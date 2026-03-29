@@ -67,4 +67,70 @@ describe("church approval decisions", () => {
     expect(decision.blockers).toContain("missing_official_website");
     expect(decision.blockers).toContain("missing_place");
   });
+
+  it("ignores suspicious header images from enrichment when merging approval signals", () => {
+    const decision = buildApprovalDecision(
+      {
+        slug: "barcelona-121",
+        name: "Barcelona International Church",
+        website: "https://barcelona.example.org",
+        email: "",
+        location: "Barcelona",
+        country: "Spain",
+        confidence: 0.75,
+        header_image: "",
+      },
+      {
+        enrichment: {
+          contact_email: "info@barcelona.example.org",
+          facebook_url: "https://www.facebook.com/barcelonachurch",
+          cover_image_url: "https://www.facebook.com/tr?id=123",
+          confidence: 0.76,
+        },
+        screening: {
+          verdict: "verified_church_needs_playlist",
+          websiteChurchScore: 0.83,
+          location: "Barcelona",
+          country: "Spain",
+        },
+        approvalThreshold: 70,
+      }
+    );
+
+    expect(decision.merged.headerImage).toBe("");
+    expect(decision.wave).toBe(2);
+  });
+
+  it("ignores junk emails and email-like locations during approval merging", () => {
+    const decision = buildApprovalDecision(
+      {
+        slug: "wurzburg-jesus-no-borders-church",
+        name: "Jesus No Borders Church",
+        website: "https://jesusnoborders.com",
+        email: "",
+        location: "jesusnoborders@gmail.com",
+        country: "Germany",
+        confidence: 0.8,
+        header_image: "",
+      },
+      {
+        enrichment: {
+          contact_email: "user@domain.com",
+          street_address: "Wurzburg",
+          facebook_url: "https://www.facebook.com/JesusnoBorders/",
+          confidence: 0.76,
+        },
+        screening: {
+          verdict: "verified_church_needs_playlist",
+          websiteChurchScore: 0.83,
+          location: "Germany",
+          country: "Germany",
+        },
+        approvalThreshold: 70,
+      }
+    );
+
+    expect(decision.merged.email).toBe("");
+    expect(decision.merged.location).toBe("Wurzburg");
+  });
 });

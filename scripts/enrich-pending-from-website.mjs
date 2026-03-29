@@ -2,11 +2,11 @@
 
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { createClient } from "@supabase/supabase-js";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { mapWithConcurrency } from "./lib/enrichment/rate-limiter.mjs";
-import { findDomainContactEmail } from "./lib/website-contact.mjs";
+import { extractEmailsFromHtml } from "./lib/website-contact.mjs";
 import { normalizeHost } from "./lib/church-intake-utils.mjs";
+import supabaseCompat from "../src/lib/supabase.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = join(__dirname, "..");
@@ -169,41 +169,6 @@ function extractSocialLinks(html, website) {
   };
 }
 
-function looksRelevantImageUrl(url) {
-  if (!url) return false;
-  if (/^data:/i.test(url)) return false;
-  if (/logo|icon|avatar|favicon|pixel/i.test(url)) return false;
-  if (/facebook\.com\/tr/i.test(url)) return false;
-  return true;
-}
-
-function extractMetaImage(html, website) {
-  const patterns = [
-    /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i,
-    /<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i,
-    /<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i,
-    /<link[^>]+rel=["']image_src["'][^>]+href=["']([^"']+)["']/i,
-  ];
-
-  for (const pattern of patterns) {
-    const match = html.match(pattern);
-    if (match?.[1]) {
-      const imageUrl = absolutize(match[1], website);
-      if (looksRelevantImageUrl(imageUrl)) return imageUrl;
-    }
-  }
-
-  const imgMatches = [...html.matchAll(/<img[^>]+src=["']([^"']+)["'][^>]*>/gi)];
-  for (const match of imgMatches) {
-    const imageUrl = absolutize(match[1], website);
-    if (!imageUrl) continue;
-    if (!looksRelevantImageUrl(imageUrl)) continue;
-    return imageUrl;
-  }
-
-  return "";
-}
-
 async function resolveYouTubeChannelId(youtubeUrl) {
   const verifyCandidate = async (candidate) => {
     if (!candidate) return "";
@@ -310,25 +275,24 @@ async function main() {
     .map((value) => value.trim())
     .filter(Boolean);
 
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SECRET_KEY) {
-    throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SECRET_KEY");
+  const { createAdminClient, hasSupabaseServiceConfig } = supabaseCompat;
+
+  if (!hasSupabaseServiceConfig()) {
+    throw new Error("Missing DATABASE_URL or DATABASE_URL_UNPOOLED");
   }
 
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.SUPABASE_SECRET_KEY,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  );
+  const supabase = createAdminClient();
 
   const allChurches = await loadChurches(supabase, options.region, options.reasonPrefix, statuses);
   const enrichmentMap = await loadEnrichments(supabase, allChurches.map((church) => church.slug));
   const candidates = allChurches.filter((church) => {
     const enrichment = enrichmentMap.get(church.slug);
+    const hasEmail = Boolean(enrichment?.contact_email);
     const hasFacebook = Boolean(enrichment?.facebook_url);
     const hasInstagram = Boolean(enrichment?.instagram_url);
     const hasYoutube = Boolean(enrichment?.youtube_url);
     const needsChannelId = Boolean(enrichment?.youtube_url) && !church.youtube_channel_id;
-    return !hasFacebook || !hasInstagram || !hasYoutube || needsChannelId;
+    return !hasEmail || !hasFacebook || !hasInstagram || !hasYoutube || needsChannelId;
   });
   const churches = options.limit > 0 ? candidates.slice(0, options.limit) : candidates;
   const candidateMap = new Map(churches.map((church) => [church.slug, church]));
@@ -347,9 +311,8 @@ async function main() {
     }
 
     const html = website ? await fetchHtml(website) : "";
-    const email = enrichment?.contact_email || (website ? await findDomainContactEmail(website) : "");
+    const email = enrichment?.contact_email || extractEmailsFromHtml(html, normalizeHost(website))[0] || "";
     const social = html ? extractSocialLinks(html, website) : { facebook: "", instagram: "", youtube: "" };
-    const coverImage = enrichment?.cover_image_url || (html ? extractMetaImage(html, website) : "");
     const resolvedYoutubeUrl = normalizeYouTubeUrl(enrichment?.youtube_url || "") || social.youtube || "";
     const youtubeChannelId = !church.youtube_channel_id && resolvedYoutubeUrl
       ? await resolveYouTubeChannelId(resolvedYoutubeUrl)
@@ -362,7 +325,6 @@ async function main() {
       ...(enrichment?.facebook_url || social.facebook ? { facebook_url: enrichment?.facebook_url || social.facebook } : {}),
       ...(enrichment?.instagram_url || social.instagram ? { instagram_url: enrichment?.instagram_url || social.instagram } : {}),
       ...(resolvedYoutubeUrl ? { youtube_url: resolvedYoutubeUrl } : {}),
-      ...(coverImage ? { cover_image_url: coverImage } : {}),
     };
 
     const changedFields = Object.keys(update).filter((key) => key !== "church_slug" && (!enrichment || enrichment[key] !== update[key]));
@@ -405,7 +367,6 @@ async function main() {
       instagram: update.instagram_url || "",
       youtube: update.youtube_url || "",
       youtubeChannelId,
-      coverImage: update.cover_image_url || "",
       domain: normalizeHost(website),
     };
   });
@@ -416,7 +377,6 @@ async function main() {
   const instagramCount = updated.filter((row) => row.instagram).length;
   const youtubeCount = updated.filter((row) => row.youtube).length;
   const youtubeChannelCount = updated.filter((row) => row.youtubeChannelId).length;
-  const coverCount = updated.filter((row) => row.coverImage).length;
 
   console.log(`Updated: ${updated.length}`);
   console.log(`Emails added or kept: ${emailCount}`);
@@ -424,7 +384,6 @@ async function main() {
   console.log(`Instagram added or kept: ${instagramCount}`);
   console.log(`YouTube added or kept: ${youtubeCount}`);
   console.log(`YouTube channel IDs added or kept: ${youtubeChannelCount}`);
-  console.log(`Cover images added or kept: ${coverCount}`);
   console.log(JSON.stringify(updated.slice(0, 20), null, 2));
 }
 

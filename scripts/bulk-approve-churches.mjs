@@ -4,11 +4,9 @@ import { readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
-import { createClient } from "@supabase/supabase-js";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { buildApprovalDecision } from "./lib/church-approval.mjs";
-import { findDomainContactEmail } from "./lib/website-contact.mjs";
-import { mapWithConcurrency } from "./lib/enrichment/rate-limiter.mjs";
+import supabaseCompat from "../src/lib/supabase.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = join(__dirname, "..");
@@ -171,21 +169,6 @@ async function loadEnrichmentMap(supabase, slugs) {
   return map;
 }
 
-async function fetchMissingEmails(rows) {
-  const needsLookup = rows.filter((row) => row.lookupEmail && row.website);
-  const results = await mapWithConcurrency(needsLookup, 4, async (row) => ({
-    slug: row.slug,
-    email: await findDomainContactEmail(row.website),
-  }));
-
-  const map = new Map();
-  for (const result of results) {
-    if (!result.ok || !result.value?.email) continue;
-    map.set(result.value.slug, result.value.email);
-  }
-  return map;
-}
-
 async function updateChurchBatch(supabase, rows) {
   for (const row of rows) {
     const { error } = await supabase
@@ -227,37 +210,23 @@ async function main() {
   loadLocalEnv(ROOT_DIR);
   const options = parseArgs(process.argv.slice(2));
 
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SECRET_KEY) {
-    throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SECRET_KEY");
+  const { createAdminClient, hasSupabaseServiceConfig } = supabaseCompat;
+
+  if (!hasSupabaseServiceConfig()) {
+    throw new Error("Missing DATABASE_URL or DATABASE_URL_UNPOOLED");
   }
 
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.SUPABASE_SECRET_KEY,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  );
+  const supabase = createAdminClient();
 
   const screeningMap = loadScreeningMap();
   const pendingChurches = await loadPendingChurches(supabase, options.region, options.reasonPrefix);
   const slicedChurches = options.limit > 0 ? pendingChurches.slice(0, options.limit) : pendingChurches;
   const enrichmentMap = await loadEnrichmentMap(supabase, slicedChurches.map((row) => row.slug));
 
-  const emailLookupMap = await fetchMissingEmails(
-    slicedChurches.map((row) => {
-      const enrichment = enrichmentMap.get(row.slug);
-      const screening = screeningMap.get(row.slug);
-      return {
-        slug: row.slug,
-        website: row.website || enrichment?.website_url || "",
-        lookupEmail: !(row.email || enrichment?.contact_email || screening?.websiteEmails?.[0]),
-      };
-    })
-  );
-
   const decisions = slicedChurches.map((church) => {
     const screening = screeningMap.get(church.slug);
     const enrichment = enrichmentMap.get(church.slug);
-    const fetchedEmail = emailLookupMap.get(church.slug) || screening?.websiteEmails?.[0] || "";
+    const fetchedEmail = screening?.websiteEmails?.[0] || "";
     const decision = buildApprovalDecision(church, {
       enrichment,
       screening,
@@ -284,14 +253,14 @@ async function main() {
     approvedNetNew: approved.length,
     enrichedEmail: approved.filter((row) => row.merged.email && !row.church.email).length,
     enrichedFacebook: approved.filter((row) => row.merged.facebookUrl).length,
-    enrichedHeaderImage: approved.filter((row) => row.merged.headerImage && !row.church.header_image).length,
+    usableHeroHints: approved.filter((row) => row.merged.headerImage).length,
   };
 
   console.log(`Pending reviewed: ${stats.totalPending}`);
   console.log(`Would approve: ${stats.approvedNetNew}`);
   console.log(`Email fills: ${stats.enrichedEmail}`);
   console.log(`Facebook available: ${stats.enrichedFacebook}`);
-  console.log(`Header image fills: ${stats.enrichedHeaderImage}`);
+  console.log(`Usable hero hints: ${stats.usableHeroHints}`);
   console.log(JSON.stringify(
     approved.slice(0, 20).map((row) => ({
       slug: row.church.slug,
@@ -322,7 +291,6 @@ async function main() {
       location: row.church.location || row.merged.location || null,
       country: row.church.country || row.merged.country || null,
       website: row.merged.website || row.church.website || null,
-      header_image: row.merged.headerImage || row.church.header_image || null,
       verified_at: now,
       last_researched: now,
     },
@@ -332,7 +300,6 @@ async function main() {
     const update = {
       church_slug: row.church.slug,
       ...(row.merged.email && !row.enrichment?.contact_email ? { contact_email: row.merged.email } : {}),
-      ...(row.merged.headerImage && !row.enrichment?.cover_image_url ? { cover_image_url: row.merged.headerImage } : {}),
       ...(row.merged.facebookUrl && !row.enrichment?.facebook_url ? { facebook_url: row.merged.facebookUrl } : {}),
       ...(row.merged.website && !row.enrichment?.website_url ? { website_url: row.merged.website } : {}),
     };

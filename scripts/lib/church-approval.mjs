@@ -1,4 +1,6 @@
 import { isOfficialWebsiteUrl, normalizeName } from "./church-intake-utils.mjs";
+import { isUsableHeroImageUrl, isValidOfficialEmail } from "./church-quality.mjs";
+import { isLikelyChurchContactEmail } from "./website-contact.mjs";
 
 /**
  * @typedef {{
@@ -82,24 +84,45 @@ function looksGenericName(value = "") {
   return GENERIC_NAME_PATTERNS.some((pattern) => pattern.test(String(value || "").trim()));
 }
 
+function looksLikeLocation(value = "") {
+  const trimmed = String(value || "").trim();
+  if (!trimmed) return false;
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return false;
+  if (/^https?:\/\//i.test(trimmed)) return false;
+  return true;
+}
+
 /**
  * @param {{ slug?: string; website?: string; email?: string; location?: string; country?: string; header_image?: string; confidence?: number; name?: string; }} church
  * @param {ApprovalOptions} [options]
  */
 export function mergeApprovalSignals(church, { enrichment = null, screening = null, fetchedEmail = "" } = {}) {
-  const location =
-    church.location ||
-    enrichment?.street_address ||
-    screening?.location ||
-    "";
+  const website = church.website || enrichment?.website_url || "";
+  const websiteHost = (() => {
+    try {
+      return new URL(website).hostname.replace(/^www\./, "").toLowerCase();
+    } catch {
+      return "";
+    }
+  })();
+  const emailCandidates = [church.email || "", enrichment?.contact_email || "", fetchedEmail || ""];
+  const email = emailCandidates.find((value) => isValidOfficialEmail(value) && isLikelyChurchContactEmail(value, websiteHost)) || "";
+  const locationCandidates = [church.location || "", enrichment?.street_address || "", screening?.location || ""];
+  const location = locationCandidates.find((value) => looksLikeLocation(value)) || "";
+  const headerImageCandidates = [
+    church.header_image || "",
+    enrichment?.cover_image_url || "",
+    screening?.headerImageUrl || "",
+  ];
+  const headerImage = headerImageCandidates.find((value) => isUsableHeroImageUrl(value)) || "";
 
   return {
-    website: church.website || enrichment?.website_url || "",
-    email: church.email || enrichment?.contact_email || fetchedEmail || "",
+    website,
+    email,
     location,
     country: church.country || screening?.country || "",
     facebookUrl: enrichment?.facebook_url || "",
-    headerImage: church.header_image || enrichment?.cover_image_url || screening?.headerImageUrl || "",
+    headerImage,
     verdict: screening?.verdict || "",
   };
 }
@@ -131,7 +154,6 @@ export function buildApprovalDecision(
   if ((enrichment?.confidence || 0) >= 0.7) score += 4;
   if (merged.email) score += 8;
   if (merged.facebookUrl) score += 6;
-  if (merged.headerImage) score += 6;
 
   const blockers = [];
   if (!hasOfficialWebsite) blockers.push("missing_official_website");

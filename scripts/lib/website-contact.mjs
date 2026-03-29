@@ -7,13 +7,36 @@ const IGNORE_PATTERNS = [
   /donotreply/i,
   /sentry/i,
   /wixpress/i,
+  /mysite\.com/i,
   /cloudflare/i,
   /google/i,
   /facebook/i,
   /instagram/i,
   /youtube/i,
   /example\.com/i,
+  /@domain\.com/i,
+  /user@domain\.com/i,
+  /example@domain\.com/i,
   /localhost/i,
+  /\.(png|jpg|jpeg|gif|svg|webp)$/i,
+  /@2x\./i,
+];
+
+const PUBLIC_EMAIL_DOMAIN_PATTERNS = [
+  /gmail\.com$/i,
+  /hotmail\./i,
+  /outlook\./i,
+  /live\./i,
+  /yahoo\./i,
+  /icloud\.com$/i,
+  /me\.com$/i,
+  /aol\.com$/i,
+  /gmx\./i,
+  /web\.de$/i,
+  /runbox\.eu$/i,
+  /btinternet\.com$/i,
+  /skynet\.be$/i,
+  /proton\.(me|mail)$/i,
 ];
 
 export function scoreContactEmail(email, churchDomain = "") {
@@ -25,6 +48,23 @@ export function scoreContactEmail(email, churchDomain = "") {
   return score;
 }
 
+export function isLikelyChurchContactEmail(email, churchDomain = "") {
+  const lower = String(email || "").toLowerCase().trim();
+  if (!EMAIL_REGEX.test(lower) || IGNORE_PATTERNS.some((pattern) => pattern.test(lower))) {
+    EMAIL_REGEX.lastIndex = 0;
+    return false;
+  }
+  EMAIL_REGEX.lastIndex = 0;
+
+  const domain = lower.split("@")[1] || "";
+  if (!domain) return false;
+  if (churchDomain && (domain === churchDomain || churchDomain.endsWith(`.${domain}`) || domain.endsWith(`.${churchDomain}`))) {
+    return true;
+  }
+
+  return PUBLIC_EMAIL_DOMAIN_PATTERNS.some((pattern) => pattern.test(domain));
+}
+
 export function extractEmailsFromHtml(html = "", churchDomain = "") {
   const decoded = String(html)
     .replace(/&#64;/g, "@")
@@ -33,7 +73,7 @@ export function extractEmailsFromHtml(html = "", churchDomain = "") {
 
   const matches = decoded.match(EMAIL_REGEX) || [];
   return [...new Set(matches.map((email) => email.toLowerCase()))]
-    .filter((email) => !IGNORE_PATTERNS.some((pattern) => pattern.test(email)))
+    .filter((email) => isLikelyChurchContactEmail(email, churchDomain))
     .sort((left, right) => scoreContactEmail(right, churchDomain) - scoreContactEmail(left, churchDomain));
 }
 

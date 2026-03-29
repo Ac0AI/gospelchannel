@@ -8,6 +8,7 @@ import {
 } from "../../../scripts/lib/church-intake-utils.mjs";
 import {
   findLikelyHeroImage,
+  isUsableHeroImageUrl,
   scoreWebsiteSignals,
 } from "../../../scripts/lib/church-quality.mjs";
 
@@ -114,6 +115,8 @@ describe("church intake utils", () => {
   it("skips suspicious og:image assets when selecting a hero image", () => {
     const html = `
       <meta property="og:image" content="/wp-content/uploads/rockstar-casino.webp" />
+      <img src="https://www.facebook.com/tr?id=123" />
+      <img src="/wp-content/uploads/350x350-badge.png" />
       <img src="/wp-content/uploads/logo.png" />
       <img src="/wp-content/uploads/church-hero.jpg" />
     `;
@@ -121,5 +124,11 @@ describe("church intake utils", () => {
     expect(findLikelyHeroImage(html, "https://example.org")).toBe(
       "https://example.org/wp-content/uploads/church-hero.jpg",
     );
+  });
+
+  it("rejects tiny squares and tracking URLs as usable hero images", () => {
+    expect(isUsableHeroImageUrl("https://www.facebook.com/tr?id=123")).toBe(false);
+    expect(isUsableHeroImageUrl("https://example.org/wp-content/uploads/350x350-badge.png")).toBe(false);
+    expect(isUsableHeroImageUrl("https://example.org/wp-content/uploads/church-hero-1600x900.webp")).toBe(true);
   });
 });

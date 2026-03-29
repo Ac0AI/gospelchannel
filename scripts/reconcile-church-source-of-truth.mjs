@@ -12,8 +12,8 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { createClient } from "@supabase/supabase-js";
 import { loadLocalEnv } from "./lib/local-env.mjs";
+import supabaseCompat from "../src/lib/supabase.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = join(__dirname, "..");
@@ -26,17 +26,14 @@ const dryRun = process.argv.includes("--dry-run");
 
 loadLocalEnv(ROOT_DIR);
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const serviceKey = process.env.SUPABASE_SECRET_KEY;
+const { createAdminClient, hasSupabaseServiceConfig } = supabaseCompat;
 
-if (!supabaseUrl || !serviceKey) {
-  console.error("Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SECRET_KEY");
+if (!hasSupabaseServiceConfig()) {
+  console.error("Missing DATABASE_URL or DATABASE_URL_UNPOOLED");
   process.exit(1);
 }
 
-const supabase = createClient(supabaseUrl, serviceKey, {
-  auth: { autoRefreshToken: false, persistSession: false },
-});
+const supabase = createAdminClient();
 
 function readSnapshot() {
   return JSON.parse(readFileSync(CHURCHES_PATH, "utf8"));

@@ -168,6 +168,46 @@ const SUSPICIOUS_MEDIA_PATTERNS = [
   /betting/i,
   /poker/i,
   /bonus/i,
+  /facebook\.com\/tr(?:\/|\?|$)/i,
+  /doubleclick/i,
+  /google-analytics/i,
+  /tracking/i,
+  /(?:^|[/?#&=_-])pixel(?:[/?#&=_-]|$)/i,
+  /revslider\/public\/assets\/assets\/dummy\.png/i,
+  /(^|[^a-z])logo(s)?([^a-z]|$)/i,
+  /(^|[^a-z])(icon|icons|avatar|favicon|brandmark|wordmark|lockup|badge)([^a-z]|$)/i,
+  /(?:^|[\/_-])(logo|logos|icon|icons|avatar|favicon|brandmark|wordmark|lockup|badge)(?:[._\/-]|$)/i,
+  /(?:^|[\/_-])(placeholder|dummy|default|spinner|loading|blank|spacer|transparent)(?:[._\/-]|$)/i,
+  /(?:^|[\/_-])(event|events|conference|poster|flyer|brochure|bulletin|program|schedule|thumbnail|thumb)(?:[._\/-]|$)/i,
+];
+
+const BLOCKED_MEDIA_HOST_PATTERNS = [
+  "facebook.com",
+  "fbcdn.net",
+  "instagram.com",
+  "cdninstagram.com",
+  "youtube.com",
+  "youtu.be",
+  "ytimg.com",
+];
+
+const BLOCKED_MEDIA_PATH_PARTS = [
+  "/logo",
+  "/logos/",
+  "/icon",
+  "/icons/",
+  "/avatar",
+  "/favicon",
+  "/badge",
+  "/placeholder",
+  "/dummy",
+  "/default",
+  "/spinner",
+  "/loading",
+  "/blank",
+  "/spacer",
+  "/transparent",
+  "/social/",
 ];
 
 const IGNORE_EMAIL_PATTERNS = [
@@ -267,7 +307,49 @@ export function looksOrganizationLike(name = "") {
 }
 
 export function looksSuspiciousMediaUrl(url = "") {
-  return SUSPICIOUS_MEDIA_PATTERNS.some((pattern) => pattern.test(url));
+  const value = String(url || "").trim();
+  if (!value) return false;
+  if (/^data:/i.test(value)) return true;
+
+  try {
+    const parsed = new URL(value, "https://example.org");
+    const host = parsed.hostname.replace(/^www\./, "").toLowerCase();
+    const pathname = parsed.pathname.toLowerCase();
+    if (BLOCKED_MEDIA_HOST_PATTERNS.some((pattern) => host.includes(pattern))) return true;
+    if (BLOCKED_MEDIA_PATH_PARTS.some((fragment) => pathname.includes(fragment))) return true;
+    if (/\.(svg|gif)(?:[?#]|$)/i.test(pathname)) return true;
+
+    const query = parsed.search || "";
+    const resizeMatch = `${pathname}${query}`.match(/(?:^|[^0-9])(\d{2,5})[xX](\d{2,5})(?:[^0-9]|$)/);
+    const fillMatch = `${pathname}${query}`.match(/w[_=/-](\d{2,5})[,/_-]*h[_=/-](\d{2,5})/i);
+    const width = Number.parseInt(
+      parsed.searchParams.get("w")
+      || parsed.searchParams.get("width")
+      || resizeMatch?.[1]
+      || fillMatch?.[1]
+      || "0",
+      10
+    ) || 0;
+    const height = Number.parseInt(
+      parsed.searchParams.get("h")
+      || parsed.searchParams.get("height")
+      || resizeMatch?.[2]
+      || fillMatch?.[2]
+      || "0",
+      10
+    ) || 0;
+
+    if ((width > 0 && width < 360) || (height > 0 && height < 180)) return true;
+    if (width > 0 && height > 0 && width === height && width < 500) return true;
+  } catch {
+    return true;
+  }
+
+  return SUSPICIOUS_MEDIA_PATTERNS.some((pattern) => pattern.test(value));
+}
+
+export function isUsableHeroImageUrl(url = "") {
+  return Boolean(String(url || "").trim()) && !looksSuspiciousMediaUrl(url);
 }
 
 export function isBlockedHost(host = "") {
@@ -485,13 +567,12 @@ export function findLikelyHeroImage(html = "", baseUrl = "") {
     || parseMetaContent(html, "name", "twitter:image");
 
   const absoluteOgImage = absoluteUrl(ogImage, baseUrl);
-  if (absoluteOgImage && !looksSuspiciousMediaUrl(absoluteOgImage)) return absoluteOgImage;
+  if (isUsableHeroImageUrl(absoluteOgImage)) return absoluteOgImage;
 
   const imageMatches = [...html.matchAll(/<img[^>]+src=["']([^"']+)["'][^>]*>/gi)]
     .map((match) => absoluteUrl(match[1] || "", baseUrl))
     .filter(Boolean)
-    .filter((url) => !/logo|icon|avatar|favicon/i.test(url))
-    .filter((url) => !looksSuspiciousMediaUrl(url))
+    .filter((url) => isUsableHeroImageUrl(url))
     .filter((url) => /\.(jpg|jpeg|png|webp)(\?|$)/i.test(url));
 
   return imageMatches[0] || "";
