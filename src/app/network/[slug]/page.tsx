@@ -8,6 +8,8 @@ type NetworkPageProps = {
   params: Promise<{ slug: string }>;
 };
 
+export const revalidate = 3600;
+
 export async function generateMetadata({ params }: NetworkPageProps): Promise<Metadata> {
   const { slug } = await params;
   const network = await getNetworkBySlug(slug);

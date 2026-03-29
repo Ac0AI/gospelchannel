@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTopChurchSlugs } from "@/lib/church-community";
-import { getChurchesAsync } from "@/lib/content";
+import { getChurchIndexSummaryLookup } from "@/lib/church";
 
 export async function GET(request: NextRequest) {
   const periodParam = request.nextUrl.searchParams.get("period") ?? "30d";
@@ -9,9 +9,10 @@ export async function GET(request: NextRequest) {
   const periodDays = Math.min(90, Math.max(1, parseInt(periodParam, 10) || 30));
   const limit = Math.min(20, Math.max(1, parseInt(limitParam, 10) || 10));
 
-  const top = await getTopChurchSlugs(periodDays, limit);
-  const churches = await getChurchesAsync();
-  const bySlug = new Map(churches.map((c) => [c.slug, c]));
+  const [top, bySlug] = await Promise.all([
+    getTopChurchSlugs(periodDays, limit),
+    getChurchIndexSummaryLookup(),
+  ]);
 
   const results = top
     .map(({ slug, votes }) => {

@@ -49,9 +49,18 @@ type CacheEntry<T> = {
   expiresAt: number;
 };
 
+type ChurchIndexSummary = {
+  slug: string;
+  name: string;
+  logo?: string;
+  country: string;
+};
+
 const CHURCH_INDEX_CACHE_SECONDS = 60 * 60;
 let churchIndexDataCache: CacheEntry<Awaited<ReturnType<typeof _getChurchIndexData>>> | null = null;
 let churchIndexDataPromise: Promise<Awaited<ReturnType<typeof _getChurchIndexData>>> | null = null;
+let churchIndexSummaryCache: CacheEntry<Map<string, ChurchIndexSummary>> | null = null;
+let churchIndexSummaryPromise: Promise<Map<string, ChurchIndexSummary>> | null = null;
 
 const ALIAS_STOP_WORDS = new Set([
   "worship",
@@ -1175,6 +1184,22 @@ async function _getChurchIndexData() {
   }
 }
 
+function buildChurchIndexSummaryLookup(
+  churches: Array<{ slug: string; name: string; logo?: string; country: string }>,
+): Map<string, ChurchIndexSummary> {
+  return new Map(
+    churches.map((church) => [
+      church.slug,
+      {
+        slug: church.slug,
+        name: church.name,
+        logo: church.logo,
+        country: church.country,
+      },
+    ]),
+  );
+}
+
 export async function getChurchIndexData() {
   if (churchIndexDataCache && churchIndexDataCache.expiresAt > Date.now()) {
     return churchIndexDataCache.value;
@@ -1183,9 +1208,11 @@ export async function getChurchIndexData() {
   if (!churchIndexDataPromise) {
     churchIndexDataPromise = _getChurchIndexData()
       .then((value) => {
-        churchIndexDataCache = {
-          value,
-          expiresAt: Date.now() + CHURCH_INDEX_CACHE_SECONDS * 1000,
+        const expiresAt = Date.now() + CHURCH_INDEX_CACHE_SECONDS * 1000;
+        churchIndexDataCache = { value, expiresAt };
+        churchIndexSummaryCache = {
+          value: buildChurchIndexSummaryLookup(value),
+          expiresAt,
         };
         return value;
       })
@@ -1195,6 +1222,36 @@ export async function getChurchIndexData() {
   }
 
   return churchIndexDataPromise;
+}
+
+export async function getChurchIndexSummaryLookup(): Promise<Map<string, ChurchIndexSummary>> {
+  if (churchIndexSummaryCache && churchIndexSummaryCache.expiresAt > Date.now()) {
+    return churchIndexSummaryCache.value;
+  }
+
+  if (churchIndexDataCache && churchIndexDataCache.expiresAt > Date.now()) {
+    const value = buildChurchIndexSummaryLookup(churchIndexDataCache.value);
+    churchIndexSummaryCache = {
+      value,
+      expiresAt: churchIndexDataCache.expiresAt,
+    };
+    return value;
+  }
+
+  if (!churchIndexSummaryPromise) {
+    churchIndexSummaryPromise = getChurchIndexData()
+      .then((churches) => {
+        const expiresAt = Date.now() + CHURCH_INDEX_CACHE_SECONDS * 1000;
+        const value = buildChurchIndexSummaryLookup(churches);
+        churchIndexSummaryCache = { value, expiresAt };
+        return value;
+      })
+      .finally(() => {
+        churchIndexSummaryPromise = null;
+      });
+  }
+
+  return churchIndexSummaryPromise;
 }
 
 export async function checkChurchClaimed(slug: string): Promise<boolean> {

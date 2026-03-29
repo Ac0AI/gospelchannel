@@ -323,6 +323,11 @@ const getApprovedChurches = cache(async (): Promise<ChurchConfig[]> => {
   }
 });
 
+const getApprovedChurchLookup = cache(async (): Promise<Map<string, ChurchConfig>> => {
+  const churches = await getApprovedChurches();
+  return new Map(churches.map((church) => [church.slug, church]));
+});
+
 /**
  * Get all approved churches from the public source of truth.
  * Falls back to the local snapshot when the public source is unavailable.
@@ -348,8 +353,8 @@ export function getLocalChurchSnapshot(): ChurchConfig[] {
 export async function getChurchBySlugAsync(
   slug: string
 ): Promise<ChurchConfig | undefined> {
-  const churches = await getChurchesAsync();
-  return churches.find((church) => church.slug === slug);
+  const churchesBySlug = await getApprovedChurchLookup();
+  return churchesBySlug.get(slug);
 }
 
 /**

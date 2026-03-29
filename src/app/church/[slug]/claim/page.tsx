@@ -6,6 +6,8 @@ type ClaimPageProps = {
   params: Promise<{ slug: string }>;
 };
 
+export const revalidate = 3600;
+
 export default async function ClaimChurchPage({ params }: ClaimPageProps) {
   const { slug } = await params;
   const church = await getChurchBySlugAsync(slug);

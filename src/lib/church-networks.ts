@@ -1,4 +1,4 @@
-import { and, asc, eq, ilike } from "drizzle-orm";
+import { and, asc, eq, ilike, sql } from "drizzle-orm";
 import { getDb, hasDatabaseConfig, schema } from "@/db";
 import type { ChurchNetwork, ChurchCampus, ChurchCampusWithDetails, ChurchEnrichment } from "@/types/gospel";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
@@ -9,6 +9,8 @@ type CacheEntry<T> = { value: T; expiresAt: number };
 const networkBySlugCache = new Map<string, CacheEntry<ChurchNetwork | null>>();
 const networkByParentSlugCache = new Map<string, CacheEntry<ChurchNetwork | null>>();
 const networkCampusCountCache = new Map<string, CacheEntry<number>>();
+const networkCampusesCache = new Map<string, CacheEntry<Array<ChurchCampus & { enrichment?: ChurchEnrichment }>>>();
+const campusBySlugCache = new Map<string, CacheEntry<ChurchCampusWithDetails | null>>();
 const loggedNetworkFallbacks = new Set<string>();
 let networkReadsUnavailable = false;
 
@@ -159,11 +161,11 @@ export async function getNetworkCampusCount(networkId: string): Promise<number> 
   try {
     const db = getDb();
     const rows = await db
-      .select()
+      .select({ count: sql<number>`count(*)::int` })
       .from(schema.churchCampuses)
       .where(and(eq(schema.churchCampuses.networkId, networkId), eq(schema.churchCampuses.status, "published")));
 
-    return setCachedValue(networkCampusCountCache, networkId, rows.length);
+    return setCachedValue(networkCampusCountCache, networkId, Number(rows[0]?.count ?? 0));
   } catch (error) {
     networkReadsUnavailable = true;
     logNetworkFallback("network-campus-count", error);
@@ -174,6 +176,8 @@ export async function getNetworkCampusCount(networkId: string): Promise<number> 
 export async function getNetworkCampuses(
   networkId: string,
 ): Promise<Array<ChurchCampus & { enrichment?: ChurchEnrichment }>> {
+  const cached = getCachedValue(networkCampusesCache, networkId);
+  if (cached !== undefined) return cached;
   if (isOfflinePublicBuild() || !hasDatabaseConfig() || networkReadsUnavailable) return [];
   try {
     const db = getDb();
@@ -188,18 +192,21 @@ export async function getNetworkCampuses(
       .where(and(eq(schema.churchCampuses.networkId, networkId), eq(schema.churchCampuses.status, "published")))
       .orderBy(asc(schema.churchCampuses.country), asc(schema.churchCampuses.name));
 
-    return rows.map((row) => ({
+    const campuses = rows.map((row) => ({
       ...mapCampus(row.campus),
       enrichment: row.enrichment ? mapEnrichment(row.enrichment) : undefined,
     }));
+    return setCachedValue(networkCampusesCache, networkId, campuses);
   } catch (error) {
     networkReadsUnavailable = true;
     logNetworkFallback("network-campuses", error);
-    return [];
+    return setCachedValue(networkCampusesCache, networkId, []);
   }
 }
 
 export async function getCampusBySlug(slug: string): Promise<ChurchCampusWithDetails | null> {
+  const cached = getCachedValue(campusBySlugCache, slug);
+  if (cached !== undefined) return cached;
   if (isOfflinePublicBuild() || !hasDatabaseConfig() || networkReadsUnavailable) return null;
   try {
     const db = getDb();
@@ -219,15 +226,15 @@ export async function getCampusBySlug(slug: string): Promise<ChurchCampusWithDet
     const row = rows[0];
     if (!row) return null;
 
-    return {
+    return setCachedValue(campusBySlugCache, slug, {
       ...mapCampus(row.campus),
       network: mapNetwork(row.network),
       enrichment: row.enrichment ? mapEnrichment(row.enrichment) : undefined,
-    };
+    });
   } catch (error) {
     networkReadsUnavailable = true;
     logNetworkFallback("campus-by-slug", error);
-    return null;
+    return setCachedValue(campusBySlugCache, slug, null);
   }
 }
 

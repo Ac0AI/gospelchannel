@@ -40,6 +40,8 @@ type ChurchPageProps = {
   params: Promise<{ slug: string }>;
 };
 
+export const revalidate = 300;
+
 /* ─── helpers ─── */
 
 function formatSocialCount(n: number): string {
