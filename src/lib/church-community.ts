@@ -1,7 +1,6 @@
 import { desc, eq, gte, inArray, sql } from "drizzle-orm";
 import { getDb, hasDatabaseConfig, schema } from "@/db";
 import { createAdminClient, hasSupabaseServiceConfig } from "@/lib/supabase";
-import { createTemporaryUserPassword } from "@/lib/auth";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
 import type {
   ChurchPlaylistReview,
@@ -508,7 +507,6 @@ export async function verifyChurchClaim(id: string): Promise<{ email: string; ch
     const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
       email,
       email_confirm: true,
-      password: createTemporaryUserPassword(),
       user_metadata: {
         full_name: claim.name || "",
       },
