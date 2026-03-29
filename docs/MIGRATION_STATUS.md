@@ -1,11 +1,10 @@
 # Gospelmigration Status
 
-Last updated: 2026-03-28
+Last updated: 2026-03-29
 
 ## Workspace
 - Active repo: `/Users/dpr/Desktop/Egna Appar/Projekt/Gospelmigration`
 - Deploy model: direct local deploy to Cloudflare via `wrangler` / `opennextjs-cloudflare`
-- Preview URL: `https://preview.gospelchannel.com`
 - Live URLs:
   - `https://gospelchannel.com`
   - `https://www.gospelchannel.com`
@@ -16,8 +15,6 @@ Last updated: 2026-03-28
 - Live traffic is routed through Workers Routes:
   - `gospelchannel.com/*`
   - `www.gospelchannel.com/*`
-- Preview remains attached as a custom domain:
-  - `preview.gospelchannel.com`
 - Neon is the active runtime database.
 - Better Auth is the active auth layer.
 - R2 buckets exist:
@@ -26,7 +23,7 @@ Last updated: 2026-03-28
 - `media.gospelchannel.com` resolves and serves objects from R2.
 
 ## Verified working
-- Public root and preview routes return `200` and include `x-opennext: 1`:
+- Public root routes return `200` and include `x-opennext: 1`:
   - `/`
   - `/church`
   - representative `/church/[slug]`
@@ -46,8 +43,6 @@ Last updated: 2026-03-28
   - OTP sign-in
   - `POST /api/church/upload-logo` to R2
   - `POST /api/church/profile`
-- `npm run smoke:preview` passed after the final media deploy.
-
 ## Runtime data status
 - Neon table counts previously verified:
   - `churches`: `3231`
@@ -85,8 +80,6 @@ Last updated: 2026-03-28
 ## Useful commands
 - Deploy current build:
   - `npx wrangler deploy --config wrangler.jsonc`
-- Preview smoke:
-  - `npm run smoke:preview`
 - Media backfill script:
   - `npm run media:backfill`
 - Media rewrite only:

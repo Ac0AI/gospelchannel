@@ -22,7 +22,6 @@
     "setup": "bash scripts/setup-local.sh",
     "check:env": "bash scripts/check-env.sh",
     "smoke": "bash scripts/smoke-test.sh",
-    "smoke:preview": "tsx scripts/preview-smoke.ts",
     "debug:claim-verify": "tsx scripts/debug-claim-verify.ts",
     "media:backfill": "node scripts/backfill-r2-media.mjs",
     "media:heroes": "node scripts/backfill-owned-hero-images.mjs",

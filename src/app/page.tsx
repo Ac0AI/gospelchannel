@@ -82,6 +82,14 @@ export default async function HomePage() {
     getChurchIndexData(),
     getPrayers({ limit: 5 }),
   ]);
+  const searchChurches = churches.map((church) => ({
+    slug: church.slug,
+    name: church.name,
+    country: church.country,
+    location: church.location,
+    thumbnailUrl: church.thumbnailUrl,
+    logoUrl: church.logo,
+  }));
   const churchCountLabel = formatChurchCountLabel(churches.length);
   const countryCount = new Set(churches.map((church) => church.country).filter(Boolean)).size;
   const homeFaqSchema = buildHomeFaqSchema(churchCountLabel, countryCount);
@@ -113,7 +121,7 @@ export default async function HomePage() {
           Compare worship style, tradition, language, and service details before your first visit.
         </p>
         <div className="mx-auto mt-5 flex justify-center">
-          <HeroSearch surpriseSlugs={surpriseSlugs} variant="page" />
+          <HeroSearch churches={searchChurches} surpriseSlugs={surpriseSlugs} variant="page" />
         </div>
       </section>
 
