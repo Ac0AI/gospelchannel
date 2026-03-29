@@ -1,5 +1,5 @@
 import { unstable_cache } from "next/cache";
-import { ensureChurchUpdateSources, getChurchLatestUpdates } from "@/lib/church-updates";
+import { getChurchLatestUpdates } from "@/lib/church-updates";
 import { uniqueSpotifyPlaylistIds } from "@/lib/spotify-playlist";
 import type { ChurchProfileEdit, YouTubeVideo, ChurchEnrichment, ChurchProfileScore } from "@/types/gospel";
 import type { ChurchConfig } from "@/types/gospel";
@@ -766,9 +766,6 @@ async function _getChurchPublicPageData(slug: string) {
     const mergedProfile = await measureChurchStep(timings, "public.merged_profile", async () =>
       buildMergedProfile(enrichment, edits, church),
     );
-    await measureChurchStep(timings, "public.update_sources", async () =>
-      ensureChurchUpdateSources({ church, enrichment, edits, mergedProfile }),
-    );
     const latestUpdates = await measureChurchStep(timings, "public.updates", async () =>
       getChurchLatestUpdates(slug),
     );
@@ -854,14 +851,6 @@ async function _getChurchPublicPageData(slug: string) {
   })), { church: campusAsChurch, enrichment: campus.enrichment ?? null }));
   const mergedProfile = await measureChurchStep(timings, "public.campus_merged_profile", async () =>
     buildMergedProfile(campus.enrichment ?? null, edits, campusAsChurch),
-  );
-  await measureChurchStep(timings, "public.campus_update_sources", async () =>
-    ensureChurchUpdateSources({
-      church: campusAsChurch,
-      enrichment: campus.enrichment ?? null,
-      edits,
-      mergedProfile,
-    }),
   );
   const latestUpdates = await measureChurchStep(timings, "public.campus_updates", async () =>
     getChurchLatestUpdates(slug),
