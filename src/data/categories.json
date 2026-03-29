@@ -1,0 +1,102 @@
+[
+  {
+    "slug": "praise-and-worship",
+    "name": "Congregational Worship",
+    "description": "Church-ready worship songs for congregational flow.",
+    "intro": "Find worship songs your church can sing immediately. This category focuses on well-known congregational worship with strong lyrical clarity and modern arrangements.",
+    "keywords": ["praise", "worship", "church", "live", "anthem", "congregation", "jesus", "hallelujah"],
+    "seoTitle": "Praise and Worship Songs Playlist 2026 — Church Worship Music",
+    "seoDescription": "Find praise and worship songs in one curated playlist. Stream church worship anthems and modern congregational music for services and personal worship.",
+    "relatedSlugs": ["sunday-morning", "contemporary-gospel", "gospel-classics"]
+  },
+  {
+    "slug": "gospel-choir",
+    "name": "Choir & Celebration Gospel",
+    "description": "Powerful choir-led gospel songs with rich harmonies.",
+    "intro": "Explore choir-led gospel songs that energize the room. Built for celebration services, choir Sundays, and classic call-and-response moments.",
+    "keywords": ["gospel", "choir", "harmony", "choral", "traditional", "live", "church"],
+    "seoTitle": "Gospel Choir Songs Playlist — Best Choir Worship Music",
+    "seoDescription": "Stream gospel choir songs and choir worship playlists. Discover powerful harmonies, celebration gospel, and church choir favorites.",
+    "relatedSlugs": ["traditional-gospel", "gospel-classics", "african-gospel"]
+  },
+  {
+    "slug": "contemporary-gospel",
+    "name": "Modern Worship & Gospel",
+    "description": "Modern worship songs for a current church sound.",
+    "intro": "This lane mixes modern gospel and contemporary worship for churches that want current arrangements without losing theological depth.",
+    "keywords": ["contemporary", "gospel", "worship", "modern", "church", "new", "live"],
+    "seoTitle": "Contemporary Gospel Playlist 2026 — Modern Worship Songs",
+    "seoDescription": "Find contemporary gospel songs and modern worship playlists. Curated for youth, young adults, and churches seeking a fresh worship sound.",
+    "relatedSlugs": ["praise-and-worship", "sunday-morning", "kids-gospel"]
+  },
+  {
+    "slug": "traditional-gospel",
+    "name": "Church Heritage",
+    "description": "Traditional gospel worship rooted in church legacy.",
+    "intro": "Discover traditional gospel songs that carry church roots and timeless faith language. Strong for legacy Sundays and multigenerational services.",
+    "keywords": ["traditional", "gospel", "hymn", "church", "choir", "classic", "worship"],
+    "seoTitle": "Traditional Gospel Songs Playlist — Classic Church Worship",
+    "seoDescription": "Listen to traditional gospel songs and classic church worship music. Curated hymns, choir moments, and timeless gospel favorites.",
+    "relatedSlugs": ["gospel-classics", "gospel-choir", "funeral-hymns"]
+  },
+  {
+    "slug": "african-gospel",
+    "name": "African & Diaspora Worship",
+    "description": "African gospel praise and worship for joyful services.",
+    "intro": "A high-energy mix of African gospel praise, worship declarations, and joyful service songs with strong congregational response.",
+    "keywords": ["african", "gospel", "praise", "worship", "church", "joy", "celebration"],
+    "seoTitle": "African Gospel Playlist — Praise and Worship Songs",
+    "seoDescription": "Find African gospel songs and worship playlists. Stream joyful praise, celebration anthems, and church-ready African gospel music.",
+    "relatedSlugs": ["gospel-choir", "praise-and-worship", "contemporary-gospel"]
+  },
+  {
+    "slug": "wedding-songs",
+    "name": "Wedding Worship",
+    "description": "Christian worship songs for wedding and ceremony moments.",
+    "intro": "Curated Christian wedding songs for aisle moments, covenant responses, and celebration transitions. Focused on lyrical clarity and worshipful tone.",
+    "keywords": ["wedding", "christian", "worship", "love", "ceremony", "marriage", "song"],
+    "seoTitle": "Christian Wedding Songs Playlist — Worship Songs for Weddings",
+    "seoDescription": "Find Christian wedding songs and worship playlists for ceremonies. Curated songs for aisle walk, vows, and celebration moments.",
+    "relatedSlugs": ["praise-and-worship", "sunday-morning", "gospel-classics"]
+  },
+  {
+    "slug": "funeral-hymns",
+    "name": "Comfort & Remembrance",
+    "description": "Comforting Christian hymns and worship for remembrance.",
+    "intro": "A gentle selection of Christian hymns and worship songs for comfort, hope, remembrance services, and prayerful reflection.",
+    "keywords": ["funeral", "hymn", "comfort", "hope", "worship", "church", "remembrance"],
+    "seoTitle": "Funeral Hymns Playlist — Christian Comfort Worship Songs",
+    "seoDescription": "Listen to funeral hymns and Christian comfort worship songs. Curated for remembrance services, hope-centered gatherings, and prayerful moments.",
+    "relatedSlugs": ["traditional-gospel", "gospel-classics", "praise-and-worship"]
+  },
+  {
+    "slug": "sunday-morning",
+    "name": "Service Flow",
+    "description": "Sunday service worship songs for full flow.",
+    "intro": "Build your Sunday service set with songs that gather the room, support preaching transitions, and guide congregational worship.",
+    "keywords": ["sunday", "morning", "worship", "church", "service", "setlist", "praise"],
+    "seoTitle": "Sunday Morning Worship Playlist — Church Service Songs",
+    "seoDescription": "Find Sunday morning worship songs and church service playlists. Curated for complete worship flow from opening praise to response.",
+    "relatedSlugs": ["praise-and-worship", "contemporary-gospel", "wedding-songs"]
+  },
+  {
+    "slug": "gospel-classics",
+    "name": "Gospel Standards",
+    "description": "Classic gospel worship songs for every generation.",
+    "intro": "Timeless gospel classics that still move congregations today. Strong for cross-generational services and familiar church moments.",
+    "keywords": ["gospel", "classic", "church", "worship", "hymn", "choir", "traditional"],
+    "seoTitle": "Gospel Classics Playlist — Timeless Church Worship Songs",
+    "seoDescription": "Stream gospel classics and timeless church worship songs. Curated old and modern favorites for multigenerational worship.",
+    "relatedSlugs": ["traditional-gospel", "gospel-choir", "praise-and-worship"]
+  },
+  {
+    "slug": "kids-gospel",
+    "name": "Family & Kids Worship",
+    "description": "Kids worship and gospel songs for families and children.",
+    "intro": "Simple, repeatable kids gospel songs for family worship, children ministries, and church events where participation matters.",
+    "keywords": ["kids", "gospel", "worship", "children", "family", "church", "song"],
+    "seoTitle": "Kids Gospel Songs Playlist — Christian Kids Worship Music",
+    "seoDescription": "Find kids gospel songs and Christian kids worship playlists. Curated music for children ministry, family worship, and church events.",
+    "relatedSlugs": ["contemporary-gospel", "praise-and-worship", "sunday-morning"]
+  }
+]

@@ -1,0 +1,352 @@
+{
+  "sos-005": {
+    "youtubeVideoId": "0-tGd05RexE",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "hillsong-001": {
+    "youtubeVideoId": "CqybaIesbuA",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "hillsong-002": {
+    "youtubeVideoId": "dy9nwe9_xzw",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "hillsong-003": {
+    "youtubeVideoId": "dQl4izxPeNU",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "hillsong-004": {
+    "youtubeVideoId": "lKw6uqtGFfo",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "hillsong-005": {
+    "youtubeVideoId": "KkpjtkGW7JQ",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "elevation-001": {
+    "youtubeVideoId": "AHe_qmo3gX4",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "elevation-002": {
+    "youtubeVideoId": "ZOBIPb-6PTc",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "elevation-003": {
+    "youtubeVideoId": "KwX1f2gYKZ4",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "elevation-004": {
+    "youtubeVideoId": "uxTc98K9OeU",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "elevation-005": {
+    "youtubeVideoId": "xrAdbH28gIg",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "bethel-001": {
+    "youtubeVideoId": "f8TkUMJtK5k",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "bethel-002": {
+    "youtubeVideoId": "n0FBb6hnwTo",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "bethel-003": {
+    "youtubeVideoId": "Sc6SSHuZvQE",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "bethel-004": {
+    "youtubeVideoId": "G2XtRuPfaAU",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "bethel-005": {
+    "youtubeVideoId": "u-1fwZtKJSM",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "maverick-001": {
+    "youtubeVideoId": "AHe_qmo3gX4",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "maverick-002": {
+    "youtubeVideoId": "q5m09rqOoxE",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "maverick-003": {
+    "youtubeVideoId": "K3TYG7Q_fj4",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "maverick-004": {
+    "youtubeVideoId": "UGFCbmvk0vo",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "maverick-005": {
+    "youtubeVideoId": "Viiw6tGimHo",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "planetshakers-001": {
+    "youtubeVideoId": "OfgIfy7UXm4",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "planetshakers-002": {
+    "youtubeVideoId": "9xwazD5SyVg",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "planetshakers-003": {
+    "youtubeVideoId": "eHPht8UrPWM",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "planetshakers-004": {
+    "youtubeVideoId": "igJskIVNysY",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "planetshakers-005": {
+    "youtubeVideoId": "ej0Gd7_LKW8",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "upperroom-001": {
+    "youtubeVideoId": "vx6mfAgHDsY",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "upperroom-002": {
+    "youtubeVideoId": "Za-yGR3sbNw",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "upperroom-003": {
+    "youtubeVideoId": "UrHU1jTCvwE",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "upperroom-004": {
+    "youtubeVideoId": "Je8we3ZUiZc",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "upperroom-005": {
+    "youtubeVideoId": "YEenBiBh91A",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "passion-001": {
+    "youtubeVideoId": "LfzpfqrPUDo",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "passion-002": {
+    "youtubeVideoId": "BGYpF-Jrfew",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "passion-003": {
+    "youtubeVideoId": "fBHcvJhc6Pk",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "passion-004": {
+    "youtubeVideoId": "AHe_qmo3gX4",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "passion-005": {
+    "youtubeVideoId": "LiLkbnD8oG0",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "sinach-001": {
+    "youtubeVideoId": "QM8jQHE5AAk",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "sinach-002": {
+    "youtubeVideoId": "LdcanZ4f2Mg",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "sinach-003": {
+    "youtubeVideoId": "8r-H852k3_I",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "sinach-004": {
+    "youtubeVideoId": "n0FBb6hnwTo",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "sinach-005": {
+    "youtubeVideoId": "PKbBvUKooZc",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "crc-001": {
+    "youtubeVideoId": "sL1lBZhwexA",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "crc-002": {
+    "youtubeVideoId": "f8TkUMJtK5k",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "crc-003": {
+    "youtubeVideoId": "CqybaIesbuA",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "crc-004": {
+    "youtubeVideoId": "AHe_qmo3gX4",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "crc-005": {
+    "youtubeVideoId": "n0FBb6hnwTo",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "sos-001": {
+    "youtubeVideoId": "_ZnbTEs4O6U",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "sos-002": {
+    "youtubeVideoId": "PJSmxV_QHTs",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "sos-003": {
+    "youtubeVideoId": "gYR0xP1j4PY",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  },
+  "sos-004": {
+    "youtubeVideoId": "NDWdCjR7H38",
+    "confidence": 1,
+    "matchedAt": "2026-02-27T00:00:00.000Z",
+    "manualOverride": true,
+    "lowConfidence": false
+  }
+}

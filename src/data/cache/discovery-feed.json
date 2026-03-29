@@ -1,0 +1,143 @@
+{
+  "generatedAt": "2026-02-27T00:00:00.000Z",
+  "spotlight": [
+    {
+      "videoId": "AHe_qmo3gX4",
+      "title": "Jireh",
+      "artist": "Elevation Worship & Maverick City",
+      "thumbnailUrl": "https://i.ytimg.com/vi/AHe_qmo3gX4/hqdefault.jpg",
+      "source": "staff"
+    },
+    {
+      "videoId": "QM8jQHE5AAk",
+      "title": "Way Maker",
+      "artist": "Sinach",
+      "thumbnailUrl": "https://i.ytimg.com/vi/QM8jQHE5AAk/hqdefault.jpg",
+      "source": "staff"
+    },
+    {
+      "videoId": "dQl4izxPeNU",
+      "title": "King of Kings",
+      "artist": "Hillsong Worship",
+      "thumbnailUrl": "https://i.ytimg.com/vi/dQl4izxPeNU/hqdefault.jpg",
+      "source": "staff"
+    },
+    {
+      "videoId": "CqybaIesbuA",
+      "title": "What A Beautiful Name",
+      "artist": "Hillsong Worship",
+      "thumbnailUrl": "https://i.ytimg.com/vi/CqybaIesbuA/hqdefault.jpg",
+      "source": "staff"
+    },
+    {
+      "videoId": "ZOBIPb-6PTc",
+      "title": "Do It Again",
+      "artist": "Elevation Worship",
+      "thumbnailUrl": "https://i.ytimg.com/vi/ZOBIPb-6PTc/hqdefault.jpg",
+      "source": "staff"
+    },
+    {
+      "videoId": "u-1fwZtKJSM",
+      "title": "No One",
+      "artist": "Maverick City Music",
+      "thumbnailUrl": "https://i.ytimg.com/vi/u-1fwZtKJSM/hqdefault.jpg",
+      "source": "staff"
+    }
+  ],
+  "sections": [
+    {
+      "slug": "spirit-lift",
+      "title": "Spirit Lift",
+      "description": "Joyful and high-energy praise that lifts the room.",
+      "videos": [
+        {
+          "videoId": "AHe_qmo3gX4",
+          "title": "Jireh",
+          "artist": "Elevation Worship & Maverick City",
+          "thumbnailUrl": "https://i.ytimg.com/vi/AHe_qmo3gX4/hqdefault.jpg",
+          "source": "staff"
+        },
+        {
+          "videoId": "QM8jQHE5AAk",
+          "title": "Way Maker",
+          "artist": "Sinach",
+          "thumbnailUrl": "https://i.ytimg.com/vi/QM8jQHE5AAk/hqdefault.jpg",
+          "source": "staff"
+        },
+        {
+          "videoId": "dQl4izxPeNU",
+          "title": "King of Kings",
+          "artist": "Hillsong Worship",
+          "thumbnailUrl": "https://i.ytimg.com/vi/dQl4izxPeNU/hqdefault.jpg",
+          "source": "staff"
+        },
+        {
+          "videoId": "CqybaIesbuA",
+          "title": "What A Beautiful Name",
+          "artist": "Hillsong Worship",
+          "thumbnailUrl": "https://i.ytimg.com/vi/CqybaIesbuA/hqdefault.jpg",
+          "source": "staff"
+        },
+        {
+          "videoId": "ZOBIPb-6PTc",
+          "title": "Do It Again",
+          "artist": "Elevation Worship",
+          "thumbnailUrl": "https://i.ytimg.com/vi/ZOBIPb-6PTc/hqdefault.jpg",
+          "source": "staff"
+        },
+        {
+          "videoId": "u-1fwZtKJSM",
+          "title": "No One",
+          "artist": "Maverick City Music",
+          "thumbnailUrl": "https://i.ytimg.com/vi/u-1fwZtKJSM/hqdefault.jpg",
+          "source": "staff"
+        }
+      ]
+    },
+    {
+      "slug": "sunday-flow",
+      "title": "Sunday Flow",
+      "description": "Live worship moments built for Sunday rhythm.",
+      "videos": [
+        {
+          "videoId": "ZOBIPb-6PTc",
+          "title": "Do It Again",
+          "artist": "Elevation Worship",
+          "thumbnailUrl": "https://i.ytimg.com/vi/ZOBIPb-6PTc/hqdefault.jpg",
+          "source": "staff"
+        },
+        {
+          "videoId": "u-1fwZtKJSM",
+          "title": "No One",
+          "artist": "Maverick City Music",
+          "thumbnailUrl": "https://i.ytimg.com/vi/u-1fwZtKJSM/hqdefault.jpg",
+          "source": "staff"
+        }
+      ]
+    },
+    {
+      "slug": "choir-fire",
+      "title": "Choir Fire",
+      "description": "Power choirs, harmonies, and classic gospel force.",
+      "videos": []
+    },
+    {
+      "slug": "prayer-room",
+      "title": "Prayer Room",
+      "description": "Gentle worship and reflective songs for prayer.",
+      "videos": []
+    },
+    {
+      "slug": "testimony-anthems",
+      "title": "Testimony Anthems",
+      "description": "Songs about grace, rescue, breakthrough, and faith.",
+      "videos": []
+    },
+    {
+      "slug": "new-and-rising",
+      "title": "New and Rising",
+      "description": "Recent and fast-growing gospel videos worth catching early.",
+      "videos": []
+    }
+  ]
+}

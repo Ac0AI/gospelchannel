@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 76" width="280" height="76" role="img" aria-labelledby="badge-title">
+  <title id="badge-title">GospelChannel Verified Church</title>
+  <defs>
+    <linearGradient id="bg-fill" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fefbf8"/>
+      <stop offset="100%" stop-color="#faf5ef"/>
+    </linearGradient>
+    <linearGradient id="rose-border" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#dba48f"/>
+      <stop offset="30%" stop-color="#c8806a"/>
+      <stop offset="70%" stop-color="#d4967f"/>
+      <stop offset="100%" stop-color="#c8806a"/>
+    </linearGradient>
+    <linearGradient id="check-bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#5199E0"/>
+      <stop offset="100%" stop-color="#3978C0"/>
+    </linearGradient>
+    <clipPath id="round-clip">
+      <rect x="0" y="0" width="280" height="76" rx="10"/>
+    </clipPath>
+    <filter id="inner-glow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="0.5" stdDeviation="1" flood-color="#c8806a" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Background with subtle gradient -->
+  <rect width="280" height="76" rx="10" fill="url(#bg-fill)" stroke="url(#rose-border)" stroke-width="1.5" filter="url(#inner-glow)"/>
+
+  <!-- Left accent bar -->
+  <rect x="0" y="0" width="4" height="76" fill="url(#rose-border)" clip-path="url(#round-clip)"/>
+
+  <!-- Blue verified circle -->
+  <circle cx="38" cy="38" r="20" fill="url(#check-bg)"/>
+  <!-- Clean checkmark only - no cross, the context says "church" -->
+  <path d="M28 38.5 L35 45.5 L49 31" stroke="#fff" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- GospelChannel in serif -->
+  <text x="70" y="33" font-family="'Cormorant Garamond', Georgia, serif" font-size="22" font-weight="700" fill="#3b2a22" letter-spacing="0.01em">
+    <tspan>Gospel</tspan><tspan fill="#7a5c4e">Channel</tspan>
+  </text>
+
+  <!-- VERIFIED CHURCH in tracked caps -->
+  <text x="70" y="52" font-family="'Nunito', 'Segoe UI', sans-serif" font-size="10.5" font-weight="700" fill="#4089CC" letter-spacing="0.14em">VERIFIED CHURCH</text>
+</svg>

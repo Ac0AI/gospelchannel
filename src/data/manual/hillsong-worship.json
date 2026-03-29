@@ -1,0 +1,32 @@
+[
+  {
+    "spotifyId": "hillsong-001",
+    "title": "What A Beautiful Name",
+    "artist": "Hillsong Worship",
+    "youtubeVideoId": "CqybaIesbuA"
+  },
+  {
+    "spotifyId": "hillsong-002",
+    "title": "Oceans (Where Feet May Fail)",
+    "artist": "Hillsong UNITED",
+    "youtubeVideoId": "dy9nwe9_xzw"
+  },
+  {
+    "spotifyId": "hillsong-003",
+    "title": "King of Kings",
+    "artist": "Hillsong Worship",
+    "youtubeVideoId": "dQl4izxPeNU"
+  },
+  {
+    "spotifyId": "hillsong-004",
+    "title": "Who You Say I Am",
+    "artist": "Hillsong Worship",
+    "youtubeVideoId": "lKw6uqtGFfo"
+  },
+  {
+    "spotifyId": "hillsong-005",
+    "title": "Hosanna",
+    "artist": "Hillsong UNITED",
+    "youtubeVideoId": "KkpjtkGW7JQ"
+  }
+]

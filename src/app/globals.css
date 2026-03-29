@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+:root {
+  /* Pinterest-worship palette */
+  --linen:        #fdf8f4;
+  --linen-deep:   #f7ede4;
+  --blush:        #f4c9c0;
+  --blush-light:  #fce9e5;
+  --rose-gold:    #b06a50;
+  --rose-gold-deep: #944f3c;
+  --mauve:        #9b7fa0;
+  --mauve-light:  #e8dff0;
+  --espresso:     #3b2a22;
+  --warm-brown:   #7a5c4e;
+  --muted-warm:   #9e8075;
+}
+
+@theme inline {
+  --color-linen:        var(--linen);
+  --color-linen-deep:   var(--linen-deep);
+  --color-blush:        var(--blush);
+  --color-blush-light:  var(--blush-light);
+  --color-rose-gold:    var(--rose-gold);
+  --color-rose-gold-deep: var(--rose-gold-deep);
+  --color-mauve:        var(--mauve);
+  --color-mauve-light:  var(--mauve-light);
+  --color-espresso:     var(--espresso);
+  --color-warm-brown:   var(--warm-brown);
+  --color-muted-warm:   var(--muted-warm);
+  --font-sans:          var(--font-sans);
+  --font-serif:         var(--font-serif);
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 15% 0%, #fce9e580 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 5%, #e8dff070 0%, transparent 45%),
+    var(--linen);
+  color: var(--espresso);
+  font-family: var(--font-sans), sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-serif), serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* Heart pulse animation for "This Moved Me" */
+.heart-pulse {
+  animation: heart-pulse 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes heart-pulse {
+  0%   { transform: scale(1); }
+  25%  { transform: scale(1.45); }
+  50%  { transform: scale(1.2); }
+  75%  { transform: scale(1.38); }
+  100% { transform: scale(1); }
+}
+
+/* Hide scrollbars on horizontal scroll containers */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Soft link hover underline */
+.worship-link {
+  position: relative;
+}
+.worship-link::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--rose-gold);
+  transition: width 0.3s ease;
+}
+.worship-link:hover::after {
+  width: 100%;
+}
+
+/* Improve tap targets on mobile */
+@media (max-width: 767px) {
+  /* Prevent horizontal scroll from overflow */
+  html, body {
+    overflow-x: hidden;
+    overscroll-behavior-x: none;
+  }
+  /* Ensure nothing can push beyond viewport */
+  html {
+    max-width: 100vw;
+  }
+}
+
+/* Mobile menu overlay fade-in */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+/* Scroll-triggered reveal animation */
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.reveal-up {
+  opacity: 0;
+  animation: reveal-up 0.6s ease-out forwards;
+  animation-play-state: paused;
+}
+
+/* Holy shimmer — warm light moving around search input */
+@property --shimmer-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes holy-shimmer {
+  from { --shimmer-angle: 0deg; }
+  to   { --shimmer-angle: 360deg; }
+}

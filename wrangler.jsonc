@@ -1,0 +1,39 @@
+{
+  "name": "gospelmigration",
+  "main": "worker.ts",
+  "compatibility_date": "2026-03-28",
+  "compatibility_flags": ["nodejs_compat"],
+  "triggers": {
+    "crons": ["0 4 * * *"]
+  },
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "routes": [
+    {
+      "pattern": "gospelchannel.com/*",
+      "zone_name": "gospelchannel.com"
+    },
+    {
+      "pattern": "www.gospelchannel.com/*",
+      "zone_name": "gospelchannel.com"
+    },
+    {
+      "pattern": "preview.gospelchannel.com",
+      "zone_name": "gospelchannel.com",
+      "custom_domain": true
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "CHURCH_ASSETS",
+      "bucket_name": "church-assets",
+      "preview_bucket_name": "church-assets-preview"
+    }
+  ],
+  "vars": {
+    "NEXT_PUBLIC_SITE_URL": "https://gospelchannel.com",
+    "NEXT_PUBLIC_MEDIA_BASE_URL": "https://media.gospelchannel.com"
+  }
+}

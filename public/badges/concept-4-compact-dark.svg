@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 44" width="200" height="44" role="img" aria-labelledby="badge-title4">
+  <title id="badge-title4">GospelChannel Verified</title>
+
+  <!-- Compact pill -->
+  <rect x="0" y="0" width="200" height="44" rx="22" fill="#171210" stroke="#3d2e26" stroke-width="1.2"/>
+
+  <!-- Left accent -->
+  <clipPath id="pill-clip-d"><rect x="0" y="0" width="200" height="44" rx="22"/></clipPath>
+  <rect x="0" y="0" width="3" height="44" fill="#c8806a" clip-path="url(#pill-clip-d)"/>
+
+  <!-- Blue check circle -->
+  <circle cx="26" cy="22" r="13" fill="#4A90D9"/>
+  <path d="M20 22.5 L24 26.5 L33 17" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Text -->
+  <text x="46" y="19" font-family="'Cormorant Garamond', Georgia, serif" font-size="13" font-weight="700" fill="#fdf8f4">
+    <tspan>Gospel</tspan><tspan fill="#c8a090">Channel</tspan>
+  </text>
+  <text x="46" y="32" font-family="'Nunito', 'Segoe UI', sans-serif" font-size="8" font-weight="700" fill="#5BA3EC" letter-spacing="0.12em">VERIFIED</text>
+</svg>
