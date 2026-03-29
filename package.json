@@ -25,6 +25,7 @@
     "smoke:preview": "tsx scripts/preview-smoke.ts",
     "debug:claim-verify": "tsx scripts/debug-claim-verify.ts",
     "media:backfill": "node scripts/backfill-r2-media.mjs",
+    "media:heroes": "node scripts/backfill-owned-hero-images.mjs",
     "check:data": "node scripts/validate-content.mjs",
     "churches:reconcile": "node scripts/reconcile-church-source-of-truth.mjs",
     "churches:check": "node scripts/reconcile-church-source-of-truth.mjs --check",
