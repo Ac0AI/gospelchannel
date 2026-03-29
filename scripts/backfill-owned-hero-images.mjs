@@ -83,7 +83,7 @@ const MAX_HERO_WIDTH = 1600;
 const MAX_HERO_HEIGHT = 1200;
 const WEBP_QUALITY = 76;
 const MIN_CACHE_IMAGE_SCORE = 3;
-const REJECTED_IMAGE_KEYWORDS = /logo|icon|avatar|favicon|flag|badge|placeholder|dummy|default|spinner|loading|play-subscribe|menu|facebook|instagram|twitter|conference|event|poster|flyer|brochure|bulletin|guide|ghid|admit|admission|sermon|spacer|transparent|copy|small|lockup|billboard|artwork|pastor|text|series|pixel|screenshot/i;
+const REJECTED_IMAGE_KEYWORDS = /logo|icon|avatar|favicon|flag|badge|placeholder|dummy|default|spinner|loading|play-subscribe|menu|facebook|instagram|twitter|conference|event|poster|flyer|brochure|bulletin|guide|ghid|admit|admission|sermon|schedule|thumbnail|spacer|transparent|copy|small|lockup|billboard|artwork|pastor|text|series|pixel|screenshot/i;
 
 const DATABASE_URL = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
 if (!DATABASE_URL) {

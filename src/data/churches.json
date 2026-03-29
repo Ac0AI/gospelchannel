@@ -11273,7 +11273,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/eglise-evangelique-de-la-croix-rousse.webp"
   },
   {
     "slug": "eglise-evangelique-de-la-foi-en-jesus-christ-vzw",
@@ -13428,7 +13429,8 @@
     "facebookUrl": "https://www.facebook.com/CentroGbg/",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/en-kyrka-i-hjartat-av-goteborg-an-international.webp"
   },
   {
     "slug": "en-moderne-frikirke-i-aalborg",
@@ -14636,7 +14638,7 @@
     "instagramUrl": "https://www.instagram.com/everynationkircheberlin/",
     "facebookUrl": "https://www.facebook.com/EveryNationKircheBerlin",
     "youtubeUrl": "https://www.youtube.com/@EveryNationKircheBerlin",
-    "headerImage": "",
+    "headerImage": "https://media.gospelchannel.com/heroes/every-nation-kirche-berlin.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -14655,7 +14657,8 @@
     "youtubeUrl": "https://www.youtube.com/@EveryNationKircheBerlin",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/every-nation-kirche-berlin-gott-begegnen.webp"
   },
   {
     "slug": "every-nation-marseille-eglise-evangelique",
@@ -15368,7 +15371,7 @@
     "location": "Fredrikstad",
     "website": "https://filadelfia-fredrikstad.no/",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=k0ClsyPDId1XxSTpKVfU1g&cb_client=search.gws-prod.gps&w=408&h=240&yaw=311.25302&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/filadelfia-fredrikstad.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -15857,7 +15860,7 @@
     "website": "https://cccasdalycity.org/",
     "email": "church@cccasdalycity.org",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=U57xIAbQtHCFNOqnLgkEAA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=260.31473&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/first-congregational-christian.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -16813,7 +16816,8 @@
     "instagramUrl": "https://www.instagram.com/clzconnect/",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/freikirche-im-berner-oberland.webp"
   },
   {
     "slug": "freikirche-mit-gottesdiensten-in-zurich-und-horgen",
@@ -16830,7 +16834,8 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCv7vUXbUC_A6d2nFFPIcvFg",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/freikirche-mit-gottesdiensten-in-zurich-und-horgen.webp"
   },
   {
     "slug": "frelsesarmeen",
