@@ -12154,7 +12154,7 @@
     "instagramUrl": "https://www.instagram.com/epg_geneve/",
     "facebookUrl": "https://www.facebook.com/EgliseProtestante/",
     "youtubeUrl": "https://www.youtube.com/user/protestantgeneve",
-    "headerImage": "",
+    "headerImage": "https://media.gospelchannel.com/heroes/glise-protestante-de-gen-ve.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00+00:00",
@@ -12535,7 +12535,7 @@
     "email": "secretariatsaintgeorges@lyon.catholique.fr",
     "logo": "",
     "youtubeUrl": "https://www.youtube.com/@eglisesaintgeorges7000",
-    "headerImage": "",
+    "headerImage": "https://media.gospelchannel.com/heroes/glise-saint-georges.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCGs5sHhPEbFI2GfNDp2roZg",
@@ -17040,7 +17040,7 @@
     "instagramUrl": "https://www.instagram.com/frimodigkyrka/",
     "facebookUrl": "https://facebook.com/125576294059",
     "youtubeUrl": "https://www.youtube.com/user/Frimodigkyrka",
-    "headerImage": "",
+    "headerImage": "https://media.gospelchannel.com/heroes/frimodig-kyrka.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCQe3QbXP6y3opdv0TBxh7Qw",
@@ -19633,7 +19633,8 @@
     "youtubeUrl": "https://www.youtube.com/channel/UC0fPzM2epEVMKDbV_xbODdw",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/grace-church-melbourne.webp"
   },
   {
     "slug": "grace-church-miami",
@@ -23124,7 +23125,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/hope-city-church.webp"
   },
   {
     "slug": "hope-community-church",
@@ -24805,7 +24807,8 @@
     "facebookUrl": "https://www.facebook.com/iglesiarincon/",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-cristiana-evangelica-rincon.webp"
   },
   {
     "slug": "iglesia-cristiana-evangelica-valencia",
@@ -25015,7 +25018,8 @@
     "youtubeUrl": "https://www.youtube.com/c/IglesiaDelCentro",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-del-centro.webp"
   },
   {
     "slug": "iglesia-el-lugar-de-su-presencia",
@@ -25400,7 +25404,8 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCYtaUzLW2CG9PnefZ1ORglQ",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-evangelica-palabra-y-espiritu.webp"
   },
   {
     "slug": "iglesia-evangelica-reformada-de-buenos-aires",
@@ -25733,7 +25738,7 @@
     "instagramUrl": "https://www.instagram.com/ipue_oficial/",
     "facebookUrl": "https://www.facebook.com/IPUEOFICIAL",
     "youtubeUrl": "https://www.youtube.com/channel/UC7DwKW4n2__wZbwXYLSp3ow",
-    "headerImage": "https://i.ytimg.com/an/7DwKW4n2__wZbwXYLSp3ow/featured_channel.jpg?v=68f27881",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-pentecostal-unida-en-europa.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UC7DwKW4n2__wZbwXYLSp3ow",
@@ -25944,7 +25949,8 @@
     "youtubeUrl": "https://www.youtube.com/@imemaranata",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/igreja.webp"
   },
   {
     "slug": "igreja-ad-barra-da-tijuca",

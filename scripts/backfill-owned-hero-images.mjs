@@ -100,6 +100,25 @@ function getArgValue(flag, fallback = "") {
   return fallback;
 }
 
+function getArgValues(flag) {
+  const values = [];
+
+  for (let index = 0; index < process.argv.length; index += 1) {
+    const arg = process.argv[index];
+    if (arg === flag) {
+      const next = process.argv[index + 1];
+      if (next) values.push(next);
+      continue;
+    }
+
+    if (arg.startsWith(`${flag}=`)) {
+      values.push(arg.slice(flag.length + 1));
+    }
+  }
+
+  return values;
+}
+
 function hasFlag(flag) {
   return process.argv.includes(flag);
 }
@@ -622,8 +641,8 @@ async function main() {
   const concurrency = Math.max(1, Number.parseInt(getArgValue("--concurrency", "3"), 10) || 3);
   const timeoutMs = Math.max(4_000, Number.parseInt(getArgValue("--timeout-ms", "12000"), 10) || 12_000);
   const slugFilter = new Set(
-    getArgValue("--slug", "")
-      .split(",")
+    getArgValues("--slug")
+      .flatMap((value) => value.split(","))
       .map((value) => value.trim())
       .filter(Boolean)
   );
