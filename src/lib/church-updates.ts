@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { extractCity } from "@/lib/church-directory";
 import { getPublicHostLabel, isValidPublicUrl, normalizeDisplayText } from "@/lib/content-quality";
 import { getApprovedProfileEditsForChurch, buildMergedProfile, type PublicProfileEdit } from "@/lib/church-profile";
-import { getChurchBySlugAsync, getChurchesAsync } from "@/lib/content";
+import { getChurchBySlugAsync, getChurchDirectorySeedAsync } from "@/lib/content";
 import { createAdminClient, hasSupabaseServiceConfig } from "@/lib/neon-client";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
 import type {
@@ -701,7 +701,7 @@ async function bootstrapMissingChurchUpdateSources(limit: number): Promise<numbe
 
   const sb = createAdminClient();
   const [churches, sourceRows] = await Promise.all([
-    getChurchesAsync(),
+    getChurchDirectorySeedAsync(),
     sb.from("church_update_sources").select("church_slug"),
   ]);
   if (sourceRows.error) {

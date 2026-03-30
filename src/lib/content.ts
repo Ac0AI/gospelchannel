@@ -587,9 +587,3 @@ export function getTrendingCache(): CatalogVideo[] {
     source: "trending",
   }));
 }
-
-export const getHomepageCollections = cache(async () => ({
-  churches: await getChurchesAsync(),
-  staffPicks: getStaffPicks(),
-  trending: getTrendingCache(),
-}));

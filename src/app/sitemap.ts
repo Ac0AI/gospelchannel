@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getChurchesAsync } from "@/lib/content";
+import { getChurchDirectorySeedAsync } from "@/lib/content";
 import {
   getCityLinks,
   getCountryLinks,
@@ -35,17 +35,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const [churches, prayerCountries, prayerCities, prayerChurches] = await Promise.all([
-    getChurchesAsync(),
+    getChurchDirectorySeedAsync(),
     getAvailableCountries(),
     getAvailableCities(),
     getAvailableChurches(),
   ]);
   const churchRoutes: MetadataRoute.Sitemap = churches.map((church) => ({
     url: `${baseUrl}/church/${church.slug}`,
-    lastModified: (() => {
-      const date = new Date(church.verifiedAt ?? church.lastResearched ?? CONTENT_UPDATED_AT);
-      return Number.isNaN(date.getTime()) ? fallbackDate : date;
-    })(),
+    lastModified: fallbackDate,
     changeFrequency: "daily",
     priority: 0.8,
   }));

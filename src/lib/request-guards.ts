@@ -9,7 +9,16 @@ type RateLimitEntry = {
 };
 
 const memoryRateLimits = new Map<string, RateLimitEntry>();
-let rateLimitStoreUnavailable = false;
+ 
+let rateLimitStoreUnavailableSince = 0;
+const RATE_LIMIT_RETRY_MS = 60_000;
+
+function isRateLimitStoreEnabled(): boolean {
+  if (rateLimitStoreUnavailableSince > 0 && Date.now() - rateLimitStoreUnavailableSince > RATE_LIMIT_RETRY_MS) {
+    rateLimitStoreUnavailableSince = 0; // reset, allow retry
+  }
+  return hasDatabaseConfig() && !isOfflinePublicBuild() && rateLimitStoreUnavailableSince === 0;
+}
 
 function getMemoryRateLimit(key: string): RateLimitEntry | null {
   const existing = memoryRateLimits.get(key);
@@ -33,7 +42,7 @@ export function isBotTrapFilled(value: string | null | undefined): boolean {
 }
 
 export async function hasKvRateLimit(key: string): Promise<boolean> {
-  if (isOfflinePublicBuild() || !hasDatabaseConfig() || rateLimitStoreUnavailable) {
+  if (!isRateLimitStoreEnabled()) {
     return Boolean(getMemoryRateLimit(key));
   }
 
@@ -50,13 +59,13 @@ export async function hasKvRateLimit(key: string): Promise<boolean> {
 
     return Boolean(rows[0]);
   } catch {
-    rateLimitStoreUnavailable = true;
+    rateLimitStoreUnavailableSince = Date.now();
     return Boolean(getMemoryRateLimit(key));
   }
 }
 
 export async function setKvRateLimit(key: string, ttlSeconds: number): Promise<void> {
-  if (!isOfflinePublicBuild() && hasDatabaseConfig() && !rateLimitStoreUnavailable) {
+  if (isRateLimitStoreEnabled()) {
     try {
       const expiresAt = new Date(Date.now() + ttlSeconds * 1000);
       const db = getDb();
@@ -79,7 +88,7 @@ export async function setKvRateLimit(key: string, ttlSeconds: number): Promise<v
         });
       return;
     } catch {
-      rateLimitStoreUnavailable = true;
+      rateLimitStoreUnavailableSince = Date.now();
     }
   }
 
@@ -90,7 +99,7 @@ export async function setKvRateLimit(key: string, ttlSeconds: number): Promise<v
 }
 
 export async function getRateLimitValue(key: string): Promise<number> {
-  if (isOfflinePublicBuild() || !hasDatabaseConfig() || rateLimitStoreUnavailable) {
+  if (!isRateLimitStoreEnabled()) {
     return getMemoryRateLimit(key)?.value ?? 0;
   }
 
@@ -104,13 +113,13 @@ export async function getRateLimitValue(key: string): Promise<number> {
 
     return Number(rows[0]?.value ?? 0);
   } catch {
-    rateLimitStoreUnavailable = true;
+    rateLimitStoreUnavailableSince = Date.now();
     return getMemoryRateLimit(key)?.value ?? 0;
   }
 }
 
 export async function incrementRateLimitValue(key: string, ttlSeconds: number): Promise<number> {
-  if (isOfflinePublicBuild() || !hasDatabaseConfig() || rateLimitStoreUnavailable) {
+  if (!isRateLimitStoreEnabled()) {
     const existing = getMemoryRateLimit(key);
     const nextValue = (existing?.value ?? 0) + 1;
     memoryRateLimits.set(key, {
@@ -144,7 +153,7 @@ export async function incrementRateLimitValue(key: string, ttlSeconds: number): 
 
     return Number(rows[0]?.value ?? 1);
   } catch {
-    rateLimitStoreUnavailable = true;
+    rateLimitStoreUnavailableSince = Date.now();
     const existing = getMemoryRateLimit(key);
     const nextValue = (existing?.value ?? 0) + 1;
     memoryRateLimits.set(key, {

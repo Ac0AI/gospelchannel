@@ -7,7 +7,9 @@ import { isOfflinePublicBuild } from "@/lib/runtime-mode";
 const PRAYERS_CACHE_TAG = "prayers";
 const PRAYERS_CACHE_SECONDS = 60;
 const memoryPrayers = new Map<string, Prayer>();
-let prayerStoreUnavailable = false;
+ 
+let prayerStoreUnavailableSince = 0;
+const STORE_RETRY_MS = 60_000; // retry after 60 seconds
 
 type PrayerRow = {
   id: string;
@@ -34,7 +36,10 @@ function mapPrayerRow(row: PrayerRow): Prayer {
 }
 
 function isPrayerStoreEnabled(): boolean {
-  return hasSupabaseServiceConfig() && !isOfflinePublicBuild() && !prayerStoreUnavailable;
+  if (prayerStoreUnavailableSince > 0 && Date.now() - prayerStoreUnavailableSince > STORE_RETRY_MS) {
+    prayerStoreUnavailableSince = 0; // reset, allow retry
+  }
+  return hasSupabaseServiceConfig() && !isOfflinePublicBuild() && prayerStoreUnavailableSince === 0;
 }
 
 function listMemoryPrayers(): Prayer[] {
@@ -82,7 +87,7 @@ const getPrayersCached = unstable_cache(
       const { data } = await query;
       return ((data as PrayerRow[] | null) ?? []).map(mapPrayerRow);
     } catch {
-      prayerStoreUnavailable = true;
+      prayerStoreUnavailableSince = Date.now();
       return getMemoryPrayers({ churchSlug, limit, offset });
     }
   },
@@ -129,7 +134,7 @@ const getPrayersFilteredCached = unstable_cache(
       const { data } = await query;
       return ((data as PrayerRow[] | null) ?? []).map(mapPrayerRow);
     } catch {
-      prayerStoreUnavailable = true;
+      prayerStoreUnavailableSince = Date.now();
       return getMemoryPrayers({ slugs, churchSlug: churchSlug ?? null, limit, offset });
     }
   },
@@ -217,7 +222,7 @@ export async function submitPrayer(
     revalidatePrayers();
     return mapPrayerRow(data as PrayerRow);
   } catch {
-    prayerStoreUnavailable = true;
+    prayerStoreUnavailableSince = Date.now();
     const prayer: Prayer = {
       id: `memory-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       churchSlug,
@@ -278,7 +283,7 @@ export async function incrementPrayedCount(prayerId: string): Promise<number> {
     revalidatePrayers();
     return (data as number) ?? 0;
   } catch {
-    prayerStoreUnavailable = true;
+    prayerStoreUnavailableSince = Date.now();
     const prayer = memoryPrayers.get(prayerId);
     if (!prayer) return 0;
     const prayedCount = (prayer.prayedCount ?? 0) + 1;
