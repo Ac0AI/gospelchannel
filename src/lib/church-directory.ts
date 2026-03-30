@@ -116,7 +116,8 @@ export const DENOMINATION_FILTERS: DenominationFilter[] = [
 export function extractCity(location?: string): string | undefined {
   if (!location) return undefined;
   const city = location.split(",")[0]?.trim();
-  return city || undefined;
+  if (!city || city.length > 60) return undefined;
+  return city;
 }
 
 function getPlaylistCount(church: Pick<ChurchDirectoryEntry, "playlistCount" | "spotifyPlaylistIds" | "additionalPlaylists">): number {

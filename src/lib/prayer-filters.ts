@@ -12,6 +12,8 @@ const COUNTRY_ALIASES: Record<string, string> = {
   "united-kingdom": "United Kingdom",
 };
 
+const MAX_CITY_LENGTH = 60;
+
 const INVALID_CITY_PATTERNS = [
   /^\d[\d\s-]*$/,
   /\bcountries?\b/i,
@@ -52,6 +54,7 @@ export function extractPrayerCity(
   if (!location) return undefined;
   const city = location.split(",")[0]?.trim();
   if (!city) return undefined;
+  if (city.length > MAX_CITY_LENGTH) return undefined;
   if (INVALID_CITY_PATTERNS.some((pattern) => pattern.test(city))) return undefined;
 
   const citySlug = slugify(city);
