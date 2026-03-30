@@ -9,6 +9,7 @@ import { isLikelyChurchContactEmail } from "./website-contact.mjs";
  *   contact_email?: string;
  *   facebook_url?: string;
  *   cover_image_url?: string;
+ *   official_church_name?: string;
  *   confidence?: number;
  * }} ApprovalEnrichment
  *
@@ -42,6 +43,17 @@ const IDENTITY_KEYWORDS = [
   "jesus centre",
   "christian centre",
   "gospel hall",
+  "vineyard",
+  "hillsong",
+  "lifehouse",
+  "icf",
+  "icu",
+  "citadel",
+  "filadelfia",
+  "shofar",
+  "oasis",
+  "kingdom hall",
+  "rccg",
   "quaker",
   "christadelphian",
   "kyrka",
@@ -92,6 +104,21 @@ function looksLikeLocation(value = "") {
   return true;
 }
 
+function resolveIdentityName(churchName = "", officialChurchName = "") {
+  const official = String(officialChurchName || "").trim();
+  if (official && hasIdentityKeyword(official) && !looksGenericName(official)) {
+    return official;
+  }
+  return churchName;
+}
+
+export function resolveApprovedChurchName(churchName = "", officialChurchName = "") {
+  const official = String(officialChurchName || "").trim();
+  if (!official) return churchName;
+  if (looksGenericName(churchName) || !hasIdentityKeyword(churchName)) return official;
+  return churchName;
+}
+
 /**
  * @param {{ slug?: string; website?: string; email?: string; location?: string; country?: string; header_image?: string; confidence?: number; name?: string; }} church
  * @param {ApprovalOptions} [options]
@@ -136,11 +163,12 @@ export function buildApprovalDecision(
   { enrichment = null, screening = null, fetchedEmail = "", approvalThreshold = 70 } = {}
 ) {
   const merged = mergeApprovalSignals(church, { enrichment, screening, fetchedEmail });
+  const identityName = resolveIdentityName(church.name || "", enrichment?.official_church_name || "");
   const verdict = merged.verdict;
   const hasStrongVerdict =
     verdict === "verified_church_with_playlist" ||
     verdict === "verified_church_needs_playlist";
-  const hasIdentity = hasIdentityKeyword(church.name) && !looksGenericName(church.name);
+  const hasIdentity = hasIdentityKeyword(identityName) && !looksGenericName(identityName);
   const hasOfficialWebsite = isOfficialWebsiteUrl(merged.website);
   const hasPlace = Boolean(merged.location);
 

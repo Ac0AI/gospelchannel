@@ -5,7 +5,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 import { loadLocalEnv } from "./lib/local-env.mjs";
-import { buildApprovalDecision } from "./lib/church-approval.mjs";
+import { buildApprovalDecision, resolveApprovedChurchName } from "./lib/church-approval.mjs";
 import supabaseCompat from "../src/lib/supabase.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -154,7 +154,7 @@ async function loadEnrichmentMap(supabase, slugs) {
   for (const batch of chunk(slugs, 200)) {
     const { data, error } = await supabase
       .from("church_enrichments")
-      .select("church_slug,street_address,contact_email,website_url,facebook_url,youtube_url,cover_image_url,confidence")
+      .select("church_slug,street_address,contact_email,website_url,facebook_url,youtube_url,cover_image_url,official_church_name,confidence")
       .in("church_slug", batch);
 
     if (error) {
@@ -286,6 +286,9 @@ async function main() {
   const churchUpdates = approved.map((row) => ({
     slug: row.church.slug,
     updates: {
+      ...(resolveApprovedChurchName(row.church.name || "", row.enrichment?.official_church_name || "") !== (row.church.name || "")
+        ? { name: resolveApprovedChurchName(row.church.name || "", row.enrichment?.official_church_name || "") }
+        : {}),
       status: "approved",
       email: row.merged.email || row.church.email || null,
       location: row.church.location || row.merged.location || null,
@@ -300,6 +303,7 @@ async function main() {
     const update = {
       church_slug: row.church.slug,
       ...(row.merged.email && !row.enrichment?.contact_email ? { contact_email: row.merged.email } : {}),
+      ...(row.enrichment?.official_church_name ? { official_church_name: row.enrichment.official_church_name } : {}),
       ...(row.merged.facebookUrl && !row.enrichment?.facebook_url ? { facebook_url: row.merged.facebookUrl } : {}),
       ...(row.merged.website && !row.enrichment?.website_url ? { website_url: row.merged.website } : {}),
     };

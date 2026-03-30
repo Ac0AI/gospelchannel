@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildApprovalDecision } from "../../../scripts/lib/church-approval.mjs";
+import { buildApprovalDecision, resolveApprovedChurchName } from "../../../scripts/lib/church-approval.mjs";
 
 describe("church approval decisions", () => {
   it("approves strong churches and merges enrichment signals", () => {
@@ -132,5 +132,50 @@ describe("church approval decisions", () => {
 
     expect(decision.merged.email).toBe("");
     expect(decision.merged.location).toBe("Wurzburg");
+  });
+
+  it("prefers official church names when the original name is too generic", () => {
+    const decision = buildApprovalDecision(
+      {
+        slug: "bethel",
+        name: "Bethel",
+        website: "https://www.bethel-llantwit.org.uk/",
+        email: "",
+        location: "Llantwit Major",
+        country: "United Kingdom",
+        confidence: 0.7,
+        header_image: "",
+      },
+      {
+        enrichment: {
+          official_church_name: "Bethel Baptist Church",
+          confidence: 0.8,
+        },
+        approvalThreshold: 70,
+      }
+    );
+
+    expect(decision.blockers).not.toContain("weak_identity_signal");
+    expect(resolveApprovedChurchName("Bethel", "Bethel Baptist Church")).toBe("Bethel Baptist Church");
+  });
+
+  it("treats established church network names as identity signals", () => {
+    const decision = buildApprovalDecision(
+      {
+        slug: "groningen-vineyard",
+        name: "Groningen Vineyard",
+        website: "https://vineyardgroningen.com/",
+        email: "",
+        location: "Groningen",
+        country: "Netherlands",
+        confidence: 0.76,
+        header_image: "",
+      },
+      {
+        approvalThreshold: 70,
+      }
+    );
+
+    expect(decision.blockers).not.toContain("weak_identity_signal");
   });
 });
