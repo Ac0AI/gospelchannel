@@ -2,9 +2,15 @@
 
 /**
  * Offline hero image backfill — works without database access.
- * Reads external headerImage URLs from the local churches.json snapshot,
- * downloads, optimizes to WebP, uploads to R2, and updates the snapshot.
- * DB updates are deferred — run --sync-db later when quota is available.
+ *
+ * Modes:
+ *   (default)      Download existing external headerImage URLs from snapshot
+ *   --live-fetch   Crawl church websites to find hero images (OG image, large <img>)
+ *
+ * Usage:
+ *   node scripts/backfill-heroes-offline.mjs --limit 50
+ *   node scripts/backfill-heroes-offline.mjs --live-fetch --limit 50 --concurrency 2
+ *   node scripts/backfill-heroes-offline.mjs --live-fetch --dry-run
  */
 
 import churchesSnapshot from "../src/data/churches.json" with { type: "json" };
@@ -15,6 +21,7 @@ import { dirname, resolve } from "node:path";
 import { homedir, tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
+import { findLikelyHeroImage } from "./lib/church-quality.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = resolve(__dirname, "..");
@@ -95,6 +102,35 @@ async function downloadAndOptimize(sourceUrl, timeoutMs) {
   }
 }
 
+async function fetchHeroFromWebsite(websiteUrl, timeoutMs) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const res = await fetch(websiteUrl, {
+      redirect: "follow",
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; GospelChannelBot/1.0)" },
+      signal: controller.signal,
+    });
+
+    if (!res.ok) throw new Error(`site_http_${res.status}`);
+
+    const ct = res.headers.get("content-type") || "";
+    if (!ct.includes("text/html")) throw new Error("not_html");
+
+    const html = await res.text();
+    const finalUrl = res.url || websiteUrl;
+    const imageUrl = findLikelyHeroImage(html, finalUrl);
+
+    if (!imageUrl) throw new Error("no_hero_found");
+    if (isBlockedUrl(imageUrl)) throw new Error("blocked_host");
+
+    return imageUrl;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function uploadToR2(key, buffer) {
   const tmp = resolve(tmpdir(), `hero-${randomUUID()}`);
   await writeFile(tmp, buffer);
@@ -135,24 +171,36 @@ async function hydrateToken() {
 
 async function main() {
   const dryRun = hasFlag("--dry-run");
+  const liveFetch = hasFlag("--live-fetch");
   const limit = Number(getArgValue("--limit", "0")) || 0;
-  const concurrency = Math.max(1, Number(getArgValue("--concurrency", "3")) || 3);
+  const concurrency = Math.max(1, Number(getArgValue("--concurrency", liveFetch ? "2" : "3")) || 3);
   const timeoutMs = Math.max(4000, Number(getArgValue("--timeout-ms", "12000")) || 12000);
 
   const snapshot = structuredClone(churchesSnapshot);
 
-  // Find churches with external (non-owned, non-blocked) header images
-  const candidates = snapshot.filter((c) =>
-    c.headerImage &&
-    !isOwnedUrl(c.headerImage) &&
-    !isBlockedUrl(c.headerImage) &&
-    /^https?:\/\//i.test(c.headerImage)
-  );
+  let candidates;
+
+  if (liveFetch) {
+    // Churches that have no owned hero and have a website to crawl
+    candidates = snapshot.filter((c) =>
+      !isOwnedUrl(c.headerImage || "") &&
+      c.website &&
+      /^https?:\/\//i.test(c.website)
+    );
+  } else {
+    // Churches with external (non-owned, non-blocked) header images
+    candidates = snapshot.filter((c) =>
+      c.headerImage &&
+      !isOwnedUrl(c.headerImage) &&
+      !isBlockedUrl(c.headerImage) &&
+      /^https?:\/\//i.test(c.headerImage)
+    );
+  }
 
   const selected = limit > 0 ? candidates.slice(0, limit) : candidates;
 
-  console.log(`Found ${candidates.length} churches with external hero images`);
-  console.log(`Processing ${selected.length} (concurrency: ${concurrency}, dry-run: ${dryRun})`);
+  console.log(`Mode: ${liveFetch ? "live-fetch (crawl websites)" : "download existing URLs"}`);
+  console.log(`Found ${candidates.length} candidates, processing ${selected.length} (concurrency: ${concurrency}, dry-run: ${dryRun})`);
 
   if (!dryRun && selected.length > 0) await hydrateToken();
 
@@ -167,22 +215,31 @@ async function main() {
       const label = `[${idx + 1}/${selected.length}] ${church.slug}`;
 
       if (dryRun) {
-        console.log(`${label} -> ${church.headerImage.substring(0, 80)}`);
+        console.log(`${label} -> ${liveFetch ? church.website : church.headerImage?.substring(0, 80)}`);
         continue;
       }
 
       try {
-        const webp = await downloadAndOptimize(church.headerImage, timeoutMs);
+        let imageUrl;
+
+        if (liveFetch) {
+          // Crawl the website to find a hero image
+          imageUrl = await fetchHeroFromWebsite(church.website, timeoutMs);
+        } else {
+          imageUrl = church.headerImage;
+        }
+
+        const webp = await downloadAndOptimize(imageUrl, timeoutMs);
         const key = `heroes/${church.slug}.webp`;
         await uploadToR2(key, webp);
 
         const mediaUrl = `${MEDIA_BASE_URL}/heroes/${church.slug}.webp`;
         church.headerImage = mediaUrl;
         uploaded++;
-        console.log(`${label} -> ${mediaUrl}`);
+        console.log(`${label} -> ${mediaUrl}${liveFetch ? ` (from ${imageUrl.substring(0, 60)})` : ""}`);
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
-        failures.push({ slug: church.slug, source: church.headerImage, error: msg });
+        failures.push({ slug: church.slug, source: liveFetch ? church.website : church.headerImage, error: msg });
         console.error(`${label} FAIL: ${msg}`);
       }
     }

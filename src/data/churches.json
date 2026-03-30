@@ -805,7 +805,8 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-25T21:52:44.562Z",
     "verifiedAt": "2026-03-25T21:52:44.562Z",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/all-saints-church-in-wales.webp"
   },
   {
     "slug": "all-saints-tuckingmill",
@@ -896,7 +897,7 @@
     "logo": "",
     "facebookUrl": "https://www.facebook.com/lighthousebaptistchurchalmere",
     "youtubeUrl": "https://www.youtube.com/@lighthousebaptistchurchalm949",
-    "headerImage": "https://www.lighthousebaptistchurchalmere.nl/wp-content/uploads/2024/09/Logo-Lighthouse-Baptist-Church-Almere-wit-klein.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/almere-lighthouse-baptist-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
@@ -1440,7 +1441,8 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCy5m5aL45aRZhpeADSwkahw",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/aspnaskyrkan.webp"
   },
   {
     "slug": "assembleia-de-deus-house-of-prayer-word-and-family",
@@ -1592,7 +1594,7 @@
     "instagramUrl": "https://www.instagram.com/trinityintlbiblechurch_greece/",
     "facebookUrl": "https://www.facebook.com/TrinityInternationalBibleChurchAthensGreece/",
     "youtubeUrl": "https://www.youtube.com/@livingsacrifice1979",
-    "headerImage": "https://static.wixstatic.com/media/2661c5_a85758d6bdfd42779432ec65279beb51~mv2.jpg/v1/fill/w_192,h_288,al_c,q_80,usm_0.66_1.00_0.01,blur_2,enc_avif,quality_auto/2661c5_a85758d6bdfd42779432ec65279beb51~mv2.jpg",
+    "headerImage": "https://media.gospelchannel.com/heroes/athens-trinity-international-bible-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
@@ -1748,7 +1750,8 @@
     "spotifyPlaylistIds": [
       "7f8pspw6b7OoYjGK4cRY3m"
     ],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/awakening-church-sofia.webp"
   },
   {
     "slug": "awakening-church",
@@ -1780,7 +1783,8 @@
     "instagramUrl": "https://www.instagram.com/awakeningberlin_/",
     "spotifyUrl": "https://open.spotify.com/artist/2IBtQP4YeeSveimEUt9Rpe",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/awakening-church-berlin.webp"
   },
   {
     "slug": "awakening-church-e-v",
@@ -1886,7 +1890,7 @@
     "logo": "/churches/_placeholder.svg",
     "facebookUrl": "https://www.facebook.com/backadalskyrkan",
     "youtubeUrl": "https://www.youtube.com/channel/UCOQB7fNAwJqE1tWG7yHCafw",
-    "headerImage": "https://scontent-lga3-3.xx.fbcdn.net/v/t39.30808-6/506712577_10160613013762531_1941511531912819505_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=104&ccb=1-7&_nc_sid=2a1932&_nc_ohc=2GM3CuPre4oQ7kNvwGlFE-U&_nc_oc=AdmTwcMLyMwGdNAHrqLHTZYSviCjphnMv12qreHHelN5MFiO9Yn8EmEZowCzzNdTeMg&_nc_zt=23&_nc_ht=scontent-lga3-3.xx&_nc_gid=ZE6fDvXijUZ4F26XAoFYjQ&_nc_ss=8&oh=00_AfwtsgelkhvJ_jyun2FkSBt9YuxXIZjSWU_os4ZzpLrhDA&oe=69BB498F",
+    "headerImage": "https://media.gospelchannel.com/heroes/backadalskyrkan.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -1961,7 +1965,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/baptisten-kirche-in-basel.webp"
   },
   {
     "slug": "baptistengemeinde-z-rich",
@@ -2028,7 +2033,7 @@
     "instagramUrl": "http://instagram.com/icb_spain",
     "facebookUrl": "https://www.facebook.com/icbspain",
     "youtubeUrl": "https://www.youtube.com/@ICBSpain",
-    "headerImage": "https://icbspain.com/wp-content/plugins/revslider/admin/assets/images/dummy.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/barcelona-international-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
@@ -2764,7 +2769,8 @@
     "youtubeVideos": [],
     "lastResearched": "2026-03-26T10:42:10.538Z",
     "verifiedAt": "2026-03-26T10:42:10.538Z",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/bethel-ag-church.webp"
   },
   {
     "slug": "bethel-apostolic-church-of-excellence",
@@ -3306,7 +3312,8 @@
     "logo": "/churches/_placeholder.svg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/birches-green-evangelical-free-church.webp"
   },
   {
     "slug": "birchfield-gospel-hall",
@@ -3454,7 +3461,7 @@
     "logo": "",
     "facebookUrl": "https://www.facebook.com/universitatea.emanueldinoradea",
     "youtubeUrl": "https://www.youtube.com/channel/UCXdk6s6oTmFbDQfgInq_u1w",
-    "headerImage": "https://emanuel.ro/wp-content/plugins/sitepress-multilingual-cms/res/flags/ro.svg",
+    "headerImage": "https://media.gospelchannel.com/heroes/biserica-emanuel-oradea.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "musicStyle": [
@@ -3698,7 +3705,7 @@
     "logo": "",
     "instagramUrl": "https://www.instagram.com/bratislavainternationalchurch/",
     "facebookUrl": "https://www.facebook.com/Bratislava-International-Church-190995617524/",
-    "headerImage": "http://static1.squarespace.com/static/5640f979e4b0b703c071aa12/t/57cccbebd1758e8b0e73e1e1/1473039339921/BIC-Logo-Website.png?format=1500w",
+    "headerImage": "https://media.gospelchannel.com/heroes/bratislava-international-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
@@ -4095,7 +4102,7 @@
     "logo": "",
     "facebookUrl": "https://www.facebook.com/InternationalChurchBucharestIBC",
     "youtubeUrl": "https://www.youtube.com/channel/UC-P96346PyscKUqs0eBUeHQ",
-    "headerImage": "https://internationalchurch.ro/wp-content/plugins/revslider/sr6/assets/assets/dummy.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/bucharest-international-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
@@ -4280,7 +4287,7 @@
     "email": "lirgaath@online.no",
     "logo": "",
     "facebookUrl": "https://www.facebook.com/trohop.no",
-    "headerImage": "https://scontent-atl3-1.xx.fbcdn.net/v/t39.30808-6/584786815_822607744015203_4384975344628397940_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=103&ccb=1-7&_nc_sid=2a1932&_nc_ohc=GYLfhe-aSFMQ7kNvwF5RDDb&_nc_oc=AdlINNc28OSmzwEdGfVSSsxYipnDVYDEEbyUk1zxWJEOGwWj-Q2EL2SXOofTje6ToiA&_nc_zt=23&_nc_ht=scontent-atl3-1.xx&_nc_gid=FslloJsA8xdjyNiTW7DI8w&_nc_ss=8&oh=00_AfzpvItdo77DKmOTi_Tz1EOLAKmss-RsoB4ksq1UDXPJfQ&oe=69BB53B9",
+    "headerImage": "https://media.gospelchannel.com/heroes/bydelskirken-filadelfia.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -4333,7 +4340,7 @@
     "instagramUrl": "https://www.instagram.com/c3churchglobal/",
     "facebookUrl": "https://www.facebook.com/c3churchglobal/",
     "youtubeUrl": "https://www.youtube.com/@c3churchglobal",
-    "headerImage": "https://scontent-phl2-1.xx.fbcdn.net/v/t39.30808-6/475168004_1054098240078966_4887500218247217390_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=104&ccb=1-7&_nc_sid=2a1932&_nc_ohc=X8D8xXMtX5sQ7kNvwHD7t11&_nc_oc=AdnctpiqEUGJ0kltINTFStk1jImyfsmQxJmpheQr-o8OTBcT4sP9iCoLs6kJr61k3NQ&_nc_zt=23&_nc_ht=scontent-phl2-1.xx&_nc_gid=_NIAkzFEYmIe_U691TbVlg&_nc_ss=8&oh=00_AfwhtAHk1zNfFWY6YnbGsK8mU6Gcd5vRAmxGDxA30sZgpw&oe=69BB651E",
+    "headerImage": "https://media.gospelchannel.com/heroes/c3-church.webp",
     "spotifyUrl": "https://open.spotify.com/playlist/3pK4HyhzKDDwwOb4gFCWhC",
     "spotifyPlaylistIds": [
       "3pK4HyhzKDDwwOb4gFCWhC"
@@ -4524,7 +4531,7 @@
     "instagramUrl": "https://www.instagram.com/c3youth_alive/",
     "facebookUrl": "https://www.facebook.com/pg/c3hanau/events",
     "youtubeUrl": "https://www.youtube.com/c/C3ChurchHanau",
-    "headerImage": "https://scontent-ord5-1.xx.fbcdn.net/v/t39.30808-6/476379184_1031776852316240_2765280208116337242_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=2a1932&_nc_ohc=ReQ5tEfa8K8Q7kNvwE6hEmB&_nc_oc=AdkhOAwpdIPdV9BwABzXufhfG17JKkAje2qGW6AL6xKrVFVTM7rMi1NvwTYA9nIqgKE&_nc_zt=23&_nc_ht=scontent-ord5-1.xx&_nc_gid=mOhZCX3FMetney_RnykKPg&_nc_ss=8&oh=00_Afyne-5dF_cMkHSxlXjULvaTM109GLwL8EW7ObKXIJK2Og&oe=69BB46B9",
+    "headerImage": "https://media.gospelchannel.com/heroes/c3-church-hanau.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCGXYYUVJ4cVpNMn1uv_UJ0Q",
@@ -4681,7 +4688,8 @@
     "musicStyle": [
       "contemporary worship"
     ],
-    "sourceKind": "manual"
+    "sourceKind": "manual",
+    "headerImage": "https://media.gospelchannel.com/heroes/c3-church-paris.webp"
   },
   {
     "slug": "c3-church-perth",
@@ -4748,7 +4756,8 @@
     "musicStyle": [
       "contemporary worship"
     ],
-    "sourceKind": "manual"
+    "sourceKind": "manual",
+    "headerImage": "https://media.gospelchannel.com/heroes/c3-church-toronto.webp"
   },
   {
     "slug": "c3-ignite-church",
@@ -5035,7 +5044,7 @@
     "denomination": "Non-denominational",
     "website": "https://www.crcchurch.com",
     "logo": "/churches/crc-church.svg",
-    "headerImage": "https://crcchurch.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fevent-banner.7533b216.webp&w=3840&q=75&dpl=dpl_Ams56oRCGYKQ6oTSJcvfhGZpCo5u",
+    "headerImage": "https://media.gospelchannel.com/heroes/crc-church.webp",
     "spotifyUrl": "https://open.spotify.com/playlist/3kNO2Q2VrcgH2m0VEuTyIa",
     "spotifyPlaylistIds": [
       "3kNO2Q2VrcgH2m0VEuTyIa"
@@ -5405,7 +5414,8 @@
     "youtubeUrl": "https://www.facebook.com/pg/Calvary-Chapel-Paphos-1077005289131822/videos/",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/calvary-chapel-paphos.webp"
   },
   {
     "slug": "calvary-christian-church-brisbane",
@@ -5677,7 +5687,7 @@
     "logo": "",
     "facebookUrl": "https://www.facebook.com/HolyTrinityCannes/",
     "youtubeUrl": "https://www.youtube.com/@holytrinitycannes",
-    "headerImage": "https://holytrinitycannes.org/wp-content/uploads/2025/04/cropped-20250404-Website-Headder-400x82.jpg",
+    "headerImage": "https://media.gospelchannel.com/heroes/cannes-holy-trinity-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
@@ -5724,7 +5734,8 @@
     "logo": "/churches/_placeholder.svg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/capilla-de-adoracion-eucaristica-perpetua.webp"
   },
   {
     "slug": "capilla-de-adoracion-al-santisimo-zona-12",
@@ -5863,7 +5874,7 @@
     "logo": "",
     "facebookUrl": "https://www.facebook.com/Castle-Hill-Baptist-Church-Warwick-155018294675816",
     "youtubeUrl": "https://www.youtube.com/channel/UCgT6-Htn1de6iqceQLenhOQ",
-    "headerImage": "https://warwickbaptists.org.uk/wp-content/themes/saved/images/square-placeholder.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/castle-hill-baptist-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCgT6-Htn1de6iqceQLenhOQ",
@@ -6208,7 +6219,7 @@
     "location": "Birmingham",
     "website": "http://www.cedarschurch.com/",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=7EmsUUE4qaA9d7Ys1o5woA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=142.3318&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/cedars-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -6267,7 +6278,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/centar-crkva-belgrade.webp"
   },
   {
     "slug": "central-church-bristol",
@@ -6300,7 +6312,7 @@
     "email": "admin@ceaqm.org.uk",
     "logo": "",
     "facebookUrl": "https://www.facebook.com/CentralEnglandQuakers/",
-    "headerImage": "https://i0.wp.com/centralenglandquakers.org.uk/wp-content/uploads/2017/01/cropped-QKRS-Sky-Q-Logo.png?fit=512%2C512&#038;ssl=1",
+    "headerImage": "https://media.gospelchannel.com/heroes/the-priory-rooms.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-30T05:08:24.845Z",
@@ -6470,7 +6482,8 @@
       "10cFOwdlyxS6ChRIih20Pd",
       "4lB2TSTALeQLZiwak6fKHX"
     ],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/ccint-centro-cristiano-internacional.webp"
   },
   {
     "slug": "centro-cristiano-internacional-cci",
@@ -6779,7 +6792,7 @@
     "website": "https://www.cheltenhamquaker.org.uk/",
     "logo": "",
     "facebookUrl": "https://www.facebook.com/gloucestershirequakers",
-    "headerImage": "https://www.cheltenhamquaker.org.uk/img/og/default.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/friends-meeting-house.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-30T05:08:24.845Z",
@@ -7412,7 +7425,7 @@
     "email": "hello@ccm.org.uk",
     "logo": "/churches/_placeholder.svg",
     "facebookUrl": "https://www.facebook.com/ChristChurchMcr/",
-    "headerImage": "https://scontent-ord5-3.xx.fbcdn.net/v/t39.30808-6/487560331_10162345400458875_5106358109982351008_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=109&ccb=1-7&_nc_sid=2a1932&_nc_ohc=dokSI4O5EG8Q7kNvwES7071&_nc_oc=AdlbG2tlML2KPGhgPoepV2J4LcYaNg9Gfg9CoF9hr8kTA87_f57KSo5gLHOONu7hcks&_nc_zt=23&_nc_ht=scontent-ord5-3.xx&_nc_gid=FlhmRq_W-hV62KeF7GiN9Q&_nc_ss=8&oh=00_AfxSkJIkXrAlVsmfm8_QiIR-uKeHV7kBEfd7C2Q9LnWvvw&oe=69BB511E",
+    "headerImage": "https://media.gospelchannel.com/heroes/christ-church-manchester.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -7661,7 +7674,7 @@
     "website": "http://cgcnwcm.org/",
     "email": "pastor@cgcnwcm.org",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=Zbrav-u3svmWaaOTer2bCA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=313.799&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/christ-gospel-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -7747,7 +7760,7 @@
     "email": "cifmakati@gmail.com",
     "logo": "/churches/_placeholder.svg",
     "facebookUrl": "https://facebook.com/cifmakati",
-    "headerImage": "https://scontent-phx1-1.xx.fbcdn.net/v/t39.30808-6/623411667_1324265449743908_8384077846559563119_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=107&ccb=1-7&_nc_sid=2a1932&_nc_ohc=pD-9ZYguM1UQ7kNvwHQ3Z6E&_nc_oc=AdkDP9XK1RtqkK8pfs6BALV78Dajn5lyEPe1umZ2qz8rg7h_2kI4Q2OmxoTlAvRSMOM&_nc_zt=23&_nc_ht=scontent-phx1-1.xx&_nc_gid=erbvUu7NaEM80ZzHLeJtUQ&_nc_ss=8&oh=00_AfzUgpLn3fqd6XfrjhQQ_QordM3Ac1ggpBPja-Lhb_oBdw&oe=69BB7044",
+    "headerImage": "https://media.gospelchannel.com/heroes/christ-s-international-fellowship.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -7945,7 +7958,7 @@
     "email": "info@cbcp.org",
     "logo": "",
     "youtubeUrl": "https://www.youtube.com/channel/UC8f-mNApRfxvFEGOg2xbnOA",
-    "headerImage": "https://i.ytimg.com/vi/I_e2kBQxUbo/hqdefault.jpg",
+    "headerImage": "https://media.gospelchannel.com/heroes/christian-bible-church-of-the-philippines.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -8072,7 +8085,7 @@
     "instagramUrl": "https://www.instagram.com/crc_london/",
     "facebookUrl": "https://www.facebook.com/CRCLONDON/",
     "youtubeUrl": "https://www.youtube.com/user/crclondontv",
-    "headerImage": "https://scontent-atl3-2.xx.fbcdn.net/v/t39.30808-6/611329356_1302897498543681_2851333408395671386_n.png?_nc_cat=104&ccb=1-7&_nc_sid=2a1932&_nc_ohc=9vpubusfxY8Q7kNvwFKK94h&_nc_oc=AdnEGoySyBilLi_DeNPDyGmdxZKd-yVxb9IilOU3K4fRj8pSJVGm5nsWJpgMl5Xk73E&_nc_zt=23&_nc_ht=scontent-atl3-2.xx&_nc_gid=nykJcvROJEO6T1xn6PhygA&_nc_ss=8&oh=00_AfyuhKUYEHy20nv-SDptGoanh1XWJ6OFN9ChEqZLLHExoQ&oe=69BB79D4",
+    "headerImage": "https://media.gospelchannel.com/heroes/christian-revival-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCSEaX8qkPvHIg0YdSRG4IQg",
@@ -8148,7 +8161,7 @@
     "logo": "",
     "facebookUrl": "https://www.facebook.com/Christianskirken-161292907230707",
     "youtubeUrl": "https://www.youtube.com/channel/UCmf0h3OFrNTSCzJRrhpJbCQ",
-    "headerImage": "https://scontent-lga3-1.xx.fbcdn.net/v/t39.30808-6/650069559_1375847954581435_2283756142897041101_n.png?_nc_cat=110&ccb=1-7&_nc_sid=2a1932&_nc_ohc=fgT-lpPcKiQQ7kNvwF7Qtlh&_nc_oc=AdmmpVzu9SjOvCdxFCf3JEoaZy_qCLqAenziM1K41YNSBehQpJAnsWDRgrrEfR1hxsg&_nc_zt=23&_nc_ht=scontent-lga3-1.xx&_nc_gid=8MuDxAS_rEQ5nxAYVKcKZg&_nc_ss=8&oh=00_AfyVGhU-wa6VEWopQoZv2SnZQm3gNfQVMip-JyYeTPOtWw&oe=69BB6F10",
+    "headerImage": "https://media.gospelchannel.com/heroes/christianskirken-aarhus.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCmf0h3OFrNTSCzJRrhpJbCQ",
@@ -8203,7 +8216,7 @@
     "instagramUrl": "https://www.instagram.com/cgbramfeld/",
     "facebookUrl": "https://www.facebook.com/CGBramfeld/",
     "youtubeUrl": "https://www.youtube.com/@cgbramfeld",
-    "headerImage": "https://scontent-dfw5-2.xx.fbcdn.net/v/t39.30808-6/484826578_9302009629868502_6442361805716400658_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=100&ccb=1-7&_nc_sid=2a1932&_nc_ohc=ZxM1RXc5ePIQ7kNvwHucOZC&_nc_oc=AdmwCSCaDfOz2GQ-59iL1KHuBz1ZvC3o8_UR6XtqQkeLOAr6byDE6BC5LmIRVDKKmzpfX4hFr4QwLQZosmMeK7Ow&_nc_zt=23&_nc_ht=scontent-dfw5-2.xx&_nc_gid=LuzVWjV7HBeVzoQ6bk32gw&_nc_ss=8&oh=00_AfxN8LyddtW_SVd6sQ_u02XANNg5UI5SG0q7auUUHhMuEw&oe=69BB4BE8",
+    "headerImage": "https://media.gospelchannel.com/heroes/christus-gemeinde-bramfeld.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCAEBIu3-A5uqXQk0B3cB7Yg",
@@ -8256,7 +8269,8 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCS8ubThBsgNkkveWPVVN49g",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/christus-gemeinde-barmbek-sud-cgbs.webp"
   },
   {
     "slug": "christusgemeente",
@@ -8387,7 +8401,7 @@
     "instagramUrl": "https://www.instagram.com/cghcinternational/",
     "facebookUrl": "https://www.facebook.com/cghcinternational",
     "youtubeUrl": "https://www.youtube.com/@CGHCInternational",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=jWTCDZ-_4x771x7pINO3uw&cb_client=search.gws-prod.gps&w=408&h=240&yaw=351.67358&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/church-of-god-holiness-in-christ.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCbGW2mHxk5mDiGxfyUUPmkw",
@@ -8420,7 +8434,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/church-on-the-rock.webp"
   },
   {
     "slug": "church-for-the-nations-cftn",
@@ -8499,7 +8514,7 @@
     "instagramUrl": "https://www.instagram.com/redeemerlondon/",
     "facebookUrl": "https://www.facebook.com/redeemerlondon/",
     "youtubeUrl": "https://www.youtube.com/channel/UC4_QelhHJyX0NXgDBQwDEug",
-    "headerImage": "https://scontent-mia5-1.xx.fbcdn.net/v/t39.30808-6/536273097_1160715786092231_2853580959849151475_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=104&ccb=1-7&_nc_sid=2a1932&_nc_ohc=r2NbmIACV0cQ7kNvwFgT4lj&_nc_oc=Adn0kPUp71M7js8aOzjY7r_dhZSnWR5VbN5pQY2iWM3UJ6y9RhLTg83pC-6tA_xMUT8&_nc_zt=23&_nc_ht=scontent-mia5-1.xx&_nc_gid=E0nHvlfhRg9iy7G7hmmehw&_nc_ss=8&oh=00_Afz6s3NFqjK1TyjmweoiW6kYxkOuGdu1scIQdd7e36OmmQ&oe=69BB59E4",
+    "headerImage": "https://media.gospelchannel.com/heroes/church-in-ealing-west-london.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -8814,7 +8829,8 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
     "verifiedAt": "2026-03-29T22:05:05.769Z",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/church-of-pentecost-portugal-lisbon-piwc.webp"
   },
   {
     "slug": "church-of-pentecost-croatia",
@@ -8877,7 +8893,8 @@
     "logo": "/churches/_placeholder.svg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/church-of-scotland-in-geneva.webp"
   },
   {
     "slug": "church-of-south-india-csi-parish-abu-dhabi-malayalam",
@@ -9061,7 +9078,8 @@
     "youtubeUrl": "https://www.youtube.com/channel/UCKnftEBndLgpXayDSg00xfw",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/church-of-truth.webp"
   },
   {
     "slug": "church-of-the-ascension",
@@ -9127,7 +9145,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/church-of-the-full-gospel-zagreb.webp"
   },
   {
     "slug": "church-of-the-highlands",
@@ -9715,7 +9734,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/citychurch-bratislava.webp"
   },
   {
     "slug": "citychurch-international",
@@ -9734,7 +9754,8 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
     "verifiedAt": "2026-03-29T22:05:05.769Z",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/citychurch-international.webp"
   },
   {
     "slug": "hamburg-citylight",
@@ -9768,7 +9789,8 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UC26bgHETUCnbfAZOEdDQkkw",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/citychurch-koln-aachen-bergisch-gladbach.webp"
   },
   {
     "slug": "citychurch-munchen",
@@ -10164,7 +10186,8 @@
     "youtubeUrl": "https://www.youtube.com/cgtworship",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/community-gospel-truth-church.webp"
   },
   {
     "slug": "comunidad-cristiana-de-fe",
@@ -10198,7 +10221,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/comunidad-cristiana-de-santiago.webp"
   },
   {
     "slug": "comunidad-de-amor-cristiano-iglesia-evangelica-pentecostal",
@@ -10214,7 +10238,8 @@
     "youtubeUrl": "https://www.youtube.com/@iglesiaCAC",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/comunidad-de-amor-cristiano-iglesia-evangelica-pentecostal.webp"
   },
   {
     "slug": "comunidade-crist-de-lisboa",
@@ -10375,7 +10400,8 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
     "verifiedAt": "2026-03-29T22:05:05.769Z",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/copenhagen-international-united-methodist-church.webp"
   },
   {
     "slug": "copenhagen-vineyard",
@@ -10592,7 +10618,7 @@
     "website": "https://www.risingbrook.org/",
     "email": "church@risingbrook.org",
     "logo": "",
-    "headerImage": "http://static1.squarespace.com/static/5e57c53018c8925b84576bb6/t/5e57c805db844f0ca147fc47/1582811142695/Rising-Brook-Logo-Small.png?format=1500w",
+    "headerImage": "https://media.gospelchannel.com/heroes/create-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-30T05:08:24.845Z",
@@ -11512,7 +11538,7 @@
     "location": "Bern",
     "website": "http://www.diegemeindeinbern.ch/",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=Il46FZ4lPcO32O52lcxcXg&cb_client=search.gws-prod.gps&w=408&h=240&yaw=215.02682&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/die-gemeinde-in-bern-the-church-in-bern.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -11542,7 +11568,7 @@
     "logo": "https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/326536886_744660356995124_7451724174219033849_n.png?stp=dst-png_s200x200&_nc_cat=108&ccb=1-7&_nc_sid=f907e8&_nc_ohc=QXWIwe5sROUQ7kNvwGEs8em&_nc_oc=AdkPeq2LTV9DpK7YZmxqhqner5kgxsv76JFVxA-x6d-tpNnONSw2rBYmC1aUPEknx_E&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=gTJQfv1VpdeS1aDdjL1jcw&_nc_ss=8&oh=00_Afy2EtHJ5kSnocWch1o6VYBs3pQwH2Hct36dEzC3Q49DHg&oe=69BB4E44",
     "instagramUrl": "https://www.instagram.com/dinfrikirke",
     "facebookUrl": "https://www.facebook.com/dinfrikirke",
-    "headerImage": "https://scontent-sea5-1.xx.fbcdn.net/v/t39.30808-6/475521354_1057164339783326_569240233030569584_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=2a1932&_nc_ohc=EJEb40pJ5wYQ7kNvwFCce4D&_nc_oc=Adl4u5EQmQ5AklUPEl2sQ2c9wOp3Kpu4HSzoh5qszo1h_1TPWnhVAkz5ai0xhoWo2SE&_nc_zt=23&_nc_ht=scontent-sea5-1.xx&_nc_gid=xOpkApoZUYSILLoWaqc3fA&_nc_ss=8&oh=00_AfxWk-tEyi6gt0PBbioOaa10NXLIfu0kCLN-StTn8LfuWg&oe=69BB6E5E",
+    "headerImage": "https://media.gospelchannel.com/heroes/din-frikirke.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -11559,7 +11585,8 @@
     "facebookUrl": "https://www.facebook.com/dinfrikirke",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/din-frikirke-haderslev.webp"
   },
   {
     "slug": "diocese-in-europe",
@@ -11759,7 +11786,7 @@
     "logo": "",
     "facebookUrl": "https://www.facebook.com/LHIM-CHURCH-655285511184845/",
     "youtubeUrl": "https://youtu.be/hofZMgo160w",
-    "headerImage": "https://www.lhim-church.de/s/misc/logo.png?t=1769511710",
+    "headerImage": "https://media.gospelchannel.com/heroes/dortmund-living-hope-international-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
@@ -11966,7 +11993,7 @@
     "logo": "",
     "facebookUrl": "https://www.facebook.com/pages/Christ-Church-D%C3%BCsseldorf/242977325884742?rf=101052266709786",
     "youtubeUrl": "https://www.youtube.com/@christchurchanglicandussel9262",
-    "headerImage": "http://static1.squarespace.com/static/66095ad396424b2ed9a1ecad/t/6633d41f3a9c62627f42b025/1714672671447/CCD_logo1.PNG?format=1500w",
+    "headerImage": "https://media.gospelchannel.com/heroes/dusseldorf-christ-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
@@ -12227,7 +12254,7 @@
     "website": "http://www.ecclesianyc.org/",
     "email": "info@ecclesianyc.org",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=UU89XXwVHptGlukZL5J5QQ&cb_client=search.gws-prod.gps&w=408&h=240&yaw=208.36098&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/ecclesia-nyc.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -12429,7 +12456,7 @@
     "website": "https://www.egliseevangeliquedumerlan.com/",
     "email": "responsables@egliseevangeliquedumerlan.com",
     "logo": "",
-    "headerImage": "http://awaken.chimpgroup.com/wp-content/uploads-dummy/04.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/eglise-evangelique-du-merlan.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -12474,7 +12501,8 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCVPKd5_zmC2enfeX5SRdH2A",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/eglise-evangelique-estavayer-le-lac.webp"
   },
   {
     "slug": "eglise-evang-lique-grand-lyon-ouest",
@@ -12871,7 +12899,8 @@
     "youtubeUrl": "https://www.youtube.com/channel/UCbUeVse9RX8WP3N6dNuo0cQ",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/eglise-passion-neuchatel.webp"
   },
   {
     "slug": "eglise-protestante-arm-nienne-de-beaumont",
@@ -12898,7 +12927,7 @@
     "website": "http://www.epelyon3e.wordpress.com/",
     "email": "epelyon3e@gmail.com",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=d7g0DJs07rLn0aYG-T0tnw&cb_client=search.gws-prod.gps&w=408&h=240&yaw=8.801625&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/eglise-protestante-evangelique.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -13227,7 +13256,7 @@
     "instagramUrl": "https://www.instagram.com/elreyjesusmiami/",
     "facebookUrl": "https://www.facebook.com/elreyjesusmiami",
     "youtubeUrl": "https://www.youtube.com/channel/UCdeQ7oX_Qn3m9OTxK_2WezQ",
-    "headerImage": "https://elreyjesus.org/wp-content/plugins/revslider/sr6/assets/assets/dummy.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/el-rey-jes-s.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "musicStyle": [
@@ -13496,7 +13525,7 @@
     "instagramUrl": "https://www.instagram.com/elimkirche",
     "facebookUrl": "https://www.facebook.com/elimkirche",
     "youtubeUrl": "https://www.youtube.com/c/ElimKircheMundsburg",
-    "headerImage": "https://scontent-lga3-2.xx.fbcdn.net/v/t39.30808-6/451688964_841575504737732_4083357299521932043_n.png?_nc_cat=101&ccb=1-7&_nc_sid=2a1932&_nc_ohc=JJ1KAWDeVloQ7kNvwGdzbVn&_nc_oc=AdnsMhIZEwBgNaP5fOJVbFDucawl1cb76JczDhycmvypmKPs789EuGYV02OGrcD4uOQ&_nc_zt=23&_nc_ht=scontent-lga3-2.xx&_nc_gid=ZMIoH5IbSlXuZcsaDp6XdA&_nc_ss=8&oh=00_Afyc-JnTssPmklNXzCOmyekkP-p_xLs4ZHXtbv4zftXBfg&oe=69BB68C6",
+    "headerImage": "https://media.gospelchannel.com/heroes/elim-kirche-hamburg.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -14115,7 +14144,8 @@
     "facebookUrl": "https://www.facebook.com/enjoychurchmelbcity/",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/enjoy-church-melbourne-city.webp"
   },
   {
     "slug": "entebbe-full-gospel-church",
@@ -14187,7 +14217,7 @@
     "instagramUrl": "https://www.instagram.com/equmeniakyrkan/",
     "facebookUrl": "https://www.facebook.com/Equmeniakyrkan",
     "youtubeUrl": "https://www.youtube.com/c/EqumeniakyrkanSverige",
-    "headerImage": "https://scontent.cdninstagram.com/v/t39.30808-6/650364246_1356153639881333_535671051683040408_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=103&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiQ0FST1VTRUxfSVRFTS5iZXN0X2ltYWdlX3VybGdlbi5DMyJ9&_nc_ohc=QeForrxdHPoQ7kNvwEKBPrc&_nc_oc=AdkKNmNKpllSkkwzVr89yQ_K6MaqIGOVFdwCS8mg0uQddkuhWKoGjgi-EsDQH_h9LwRy-X1qezFBlImVNqMqqQD1&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&edm=ANo9K5cEAAAA&_nc_gid=StbDVpfKGtN1ZPjTouQ93Q&_nc_tpa=Q5bMBQGWbmO_MbvpehPeXYwKNuZjMvxi8r5upvTGSkXePjXaRrVtE_3ynFPmVRxHtg-S15CLQnKj29reLg&oh=00_AfwFzh1eyOLsYNAlNvQvOmsTzI37EyU8QgNUlw-ERtHDsg&oe=69BA3BEF",
+    "headerImage": "https://media.gospelchannel.com/heroes/equmeniakyrkan.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCKsrICV__vlZJ1wEoJAc9Rg",
@@ -14268,7 +14298,7 @@
     "instagramUrl": "https://www.instagram.com/espoonvapaaseurakunta",
     "facebookUrl": "https://www.facebook.com/espoonvapaaseurakunta",
     "youtubeUrl": "https://www.youtube.com/channel/UCbit.ly/espoonvapis",
-    "headerImage": "https://scontent.fosu2-2.fna.fbcdn.net/v/t39.30808-6/487750242_1123665123135110_5074863088984485434_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=111&ccb=1-7&_nc_sid=2a1932&_nc_ohc=ooGBCmn1mnIQ7kNvwFgquM5&_nc_oc=AdlXGZ7ro-U5D6ICMfKPWi6hYn6ia6a36euu1atjPxW4DgDsqg8Q2JY_0Bq7iEd4x2EApsW4BXrXj-7F8PomD6d8&_nc_zt=23&_nc_ht=scontent.fosu2-2.fna&_nc_gid=YLmkQ_P7M-ESawp1PDD02g&_nc_ss=8&oh=00_AfzCPSLw61MrzE9fsp_ezfnsSlBMRVopnksK9vOkYZCqxw&oe=69BB691B",
+    "headerImage": "https://media.gospelchannel.com/heroes/espoon-vapaaseurakunta.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -14326,7 +14356,8 @@
     "logo": "/churches/_placeholder.svg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/ethiopian-evangelical-church-in-finland-eecfin.webp"
   },
   {
     "slug": "etusivu",
@@ -14356,7 +14387,7 @@
     "instagramUrl": "https://www.instagram.com/euphoriabog/",
     "facebookUrl": "https://www.facebook.com/euphoriachurchofficial",
     "youtubeUrl": "https://www.youtube.com/@EuphoriaChurch",
-    "headerImage": "https://scontent-phx1-1.xx.fbcdn.net/v/t39.30808-6/633289242_1333403335490759_2326338941867982829_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=2a1932&_nc_ohc=ZeQrZx7CcYsQ7kNvwHYKGeM&_nc_oc=AdlBktbLQ9Cq1MDGZsbHLUlJIP91rnSyuvZBcbTO2oYu89iBkejwNTHUNkXfTw326kzgdHgejwfwX7ICJb0hJF3F&_nc_zt=23&_nc_ht=scontent-phx1-1.xx&_nc_gid=KIffxuWtO_EGo6Mvbg487A&_nc_ss=8&oh=00_Afxrj_xAT2hszh0V04bnEZKrNmm78dy_9SsC-chERcmmkg&oe=69BB715D",
+    "headerImage": "https://media.gospelchannel.com/heroes/euphoria-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -14528,7 +14559,7 @@
     "email": "evangelienytt@gmail.com",
     "logo": "",
     "facebookUrl": "https://www.facebook.com/ekirken",
-    "headerImage": "https://evangeliekirken.dk/wp-content/plugins/LayerSlider/assets/static/layerslider/skins/v6/shadow.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/evangeliekirken.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -14572,7 +14603,7 @@
     "website": "https://www.efk-graz-nord.at/kontakt",
     "email": "willkommen@efk-graz-nord.at",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=5H4V2ePnAC44Gt0FxbSO7w&cb_client=search.gws-prod.gps&w=408&h=240&yaw=75.74523&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/evangelikale-freikirche-graz-nord.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -14959,7 +14990,7 @@
     "website": "http://www.newlifebern.ch/",
     "email": "office@newlifebern.ch",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=AQdJc167olKDf5GhYuYHNA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=284.05786&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/evangelische-gemeinde-bern-new-life.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -15445,7 +15476,7 @@
     "instagramUrl": "https://www.instagram.com/thefiec/",
     "facebookUrl": "https://www.facebook.com/theFIEC",
     "youtubeUrl": "https://www.youtube.com/user/FIECvideo",
-    "headerImage": "https://scontent.fbah5-1.fna.fbcdn.net/v/t39.30808-6/486613558_1081051764066060_3668679101211607433_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=2a1932&_nc_ohc=5G2TbOnxoEEQ7kNvwEG1ZNQ&_nc_oc=AdlVQE97C0jXdgGxUGLw1gcsrgWek42s5-F3fxS19llBl28BpPCbxWoCGu-DdNlITms&_nc_zt=23&_nc_ht=scontent.fbah5-1.fna&_nc_gid=1qqUpTcr1yyWmT7KG-mbAQ&_nc_ss=8&oh=00_AfwOpFf_u4YY6IanbQ1Huh0L5J8KNAXcsWIDhT2Q4ZVYbQ&oe=69BB759C",
+    "headerImage": "https://media.gospelchannel.com/heroes/fiec.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -15802,7 +15833,7 @@
     "instagramUrl": "https://www.instagram.com/favor.mnl",
     "facebookUrl": "https://www.facebook.com/favor.mnl",
     "youtubeUrl": "https://www.youtube.com/favorchurchtv/",
-    "headerImage": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/481512505_950953017174087_2198959512350116285_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=2a1932&_nc_ohc=wZXuZ85yes8Q7kNvwEZUlJ8&_nc_oc=Adl7LVWvh40USl6uV1ELP-GyAlV1_FvlrD3QDH5CD8g30ke7HPqYfzQ0dkQbb4u_Y8g&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=uTTHOWR5c6QeL_Qu9Pxdng&_nc_ss=8&oh=00_Afzwzz7IggsILjYj7tlv6kBK137nn6aC5bKuvAd7yJPe6A&oe=69BB4AB4",
+    "headerImage": "https://media.gospelchannel.com/heroes/favor-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -15923,7 +15954,7 @@
     "logo": "",
     "facebookUrl": "https://www.facebook.com/AgenziaNEV/",
     "youtubeUrl": "https://www.youtube.com/channel/UCEqq0BIPdS1Aqkjuof8qADQ",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=SOY5znSNXiUfDE02UhoM7A&cb_client=search.gws-prod.gps&w=408&h=240&yaw=103.600586&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/federazione-delle-chiese-evangeliche-in-italia.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCEqq0BIPdS1Aqkjuof8qADQ",
@@ -16438,7 +16469,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/first-church-melbourne.webp"
   },
   {
     "slug": "first-church-miami",
@@ -16586,7 +16618,7 @@
     "email": "fisherscreekchurch@outlook.com",
     "logo": "",
     "facebookUrl": "https://www.facebook.com/fisherscreek",
-    "headerImage": "https://scontent.fagc3-2.fna.fbcdn.net/v/t39.30808-6/475265344_937245425263103_2265774281966632739_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=2a1932&_nc_ohc=7b-74NQ_y5UQ7kNvwGEmHqK&_nc_oc=Adnli7o5LA_SXluComfOmKUyrTzsfDu5TI6yNPa5V_1kdZ9DET1jTo78qzlpCe3AQzc&_nc_zt=23&_nc_ht=scontent.fagc3-2.fna&_nc_gid=WZUI9_RUMiFrvAvgnFH0Sw&_nc_ss=8&oh=00_AfwYWhdxP02acL5xvtYQyjdIPzgFszr03sOf5noX7ExTpw&oe=69BB5915",
+    "headerImage": "https://media.gospelchannel.com/heroes/fishers-creek-international-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -16941,7 +16973,7 @@
     "logo": "",
     "instagramUrl": "https://www.instagram.com/riveroflifechurch_frankfurt/",
     "facebookUrl": "https://www.facebook.com/RoLCFrankfurt",
-    "headerImage": "https://rol-frankfurt.com/wpmedia",
+    "headerImage": "https://media.gospelchannel.com/heroes/frankfurt-river-of-life-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
@@ -16998,7 +17030,7 @@
     "website": "http://freegospelchurch.net/",
     "email": "team@latofonts.com",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=hJNH8U1oRDLfO7IwJ1B5PA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=4.7115545&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/free-gospel-interdenominational-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -17012,7 +17044,7 @@
     "website": "http://www.freestatebiblechurch.com/",
     "email": "diesbas1@gmail.com",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=rUHdwC5D68noYugO0oLmvg&cb_client=search.gws-prod.gps&w=408&h=240&yaw=102.62349&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/free-state-bible-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -17052,7 +17084,8 @@
     "facebookUrl": "https://www.facebook.com/FreedomChurchLimassol",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/freedom-church-limassol.webp"
   },
   {
     "slug": "freedom-church-cape-town",
@@ -17167,7 +17200,7 @@
     "website": "http://www.felg-hannover.de/",
     "logo": "",
     "youtubeUrl": "https://www.youtube.com/channel/UC0ZBdnWXf5N10MCGu4WqyCA",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=xR31FCJvvaro4N1oKbzniQ&cb_client=search.gws-prod.gps&w=408&h=240&yaw=358.89468&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/freie-evangelisch-lutherische-gemeinde.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UC0ZBdnWXf5N10MCGu4WqyCA",
@@ -17648,7 +17681,8 @@
     "youtubeUrl": "https://www.youtube.com/channel/UCySL72hAiFbexZ8WGrqyhLw",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/frikirken.webp"
   },
   {
     "slug": "frikirken-nu",
@@ -18274,7 +18308,7 @@
     "logo": "",
     "instagramUrl": "https://www.instagram.com/gospel.dream/",
     "facebookUrl": "https://www.facebook.com/people/Gospel-Dream/100066705793891/",
-    "headerImage": "https://scontent-ord5-3.xx.fbcdn.net/v/t39.30808-6/484498646_994042776162573_3020072278405611833_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=109&ccb=1-7&_nc_sid=2a1932&_nc_ohc=n-aMDguxuNIQ7kNvwGx_JSy&_nc_oc=AdkRNKNXNP375jS8778kAQNRTa5FTzU_X7SqQPyeEcwuf1Ofavoh1S96RaKpdg23CSQ&_nc_zt=23&_nc_ht=scontent-ord5-3.xx&_nc_gid=XWJgglO40Lq7jMFagNYYbg&_nc_ss=8&oh=00_AfxerMca5U3frIU65kvSlWpKrFMK3gQNg2v68FnROIg7dw&oe=69BB5203",
+    "headerImage": "https://media.gospelchannel.com/heroes/gospel-dream.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -18496,7 +18530,7 @@
     "email": "info@gatewayfellowship.co.za",
     "logo": "",
     "youtubeUrl": "https://www.youtube.com/channel/UCThNVNEwmkNU",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=RPCLHb7K18Vd1DfefV4hOQ&cb_client=search.gws-prod.gps&w=408&h=240&yaw=332.2994&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/gateway-fellowship-church-bloemfontein.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -18918,7 +18952,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/gfc-basel.webp"
   },
   {
     "slug": "giantslayers4christ",
@@ -19256,7 +19291,8 @@
     "youtubeUrl": "https://www.youtube.com/channel/UCskRITArcgDHrdxiTvYlBOA",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/gold-coast-christian-church.webp"
   },
   {
     "slug": "golgota-budapest",
@@ -19326,7 +19362,7 @@
     "website": "https://www.gacphoenix.org/",
     "email": "gospelassemblyatphx@gmail.com",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=zXL-j4yTeSzTlfXWZKek8g&cb_client=search.gws-prod.gps&w=408&h=240&yaw=216.17776&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/gospel-assembly-at-phoenix.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -19464,7 +19500,7 @@
     "email": "hello@gospelchurch.co",
     "logo": "",
     "youtubeUrl": "https://www.youtube.com/@gospelchurchco",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=4d8oyVKDveAlbWZj4bthdw&cb_client=search.gws-prod.gps&w=408&h=240&yaw=160.49034&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/gospel-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -19481,7 +19517,8 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCBVgA7DBoiTJ9DWmsZ905gw",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/gospel-church-munchen.webp"
   },
   {
     "slug": "gospel-church-for-all-nations-gospel-can",
@@ -19783,7 +19820,7 @@
     "website": "http://glbcny.com/",
     "email": "info@glbcny.com",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=uwBdclIpF91ShhS7jdLTsw&cb_client=search.gws-prod.gps&w=408&h=240&yaw=319.7828&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/gospel-light-baptist-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -19878,7 +19915,7 @@
     "location": "Atlanta",
     "website": "https://www.atlantagmwa.org/",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=3-tXgg8a8Qmy2zy3Zqk21A&cb_client=search.gws-prod.gps&w=408&h=240&yaw=16.63404&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/gospel-music-workshop-amer-inc.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -19974,7 +20011,7 @@
     "location": "London",
     "website": "https://www.gospelpillars.co.uk/",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=W9hbqOIA1p73xR3oGpKKEA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=287.52866&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/gospel-pillars-church-hackney-london.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -20167,7 +20204,7 @@
     "email": "info@icugouda.nl",
     "logo": "",
     "youtubeUrl": "https://www.youtube.com/channel/UCjk8rbcBbHWpXd76iuKTQGA",
-    "headerImage": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAALCAMAAABBPP0LAAAAY1BMVEX/AAD8AADzAADqAAD/fYz+dYT6aHr7XG36VGb6R1f4L0H/ECz+mKXw8fH9/f36+vr19vbW1tbS0tIAG493n89cjcZNgsA/eLkzcbUpaLAcYKwAAFEAA4ANU6UAADsAAHgAAGcSgiW+AAAAS0lEQVR4AQXBiQ3CQBAAMc/dConQf688SoIdBIIyQiR9R0tCuM2rNxHpMqsDIWiBEE4NgnBiHhVJcs48P0uSjXsPl4hLmH2EHzb4A7DPDGppZMSwAAAAAElFTkSuQmCC",
+    "headerImage": "https://media.gospelchannel.com/heroes/gouda-icu.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-30T05:10:43.090Z",
@@ -20313,7 +20350,7 @@
     "instagramUrl": "https://www.instagram.com/gccph/",
     "facebookUrl": "https://www.facebook.com/gccph/",
     "youtubeUrl": "https://www.youtube.com/c/gracechristianchurchph",
-    "headerImage": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/616401361_1286064266901218_5804983482552205876_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=108&ccb=1-7&_nc_sid=2a1932&_nc_ohc=R3he5QAmdeQQ7kNvwETrTFN&_nc_oc=AdkA7tD6vg3E2i45k8X91OgpM-vU5cE28kRghHjlGd24rzGtMDtqB77Fadqb5Act_jE&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=7x0ZdQKHJHo_mKthhhHLUQ&_nc_ss=8&oh=00_AfxqJjS_KcHuodFyg-rc1MXe8QFJ5OG9QPofrPomkYcphw&oe=69BB5338",
+    "headerImage": "https://media.gospelchannel.com/heroes/grace-christian-church-of-the-philippines.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -20461,7 +20498,7 @@
     "logo": "/churches/_placeholder.svg",
     "facebookUrl": "https://www.facebook.com/gracechurchstockholm",
     "youtubeUrl": "https://www.youtube.com/channel/UCN3kJnra1blRIKwLyVWCuOg",
-    "headerImage": "https://scontent-ord5-1.xx.fbcdn.net/v/t39.30808-6/545613204_1221365610035258_3420027550895535405_n.png?_nc_cat=111&ccb=1-7&_nc_sid=2a1932&_nc_ohc=S9TcdBjEwzAQ7kNvwGI2pvD&_nc_oc=AdnkrzDF7D7O1UEGnyFqgaVO_MXoGaZniNjnSoDU_AmZqE2k9jy6XfFC2hj47toBkSI&_nc_zt=23&_nc_ht=scontent-ord5-1.xx&_nc_gid=vTPjMglLfi9Uni5Gm0-5XA&_nc_ss=8&oh=00_Afy_gzcTxrgjfa_-BBOfBB3NF0yjYFMyD498OpOwUk8HqQ&oe=69BB7897",
+    "headerImage": "https://media.gospelchannel.com/heroes/grace-church-stockholm.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCN3kJnra1blRIKwLyVWCuOg",
@@ -20526,7 +20563,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/grace-evangelical-church-novi-sad.webp"
   },
   {
     "slug": "grace-gospel-chapel-inc",
@@ -20593,7 +20631,7 @@
     "logo": "",
     "facebookUrl": "https://www.facebook.com/AxiomThemes-505060569826537",
     "youtubeUrl": "https://www.youtube.com/channel/UCBjqhuwKj3MfE3B6Hg2oA8Q",
-    "headerImage": "https://gracechurchoslo.org/wp-content/plugins/revslider/sr6/assets/assets/dummy.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/grace-international-church-of-oslo.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCBjqhuwKj3MfE3B6Hg2oA8Q",
@@ -20655,7 +20693,8 @@
     "facebookUrl": "https://www.facebook.com/groups/1528051364121420/",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/grace-united-church.webp"
   },
   {
     "slug": "grace-walk-church",
@@ -20742,7 +20781,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/greater-grace-church-cyprus.webp"
   },
   {
     "slug": "greater-jerusalem-baptist-church",
@@ -20837,7 +20877,7 @@
     "logo": "",
     "facebookUrl": "https://www.facebook.com/vineyard.groningen/",
     "youtubeUrl": "https://www.youtube.com/c/Vineyardgroningennl",
-    "headerImage": "https://vineyardgroningen.com/wp-content/uploads/im-new-jpg.avif",
+    "headerImage": "https://media.gospelchannel.com/heroes/groningen-vineyard.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-30T05:10:43.090Z",
@@ -21223,7 +21263,7 @@
     "location": "Leeds",
     "website": "http://harehillsgospelhall.org/",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=nJg5Z4nlmmlU2debE1m8SA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=356.1298&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/harehills-gospel-hall.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -21410,7 +21450,7 @@
     "location": "Cardiff",
     "website": "http://www.heathgospelhall.org.uk/",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=nfV7KOi70EARCoBweulFzg&cb_client=search.gws-prod.gps&w=408&h=240&yaw=88.39293&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/heath-gospel-hall.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -21534,7 +21574,8 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-30T05:08:24.845Z",
     "verifiedAt": "2026-03-30T05:08:24.845Z",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/highway-vineyard.webp"
   },
   {
     "slug": "hillfields-park-baptist-church",
@@ -23723,7 +23764,8 @@
     "logo": "/churches/_placeholder.svg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/holsby-frikyrka.webp"
   },
   {
     "slug": "holsby-frikyrkoforsamling",
@@ -23771,7 +23813,7 @@
     "instagramUrl": "https://www.instagram.com/htbchurch/",
     "facebookUrl": "https://m.facebook.com/htbchurch/",
     "youtubeUrl": "https://www.youtube.com/@HTBChurchLondon",
-    "headerImage": "https://scontent-dfw6-1.xx.fbcdn.net/v/t39.30808-6/497634841_1130103372495491_2536945358475726208_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=2a1932&_nc_ohc=D-z8GxLOHJEQ7kNvwESzCJh&_nc_oc=AdnemRznbINrUIrdCCqogr2UPB31QUCzyH-BE0TBJg4JfOBYcxDv4Pu5XBLHKqtnIbc&_nc_zt=23&_nc_ht=scontent-dfw6-1.xx&_nc_gid=ws2j8Mx63UrwkYJ8mMN1zA&_nc_ss=8&oh=00_Afwlo2A9M924CMJ83Am_5HHqhT2HVtZkCP10MXO4pI2uVQ&oe=69BB72ED",
+    "headerImage": "https://media.gospelchannel.com/heroes/holy-trinity-brompton.webp",
     "spotifyUrl": "https://open.spotify.com/playlist/2Qza4yuPlcnlWYwrxfcRkV",
     "spotifyPlaylistIds": [
       "2Qza4yuPlcnlWYwrxfcRkV"
@@ -23914,7 +23956,7 @@
     "logo": "/churches/_placeholder.svg",
     "instagramUrl": "https://www.instagram.com/holy.trinity.geneva/",
     "facebookUrl": "https://www.facebook.com/holytrinitygeneva",
-    "headerImage": "https://scontent.fshd1-1.fna.fbcdn.net/v/t39.30808-6/484931890_1062766675884937_7191546827207763447_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=2a1932&_nc_ohc=kwmsO62ffYsQ7kNvwE1UzZC&_nc_oc=Adnp8yTkkQBCn6l2XvdnGsElmJRpAU3qdWPKYRCTjXb98YgInj4xHTjI8_zr00Te-J8&_nc_zt=23&_nc_ht=scontent.fshd1-1.fna&_nc_gid=0du3-sAe0bCH4-rIbrjHvA&_nc_ss=8&oh=00_AfxmvPhAgPHMHchJsEDFV8hfQ7V85IBhN8uN-pL1cTFPvQ&oe=69BB6B4C",
+    "headerImage": "https://media.gospelchannel.com/heroes/holy-trinity-church-geneva.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -23931,7 +23973,7 @@
     "language": "English",
     "logo": "https://scontent-atl3-3.xx.fbcdn.net/v/t39.30808-1/645263213_1346712454160781_2394466124300171747_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=111&ccb=1-7&_nc_sid=f907e8&_nc_ohc=pBoxKM5HCVwQ7kNvwGHipa4&_nc_oc=AdlIN081_mvqw0lzyJfas_sPy_NDkBhJfDu0HVVJsPdfOSZwOSNev5jujiaGgRBxS4E&_nc_zt=24&_nc_ht=scontent-atl3-3.xx&_nc_gid=6-RQ9tb_NComjQfB7dOumA&_nc_ss=8&oh=00_Afz-2I6d7GM6Q3nQwe2tlq0HbVtT8dhPh5XnXezNquz4mQ&oe=69BB7993",
     "facebookUrl": "https://www.facebook.com/holytrinityhotwells/",
-    "headerImage": "https://scontent-atl3-2.xx.fbcdn.net/v/t39.30808-6/645402485_1346715757493784_6431754206936092654_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=2a1932&_nc_ohc=syIfPsqTNvUQ7kNvwGMJGRT&_nc_oc=AdmF-8QePctGFYMkSsbprwVdhk0uwzUcY6So3XWjpmQsGgPHKAvC36JRRh6E3Eg9Rgg&_nc_zt=23&_nc_ht=scontent-atl3-2.xx&_nc_gid=sVBgFz3_xG2M9Hu8TDC3Cw&_nc_ss=8&oh=00_AfyDrkMazxQ4wc5dvtFUggzxmg4H9XBSziJet3pw4NLaKA&oe=69BB7879",
+    "headerImage": "https://media.gospelchannel.com/heroes/holy-trinity-church-hotwells.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -24189,7 +24231,7 @@
     "instagramUrl": "https://www.instagram.com/hopechurchmunich/",
     "facebookUrl": "https://www.facebook.com/hopechurchmunich/",
     "youtubeUrl": "https://www.youtube.com/channel/UC-h1HxIEzJsnWINcFTAt2QA",
-    "headerImage": "https://scontent.fwzy2-1.fna.fbcdn.net/v/t39.30808-6/492056515_1093403282816110_2443387905765786416_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=2a1932&_nc_ohc=lKkwthFT0W4Q7kNvwEWYub9&_nc_oc=AdkQgOWrV95UwaEqZwTBilsTAzvgMh2KkFYYReSMC3_CAkWDEuOaTv7vPo2PxbYBpmQ&_nc_zt=23&_nc_ht=scontent.fwzy2-1.fna&_nc_gid=StPVh7sFnbmhNrHTjusSug&_nc_ss=8&oh=00_AfwCPHjz13VOwkNKQkGb6ZgQ9gFsfPvK-oJ1sDhncx7P1A&oe=69BB6F0A",
+    "headerImage": "https://media.gospelchannel.com/heroes/hope-church-munich.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UC-h1HxIEzJsnWINcFTAt2QA",
@@ -24205,7 +24247,7 @@
     "logo": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-1/326479646_502488278699846_2200688580936304211_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=104&ccb=1-7&_nc_sid=f907e8&_nc_ohc=7BHK9QmxtKkQ7kNvwGjZulk&_nc_oc=AdlVU7ODazg0IVmKOu56STKpblozmqDHcS0DH-ERPst9R25YIsM9XryJIMh7xCtgYp0&_nc_zt=24&_nc_ht=scontent-iad3-1.xx&_nc_gid=Xjyij0FB6I0t3LRcG6sotA&_nc_ss=8&oh=00_AfxCvfCdNSyLdqXCDt-MsMfIi7yBje-8qH1BYPNIf6FDfw&oe=69BB4AC5",
     "instagramUrl": "https://www.instagram.com/hopenorway_christianchurch/",
     "facebookUrl": "https://www.facebook.com/hopechurchnorway",
-    "headerImage": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.30808-6/480276530_1035366521970248_188322607711648150_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=2a1932&_nc_ohc=ROsH3ahtrDoQ7kNvwEJ7eqr&_nc_oc=AdkCaE36ZBvI0fn3XPD0-TUhYc3n7AiNAhbx9GYtGKohhTlAseFC7P2tu3DQ66JeoBQ&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&_nc_gid=j8YCXLdTBU3WirvvLPhgPg&_nc_ss=8&oh=00_AfyvVMuLo1zTe_N3yL1MKFZrVlrVmFOKQRBHRTXSYCkbsw&oe=69BB5122",
+    "headerImage": "https://media.gospelchannel.com/heroes/hope-church-norway-haugesund.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -24315,7 +24357,7 @@
     "logo": "/churches/_placeholder.svg",
     "instagramUrl": "https://instagram.com/hopeseurakunta",
     "facebookUrl": "https://www.facebook.com/hopeseurakuntaturku",
-    "headerImage": "https://scontent-lga3-1.xx.fbcdn.net/v/t39.30808-6/481178633_2798913410291284_3522427353515786295_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=2a1932&_nc_ohc=jDP-Ij7i8YAQ7kNvwFhXE1o&_nc_oc=Adl8zYdzBZeMAMi-9W0uOT-F8-9v9uMbLzRnvZ99Naek2LnCkUscd1Qnxu0Cc2f3B1E&_nc_zt=23&_nc_ht=scontent-lga3-1.xx&_nc_gid=hCAws1-Imet9l7nuxiEcVw&_nc_ss=8&oh=00_Afze8yFNdNASaaUXkeb-AZKWx1s4fbjsFhCICtR-wh4IDg&oe=69BB6CF0",
+    "headerImage": "https://media.gospelchannel.com/heroes/hopeseurakunta.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -24417,7 +24459,7 @@
     "instagramUrl": "https://www.instagram.com/houseofworshipcc/",
     "facebookUrl": "https://www.facebook.com/houseofworshipcc",
     "youtubeUrl": "https://www.youtube.com/channel/UCGSqAdA9AvC6Uc8WDWfnUTw",
-    "headerImage": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.30808-6/539565769_1080610344284715_2958913213194200841_n.png?stp=dst-png_s960x960&_nc_cat=103&ccb=1-7&_nc_sid=2a1932&_nc_ohc=B_UQ9nwv7mMQ7kNvwHL35hp&_nc_oc=Adkrz_Pst4OftGoqwUmfGs5hCxSkjrq4Le2S-KmTox8EOA0WYSg-bogIc_jubugM3DM&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&_nc_gid=klIhE0ih51YtBL1mRzhSWg&_nc_ss=8&oh=00_AfxqTS5WgGNVfXIqonzrod2SoizScK-vxr4lFFZ3FMjNog&oe=69BB5C79",
+    "headerImage": "https://media.gospelchannel.com/heroes/house-of-worship.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -24860,7 +24902,8 @@
       "contemporary worship"
     ],
     "youtubeChannelId": "UCzNSY1t9NVOWDfBKukMiGGg",
-    "sourceKind": "manual"
+    "sourceKind": "manual",
+    "headerImage": "https://media.gospelchannel.com/heroes/icf-church-geneva.webp"
   },
   {
     "slug": "icf-church-hamburg",
@@ -24876,7 +24919,8 @@
     "musicStyle": [
       "contemporary worship"
     ],
-    "sourceKind": "manual"
+    "sourceKind": "manual",
+    "headerImage": "https://media.gospelchannel.com/heroes/icf-church-hamburg.webp"
   },
   {
     "slug": "icf-church-karlsruhe",
@@ -24892,7 +24936,8 @@
     "musicStyle": [
       "contemporary worship"
     ],
-    "sourceKind": "manual"
+    "sourceKind": "manual",
+    "headerImage": "https://media.gospelchannel.com/heroes/icf-church-karlsruhe.webp"
   },
   {
     "slug": "icf-church-lausanne",
@@ -24911,7 +24956,8 @@
       "contemporary worship"
     ],
     "youtubeChannelId": "UCzNSY1t9NVOWDfBKukMiGGg",
-    "sourceKind": "manual"
+    "sourceKind": "manual",
+    "headerImage": "https://media.gospelchannel.com/heroes/icf-church-lausanne.webp"
   },
   {
     "slug": "icf-church-luzern",
@@ -24930,7 +24976,8 @@
       "contemporary worship"
     ],
     "youtubeChannelId": "UCzNSY1t9NVOWDfBKukMiGGg",
-    "sourceKind": "manual"
+    "sourceKind": "manual",
+    "headerImage": "https://media.gospelchannel.com/heroes/icf-church-luzern.webp"
   },
   {
     "slug": "icf-church-st-gallen",
@@ -24949,7 +24996,8 @@
       "contemporary worship"
     ],
     "youtubeChannelId": "UCzNSY1t9NVOWDfBKukMiGGg",
-    "sourceKind": "manual"
+    "sourceKind": "manual",
+    "headerImage": "https://media.gospelchannel.com/heroes/icf-church-st-gallen.webp"
   },
   {
     "slug": "icf-church-stuttgart",
@@ -24965,7 +25013,8 @@
     "musicStyle": [
       "contemporary worship"
     ],
-    "sourceKind": "manual"
+    "sourceKind": "manual",
+    "headerImage": "https://media.gospelchannel.com/heroes/icf-church-stuttgart.webp"
   },
   {
     "slug": "icf-church-vienna",
@@ -24984,7 +25033,8 @@
       "contemporary worship"
     ],
     "youtubeChannelId": "UCxbzaCsnYgOvHaI7cyNVx9w",
-    "sourceKind": "manual"
+    "sourceKind": "manual",
+    "headerImage": "https://media.gospelchannel.com/heroes/icf-church-vienna.webp"
   },
   {
     "slug": "icf-church-winterthur",
@@ -25003,7 +25053,8 @@
       "contemporary worship"
     ],
     "youtubeChannelId": "UCzNSY1t9NVOWDfBKukMiGGg",
-    "sourceKind": "manual"
+    "sourceKind": "manual",
+    "headerImage": "https://media.gospelchannel.com/heroes/icf-church-winterthur.webp"
   },
   {
     "slug": "icf-essen",
@@ -25033,7 +25084,8 @@
     "instagramUrl": "https://instagram.com/icfessen",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/icf-essen-kirche-neu-erleben.webp"
   },
   {
     "slug": "icf-gen-ve-ndash-une-nouvelle-exp-rience-de-l-039-glise",
@@ -25067,7 +25119,7 @@
     "instagramUrl": "https://instagram.com/icfmuenchen",
     "facebookUrl": "https://facebook.com/icfmuenchen",
     "youtubeUrl": "https://www.youtube.com/icfmuenchen",
-    "headerImage": "https://scontent-hou1-1.xx.fbcdn.net/v/t39.30808-6/476379758_1024697103036832_3686288218828785671_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=2a1932&_nc_ohc=9Z_Nazg1fQYQ7kNvwGvEyOA&_nc_oc=Adn-5Nq2Rs1jMYSgnQFjeaiAyMrPZ4IUE59Z-GypL1R-D1f3fMQsR9oIVNW4MhseuXk&_nc_zt=23&_nc_ht=scontent-hou1-1.xx&_nc_gid=8sJQyTRpv6vgD8SlucFuDQ&_nc_ss=8&oh=00_Afyo6EJvIbPM-XvbXvZWKSQc8LkgIIdpEPNt6ht6PmXlQw&oe=69BB7826",
+    "headerImage": "https://media.gospelchannel.com/heroes/icf-munich.webp",
     "spotifyUrl": "https://open.spotify.com/playlist/6LJrGba16eIxThITB1QeTL",
     "spotifyPlaylistIds": [
       "6LJrGba16eIxThITB1QeTL"
@@ -25163,7 +25215,8 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-30T05:10:43.090Z",
     "verifiedAt": "2026-03-30T05:10:43.090Z",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/icf-praha.webp"
   },
   {
     "slug": "icf-radio-ndash-kirche-neu-erleben",
@@ -25452,7 +25505,7 @@
     "instagramUrl": "https://instagram.com/imikirken",
     "facebookUrl": "https://facebook.com/imikirken",
     "youtubeUrl": "https://www.youtube.com/imikirken",
-    "headerImage": "https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-6/634737544_1307147691450822_6797958687003344761_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=100&ccb=1-7&_nc_sid=2a1932&_nc_ohc=HwD0rWONAjUQ7kNvwGxjQq5&_nc_oc=AdlaHrPxVHI4yT_5yzlc1GA7-MO8CXqh8VtjApe2JTCSSpPaukwOXiUQL9rtoPIcMps&_nc_zt=23&_nc_ht=scontent-sea1-1.xx&_nc_gid=raRlRhwb_I6gbqg9SuHDXQ&_nc_ss=8&oh=00_Afw3boUgYVu6jrs38US-o8UNSkSoV2Ddr4F-uql59r0Ytw&oe=69BB4E7A",
+    "headerImage": "https://media.gospelchannel.com/heroes/imi-kirken.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCMvUIDcMPiInzCChFTBDfjA",
@@ -25537,7 +25590,8 @@
     "youtubeUrl": "https://www.youtube.com/channel/UC6SGPr-pBdUejWlrOl07oxw",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-adoracion.webp"
   },
   {
     "slug": "iglesia-bautista-calvario-de-valencia",
@@ -25599,7 +25653,7 @@
     "logo": "",
     "instagramUrl": "https://www.instagram.com/iglesia.biblica.nueva.vida",
     "facebookUrl": "https://www.facebook.com/profile.php?id=100093299962328",
-    "headerImage": "https://scontent-sea5-1.xx.fbcdn.net/v/t39.30808-6/469797294_563241806591642_3758824454011458335_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=102&ccb=1-7&_nc_sid=2a1932&_nc_ohc=cvg8kxhmzL8Q7kNvwE0ySYA&_nc_oc=Adl3fHw-gVAnme57oWw_6Fc69HIoPbvq4uJfGs-DQBAQKzSLPNNaiAddBOdKEchQiPY&_nc_zt=23&_nc_ht=scontent-sea5-1.xx&_nc_gid=dv4oH84xbx6nBBS7u3cV4w&_nc_ss=8&oh=00_AfwhH6bF_2A_au43Apu4jVLcX91V3xWRQqPUWLq1PveE7w&oe=69BB4FF5",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-b-blica-nueva-vida.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -25682,7 +25736,8 @@
     "youtubeUrl": "https://www.youtube.com/@centrodeadoracionministeri2557/streams",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-centro-de-adoracion.webp"
   },
   {
     "slug": "iglesia-centro-de-avivamiento",
@@ -25899,7 +25954,8 @@
     "facebookUrl": "https://www.facebook.com/profile.php?id=100087174815092",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-cristiana-evangelica-valencia.webp"
   },
   {
     "slug": "iglesia-cristiana-evang-lica-de-chamart-n",
@@ -25914,7 +25970,7 @@
     "instagramUrl": "https://www.instagram.com/iglesiadechamartin/",
     "facebookUrl": "https://www.facebook.com/iglesiacristianachamartin/",
     "youtubeUrl": "https://www.youtube.com/channel/UCuV-ZnqtVmREdANuxPuhuog",
-    "headerImage": "https://scontent.fagc1-2.fna.fbcdn.net/v/t39.30808-6/472297953_3431931077115437_9218022425602498066_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=109&ccb=1-7&_nc_sid=2a1932&_nc_ohc=oJ6oFTeHMssQ7kNvwEwOFRt&_nc_oc=Admf5iaoesyVbpA5yBi43SiEXfRUe8uMyJlQXK3OiX76fWPlcGh5pSWWzLtdVbiOTZc&_nc_zt=23&_nc_ht=scontent.fagc1-2.fna&_nc_gid=OsOsUkV5OYNsBTaKzbXTeQ&_nc_ss=8&oh=00_AfwzzEQAx0yjwe_VXU5-eCVaA5bG8yMFOwxIqgMLs3P-UQ&oe=69BB4B12",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-cristiana-evang-lica-de-chamart-n.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -26028,7 +26084,8 @@
     "logo": "/churches/_placeholder.svg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-cristiana-en-barcelona.webp"
   },
   {
     "slug": "iglesia-cristiana-en-barcelona-cecmavi",
@@ -26209,7 +26266,7 @@
     "email": "iebmislata@gmail.com",
     "logo": "",
     "facebookUrl": "https://www.facebook.com/juancarlos.graciamartinez",
-    "headerImage": "https://scontent-lga3-2.xx.fbcdn.net/v/t39.30808-6/533855419_10232544104279232_6979095531209496111_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=2a1932&_nc_ohc=oIaEq0Q3A7MQ7kNvwFC2ovA&_nc_oc=AdmzE4mY-diwLeRoVZdIzjyGbNmTz-WzMZLgqAo5mGmg0z4fXY2CHvuE_e7n_RCrhyo&_nc_zt=23&_nc_ht=scontent-lga3-2.xx&_nc_gid=P7e7YR535GjA3YGzUnbE3g&_nc_ss=8&oh=00_AfwuTzSHZdi2pDXlQk5de0SJxCQOk7kQmV8CoMPyFV-JTQ&oe=69BB4C14",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-evang-lica-bautista-de-valencia.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -26243,7 +26300,7 @@
     "logo": "",
     "facebookUrl": "https://www.facebook.com/323168357883919",
     "youtubeUrl": "https://www.youtube.com/channel/UCiahUfyUv3VbwrMjgLh-WzA",
-    "headerImage": "https://scontent-phx1-1.xx.fbcdn.net/v/t39.30808-6/467758616_865048199153407_1947073553959219635_n.png?stp=dst-png_s960x960&_nc_cat=104&ccb=1-7&_nc_sid=2a1932&_nc_ohc=NjdI41lU1TkQ7kNvwEtTuDm&_nc_oc=AdlhhGKR1ZxOxQeMJhciPxJ5auT7rWJxaHXwLjldxbX2Cy0yYX3SMLDBcwHYYgz7QW8&_nc_zt=23&_nc_ht=scontent-phx1-1.xx&_nc_gid=ODbdY6LBHzvd3zMZvNFNiw&_nc_ss=8&oh=00_AfwE7quN84t5TilqMiNEY4sGpQUCKq8POs75cTwLjuW-kg&oe=69BB5090",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-evang-lica-bautista-la-luz-m-laga.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCiahUfyUv3VbwrMjgLh-WzA",
@@ -26330,7 +26387,8 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCrWq-k3FONWTpzQ9UVf9kdA",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-evangelica-cristo-vive.webp"
   },
   {
     "slug": "iglesia-evang-lica-espa-ola",
@@ -26407,7 +26465,7 @@
     "logo": "https://scontent-bos5-1.xx.fbcdn.net/v/t39.30808-1/252622536_3067066863571606_8210771346984480754_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=104&ccb=1-7&_nc_sid=f907e8&_nc_ohc=_yo1RbvrXiIQ7kNvwHij7I0&_nc_oc=AdkNlHwR9Hf74-h81h_wyrJWiErYRZBuY__u3PwXuL3w28hOD9I89OEF-kTvoVILKmc&_nc_zt=24&_nc_ht=scontent-bos5-1.xx&_nc_gid=X0UW9wJCtM9BJpPb5wWzqg&_nc_ss=8&oh=00_AfwGddXsI7Wu-Vw7Z9ATYitN8a79oDUPaQssVqcC5pr4ow&oe=69BB42A1",
     "facebookUrl": "https://www.facebook.com/libresparaamarspain",
     "youtubeUrl": "https://www.youtube.com/channel/UCWnIqP94scDoaXwX_3TQsrw",
-    "headerImage": "https://scontent-bos5-1.xx.fbcdn.net/v/t39.30808-6/239409868_3010655175879442_8733903410182208816_n.png?_nc_cat=100&ccb=1-7&_nc_sid=2a1932&_nc_ohc=CS-GIP6xqawQ7kNvwEow6cZ&_nc_oc=AdkR39qyiW6DuvsO1ShAYhJJpCgEPV_SzYUKXEs5RkPdNykWbSbngD5Ftq60-glXrZs&_nc_zt=23&_nc_ht=scontent-bos5-1.xx&_nc_gid=QblhMFESc7huukAo514osg&_nc_ss=8&oh=00_AfyMm3mDDnDKgAes10xuUVSOAmfmretQ30WyFgDjEE4qyw&oe=69BB7831",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-evangelica-las-aguilas.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCWnIqP94scDoaXwX_3TQsrw",
@@ -26444,7 +26502,8 @@
     "youtubeUrl": "https://www.youtube.com/c/IglesiaSalemMadridOficial",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-evangelica-salem-madrid.webp"
   },
   {
     "slug": "iglesia-evang-lica-sevilla-ccgetseman",
@@ -26556,7 +26615,8 @@
     "youtubeUrl": "https://www.youtube.com/@IglesiaJesucristoRey",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-jesucristo-rey.webp"
   },
   {
     "slug": "iglesia-la-senda-antigua",
@@ -26600,7 +26660,8 @@
     "facebookUrl": "https://www.facebook.com/libresparaamarspain/",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-las-aguilas.webp"
   },
   {
     "slug": "iglesia-metodista-pentecostal-curico",
@@ -26629,7 +26690,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-metodista-pentecostal-san-miguel.webp"
   },
   {
     "slug": "iglesia-oasis-cordoba",
@@ -26656,7 +26718,7 @@
     "instagramUrl": "https://www.instagram.com/iglesiapasionporcristo/",
     "facebookUrl": "https://www.facebook.com/ipasionporcristo",
     "youtubeUrl": "https://www.youtube.com/c/IglesiaPasionporCristo",
-    "headerImage": "https://scontent-atl3-3.xx.fbcdn.net/v/t39.30808-6/482025341_1046719640831728_1915725122171104926_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=2a1932&_nc_ohc=jaDiUh4sYdgQ7kNvwGyGhDI&_nc_oc=AdkaoLyMtTe0A5EFohNmBZsA_HJ1mG9oroWhsVgv1YbQtVU5uDswS9dxNjCXFiErUy0&_nc_zt=23&_nc_ht=scontent-atl3-3.xx&_nc_gid=y6HHjwg2Dw2rCDjW74sBPQ&_nc_ss=8&oh=00_Afy4hhEdyMltVR3mI8AndLfJspuXG3uMgB8hdkxGiNZRUw&oe=69BB5D8F",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-pasi-n-por-cristo-en-madrid-2022-la-gracia.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UC59jjvtMgXtwRlfNzgA6a_Q",
@@ -26675,7 +26737,7 @@
     "instagramUrl": "https://www.instagram.com/iglesiapasionporcristo/",
     "facebookUrl": "https://www.facebook.com/ipasionporcristo",
     "youtubeUrl": "https://www.youtube.com/c/IglesiaPasionporCristo",
-    "headerImage": "https://scontent.ffcm1-2.fna.fbcdn.net/v/t39.30808-6/482025341_1046719640831728_1915725122171104926_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=2a1932&_nc_ohc=jaDiUh4sYdgQ7kNvwEq5dAw&_nc_oc=Admiu8R21SF2TJGkp0nskDtcAPd4NRksV1BAJ84IteEJMdOFM16mg_lHI0xcuhV6tgI&_nc_zt=23&_nc_ht=scontent.ffcm1-2.fna&_nc_gid=7eXFQuXh3A7UFDYs-8kFOw&_nc_ss=8&oh=00_AfyXe4cwOiJmHfISvKcmrxe2dLwdDiH90wxVudk9favBeg&oe=69BB5D8F",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-pasion-por-cristo-en-madridla-gracia.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -26789,7 +26851,8 @@
     "youtubeUrl": "https://www.youtube.com/channel/UCkOAfw_hbXzQMGiIkTCRBng",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-presbiteriana-de-malaga.webp"
   },
   {
     "slug": "iglesia-renacer-malaga",
@@ -26805,7 +26868,8 @@
     "youtubeUrl": "https://www.youtube.com/channel/UCewOGZ3ECXc6vLVFLh38tNA",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-renacer-malaga.webp"
   },
   {
     "slug": "iglesia-san-ant-n",
@@ -26842,7 +26906,8 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCgkKGyB7XYP7hrUVXKbIm0g",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-san-nicolas-valencia.webp"
   },
   {
     "slug": "iglesia-siloe-hn-col-satelite-san-pedro-sula",
@@ -26887,7 +26952,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-unida-metodista-pentecostal-coro-nacional.webp"
   },
   {
     "slug": "iglesia-verbo-de-dios",
@@ -27023,7 +27089,8 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCR_AQaurx4o7q2hnItkC5gw",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-evangelica-en-madrid.webp"
   },
   {
     "slug": "iglesia-internacional-de-la-gracia-de-dios",
@@ -27136,7 +27203,7 @@
     "instagramUrl": "https://www.instagram.com/ibatitude",
     "facebookUrl": "https://www.facebook.com/Ibatitude/",
     "youtubeUrl": "https://www.youtube.com/channel/UC75azx7rPcImmpNvIguyDRA",
-    "headerImage": "https://scontent-atl3-3.xx.fbcdn.net/v/t39.30808-6/613678862_1337745255045528_5419373617183231928_n.png?_nc_cat=111&ccb=1-7&_nc_sid=2a1932&_nc_ohc=DF4BL1ZIZtMQ7kNvwGI_zCP&_nc_oc=AdktO7PJfU9kmTj89Kj8HPR9EdYPnrRqNNBKvfmA45EteNRl2L5ocPxIuzKyR5fJbYw&_nc_zt=23&_nc_ht=scontent-atl3-3.xx&_nc_gid=I6xSQLtpMIylZmIWJLRlgw&_nc_ss=8&oh=00_AfwdV0iRQ4r7BNgrvdjLfXm3WAdw6qlvheZuDFTpnPbq7g&oe=69BB4351",
+    "headerImage": "https://media.gospelchannel.com/heroes/igreja-batista-atitude.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -27154,7 +27221,8 @@
     "youtubeUrl": "https://www.youtube.com/channel/UCjLA1r796KJ4wRHkG-SJojg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/igreja-batista-sao-paulo.webp"
   },
   {
     "slug": "igreja-batista-da-lagoinha",
@@ -27351,7 +27419,8 @@
     "logo": "/churches/_placeholder.svg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/igreja-consolacao-correia.webp"
   },
   {
     "slug": "igreja-crist-maranata",
@@ -27509,7 +27578,8 @@
     "logo": "/churches/_placeholder.svg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/igreja-pentecostal-yeshua-emanuell.webp"
   },
   {
     "slug": "igreja-pentecostal-de-jesus-cristo",
@@ -27580,7 +27650,7 @@
     "logo": "",
     "instagramUrl": "https://instagram.com/igrejauphouse",
     "facebookUrl": "https://www.facebook.com/igrejauphouse",
-    "headerImage": "https://scontent-ord5-2.xx.fbcdn.net/v/t39.30808-6/326241536_524956589471618_4172128268222317409_n.png?stp=dst-png_s960x960&_nc_cat=102&ccb=1-7&_nc_sid=2a1932&_nc_ohc=npd6Szd0hn0Q7kNvwGdbC7n&_nc_oc=AdmFLjOxUNLGkLR42XEphq2nHxO6-BFYZQ1fbUjbC0-ceBijBPoVAf2soVsliFbywNE&_nc_zt=23&_nc_ht=scontent-ord5-2.xx&_nc_gid=0S825151S-pabTjZvi_EKw&_nc_ss=8&oh=00_Afw0GoMXzvtxI88m1VPsexrumBzs_limlpFrt1Q26FOG4w&oe=69BB723E",
+    "headerImage": "https://media.gospelchannel.com/heroes/igreja-up-house.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -27598,7 +27668,7 @@
     "instagramUrl": "https://instagram.com/igrejaunaspsp",
     "facebookUrl": "https://facebook.com/igrejaunaspsp",
     "youtubeUrl": "https://youtube.com/@igrejaunaspsplive",
-    "headerImage": "https://scontent-atl3-1.xx.fbcdn.net/v/t39.30808-6/484868336_1070813118424518_2939904191817338438_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=103&ccb=1-7&_nc_sid=2a1932&_nc_ohc=-gXRRCPwYfYQ7kNvwHZUXHp&_nc_oc=AdkmlytZ59N4kZqiV96ZXzZJYWUv6q8cc6uxKhEpNWvr67J3gliW1eVKynNJiNmrthg&_nc_zt=23&_nc_ht=scontent-atl3-1.xx&_nc_gid=RKsffFBsy4aLldIlpTw7uA&_nc_ss=8&oh=00_AfwbQ5K0FI3hI0M-GrUTj91IE8RiIClytQdYovj8Q_g5eg&oe=69BB7505",
+    "headerImage": "https://media.gospelchannel.com/heroes/igreja-unasp-sp.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -27615,7 +27685,7 @@
     "instagramUrl": "https://www.instagram.com/igrejadorecreio/",
     "facebookUrl": "https://www.facebook.com/igrejadorecreio",
     "youtubeUrl": "https://www.youtube.com/user/igrejadorecreioRJ",
-    "headerImage": "https://scontent-ord5-2.xx.fbcdn.net/v/t39.30808-6/615881604_1335222195309668_4163790006944431734_n.png?stp=dst-png_s960x960&_nc_cat=102&ccb=1-7&_nc_sid=2a1932&_nc_ohc=szle6pmK4lUQ7kNvwEM_Ob3&_nc_oc=Adn-Thm4D8xqLokdQAtyMxywYBoVKxR98e5Jr08DT3VHnw9lb8VH5lamt8qmsS7PknY&_nc_zt=23&_nc_ht=scontent-ord5-2.xx&_nc_gid=h0Kq309mVrC6xuirFyVgrg&_nc_ss=8&oh=00_AfzrEBMWLKmAkocDjAZPgYMN51Fwa2cLpXf6pC6zMlJzYA&oe=69BB7860",
+    "headerImage": "https://media.gospelchannel.com/heroes/igreja-do-recreio.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -27885,7 +27955,7 @@
     "instagramUrl": "https://www.instagram.com/inclusive.church/",
     "facebookUrl": "https://www.facebook.com/InclusiveCommunityChurch",
     "youtubeUrl": "https://www.youtube.com/@inclusivecommunitychurch",
-    "headerImage": "https://www.inclusive.church/s/misc/logo.png?t=1771345755",
+    "headerImage": "https://media.gospelchannel.com/heroes/mcc-bournemouth.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-30T05:08:24.845Z",
@@ -28067,7 +28137,8 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
     "verifiedAt": "2026-03-29T22:05:05.769Z",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/international-baptist-church-cologne.webp"
   },
   {
     "slug": "international-baptist-church-sofia",
@@ -28194,7 +28265,7 @@
     "logo": "",
     "instagramUrl": "https://www.instagram.com/icgcbirmingham/",
     "facebookUrl": "https://www.facebook.com/ICGCLRT",
-    "headerImage": "https://scontent-dus1-1.xx.fbcdn.net/v/t39.30808-6/607496866_864171129585619_3285941380162495597_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=2a1932&_nc_ohc=5JVSPCuUVUwQ7kNvwGgX4iu&_nc_oc=AdkT3dgkMCHsf69Hi3_H1IhIlsMcM6pO8ZkHDBU54joW3rY6whyktLqBzQhJsDKIKOo&_nc_zt=23&_nc_ht=scontent-dus1-1.xx&_nc_gid=MdwraX_GQRt7oVpyl-2k8Q&_nc_ss=8&oh=00_AfxFZUTck9mwpchK6eGQq7HpMvC8CQ1wAnSdQ6QOMijM1g&oe=69BB66A1",
+    "headerImage": "https://media.gospelchannel.com/heroes/international-central-gospel-church-birmingham.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -28347,7 +28418,8 @@
     "facebookUrl": "https://www.facebook.com/icflimassol",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/international-christian-fellowship-limassol.webp"
   },
   {
     "slug": "wageningen-icf",
@@ -28529,7 +28601,8 @@
     "youtubeUrl": "https://www.youtube.com/@ieclca",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/international-evangelical-church-larnaca.webp"
   },
   {
     "slug": "international-evangelical-church-limassol",
@@ -28546,7 +28619,8 @@
     "youtubeUrl": "https://www.youtube.com/@ieclca",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/international-evangelical-church-limassol.webp"
   },
   {
     "slug": "international-evangelical-church-abu-dhabi",
@@ -28578,7 +28652,8 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCUK9KtFqfRBMGAVO89aTbEA",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/international-evangelical-church-valencia.webp"
   },
   {
     "slug": "international-evangelical-lutheran-church",
@@ -28640,7 +28715,7 @@
     "instagramUrl": "https://www.instagram.com/igcnews_/",
     "facebookUrl": "https://www.facebook.com/igcberlin/",
     "youtubeUrl": "https://www.youtube.com/user/tnwzp",
-    "headerImage": "https://scontent-dfw5-2.xx.fbcdn.net/v/t39.30808-6/482069765_1032230005605085_2394716578255361361_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=108&ccb=1-7&_nc_sid=2a1932&_nc_ohc=0ew1cesd0kwQ7kNvwHKFh12&_nc_oc=AdlDvetsZsdKlG2pzZtujuXi4tGec7URVlJ_-8lUPAA_PqHmW39afKV2byjxQx7JgeM&_nc_zt=23&_nc_ht=scontent-dfw5-2.xx&_nc_gid=kdNO1pbSfNRJ6n5x6kv7pw&_nc_ss=8&oh=00_AfzUxpv6bzrjkuFjI-XjcPCSk2WwMuD3zb6h48IYpu0Mlw&oe=69BB51BF",
+    "headerImage": "https://media.gospelchannel.com/heroes/international-gospel-center.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UC81vb-EgOVVIaXcBQe7Y57w",
@@ -28855,7 +28930,7 @@
     "location": "Penang",
     "website": "http://iggc.penang-assemblies.org/",
     "logo": "",
-    "headerImage": "https://lh3.googleusercontent.com/gps-proxy/ALd4DhGX9yCeOTcdbayL7DkUPzgzGBF3viSt5BpgFbUHi6pZtvfNEmb4-f-_-gvuC1HZ1vQ6j04OP5DYMzuG9zPKfgCl3bGDryeR-tOZ8WZO52eMSGJMDibv56MAXscZsZURRJp-4iWD_DXbf8dmqLjy57ndA4koClKTzaMfpBOH8VNrU9tMJy0IPks5jS2RTzoTIlBzrFA=w408-h306-k-no",
+    "headerImage": "https://media.gospelchannel.com/heroes/island-glades-gospel-centre.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -29067,7 +29142,7 @@
     "website": "https://www.calgaryjapanesegospel.com/",
     "email": "iokiebisu@gmail.com",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=tCCu-avTBlGk2SBhSvYdqQ&cb_client=search.gws-prod.gps&w=408&h=240&yaw=236.85437&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/japanese-gospel-church-calgary.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -29083,7 +29158,7 @@
     "logo": "",
     "facebookUrl": "https://www.facebook.com/jerusalemchurch.org",
     "youtubeUrl": "https://www.youtube.com/channel/jerusalembaptistchurch",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=Af6BsS50swTuk12bM9vr9w&cb_client=search.gws-prod.gps&w=408&h=240&yaw=27.452963&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/jerusalem-baptist-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -29286,7 +29361,7 @@
     "instagramUrl": "https://www.instagram.com/jesushausmuenchen/",
     "facebookUrl": "https://www.facebook.com/jesus.haus.muenchen",
     "youtubeUrl": "https://www.youtube.com/@JesusHausMuenchen",
-    "headerImage": "https://scontent-mia5-1.xx.fbcdn.net/v/t39.30808-6/480567677_613995061603531_1889831927354962372_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=101&ccb=1-7&_nc_sid=2a1932&_nc_ohc=DnBfLZ-XOiYQ7kNvwHpuaCD&_nc_oc=AdmeI-WI167wGOGRbe2Wvt93j-kvp-AsPBJ7q4ZWTsQRodZZsA8BiMDOyh7svDrdTFY&_nc_zt=23&_nc_ht=scontent-mia5-1.xx&_nc_gid=mYXEJDPI8MRAz-x4YJmyCw&_nc_ss=8&oh=00_Afz0UGZpVi2iiJxNkbOTvfxxaCL65MQ4-Q6CLD93kyL26A&oe=69BB6090",
+    "headerImage": "https://media.gospelchannel.com/heroes/jesus-haus.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCU1CDZTR3-8f15wRK9_DewQ",
@@ -29324,7 +29399,7 @@
     "logo": "/churches/_placeholder.svg",
     "facebookUrl": "https://www.facebook.com/profile.php?id=100057403781870",
     "youtubeUrl": "https://www.youtube.com/@JILWorldwide",
-    "headerImage": "https://scontent-den2-1.xx.fbcdn.net/v/t39.30808-6/473071178_1089192859670830_2336752293936774513_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=100&ccb=1-7&_nc_sid=2a1932&_nc_ohc=DbDTiwJ_leUQ7kNvwFxos_z&_nc_oc=Admk33f-XF3F-NCpaz2E8KFNTQiN6uf8Z5PjeiK7y3yWlCGVkJ7ar9_W7Zi6FIthFmY&_nc_zt=23&_nc_ht=scontent-den2-1.xx&_nc_gid=vdX0WjHjPq-K5hCGB2BV6w&_nc_ss=8&oh=00_AfyGxLw7k2S8snRS5RpItVdsHC7O_U2Ch6Fvk132PVV5RQ&oe=69BB5C3D",
+    "headerImage": "https://media.gospelchannel.com/heroes/jesus-is-lord-church-worldwide.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -29687,7 +29762,7 @@
     "instagramUrl": "https://www.instagram.com/kbhfrikirke/",
     "facebookUrl": "https://www.facebook.com/KBHFrikirke/",
     "youtubeUrl": "https://www.youtube.com/channel/UCBbiq18NClo1T3ImT0ByuYQ",
-    "headerImage": "https://scontent-sjc6-1.xx.fbcdn.net/v/t39.30808-6/479137055_630001622983227_2601963275946078307_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=2a1932&_nc_ohc=RkavQFcx47wQ7kNvwFFBqRR&_nc_oc=AdlowYizLsSlwVDoXmJSe0YsA0VicMQm_msvY2flt8WqBnqVisThhUQibmY34jXOwU8&_nc_zt=23&_nc_ht=scontent-sjc6-1.xx&_nc_gid=QXdEsKdTo8N2w--E2PMPEg&_nc_ss=8&oh=00_AfyV0J9NZEJatvgrSOH1HxvhqlHB78X9a5rKYNr07JwCSQ&oe=69BB4881",
+    "headerImage": "https://media.gospelchannel.com/heroes/kbh-frikirke.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -29801,7 +29876,8 @@
     "logo": "/churches/_placeholder.svg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/katolska-kyrkan.webp"
   },
   {
     "slug": "kaunas-evangelical-christian-baptist-church",
@@ -29813,7 +29889,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/kaunas-evangelical-christian-baptist-church.webp"
   },
   {
     "slug": "kawempe-worship-centre",
@@ -29859,7 +29936,7 @@
     "instagramUrl": "https://www.instagram.com/kensingtontemple",
     "facebookUrl": "https://www.facebook.com/kt.org",
     "youtubeUrl": "https://www.youtube.com/kensingtontemplekt",
-    "headerImage": "https://scontent-sjc6-1.xx.fbcdn.net/v/t39.30808-6/487063669_1114448160711465_190652057515752784_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=108&ccb=1-7&_nc_sid=2a1932&_nc_ohc=-FKQW9jORdsQ7kNvwEqRfCY&_nc_oc=AdkIVB_KlhQZkPLUFIseOgSABKcZu-s_s5YTH6RWrF5FUARfmchydGAKQ7pLrDibZJ8&_nc_zt=23&_nc_ht=scontent-sjc6-1.xx&_nc_gid=hpCEX8irp0DtbiioUSvxjw&_nc_ss=8&oh=00_Afx41wGCRBNkYb9mlW7Q9FxSerL_E5tHVL182C78jU-kZA&oe=69BB6FCD",
+    "headerImage": "https://media.gospelchannel.com/heroes/kensington-temple.webp",
     "spotifyUrl": "https://open.spotify.com/playlist/4s385pb5ThrIbtKEkUzyf2",
     "spotifyPlaylistIds": [
       "4s385pb5ThrIbtKEkUzyf2"
@@ -30095,7 +30172,8 @@
     "facebookUrl": "https://www.facebook.com/kingschurchlondon",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/king-s-church-london.webp"
   },
   {
     "slug": "kings-cross-church",
@@ -30374,7 +30452,8 @@
     "youtubeUrl": "https://www.youtube.com/@weinstockhamburg-christlic3641",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/kirche-fur-dich.webp"
   },
   {
     "slug": "kirche-im-pott",
@@ -30386,7 +30465,8 @@
     "logo": "/churches/_placeholder.svg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/kirche-im-pott.webp"
   },
   {
     "slug": "kirche-im-pott-e-v",
@@ -30807,7 +30887,7 @@
     "email": "kordegn@kristkirken.dk",
     "logo": "/churches/_placeholder.svg",
     "facebookUrl": "https://www.facebook.com/KristkirkenKolding",
-    "headerImage": "https://scontent-hou1-1.xx.fbcdn.net/v/t39.30808-6/494449191_1113614430804151_6128437644635339913_n.jpg?stp=cp6_dst-jpg_s2048x2048_tt6&_nc_cat=111&ccb=1-7&_nc_sid=2a1932&_nc_ohc=Ivuqhe8IoNYQ7kNvwHZ4Kqr&_nc_oc=Adki37Bs9LqzFHABgvUGFJwelhr_xocMvMSN4bmE2tSaAWifmfj25fhnCNTs3fZx7ak&_nc_zt=23&_nc_ht=scontent-hou1-1.xx&_nc_gid=P3axEc4DeDR3zVf1iDAvKg&_nc_ss=8&oh=00_AfxGhjL7-CEFXCLEpso4Q15FmOmiUo9O8GOH6QbM4dI3cQ&oe=69BB5DC8",
+    "headerImage": "https://media.gospelchannel.com/heroes/kristkirkens-sogn.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -30888,7 +30968,7 @@
     "instagramUrl": "https://www.instagram.com/krsbrno/",
     "facebookUrl": "https://www.facebook.com/KrestanskysborBrno",
     "youtubeUrl": "https://www.youtube.com/@krestanskysborbrno777",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=rwyrlaFUHU2g-jA6iFEdLA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=197.72012&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/krestanske-sbory.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -30903,7 +30983,8 @@
     "logo": "/churches/_placeholder.svg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/l-eglise-catholique-a-marseille.webp"
   },
   {
     "slug": "l-a-worship-church",
@@ -31057,7 +31138,8 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCZRLUjRevicX0SFncg598wQ",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/la-buena-nueva-iglesia-valencia-espana.webp"
   },
   {
     "slug": "lagoa-christian-fellowship",
@@ -31501,7 +31583,7 @@
     "website": "https://www.stringsoflife.co.uk/",
     "email": "stringsoflifelcgc@gmail.com",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=6ghBxCH1Gu1a1ChkTN1N4g&cb_client=search.gws-prod.gps&w=408&h=240&yaw=36.505&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/leeds-chinese-gospel-church-strings-of-life.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -31775,7 +31857,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/life-in-christ-evangelical-church-tirana.webp"
   },
   {
     "slug": "life-church",
@@ -31953,7 +32036,8 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
     "verifiedAt": "2026-03-29T22:05:05.769Z",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/lifecenter-church-vasteras.webp"
   },
   {
     "slug": "lifehouse-international-church-hong-kong",
@@ -31980,7 +32064,7 @@
     "instagramUrl": "https://www.instagram.com/liftyouthzug/",
     "facebookUrl": "https://www.facebook.com/swissenglishchurch",
     "youtubeUrl": "https://www.youtube.com/@liftinternationalchurchofz9038",
-    "headerImage": "https://scontent.fosu3-1.fna.fbcdn.net/v/t39.30808-6/360085895_607581941515971_2472972834051739594_n.png?stp=dst-png_s960x960&_nc_cat=108&ccb=1-7&_nc_sid=2a1932&_nc_ohc=l9raRfKwLb4Q7kNvwE4OTbk&_nc_oc=AdkTZpZ_9IbRSwh1MNfvNSO6Km3pcgBlRH-L_pNsxJVwbMOVoRaAeWySkRbV_LJ83NA&_nc_zt=23&_nc_ht=scontent.fosu3-1.fna&_nc_gid=xNc5CELftoEGN3g8q4fkKQ&_nc_ss=8&oh=00_Afw6ujshbavirB9j2HEYPwHl3iXb1ofA1lWp-VIVTweUcw&oe=69BB50B8",
+    "headerImage": "https://media.gospelchannel.com/heroes/lift-international-church-of-zug.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCQQMOp-f3UnpkE2EGqANzsA",
@@ -32102,7 +32186,8 @@
     "youtubeUrl": "https://www.youtube.com/channel/UCUqp45c9J4rxwrVs-BsxKtA",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/lighthouse-full-gospel-church.webp"
   },
   {
     "slug": "lighthouse-international-christian-centre-ibadan",
@@ -32143,7 +32228,7 @@
     "website": "http://www.thelighthouse.org.za/",
     "email": "info@thelighthouse.org.za",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=pz9H3QqTYCDnUMZXrr7_LQ&cb_client=search.gws-prod.gps&w=408&h=240&yaw=8.457856&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/lighthouse-to-the-nations-church-orchards-site-church-offices.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -32245,7 +32330,7 @@
     "website": "https://www.littlemillchurch.org.uk/",
     "logo": "",
     "facebookUrl": "http://www.facebook.com/pages/Little-Mill-Baptist-Church/203374633035579",
-    "headerImage": "https://lh3.googleusercontent.com/sitesv/APaQ0SQApi46fBh02_WisCYeN2FsYLBsNhKQrNEMJCw-HDKFTixEcsdoO5RoBr2Sq0Nd59MuJnICAIEnz9hYjZtWOt_aBEyN-riq_CV_6ydPmFAQ5KH54lU4sPe-zDgpcHpsrsvOnycVGx03HDnBDP7GUeBYLFR20T6MOoUGulsdFN7DfkH6TuAvjsuBRRfNAXRxBdF3US82ZQZGCo0=w1280",
+    "headerImage": "https://media.gospelchannel.com/heroes/little-mill-baptist-chapel.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-25T21:52:44.562Z",
@@ -32542,7 +32627,8 @@
     "youtubeUrl": "https://www.youtube.com/channel/UCRjWlBcEBr7o",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/living-water-fellowship.webp"
   },
   {
     "slug": "living-for-the-brand-cowboy-church",
@@ -32762,7 +32848,7 @@
     "instagramUrl": "https://www.instagram.com/lovestoryfamily/",
     "facebookUrl": "https://www.facebook.com/lovestory.helsinki/",
     "youtubeUrl": "https://www.youtube.com/channel/UCrs_F973G4CWJbsdob4hTlA",
-    "headerImage": "https://scontent-ord5-2.xx.fbcdn.net/v/t39.30808-6/482255267_1024009606419015_8011158856260002867_n.jpg?stp=dst-jpg_p720x720_tt6&_nc_cat=105&ccb=1-7&_nc_sid=2a1932&_nc_ohc=JSwDA3ni0qEQ7kNvwHmKIOf&_nc_oc=Adlmw40pa0lgLJMtTrVO2OC3DjHGx6VJliby0k_9Xt0iN6sOgH37W0-73eFLO1_1Wjw&_nc_zt=23&_nc_ht=scontent-ord5-2.xx&_nc_gid=qfKtuZtywHxI3gTj8EW7mQ&_nc_ss=8&oh=00_Afz-xnRg0Gwp5X7j1fGSelZtulD4hOAhd1xZ4vxTEzYEfg&oe=69BB7536",
+    "headerImage": "https://media.gospelchannel.com/heroes/love-story-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -32987,7 +33073,7 @@
     "logo": "",
     "facebookUrl": "https://www.facebook.com/MountainviewIC/",
     "youtubeUrl": "https://www.youtube.com/channel/UCSv6JzFDca8nHyZdDhYDxlQ",
-    "headerImage": "https://lh3.googleusercontent.com/sitesv/APaQ0SRx1uHW-U1BMgzCMx_Befc49GM99I0Xy4HbavZB2_ltAn4ry_mtacc8BpwkZgsHr4GT1uzj8NsqBRYVYQk-g8gmBk068xUAyYx1B5TZRvg4vkLqXSdoe40tmnren4xH6nH4O5ltwZ_cu8PdEu8fS0zYrlt75ilBOtTBUlrinO_FWvPcAeYcaN8tJP0=w16383",
+    "headerImage": "https://media.gospelchannel.com/heroes/madrid-mountainview-international-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-27T13:52:48.425Z",
@@ -33241,7 +33327,7 @@
     "instagramUrl": "https://instagram.com/manifestchurchmanchester",
     "facebookUrl": "https://facebook.com/manifestchurchmanchester",
     "youtubeUrl": "https://www.youtube.com/@ManifestChurchManchester",
-    "headerImage": "https://scontent.fsac1-2.fna.fbcdn.net/v/t39.30808-6/469494251_1820022678831678_6433012413857375330_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=2a1932&_nc_ohc=DS14pgJOz5IQ7kNvwFdKVOo&_nc_oc=AdlwcS5bJTdAZemDa6ijNnromgZ77F8PACafk4vsBl2miKoEqvl7kdUWsT4nUNlPISM&_nc_zt=23&_nc_ht=scontent.fsac1-2.fna&_nc_gid=MAvpyGIZ0W4zTk2t7NK0UQ&_nc_ss=8&oh=00_AfyR-DitRrwaaFbRGjeHlMqLOsN6Y0pa5Z_Uznmhv3dvFg&oe=69BB4E05",
+    "headerImage": "https://media.gospelchannel.com/heroes/manifest-church-manchester.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UC8EBSfn1lhGs1qha53V80Sw",
@@ -33381,7 +33467,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/maranatha-church-munchen.webp"
   },
   {
     "slug": "mariagerfjord-frikirke",
@@ -33394,7 +33481,7 @@
     "logo": "",
     "facebookUrl": "https://www.facebook.com/mariagerfjordfrikirke",
     "youtubeUrl": "https://www.youtube.com/channel/UCURU3QU3V6zw7wgifagvWww",
-    "headerImage": "https://scontent-atl3-2.xx.fbcdn.net/v/t39.30808-6/414956437_781699933991638_5319615731441982982_n.png?stp=dst-png_s960x960&_nc_cat=104&ccb=1-7&_nc_sid=2a1932&_nc_ohc=09bo-eLkGTEQ7kNvwGO28gr&_nc_oc=AdmXAlR_LiFICe7pqGvr5RdSRspMrvhHDuSKHJMcb2hTcxLO07hJ4ZwMvoDtPkOrJ6M&_nc_zt=23&_nc_ht=scontent-atl3-2.xx&_nc_gid=1Cty_NJdv35vp2n5wtiDew&_nc_ss=8&oh=00_AfzOVYlSc2n2ZTUr9_lJmFnGC_Hgh7SzawDa46ES7IUxRA&oe=69BB5EBD",
+    "headerImage": "https://media.gospelchannel.com/heroes/mariagerfjord-frikirke.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -33441,7 +33528,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/masvida-iglesia-cristiana.webp"
   },
   {
     "slug": "maverick-city",
@@ -33619,7 +33707,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/melbourne-church-of-christ.webp"
   },
   {
     "slug": "melbourne-full-gospel-church",
@@ -33634,7 +33723,8 @@
     "youtubeUrl": "https://www.youtube.com/@MelbourneFullGospelChurch",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/melbourne-full-gospel-church.webp"
   },
   {
     "slug": "menigheten-var",
@@ -33647,7 +33737,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/menigheten-var.webp"
   },
   {
     "slug": "methodist-central-hall",
@@ -33790,7 +33881,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/miesto-baznycia-vilnius.webp"
   },
   {
     "slug": "mighty-warriors-christian-church-bloemfontein",
@@ -33801,7 +33893,7 @@
     "website": "http://mightywarriors.co.za/",
     "email": "stefanbrown@mweb.co.za",
     "logo": "",
-    "headerImage": "https://lh3.googleusercontent.com/gps-proxy/ALd4DhFTKgtQ29uQdav6nNAiL6grgBs4f8aCjx2Fs7tBIJLYk-16FcvVfK1tpCD3Wvnf3Q8BzGyJgZkmXWlumcabH4j3AgtjCxT3YV2pRMdaJ5L0QE9qo43U_ORfmIM9_weTh_lctgXY2nXhFOIiABiS0DaDGYKUZemudrUV1XQYAAe6D5kuTBKsoxF7jEriHULQNiHabhU=w408-h306-k-no",
+    "headerImage": "https://media.gospelchannel.com/heroes/mighty-warriors-christian-church-bloemfontein.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -34063,7 +34155,7 @@
     "instagramUrl": "https://www.instagram.com/momentum.church.ch/",
     "facebookUrl": "https://www.facebook.com/momentum.church.ch",
     "youtubeUrl": "https://www.youtube.com/c/momentumchurchlive",
-    "headerImage": "https://www.momentum-church.ch/quality_auto/Home%20Gemeinschaft%202.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/momentum-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCrkMltFv6ujHL_D1sOGUO7g",
@@ -34455,7 +34547,7 @@
     "instagramUrl": "https://www.instagram.com/mozaiekworship/",
     "facebookUrl": "https://www.facebook.com/mozaiekworship",
     "youtubeUrl": "https://www.youtube.com/@MozaiekChurchOfficial",
-    "headerImage": "https://scontent-msp1-1.xx.fbcdn.net/v/t51.82787-15/566325323_18403094908136344_3156744564428833749_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=106&ccb=1-7&_nc_sid=2a1932&_nc_ohc=qYL6GWkGGHoQ7kNvwGxoRO_&_nc_oc=AdlBlDTGn7qWwKM6STib2sj6d_NdOpqFhpd2q56D9_HBmISqRJxVhagK1mYg_HYTdxQ&_nc_zt=23&_nc_ht=scontent-msp1-1.xx&_nc_gid=Kpo427fr74lPkebNV9LALw&_nc_ss=8&oh=00_Afxa7NvIGfgVHqLS-yjRM6FeQhgB34Ubn_IviPmEJr7EwQ&oe=69BB7465",
+    "headerImage": "https://media.gospelchannel.com/heroes/mozaiek-worship.webp",
     "spotifyUrl": "https://open.spotify.com/playlist/0g285kDQjjYB51ED9KtOd6",
     "spotifyPlaylistIds": [
       "0g285kDQjjYB51ED9KtOd6"
@@ -34776,7 +34868,7 @@
     "logo": "",
     "instagramUrl": "https://www.instagram.com/nationalchurchestrust/",
     "facebookUrl": "https://www.facebook.com/nationalchurchestrust",
-    "headerImage": "https://www.nationalchurchestrust.org/sites/default/files/styles/hero_image_large/public/2020-04/LincolnshireFALDINGWORTHAllSaints%28pushcreativityPERMISSIONBYEMAIL%294.jpg?h=a9b1ba5e&itok=PWoQBkxN",
+    "headerImage": "https://media.gospelchannel.com/heroes/national-churches-trust.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -34966,7 +35058,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/new-hope-church.webp"
   },
   {
     "slug": "new-hope-church-brisbane",
@@ -35054,7 +35147,7 @@
     "email": "njwtc@yahoo.com",
     "logo": "",
     "youtubeUrl": "https://www.youtube.com/channel/UCxtQP1sIxS14tyUoyKoRy-w",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=GO8nmFO3eAKqONd0V2FSCw&cb_client=search.gws-prod.gps&w=408&h=240&yaw=3.5108435&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/new-jerusalem-whole-truth-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -35117,7 +35210,7 @@
     "website": "https://newlifewales.org.uk/",
     "logo": "",
     "facebookUrl": "https://www.facebook.com/NewLifeCardigan/",
-    "headerImage": "https://www.geograph.org.uk/photo/3075059",
+    "headerImage": "https://media.gospelchannel.com/heroes/new-life-church-united-kingdom.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-25T21:52:44.562Z",
@@ -35764,7 +35857,7 @@
     "logo": "https://scontent-atl3-3.xx.fbcdn.net/v/t39.30808-1/348271318_1271036276848170_4830207537036144677_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=107&ccb=1-7&_nc_sid=f907e8&_nc_ohc=h0Epj93OLgkQ7kNvwHBwVz_&_nc_oc=AdnqwATRI7uirDgkG5YANHx6pnCDHJiJMretN7nWuVFts6XODfa2WeM4d9vx17K7a6E&_nc_zt=24&_nc_ht=scontent-atl3-3.xx&_nc_gid=SugZQAghb4HPsPzdmS8nYg&_nc_ss=8&oh=00_AfzSpDBSEtG30uuVg9d9HqtDDGH4Vu7lREDtZt6oDi_WNA&oe=69BB788E",
     "instagramUrl": "https://www.instagram.com/nidarosdomen/",
     "facebookUrl": "https://www.facebook.com/The-Anglican-Church-in-Trondheim-104432350146077",
-    "headerImage": "https://scontent-atl3-1.xx.fbcdn.net/v/t39.30808-6/481766386_1064084699097359_6898587617222543404_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=103&ccb=1-7&_nc_sid=2a1932&_nc_ohc=fQgvyZv7oqEQ7kNvwHLClk6&_nc_oc=AdkLUMAzldck4oVScQs1H0ncNkbsV0qx0tXC-OKpiLmWT5RrLCIsu6jOmb--Da3-tmk&_nc_zt=23&_nc_ht=scontent-atl3-1.xx&_nc_gid=BAgXTVh78Ym7ZDPydgiY6Q&_nc_ss=8&oh=00_Afzl30jJy4dAZ5Tsyj3c4lJvWUSMgYym9jOWDdXrXdxRdA&oe=69BB6BB7",
+    "headerImage": "https://media.gospelchannel.com/heroes/nidaros-cathedral-nidarosdomen.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -35781,7 +35874,8 @@
     "facebookUrl": "https://www.facebook.com/The-Anglican-Church-in-Trondheim-104432350146077",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/nidarosdomen.webp"
   },
   {
     "slug": "nieuwe-kerk-utrecht-wittevrouwen",
@@ -35830,7 +35924,7 @@
     "instagramUrl": "https://www.instagram.com/norkirken",
     "facebookUrl": "https://www.facebook.com/norkirken",
     "youtubeUrl": "https://www.youtube.com/norkirken",
-    "headerImage": "https://scontent-lga3-3.xx.fbcdn.net/v/t39.30808-6/615932002_1304924184999392_8732020844275520328_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=2a1932&_nc_ohc=QqYP6Z4KNg4Q7kNvwHjDezy&_nc_oc=AdkOz6aHTfHrTRkgaPERfOaDK3TP25nq9-J58HCY7vAZKrotgxoQCS68gKcwCRaJu0E&_nc_zt=23&_nc_ht=scontent-lga3-3.xx&_nc_gid=9k4RU0sdGiZ6jACrzhGL1g&_nc_ss=8&oh=00_AfzHJ1HJBgnoORcx3gaEVVCI3thBs0SM9OqR8NBou5b5Mw&oe=69BB7984",
+    "headerImage": "https://media.gospelchannel.com/heroes/norkirken-bergen.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCQvWpak-ipgPOYw4U7I12kg",
@@ -35880,7 +35974,8 @@
     "youtubeUrl": "https://youtube.com/@northcoastfamilyfellowship?si=H6QSd0MbBE8Ium5m",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/north-coast-family-fellowship.webp"
   },
   {
     "slug": "north-point-community-church",
@@ -36026,7 +36121,7 @@
     "website": "https://sites.google.com/view/nottinghamchristiancenter/home",
     "email": "ncc84pa@gmail.com",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=rMajge-SynRwoWuWyGX9ZQ&cb_client=search.gws-prod.gps&w=408&h=240&yaw=111.737465&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/nottingham-christian-center.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -36280,7 +36375,7 @@
     "location": "Gold Coast",
     "website": "http://ovcoc.org/",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=yLCgf1geRnO-eHqFelXLeg&cb_client=search.gws-prod.gps&w=408&h=240&yaw=112.430504&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/oceanview-church-of-christ.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -36366,7 +36461,7 @@
     "instagramUrl": "https://www.instagram.com/offene.kirche/",
     "facebookUrl": "https://www.facebook.com/projektfrausein",
     "youtubeUrl": "https://www.youtube.com/@offenekircheelisabethen360",
-    "headerImage": "https://scontent-lga3-2.xx.fbcdn.net/v/t39.30808-6/480680987_941692504820321_7536449307591119721_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=100&ccb=1-7&_nc_sid=2a1932&_nc_ohc=KKtf6DY48jUQ7kNvwGh6mIm&_nc_oc=AdnYoKDoLkyeIpuTac-CBCW6ue8W0CWxJUrxzR3PRSZcEjrZ3-Iyt-O6UIkoNqeawl0&_nc_zt=23&_nc_ht=scontent-lga3-2.xx&_nc_gid=Q2zyKiHLPEqtG6A8AWAfdg&_nc_ss=8&oh=00_AfxV8-JifWiINcvIS6m9PEh6c8pmGV5ap05fIAJulgxSFg&oe=69BB6907",
+    "headerImage": "https://media.gospelchannel.com/heroes/offene-kirche-elisabethen-basel.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UClNpsMpW4hFwa4a9JCvVgJQ",
@@ -36565,7 +36660,8 @@
     "logo": "/churches/_placeholder.svg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/openchurch-global.webp"
   },
   {
     "slug": "opendoors-church-netherlands",
@@ -36759,7 +36855,7 @@
     "instagramUrl": "https://www.instagram.com/kirkemusikkfestivalen/",
     "facebookUrl": "https://www.facebook.com/kirkemusikkfestivalen",
     "youtubeUrl": "https://www.youtube.com/@oslointernasjonalekirkemus9580",
-    "headerImage": "https://scontent-lax3-1.xx.fbcdn.net/v/t39.30808-6/593567751_1453663163428296_4005838451293664103_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=110&ccb=1-7&_nc_sid=2a1932&_nc_ohc=1HyT5uskZggQ7kNvwGS8mvl&_nc_oc=Adk3vm-mShul0vjXnUChGs5W6n-FWxDqONm_I8u7hX5EPH04_F5cNfWuQ6P4FgZRp3s&_nc_zt=23&_nc_ht=scontent-lax3-1.xx&_nc_gid=y2ZXSPCwrwhdYn4iniT0JA&_nc_ss=8&oh=00_AfymSXTa1MHd2MWkvZv2o6e0y9JkkEqxfzaMgMCqL-e02w&oe=69BB55AE",
+    "headerImage": "https://media.gospelchannel.com/heroes/oslo-church-music-festival.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCC8JQKcdno_fIEWz81-bOag",
@@ -36893,7 +36989,7 @@
     "email": "post@oks.no",
     "logo": "",
     "youtubeUrl": "https://www.youtube.com/@Romerikskirken",
-    "headerImage": "https://oks.no/wp-content/uploads/2021/12/Velkommen-hjem-tekst-billboard-RMK-e1685892097377.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/oslo-kristne-senter.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "musicStyle": [
@@ -36955,7 +37051,7 @@
     "email": "church@ottawaocg.org",
     "logo": "",
     "youtubeUrl": "https://www.youtube.com/channel/UCa9dkd2qZw9IyaqH6GsCtdA",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=HqPWE69OFrJiL_f_lxzhYg&cb_client=search.gws-prod.gps&w=408&h=240&yaw=169.10526&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/ottawa-church-of-god.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -37262,7 +37358,7 @@
     "instagramUrl": "https://www.instagram.com/ParisCentreChurch/",
     "facebookUrl": "https://www.facebook.com/ParisCentreChurch/",
     "youtubeUrl": "https://www.youtube.com/@ParisCentreChurch",
-    "headerImage": "https://scontent-lax3-1.xx.fbcdn.net/v/t39.30808-6/480603061_658742626731935_7517866674315726984_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=108&ccb=1-7&_nc_sid=2a1932&_nc_ohc=Q6SXSjY73ncQ7kNvwH7otwc&_nc_oc=AdkkNWJTsqAY-j_vQh6_i5DMXmjQOJFLOhqaSTnkCdhnZMijr1JyH7cEVrC7VVJ5-K0&_nc_zt=23&_nc_ht=scontent-lax3-1.xx&_nc_gid=UerhShjlsMaM6PmgJIh85A&_nc_ss=8&oh=00_AfzJ2CJ89r5Cd0cXYvXlpWngalaeiwIn5E1Bdcnv3wq6Nw&oe=69BB60C8",
+    "headerImage": "https://media.gospelchannel.com/heroes/paris-centre-church-eglise-paris-centre.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCS83FCFdUdCYIRDaFDk5OuQ",
@@ -37451,7 +37547,8 @@
     "logo": "/churches/_placeholder.svg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/parroquia-san-bonifacio-archidiocesis-de-madrid-iglesia.webp"
   },
   {
     "slug": "parroquia-san-juan-apostol-y-evangelista",
@@ -37512,7 +37609,8 @@
     "youtubeUrl": "https://www.youtube.com/@psantacristina",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/parroquia-santa-cristina-y-santa-margarita-maria-de.webp"
   },
   {
     "slug": "parroquia-de-san-agustin",
@@ -37543,7 +37641,7 @@
     "logo": "https://scontent-ord5-3.xx.fbcdn.net/v/t39.30808-1/257500776_2507574016054147_8794049969522373270_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=106&ccb=1-7&_nc_sid=f907e8&_nc_ohc=JBYfSUdxIgIQ7kNvwFHgDom&_nc_oc=AdnpWncPfH8jmjWmejTMZr1_rbbVUPwHDFtwr14af8oOSTwczL53_MK5VaW-eA1UR5Y&_nc_zt=24&_nc_ht=scontent-ord5-3.xx&_nc_gid=Oga28j5pXDCz1oBI5RiE4Q&_nc_ss=8&oh=00_Afz32Hd7-AK06B36t_7n1ArngVq0iKb3expPnBpJQanqTw&oe=69BB738A",
     "facebookUrl": "https://es-es.facebook.com/people/Parroquia-Santa-Cristina-y-Santa-Margarita/100064428802504/",
     "youtubeUrl": "https://www.youtube.com/@psantacristina",
-    "headerImage": "https://scontent-ord5-3.xx.fbcdn.net/v/t39.30808-6/476343535_1025327982958152_4173227713392974564_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=100&ccb=1-7&_nc_sid=2a1932&_nc_ohc=TOAJ5r5ClwgQ7kNvwHEMKDT&_nc_oc=AdmjmMHiFCPBsZQeurXTS2WdhKuXFYjTupFx7750m1wwDbxAdWe47ZZSCP07bXe8JQ4&_nc_zt=23&_nc_ht=scontent-ord5-3.xx&_nc_gid=Ip0mD7w9wTd2BwEIsaRUNA&_nc_ss=8&oh=00_AfyNeBZFVcwpwhGO7Ea8hU5VUekTThABcwVBTm5iEP8siw&oe=69BB5A3D",
+    "headerImage": "https://media.gospelchannel.com/heroes/parroquia-de-santa-cristina-y-santa-margarita-maria-de-alacoque.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UC7tH45b1D5Aus0w14Vbh3Fw",
@@ -37579,7 +37677,7 @@
     "instagramUrl": "https://instagram.com/pquiamiraculosa/",
     "facebookUrl": "https://www.facebook.com/MedallaMiraculosa",
     "youtubeUrl": "https://www.youtube.com/channel/UCoZZvNkj5tmrnenmd4gQxDw",
-    "headerImage": "https://scontent-ord5-1.xx.fbcdn.net/v/t39.30808-6/480832450_940585498270553_8085159626871182886_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=2a1932&_nc_ohc=QnedJXh6CD8Q7kNvwHNjxg3&_nc_oc=AdnKFfBmHwMx4J0MlNqi9CHvuzWURt08lxKb-V3LpBTN0FG8JMeKlvH7FOjQYjGz7zM&_nc_zt=23&_nc_ht=scontent-ord5-1.xx&_nc_gid=BzzVDHoMSGGKoSxVG4wJBA&_nc_ss=8&oh=00_AfynesxQTQUYQ_eTRdrvbJDF__nD2MN4WTHH02ZdOgUS-g&oe=69BB7737",
+    "headerImage": "https://media.gospelchannel.com/heroes/parroquia-mare-de-deu-de-la-medalla-miraculosa.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCoZZvNkj5tmrnenmd4gQxDw",
@@ -37599,7 +37697,8 @@
     "youtubeUrl": "https://www.youtube.com/channel/UCoZZvNkj5tmrnenmd4gQxDw",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/parroquia-mare-de-deu-de-la-medalla-miraculosa-de-barcelona.webp"
   },
   {
     "slug": "partille-pingstforsamling",
@@ -37834,7 +37933,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/pearl-church.webp"
   },
   {
     "slug": "penang-christian-centre",
@@ -37898,7 +37998,8 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
     "verifiedAt": "2026-03-29T22:05:05.769Z",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/pentecostal-fellowship-prague.webp"
   },
   {
     "slug": "pentecostal-gospel-international-center",
@@ -38016,7 +38117,8 @@
     "facebookUrl": "https://www.facebook.com/christianchurchpaphos/videos",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/petra-bible-fellowship-paphos.webp"
   },
   {
     "slug": "pfimi-bern",
@@ -38784,7 +38886,7 @@
     "instagramUrl": "https://www.instagram.com/porteouverte_mulhouse/",
     "facebookUrl": "https://www.facebook.com/porteouvertemulhouse",
     "youtubeUrl": "https://www.youtube.com/c/LaPorteOuverte",
-    "headerImage": "https://scontent-mia5-1.xx.fbcdn.net/v/t39.30808-6/352217300_221167160717906_8371846031652480009_n.png?_nc_cat=101&ccb=1-7&_nc_sid=2a1932&_nc_ohc=QAn5PnTad34Q7kNvwFcJOE1&_nc_oc=Admst__C6LW-k3xi-W2Pua6EwEbAzS-KQyKh7F_c9NKRqrzCb0B3QttxTDQuIKFmtbg&_nc_zt=23&_nc_ht=scontent-mia5-1.xx&_nc_gid=jqHEU-9wBNjYf6ZgDHZSFA&_nc_ss=8&oh=00_AfzhlyHXC8ex2Y_E12G3txiL9o2Gr5BxDl8Du1lcvPD6IA&oe=69BB746F",
+    "headerImage": "https://media.gospelchannel.com/heroes/porte-ouverte.webp",
     "spotifyUrl": "https://open.spotify.com/search/Porte%20Ouverte%20Chr%C3%A9tienne%20worship",
     "spotifyPlaylistIds": [],
     "musicStyle": [
@@ -38877,7 +38979,7 @@
     "website": "http://www.icf-portimao.org/",
     "logo": "",
     "youtubeUrl": "https://www.youtube.com/channel/UCwJ5RDqhFvCqn9jnVuq_rSw",
-    "headerImage": "http://www.icf-portimao.org/1x1.gif",
+    "headerImage": "https://media.gospelchannel.com/heroes/portimao-international-christian-fellowship.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
@@ -39247,7 +39349,7 @@
     "instagramUrl": "https://www.instagram.com/pibcuritiba/",
     "facebookUrl": "https://www.facebook.com/pibcuritiba",
     "youtubeUrl": "https://www.youtube.com/@pibcuritiba",
-    "headerImage": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.30808-6/617471183_1296205922533066_678525422294187866_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=2a1932&_nc_ohc=p26rhNCO3qQQ7kNvwEsNgdb&_nc_oc=Adledo3SO_cWo4Fa7uELRbXwkAP-UghDovgXQMBWnKIO5JXetiaTW4uUxJuVQLCTq6k&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&_nc_gid=866xr_2wnjybYqMmnK9bBw&_nc_ss=8&oh=00_Afx_5qAjEmnNDYikhVPD3Jo4kvjiitYRTrG5taD1z59myQ&oe=69BB58DB",
+    "headerImage": "https://media.gospelchannel.com/heroes/primeira-igreja-batista-de-curitiba.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -39489,7 +39591,7 @@
     "instagramUrl": "https://www.instagram.com/rampchurchmcr",
     "facebookUrl": "https://www.facebook.com/RampChurchMCR",
     "youtubeUrl": "https://www.youtube.com/rampchurchmcr",
-    "headerImage": "https://scontent-ord5-3.xx.fbcdn.net/v/t39.30808-6/571197533_1167497228818433_475610344829777716_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=107&ccb=1-7&_nc_sid=2a1932&_nc_ohc=q7KZXjLcUSwQ7kNvwE-fVow&_nc_oc=AdkgWCHAIzveST5RygIjVFDB1yRzr5w8idOF9pJ0A_de5syc76QMkR2_0cTCSgfmTNE&_nc_zt=23&_nc_ht=scontent-ord5-3.xx&_nc_gid=Cyc6fhqRKKc0ErT3XyLpPA&_nc_ss=8&oh=00_Afxn7Q_DO2BDtf-0REwU9FqWyX5s9L4BH8-SvwaaKmnNzQ&oe=69BB6DAF",
+    "headerImage": "https://media.gospelchannel.com/heroes/ramp-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCnmLpK0DEkUqxBB1IEi3C1g",
@@ -40017,7 +40119,7 @@
     "instagramUrl": "https://www.instagram.com/regiogemeinderiehen/",
     "facebookUrl": "https://www.facebook.com/RegiogemeindeRiehen/",
     "youtubeUrl": "https://www.youtube.com/c/RegiogemeindeRiehen",
-    "headerImage": "https://scontent-dfw5-1.xx.fbcdn.net/v/t39.30808-6/555139688_25101412272784255_7561646553311189320_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=105&ccb=1-7&_nc_sid=2a1932&_nc_ohc=zo0u_q76378Q7kNvwGVApmM&_nc_oc=Adk_5j_ZIMUtxSnNSM1gXwu2Dwj0MovB37tL0LSK9tRmPXIxkBDUxLm4UMLP9P7wHE8&_nc_zt=23&_nc_ht=scontent-dfw5-1.xx&_nc_gid=T64BXwY_tjR4Jq7ucADnYg&_nc_ss=8&oh=00_AfzAiBwcF7X070Sn4C9hIA6pyQQXR5UXkX5njZBLR-tXsA&oe=69BB432A",
+    "headerImage": "https://media.gospelchannel.com/heroes/regiogemeinde-riehen.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCvJhzN6Utt6kKToHuYVqwqw",
@@ -40478,7 +40580,8 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
     "verifiedAt": "2026-03-29T22:05:05.769Z",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/river-church-frankfurt.webp"
   },
   {
     "slug": "river-of-life-church",
@@ -40615,7 +40718,7 @@
     "instagramUrl": "http://instagram.com/romeinternationalchurch",
     "facebookUrl": "https://www.facebook.com/RomeInternationalChurch/",
     "youtubeUrl": "https://www.youtube.com/channel/UCTGxUaNwqAJeJY55yGeGCBg",
-    "headerImage": "http://static1.squarespace.com/static/5ae1a841af20960de152f4f8/t/5b9d0e60758d46cdbe6abb36/1537019491432/RIC_icon_color_mediumres.png?format=1500w",
+    "headerImage": "https://media.gospelchannel.com/heroes/rome-international-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
@@ -40839,7 +40942,7 @@
     "email": "pia.dongiovanni@rkk-bs.ch",
     "logo": "/churches/_placeholder.svg",
     "facebookUrl": "https://facebook.com/105752202041916",
-    "headerImage": "https://scontent-lga3-1.xx.fbcdn.net/v/t39.30808-6/468277993_563731722910626_4440561416550892803_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=109&ccb=1-7&_nc_sid=2a1932&_nc_ohc=PEv6BDzDmqUQ7kNvwGdY5jc&_nc_oc=AdkrNK3mbyj_9H8eI1jyeo9czkmD0kL2Xk02IT0AtGktzFy9K2gJ1OzzmAd4nzBK_F8&_nc_zt=23&_nc_ht=scontent-lga3-1.xx&_nc_gid=OPzMd6OqcL4IfRokH8CEJA&_nc_ss=8&oh=00_AfyjMClx1pASTddaUTPRK2VTT7AjiMjr3xwnWD_J1BOkmg&oe=69BB7AA8",
+    "headerImage": "https://media.gospelchannel.com/heroes/romisch-katholische-kirche-basel-stadt.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -41051,7 +41154,7 @@
     "instagramUrl": "https://www.instagram.com/saalemenglish/",
     "facebookUrl": "https://www.facebook.com/saalemenglishchurch",
     "youtubeUrl": "https://www.youtube.com/@helsinkisaalem",
-    "headerImage": "https://scontent-lax3-2.xx.fbcdn.net/v/t39.30808-6/472755946_8745315932230533_9128065376028414165_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=103&ccb=1-7&_nc_sid=2a1932&_nc_ohc=FpwxYXwxMQ4Q7kNvwEQYHn_&_nc_oc=Adn97O0Im-K0XQ3tsEc8k14ZHloFyFg_qP_i81rpLvLBVlXUFGkvtYF4IG3iX2Pkbng&_nc_zt=23&_nc_ht=scontent-lax3-2.xx&_nc_gid=yLJ_3hPHsDQ5AESWnDDr5A&_nc_ss=8&oh=00_AfwrVcfT6elKE7JmV3hFpKtwphCerZiBY61-cJZAA8jpVw&oe=69BB4A91",
+    "headerImage": "https://media.gospelchannel.com/heroes/saalem-helsinki.webp",
     "spotifyUrl": "https://open.spotify.com/playlist/2dlxps13YyCGzNeG9JACyY",
     "spotifyPlaylistIds": [
       "2dlxps13YyCGzNeG9JACyY"
@@ -41793,7 +41896,7 @@
     "instagramUrl": "https://www.instagram.com/salisburycathedral/",
     "facebookUrl": "https://www.facebook.com/salisburycathedral",
     "youtubeUrl": "https://www.youtube.com/user/SalisburyCathedral1",
-    "headerImage": "https://commons.wikimedia.org/wiki/File%3ACatedral_de_Salisbury%2C_Salisbury%2C_Inglaterra%2C_2014-08-12%2C_DD_03.JPG",
+    "headerImage": "https://media.gospelchannel.com/heroes/salisbury-cathedral.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-25T21:52:44.562Z",
@@ -42565,7 +42668,7 @@
     "email": "bloemfontein@shofaronline.org",
     "logo": "",
     "youtubeUrl": "https://www.youtube.com/channel/UCdGG-MJ8DentSaPA7gkVHtw",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=X3VG6leIC6wzaiDxqKpO0w&cb_client=search.gws-prod.gps&w=408&h=240&yaw=282.98547&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/shofar-christian-church-bloemfontein.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -43085,7 +43188,8 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-30T05:08:24.845Z",
     "verifiedAt": "2026-03-30T05:08:24.845Z",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/south-west-london-vineyard.webp"
   },
   {
     "slug": "southdown-methodist-church",
@@ -43445,7 +43549,7 @@
     "logo": "",
     "facebookUrl": "https://www.facebook.com/StAndrewsZurich",
     "youtubeUrl": "https://www.youtube.com/channel/UC1yN9yZiQjhwu8y_EgN9M3Q",
-    "headerImage": "https://scontent-lax3-2.xx.fbcdn.net/v/t39.30808-6/483975370_1075954324574410_6792152403440067100_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=2a1932&_nc_ohc=UYwcm7XuaTMQ7kNvwEtdzmf&_nc_oc=Adnh5aBBE9uLdNOE5qzv9154CaWLI3DZk1GBcQb0GBJXPx9aTJDx5y1R5PoYDx6BEd4&_nc_zt=23&_nc_ht=scontent-lax3-2.xx&_nc_gid=2CYfxPYaHxfmHrG4W56bwQ&_nc_ss=8&oh=00_AfyPHxIXDyIGcMGicXK63-EMvuZ108kxuZv35BhgDZgl0w&oe=69BB73D1",
+    "headerImage": "https://media.gospelchannel.com/heroes/st-andrew-039-s-zurich-the-anglican-church-in-zurich.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UC1yN9yZiQjhwu8y_EgN9M3Q",
@@ -43705,7 +43809,7 @@
     "logo": "",
     "instagramUrl": "https://www.instagram.com/oslo_anglicans/",
     "facebookUrl": "https://www.facebook.com/StEdmundsOslo/",
-    "headerImage": "https://scontent-lga3-3.xx.fbcdn.net/v/t39.30808-6/480743757_1036355768520674_4583822820519642716_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=2a1932&_nc_ohc=V3_38xWzF9oQ7kNvwEvh8Xw&_nc_oc=Adk8WzkCt47sH0LCY6btRhnoExSDufSkKZX7KPQ9AUTBYpUuRcrwlaGQ7afhhC7O42k&_nc_zt=23&_nc_ht=scontent-lga3-3.xx&_nc_gid=yYccsxWp3mjAUYbTMHRWiA&_nc_ss=8&oh=00_AfxjaTtwD9HtXUu-BdUm1cSqaQSf-K5vF_JyogBRMr391g&oe=69BB676B",
+    "headerImage": "https://media.gospelchannel.com/heroes/st-edmund-s-anglican-church-oslo-norway.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -43873,7 +43977,7 @@
     "website": "https://broenlli.com/",
     "logo": "",
     "facebookUrl": "https://www.facebook.com/Broenlli/",
-    "headerImage": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "headerImage": "https://media.gospelchannel.com/heroes/st-hywyn.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-25T22:00:07.370Z",
@@ -43889,7 +43993,7 @@
     "denomination": "anglican",
     "website": "https://www.avonwickchurch.co.uk/",
     "logo": "",
-    "headerImage": "https://www.avonwickchurch.co.uk/themes/Church_B3_Scss/Church/theme-images/stjames.svg",
+    "headerImage": "https://media.gospelchannel.com/heroes/st-james.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-30T05:08:24.845Z",
@@ -44282,7 +44386,7 @@
     "instagramUrl": "https://www.instagram.com/stmartinswalsall/",
     "facebookUrl": "https://www.facebook.com/walsallstmartins",
     "youtubeUrl": "https://www.youtube.com/@stmartinswalsall",
-    "headerImage": "https://www.stmartinswalsall.org/content/images/social/hca4o2vfxj3wl6i981zyk0deubrgqn7p5mt.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/st-martins-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-25T21:52:44.562Z",
@@ -44629,7 +44733,7 @@
     "email": "revjacquikean@gmail.com",
     "logo": "",
     "facebookUrl": "https://www.facebook.com/StPaulsChurchSouthville/",
-    "headerImage": "https://scontent-ord5-3.xx.fbcdn.net/v/t39.30808-6/480732570_28464668776514383_8307908947023925292_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=104&ccb=1-7&_nc_sid=2a1932&_nc_ohc=yaj6l49jFdoQ7kNvwF8e3d0&_nc_oc=AdnLhGLSa-11Ze3TLXNxX_mTa_1UmT9HbgPWJowhcrbVhRfQkhdCuOIWtbCYQMgF0mY&_nc_zt=23&_nc_ht=scontent-ord5-3.xx&_nc_gid=2xoa8nnFLa_D8JM53u4AUQ&_nc_ss=8&oh=00_AfylhSWR4314_b0wtQidefT9z5XwxK2X09zNzFRh4m3adg&oe=69BB53DA",
+    "headerImage": "https://media.gospelchannel.com/heroes/st-pauls-church-bristol.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -44831,7 +44935,7 @@
     "instagramUrl": "https://www.instagram.com/stswithinsbath/",
     "facebookUrl": "https://www.facebook.com/p/The-Honey-Cafe-Hut-100063551592280/?paipv=0&amp;eav=AfakYlRuJwGUyYIvBBXMca_ro2Z9a0iKnV5Q6TfQPKHlPoPeCJDNBBxyjmYgevceXcY&amp;_rdr",
     "youtubeUrl": "https://www.youtube.com/@stswithinswalcot",
-    "headerImage": "http://stswithins.weebly.com/uploads/1/1/5/2/115236627/ssw-logo-2017-rgb-03_orig.jpg",
+    "headerImage": "https://media.gospelchannel.com/heroes/st-swithin-s.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCXuy8q0s_Rbr-M_zREXvYdA",
@@ -45047,7 +45151,7 @@
     "website": "https://stjames302.org/",
     "email": "impallari@gmail.com",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=yNe3amExhhormw6oWNx-Kg&cb_client=search.gws-prod.gps&w=408&h=240&yaw=233.21504&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/st-james-community-full-gospel-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -45197,7 +45301,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/st-markus-evangelisch-lutherische-kirchengemeinde-munchen.webp"
   },
   {
     "slug": "st-markus-kirche-munchen",
@@ -45230,7 +45335,7 @@
     "instagramUrl": "https://www.instagram.com/stmatthewschurchbristol/",
     "facebookUrl": "https://www.facebook.com/stmatthewsbristol",
     "youtubeUrl": "https://www.youtube.com/channel/UCJGgterzqE0mM-Vxb-AWYOQ",
-    "headerImage": "https://cache/img/84/templates|current&sz1200x630&cp&tn&ql&fm&bo&bc&sg3aa818df44&ft1647677168&site_icon.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/st-matthew-s-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-25T21:52:44.562Z",
@@ -45347,7 +45452,7 @@
     "website": "https://www.stteilonewport.org.uk/",
     "email": "info@stteilonewport.org.uk",
     "logo": "",
-    "headerImage": "https://lh3.googleusercontent.com/sitesv/APaQ0SQViZ_9Mjkb0cvvE5unHXIMJtPunrVUGB85oAqnNm98ydFC0H0vohhB42eLdporiWEaOISAmAZZCyMAnaFQup9xtvHtLec7VQItHBDzbWCgBw4ZAN80aM4aFY1jzCScL9EsyMqsmX7IuhjOlFqCZpXEGvgG5KwUkBB2-jE5wREsAbKyjSyyGX26q48=w16383",
+    "headerImage": "https://media.gospelchannel.com/heroes/st-teilo-s-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-25T21:52:44.562Z",
@@ -45482,7 +45587,7 @@
     "logo": "",
     "facebookUrl": "https://www.facebook.com/SvgIntlCh/",
     "youtubeUrl": "https://www.youtube.com/channel/UCGzxnn7UV4oGu3VYFYvpZFQ",
-    "headerImage": "https://scontent-msp1-1.xx.fbcdn.net/v/t39.30808-6/480337821_1020837740080277_8355477906850771812_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=102&ccb=1-7&_nc_sid=2a1932&_nc_ohc=cBWASIaPdYQQ7kNvwGJvOjW&_nc_oc=AdmAqzSgraoKWcw389Yn0UQrhgibtue6UtmW4fFy5qlXbTL7taEWBu-oif6ZuQ_07kU&_nc_zt=23&_nc_ht=scontent-msp1-1.xx&_nc_gid=PeT98jGy3PrWGzPDbH3JhQ&_nc_ss=8&oh=00_AfyJPWu28tZoemeQBz1JNwYFKpqPPTy-LUm6Er4P5V0ujw&oe=69BB4D0D",
+    "headerImage": "https://media.gospelchannel.com/heroes/stavanger-international-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -45498,7 +45603,7 @@
     "logo": "/churches/_placeholder.svg",
     "facebookUrl": "https://facebook.com/stavangerlutheranchurch",
     "youtubeUrl": "https://www.youtube.com/@stavangerlutheranchurch6543",
-    "headerImage": "https://scontent.ffcm1-1.fna.fbcdn.net/v/t39.30808-6/480454787_935932975355674_1805978612843985149_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=2a1932&_nc_ohc=PfXO-lgAEBoQ7kNvwHox3mQ&_nc_oc=AdlbNpJbd6AWRSwDbvDqRESABjVxQcXfrSD6DMQ59T_4OE8-tDhncHXEwGt-QQvZUFU&_nc_zt=23&_nc_ht=scontent.ffcm1-1.fna&_nc_gid=AYbDv8uKQdt4Lf85BIASWA&_nc_ss=8&oh=00_AfzTUj7tKOpiGSxc-Iijl0v_97LCCkRcVRgbb9InKON9EA&oe=69BB55FB",
+    "headerImage": "https://media.gospelchannel.com/heroes/stavanger-lutheran-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UC4UUA0runkqLzpZ_XEJ_rBw",
@@ -45534,7 +45639,7 @@
     "email": "post.stavanger@kirken.no",
     "logo": "",
     "facebookUrl": "https://www.facebook.com/kirkeneistavanger/",
-    "headerImage": "https://scontent-lax3-2.xx.fbcdn.net/v/t39.30808-6/475508961_933983292189126_8095820602913433418_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=2a1932&_nc_ohc=sEnwlheh1g8Q7kNvwEFduN5&_nc_oc=AdkfxcWWZJ9pB0xbJMGX1jZeVsPrlS8F1TZeSM3ZZEMekfTZCFsyrZSUCPCEMpN5Rds&_nc_zt=23&_nc_ht=scontent-lax3-2.xx&_nc_gid=cgN-RDBc9NnbYG4lf1F8cg&_nc_ss=8&oh=00_Afxyqg2rxNwVbfRsI72jX6z9q4rZFlbeENG1XdxGGqHuJA&oe=69BB4D0C",
+    "headerImage": "https://media.gospelchannel.com/heroes/stavanger-kirkelige-fellesr-d-hjem.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -45587,7 +45692,7 @@
     "instagramUrl": "https://www.instagram.com/stirchleycc",
     "facebookUrl": "https://www.facebook.com/stirchleycc",
     "youtubeUrl": "https://www.youtube.com/channel/UCXxlVoKTosrE9BLAohkPgiQ",
-    "headerImage": "https://static.wixstatic.com/media/23fd2a2be53141ed810f4d3dcdcd01fa.png/v1/fill/w_30,h_30,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/23fd2a2be53141ed810f4d3dcdcd01fa.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/stirchley-community-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-30T05:08:24.845Z",
@@ -45954,7 +46059,8 @@
     "logo": "/churches/_placeholder.svg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/tbbmi.webp"
   },
   {
     "slug": "the-fortified-city-church",
@@ -46163,7 +46269,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/tallinn-kalju-baptist-church.webp"
   },
   {
     "slug": "tamil-church-london",
@@ -46234,7 +46341,7 @@
     "website": "https://tampereenseurakunnat.fi/",
     "email": "firstname.lastname@evl.fi",
     "logo": "/churches/_placeholder.svg",
-    "headerImage": "https://tampereenseurakunnat.fi/files/55112/650/Yhteisvastuu_banneri_2026.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/tampereen-seurakuntayhtyma.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -46340,7 +46447,8 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
     "verifiedAt": "2026-03-29T22:05:05.769Z",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/terceira-igreja-evangelica-baptista-de-lisboa.webp"
   },
   {
     "slug": "the-american-cathedral-in-paris",
@@ -46374,7 +46482,7 @@
     "logo": "",
     "facebookUrl": "https://www.facebook.com/TheAngelChurch/",
     "youtubeUrl": "https://www.youtube.com/channel/UCyehrYZ5104Yr4krrldtLig",
-    "headerImage": "https://scontent.fluk1-1.fna.fbcdn.net/v/t39.30808-6/326328977_712486346929842_1496400099328909704_n.png?_nc_cat=105&ccb=1-7&_nc_sid=2a1932&_nc_ohc=kzdXC0H8dRoQ7kNvwEYVu2S&_nc_oc=AdnGhwxHjgE-Wk_GPY0f915i5LzK6MkPUA-u-1Cpc9d_a4EvdSy5WBNelaRfueTd6SRi44JXuY74x2R74yAZQ5Xw&_nc_zt=23&_nc_ht=scontent.fluk1-1.fna&_nc_gid=YIqILrXycKge1e1hhSrOtQ&_nc_ss=8&oh=00_AfzzesDteCGgsKzU_aw3EJ8cuAR1sRCgF2b0m-SUHuofSg&oe=69BB466F",
+    "headerImage": "https://media.gospelchannel.com/heroes/the-angel-church-in-london.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCyehrYZ5104Yr4krrldtLig",
@@ -46539,7 +46647,7 @@
     "logo": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-1/326471920_834248684339729_1604739518584460000_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=110&ccb=1-7&_nc_sid=f907e8&_nc_ohc=oT0kReL4DT8Q7kNvwFUzwgM&_nc_oc=AdnkeNvqY5StQXq-YcH_ocrKSGvN0Rr8eRYl7aq_DArH89AQuEbFLF1THlLQjCoUJId1IpExmFwzWF1ieiGjHNse&_nc_zt=24&_nc_ht=scontent-iad3-1.xx&_nc_gid=ugxf7Eb-nwHMcUuzAA_jJA&_nc_ss=8&oh=00_AfyGpvQZ5ZbiI2Vqw9juqvefeJvxvd5ZzGt2WQKA3n1ung&oe=69BB6599",
     "facebookUrl": "https://www.facebook.com/cop.manila/",
     "youtubeUrl": "https://www.youtube.com/user/cathedralofpraiseTV",
-    "headerImage": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/645763608_1346904997465595_5087224573742606620_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=108&ccb=1-7&_nc_sid=2a1932&_nc_ohc=IDdOqrKpsUAQ7kNvwGXKhAp&_nc_oc=AdktSvMK3zHXaUR2drpMTLaTEFfEI-tzgMgi7cc9MbE6sbxAMNcxI2AtNl-EOKmoYqVdesnS42c9EbuhX0gI3mBb&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=sszI_xvhW4cK5_ZQJOsHpA&_nc_ss=8&oh=00_Afz1KJ-Y1pvcCBdZGM6Bgz-l2m0wWHJygOpqfJ_Jdt4jdg&oe=69BB6164",
+    "headerImage": "https://media.gospelchannel.com/heroes/the-cathedral-of-praise-cop.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -46556,7 +46664,8 @@
     "youtubeUrl": "https://www.youtube.com/user/cathedralofpraiseTV",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/the-cathedral-of-praise-cop-church.webp"
   },
   {
     "slug": "the-centre",
@@ -46569,7 +46678,8 @@
     "logo": "/churches/_placeholder.svg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/the-centre.webp"
   },
   {
     "slug": "the-chinese-full-gospel-church-sai-kung-mission",
@@ -46824,7 +46934,7 @@
     "email": "stephenl@saddleback.com",
     "logo": "/churches/the-crossing-hong-kong.svg",
     "facebookUrl": "https://facebook.com/SaddlebackHongKong",
-    "headerImage": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.30808-6/476425154_1056505666515109_3673944875339375660_n.png?stp=dst-png_s960x960&_nc_cat=100&ccb=1-7&_nc_sid=2a1932&_nc_ohc=DV3pVWDtIDcQ7kNvwGzOUIN&_nc_oc=Adn3XPUHmjHEQTaPirmfmIaFthVDnmD6Ag0siMGBTiiYDw9M92J2Q-ruUFCFRKFcmLo&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&_nc_gid=dXL5R67A2YeSggVOr2xcvQ&_nc_ss=8&oh=00_Afybhie9lOT5qpGiZjajws68zBHzOUKSGAYmE2Z7amy9sg&oe=69BB4DDE",
+    "headerImage": "https://media.gospelchannel.com/heroes/the-crossing-hong-kong.webp",
     "spotifyUrl": "https://open.spotify.com/playlist/0zD7AXFaatW1KoTDmOWRI9",
     "spotifyPlaylistIds": [
       "0zD7AXFaatW1KoTDmOWRI9"
@@ -47211,7 +47321,7 @@
     "email": "info@gospelfellowship.dk",
     "logo": "",
     "facebookUrl": "https://www.facebook.com/gospelfellowshipdk",
-    "headerImage": "https://scontent-ord5-2.xx.fbcdn.net/v/t39.30808-6/615230218_897666346112519_6217678046409929449_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=103&ccb=1-7&_nc_sid=2a1932&_nc_ohc=duKQWafFRPoQ7kNvwHbGDrG&_nc_oc=AdmVT9usoMxnoGt9DQZm5abuanXZ9qHR7HIvjvjhGquSjOAmkF5ZS_6uNr-qQRuPgdk&_nc_zt=23&_nc_ht=scontent-ord5-2.xx&_nc_gid=OH2TXmKSJwixHGUYv5cq1Q&_nc_ss=8&oh=00_AfwFanToRRW6BkkSGiJ1c0oZTFFI2OI1fC1iMP7U7-bNvA&oe=69BB77F3",
+    "headerImage": "https://media.gospelchannel.com/heroes/the-gospel-fellowship.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -47320,7 +47430,8 @@
     "youtubeUrl": "https://www.youtube.com/channel/UCgHXmPcb7MAJqVYLF8v0jEg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/the-immanuel-church.webp"
   },
   {
     "slug": "the-international-church-of-bucharest",
@@ -47575,7 +47686,8 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-25T21:52:44.562Z",
     "verifiedAt": "2026-03-25T21:52:44.562Z",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/the-redeemed-christian-church-of-god-rccg-overcomers-house-swindon.webp"
   },
   {
     "slug": "the-river-church",
@@ -48775,7 +48887,7 @@
     "website": "https://vinecc.org/",
     "email": "office@vinecc.org",
     "logo": "",
-    "headerImage": "https://www.paypal.com/en_GB/i/scr/pixel.gif",
+    "headerImage": "https://media.gospelchannel.com/heroes/the-vine-christian-centre.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-25T22:00:07.370Z",
@@ -48827,7 +48939,8 @@
     "youtubeUrl": "https://www.youtube.com/@WellChurchPDX",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/the-well-community-church.webp"
   },
   {
     "slug": "the-well-worship-center",
@@ -49341,7 +49454,7 @@
     "instagramUrl": "https://www.instagram.com/trondheiminternationalchurch/",
     "facebookUrl": "https://www.facebook.com/TrondheimInternationalChurch",
     "youtubeUrl": "https://www.youtube.com/@TrondheimInternationalChurch",
-    "headerImage": "https://scontent-ord5-3.xx.fbcdn.net/v/t39.30808-6/478079629_3237324653070886_341317306035877868_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=2a1932&_nc_ohc=4D8OqcoxHHMQ7kNvwGavgjA&_nc_oc=Adl_uW6EcXI4xp9dzd7Wq7mrvR97GRY1P8W5SdzxQoGAbqs_3jkvTMUdULwCkpdxj331WRl912I6eusQ_DXvsYrQ&_nc_zt=23&_nc_ht=scontent-ord5-3.xx&_nc_gid=gYOfWNdcrJLN-ac99TwFxg&_nc_ss=8&oh=00_AfyY_hTEleOZ9aCk5iHAPFZ3frdIPSjqaANgAEzH8HdfUw&oe=69BB77AA",
+    "headerImage": "https://media.gospelchannel.com/heroes/trondheim-international-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCmN9hrdWKSPUbWGEArkmiHA",
@@ -49360,7 +49473,7 @@
     "logo": "https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-1/327202447_862021091744391_6753342553765618929_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=102&ccb=1-7&_nc_sid=f907e8&_nc_ohc=RdD58UQ-rnoQ7kNvwFimyNX&_nc_oc=AdlbTOjsDMctSZP4DXjX9GYNnKtd8yLz57xXuzlnLBIkxD2U9V70zTabRAeafvWNnA0&_nc_zt=24&_nc_ht=scontent-iad3-1.xx&_nc_gid=tvIho-wfOA5U5ZnZdi81xA&_nc_ss=8&oh=00_AfzK1Erv_yACYXWXeQPGCHz8o_NIH70HFx57jF-kYfKHZQ&oe=69BB5345",
     "facebookUrl": "https://www.facebook.com/TrdMisjonskirke/",
     "youtubeUrl": "https://www.youtube.com/channel/UChfVJ8Zi_EK-3_EMJ2gSPTw",
-    "headerImage": "https://scontent-iad3-2.xx.fbcdn.net/v/t39.30808-6/480541567_954862073499317_1739494768048466455_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=2a1932&_nc_ohc=6Rw5HaAa_eoQ7kNvwGDxPez&_nc_oc=AdkZPpa8pccFugcPgCTQF_IjYoxxHTlMyCjQzkbbRK3y3421OBSs9-FmjEvokLk5fIU&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&_nc_gid=JsaKlZ8olbhcU9uAq7Hi_Q&_nc_ss=8&oh=00_AfyJ_ldJGDv7xLe-NFN8pIPBxLOSe3hENhjllxl3zAbrkA&oe=69BB718F",
+    "headerImage": "https://media.gospelchannel.com/heroes/trondheim-misjonskirke.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -49497,7 +49610,8 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
     "verifiedAt": "2026-03-29T22:05:05.769Z",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/turun-helluntaiseurakunta.webp"
   },
   {
     "slug": "turun-raamattu-puhuu-seurakunta",
@@ -49776,7 +49890,7 @@
     "logo": "",
     "instagramUrl": "https://www.instagram.com/unionhallchurch/",
     "facebookUrl": "https://www.facebook.com/unionhallchurch",
-    "headerImage": "https://scontent-dfw5-1.xx.fbcdn.net/v/t39.30808-6/480684380_940859998200755_7203974883935260945_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=2a1932&_nc_ohc=r0QCAbYyDwgQ7kNvwEDLxiP&_nc_oc=AdltBYXQrwD96EzNEMiuXszvzrXyAimbDSJEYBX0UhoT-g9X-wUA52T48Qu3VvzBHms&_nc_zt=23&_nc_ht=scontent-dfw5-1.xx&_nc_gid=y0Ua4GKTH_ys6lng025XPA&_nc_ss=8&oh=00_AfxcS3Y719fzz5n7T1aYS1qt9Lg6bp6PUNvKniTluJEPKw&oe=69BB656A",
+    "headerImage": "https://media.gospelchannel.com/heroes/union-hall-evangelical-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -49849,7 +49963,7 @@
     "language": "English",
     "logo": "https://scontent-det1-1.xx.fbcdn.net/v/t39.30808-1/448548075_865981065565993_6685927515677957295_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=108&ccb=1-7&_nc_sid=f907e8&_nc_ohc=c_nss0DyICcQ7kNvwGiDUfF&_nc_oc=AdklU8pB-mh6lanaku2RLyvjbqBbixBjCkRdgh_BV0k_PgFoNhWCLoIJ2kC3_RIpRYc&_nc_zt=24&_nc_ht=scontent-det1-1.xx&_nc_gid=hqq9mfjSwcNtVLj70bEEvQ&_nc_ss=8&oh=00_AfxFVEb9qbDuPTQOGwIrDQHCpP-nIAwh9TI1D3x6UvXwkw&oe=69BB7A80",
     "facebookUrl": "https://www.facebook.com/GIFTPASAY",
-    "headerImage": "https://scontent-det1-1.xx.fbcdn.net/v/t39.30808-6/488220772_1075074464656651_6405632778244929813_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=2a1932&_nc_ohc=ap94Dw5iq4UQ7kNvwHGM-Gq&_nc_oc=AdmQKT4oxtNdfPw6CUDYt0OXbLP_S7O2x287KLYGj4l9ENQK1OtYTe9GrsS_Bp8BNmc&_nc_zt=23&_nc_ht=scontent-det1-1.xx&_nc_gid=hbz8lJdUyplmSA2JG4N9fQ&_nc_ss=8&oh=00_AfwDHUIql0-AYgcJuTxK6DY1vWk5SzNERV5xyYUMA0MWWg&oe=69BB5775",
+    "headerImage": "https://media.gospelchannel.com/heroes/united-pentecostal-church-philippines-inc-grace-in-christ-fellowship-temple-gift-pasay.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -49902,7 +50016,8 @@
     "facebookUrl": "https://www.facebook.com/GIFTPASAY",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/united-pentecostal-church-in-pasay.webp"
   },
   {
     "slug": "united-reformed-church",
@@ -49974,7 +50089,7 @@
     "language": "English",
     "logo": "https://scontent-lga3-2.xx.fbcdn.net/v/t39.30808-1/560339697_1254364746725845_4119351945691463239_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=105&ccb=1-7&_nc_sid=f907e8&_nc_ohc=rucbDJf2NcEQ7kNvwGtiOya&_nc_oc=AdlYRJQar_72h7PFUfVFw2pEZ5Jke2HYvJkMeitovWv8oKq0PS1g31tLlQkpR9OPkZU&_nc_zt=24&_nc_ht=scontent-lga3-2.xx&_nc_gid=tOYIDn3oG6p7jUPuevkbKA&_nc_ss=8&oh=00_AfxS1FvWaNNieNdv3JgyUp9HlOwqCIJaxqi1q9JR77bDuA&oe=69BB4D03",
     "facebookUrl": "https://www.facebook.com/ubcmorayta/",
-    "headerImage": "https://scontent-lga3-3.xx.fbcdn.net/v/t39.30808-6/564167384_1256117796550540_20182254811736350_n.png?stp=dst-png_s960x960&_nc_cat=106&ccb=1-7&_nc_sid=2a1932&_nc_ohc=cTcYvmJ21hEQ7kNvwF5MJru&_nc_oc=AdkhCnFbVNXcy04uoILjwaoizfJmOcrgUD8Hbhl7zaDudUNQ0z0gj8d7yJos_M2HwgU&_nc_zt=23&_nc_ht=scontent-lga3-3.xx&_nc_gid=vcCrIQ40zmWOQdJXAqG-cg&_nc_ss=8&oh=00_AfwwzhaaIoQIEcsg3D1M4X7HUylExXbGzU0AJ2iN7pnyYg&oe=69BB716D",
+    "headerImage": "https://media.gospelchannel.com/heroes/university-baptist-church-incorporated.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -50058,7 +50173,8 @@
     "logo": "/churches/_placeholder.svg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/vhnkyrn-vapaaseurakunta.webp"
   },
   {
     "slug": "viva-kirche-basel",
@@ -50102,7 +50218,7 @@
     "instagramUrl": "https://instagram.com/vouschurch",
     "facebookUrl": "https://facebook.com/vouschurch",
     "youtubeUrl": "https://www.youtube.com/vouschurch",
-    "headerImage": "https://scontent.fosu3-1.fna.fbcdn.net/v/t39.30808-6/610811010_1428084255353764_1530899019710286166_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=2a1932&_nc_ohc=lt-l5llExawQ7kNvwE-8G09&_nc_oc=AdmUifLVZhR97eZDewq-1jUYcz1XR0BvBU4uPXDpIm9mjfICYDAWVBuZ9dhwOjKzN5o&_nc_zt=23&_nc_ht=scontent.fosu3-1.fna&_nc_gid=sWikQnf3Os84o02V5UEOIQ&_nc_ss=8&oh=00_AfyiHfV--0eWEC5vg46yU5eAhgTwr32zCkOH8rMUwEfkVQ&oe=69BB6EF3",
+    "headerImage": "https://media.gospelchannel.com/heroes/vous-worship.webp",
     "spotifyUrl": "https://open.spotify.com/playlist/7iQw3l4ZZHoCmolMZgA6Lz",
     "spotifyPlaylistIds": [
       "7iQw3l4ZZHoCmolMZgA6Lz"
@@ -50556,7 +50672,7 @@
     "instagramUrl": "https://www.instagram.com/vbciuk/",
     "facebookUrl": "https://www.facebook.com/vbciuk",
     "youtubeUrl": "https://www.youtube.com/@VBCIUK",
-    "headerImage": "https://scontent.fagc1-2.fna.fbcdn.net/v/t39.30808-6/610949257_1302202021951825_824934209849056643_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=100&ccb=1-7&_nc_sid=2a1932&_nc_ohc=DPJjtKJeg1MQ7kNvwGOBUYA&_nc_oc=AdnwrlTI6MrYRargiSE_V8TDLif48pNKUmgNsPnzBT2FukxBfVzwLGvfCep2BUkAzZs&_nc_zt=23&_nc_ht=scontent.fagc1-2.fna&_nc_gid=47eJ9GB-umkwOg9KwYH-KA&_nc_ss=8&oh=00_AfzTgXT_JpGOXKg47FWbQTGdf32mjINz8AYIsvW_G5HnMQ&oe=69BB6BFF",
+    "headerImage": "https://media.gospelchannel.com/heroes/victory-bible-church-international-uk.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCn-rYYEYL1o4hJ2HSOUpwIQ",
@@ -50765,7 +50881,7 @@
     "instagramUrl": "https://www.instagram.com/church.vcc/",
     "facebookUrl": "https://www.facebook.com/Vienna-Community-Church-100482058307578/",
     "youtubeUrl": "https://viennacommunitychurch.com/this-sunday-in-our-worship/",
-    "headerImage": "https://s0.wp.com/i/blank.jpg",
+    "headerImage": "https://media.gospelchannel.com/heroes/vienna-community-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
@@ -51102,7 +51218,8 @@
     "musicStyle": [
       "contemporary worship"
     ],
-    "sourceKind": "manual"
+    "sourceKind": "manual",
+    "headerImage": "https://media.gospelchannel.com/heroes/vineyard-cincinnati.webp"
   },
   {
     "slug": "vineyard-columbus",
@@ -51119,7 +51236,8 @@
     "musicStyle": [
       "contemporary worship"
     ],
-    "sourceKind": "manual"
+    "sourceKind": "manual",
+    "headerImage": "https://media.gospelchannel.com/heroes/vineyard-columbus.webp"
   },
   {
     "slug": "vineyard-copenhagen",
@@ -51183,7 +51301,8 @@
     "musicStyle": [
       "contemporary worship"
     ],
-    "sourceKind": "manual"
+    "sourceKind": "manual",
+    "headerImage": "https://media.gospelchannel.com/heroes/vineyard-london.webp"
   },
   {
     "slug": "vineyard-munich",
@@ -51563,7 +51682,8 @@
     "youtubeUrl": "https://www.wccrmlagos.org/videos/",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/wccrm-lagos.webp"
   },
   {
     "slug": "we-are-one-church",
@@ -51866,7 +51986,7 @@
     "instagramUrl": "https://www.instagram.com/wavehousechurch/?hl=en-gb",
     "facebookUrl": "https://www.facebook.com/wavehousefamily",
     "youtubeUrl": "https://www.youtube.com/@wavehousechurch",
-    "headerImage": "https://wavehouse.org.uk/wp-content/themes/wavehouse/images/menu.svg",
+    "headerImage": "https://media.gospelchannel.com/heroes/wave-house-church.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCFKj3hwRojK9Auah1JnnpKg",
@@ -52105,7 +52225,7 @@
     "instagramUrl": "https://www.instagram.com/westminsterabbeylondon/",
     "facebookUrl": "https://www.facebook.com/WestminsterAbbeyLondon",
     "youtubeUrl": "https://www.youtube.com/c/WestminsterAbbeyLondon",
-    "headerImage": "https://www.westminster-abbey.org/images/icn-left-arrow.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/westminster-abbey.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCNySjNq1BUNEu7azGutrDEw",
@@ -52362,7 +52482,7 @@
     "location": "Tel Aviv",
     "website": "http://www.wordfortheworld.com/",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=TcJ221sC4ZWOw5Te69Q4gg&cb_client=search.gws-prod.gps&w=408&h=240&yaw=76.936554&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/word-for-the-world-tel-aviv.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -52389,7 +52509,7 @@
     "website": "http://www.wordandworshipministries.org/",
     "email": "info@wordandworshipministries.org",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=XKZQpPBAcFT1b0Zg1WBDlg&cb_client=search.gws-prod.gps&w=408&h=240&yaw=46.26586&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/word-and-wordship-ministries.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -52489,7 +52609,7 @@
     "location": "Atlanta",
     "website": "https://www.worshipcenterofatlanta.org/",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=aDM4DJuTktUmsZ1H22-Dxg&cb_client=search.gws-prod.gps&w=408&h=240&yaw=3.432113&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/worship-center-of-atlanta.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -53376,7 +53496,7 @@
     "instagramUrl": "https://www.instagram.com/ce.deutschland/",
     "facebookUrl": "https://www.facebook.com/Erneuerung.de/",
     "youtubeUrl": "https://www.youtube.com/channel/UCV-LJ-gXdZOta5Rfkat-GKg",
-    "headerImage": "https://scontent-ord5-2.xx.fbcdn.net/v/t39.30808-6/532060615_1188497843320686_5031806885293453843_n.png?_nc_cat=102&ccb=1-7&_nc_sid=2a1932&_nc_ohc=HAHeUZAkZZUQ7kNvwGEnwdB&_nc_oc=Admi3QwpmZs2AGA1tTh3PQSSRjY3s3kOpdLhmPBS_wGioRHcG4PzA0SMSiZaQhg8U1s&_nc_zt=23&_nc_ht=scontent-ord5-2.xx&_nc_gid=p6enMVDEZFAyHU7uEAHKzw&_nc_ss=8&oh=00_AfxDXaPvd9AbFgwXkkQFnP0X6mKSt0HhK09VT2QIxNYLYQ&oe=69BB669E",
+    "headerImage": "https://media.gospelchannel.com/heroes/in-der-katholischen-kirche.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCV-LJ-gXdZOta5Rfkat-GKg",
@@ -53394,7 +53514,8 @@
     "logo": "/churches/_placeholder.svg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/interchurch-dk.webp"
   },
   {
     "slug": "jesus-haus-church",
@@ -53407,7 +53528,8 @@
     "facebookUrl": "https://www.facebook.com/jesus.haus.muenchen",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/jesus-haus-church.webp"
   },
   {
     "slug": "lifechurch-wil",
@@ -53540,7 +53662,8 @@
     "facebookUrl": "https://www.facebook.com/NewLifeLaCote/",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/une-eglise-qui-vit-ce-qu-elle-croit.webp"
   },
   {
     "slug": "gape-church",
@@ -53653,7 +53776,8 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UC_mg34uuwJnHUcnNL_CXsCg",
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/eglise-connexion.webp"
   },
   {
     "slug": "eglise-connexion-jolimont",
@@ -53762,7 +53886,8 @@
     "youtubeUrl": "https://www.youtube.com/channel/UCLljMSW6t5jUjldgmuzcQDQ",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/eglise-lyon-gerland-reformee-evangelique.webp"
   },
   {
     "slug": "eglise-mlk",
@@ -54051,7 +54176,7 @@
     "website": "https://eglisedecardinet.fr/",
     "email": "eglise.cardinet@gmail.com",
     "logo": "",
-    "headerImage": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=AxFQnF-q4kQRSee89bpETA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=64.181564&pitch=0&thumbfov=100",
+    "headerImage": "https://media.gospelchannel.com/heroes/eglise-protestante-evangelique-de-paris-cardinet.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -54068,7 +54193,8 @@
     "youtubeUrl": "https://www.youtube.com/channel/UCtn6WhhmqW9Lyq9LqNMl56g",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/eglise-reformee-baptiste-de-lausanne.webp"
   },
   {
     "slug": "glise-r-form-e-vang-lique-de-marseille-sud",
@@ -54208,7 +54334,8 @@
     "youtubeUrl": "https://www.youtube.com/channel/UCKA00BD3GzgUwhOrBnkAXVA",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/eglise-protestante-paris-alesia.webp"
   },
   {
     "slug": "glise-protestante-de-gen-ve",
@@ -54325,7 +54452,8 @@
     "youtubeUrl": "https://m.youtube.com/channel/UCQcmHFdp3yfxNFolDtC55-w",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/eglise-evangelique-le-phare-et-la-source.webp"
   },
   {
     "slug": "eglise-evangelique-libre-de-geneve",
@@ -54412,7 +54540,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/eglise-evangelique-de-la-pelisserie.webp"
   },
   {
     "slug": "eglise-a-lausanne-inclusive-et-ouverte",
@@ -54425,7 +54554,8 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
+    "sourceKind": "discovered",
+    "headerImage": "https://media.gospelchannel.com/heroes/eglise-a-lausanne-inclusive-et-ouverte.webp"
   },
   {
     "slug": "eglise-evangelique-actes-2-42-nice",
