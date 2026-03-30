@@ -1,5 +1,5 @@
 import { headers } from "next/headers";
-import { getAuthenticatedUserFromHeaders } from "@/lib/supabase";
+import { getAuthenticatedUserFromHeaders } from "@/lib/neon-client";
 
 export async function createServerComponentClient() {
   return {

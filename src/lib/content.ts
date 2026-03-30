@@ -4,7 +4,7 @@ import churchesJson from "@/data/churches.json";
 import staffPicksJson from "@/data/staff-picks.json";
 import trendingJson from "@/data/cache/trending.json";
 import type { ChurchConfig, CatalogVideo } from "@/types/gospel";
-import { hasSupabaseServiceConfig, createAdminClient } from "@/lib/supabase";
+import { hasSupabaseServiceConfig, createAdminClient } from "@/lib/neon-client";
 import { rewriteLegacySupabaseMediaUrl } from "@/lib/media";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
 import {
@@ -322,6 +322,36 @@ async function fetchApprovedChurchesFromSupabase(): Promise<ChurchConfig[]> {
   return churchRows.map((row) => mapRowToChurchConfig(row, enrichmentMap.get(String(row.slug || ""))));
 }
 
+async function fetchSingleChurchBySlug(slug: string): Promise<ChurchConfig | undefined> {
+  const sb = createAdminClient();
+
+  const { data: churchRow, error: churchError } = await sb
+    .from("churches")
+    .select("*")
+    .eq("slug", slug)
+    .eq("status", "approved")
+    .limit(1)
+    .maybeSingle();
+
+  if (churchError) {
+    throw new Error(`Failed to load church ${slug}: ${churchError.message}`);
+  }
+
+  if (!churchRow) {
+    return undefined;
+  }
+
+  const { data: enrichmentRows } = await sb
+    .from("church_enrichments")
+    .select("church_slug,contact_email,instagram_url,facebook_url,youtube_url,cover_image_url")
+    .eq("church_slug", slug)
+    .limit(1);
+
+  const enrichment = (enrichmentRows as Array<Record<string, unknown>> | null)?.[0];
+
+  return mapRowToChurchConfig(churchRow as ChurchDataRow, enrichment);
+}
+
 async function fetchApprovedChurchDirectorySeedFromSupabase(): Promise<ChurchDirectorySeed[]> {
   const sb = createAdminClient();
   const PAGE_SIZE = 1000;
@@ -442,8 +472,18 @@ export function getLocalChurchSnapshot(): ChurchConfig[] {
 export async function getChurchBySlugAsync(
   slug: string
 ): Promise<ChurchConfig | undefined> {
-  const churchesBySlug = await getApprovedChurchLookup();
-  return churchesBySlug.get(slug);
+  if (isOfflinePublicBuild() || !hasSupabaseServiceConfig()) {
+    return getFallbackChurchMap().get(slug);
+  }
+
+  try {
+    const church = await fetchSingleChurchBySlug(slug);
+    if (church) return church;
+    return getFallbackChurchMap().get(slug);
+  } catch (error) {
+    logChurchSnapshotFallback(`church-by-slug:${slug}`, error);
+    return getFallbackChurchMap().get(slug);
+  }
 }
 
 /**
@@ -467,6 +507,11 @@ export const getHomepageShowcaseChurches = unstable_cache(
   { revalidate: 3600, tags: [CHURCH_CONTENT_TAG, HOME_TAG] }
 );
 
+/**
+ * Nuclear revalidation — invalidates ALL church-related caches and paths.
+ * Use for admin operations (approve, status change, profile edit) where
+ * the full scope of change is unknown.
+ */
 export function revalidatePublicChurchContent(): void {
   revalidateTag(CHURCH_CONTENT_TAG, "max");
   revalidateTag(CHURCH_INDEX_TAG, "max");
@@ -493,6 +538,19 @@ export function revalidatePublicChurchContent(): void {
   revalidatePath("/network/[slug]", "page");
   revalidatePath("/prayerwall");
   revalidatePath("/prayerwall/[...segments]", "page");
+  revalidatePath("/sitemap.xml");
+}
+
+/**
+ * Lightweight revalidation for the daily cron sync.
+ * Only refreshes data caches (tags) without blasting every rendered path.
+ * Individual church pages pick up fresh data on their next ISR cycle.
+ */
+export function revalidateCronSync(): void {
+  revalidateTag(CHURCH_CONTENT_TAG, "max");
+  revalidateTag(CHURCH_INDEX_TAG, "max");
+  revalidateTag(CHURCH_PAGE_PUBLIC_TAG, "max");
+  revalidatePath("/church");
   revalidatePath("/sitemap.xml");
 }
 

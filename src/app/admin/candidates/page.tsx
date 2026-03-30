@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import Link from "next/link";
-import { createAdminClient, hasSupabaseServiceConfig } from "@/lib/supabase";
+import { createAdminClient, hasSupabaseServiceConfig } from "@/lib/neon-client";
 import { AdminNav } from "@/components/admin/AdminNav";
 import {
   AdminCandidatesPanel,

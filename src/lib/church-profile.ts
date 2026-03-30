@@ -1,4 +1,4 @@
-import { createAdminClient, hasSupabaseServiceConfig } from '@/lib/supabase';
+import { createAdminClient, hasSupabaseServiceConfig } from '@/lib/neon-client';
 import { getDb, schema } from '@/db';
 import type {
   ChurchProfileEdit,

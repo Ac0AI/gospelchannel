@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { hasSupabaseServiceConfig, createAdminClient } from "@/lib/supabase";
+import { hasSupabaseServiceConfig, createAdminClient } from "@/lib/neon-client";
 import { getClientIp, hasKvRateLimit, isBotTrapFilled, setKvRateLimit } from "@/lib/request-guards";
 import { getPostHogClient } from "@/lib/posthog-server";
 

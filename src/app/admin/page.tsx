@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { createAdminClient, hasSupabaseServiceConfig } from "@/lib/supabase";
+import { createAdminClient, hasSupabaseServiceConfig } from "@/lib/neon-client";
 import { AdminLogout } from "@/components/AdminLogout";
 import { AdminNav } from "@/components/admin/AdminNav";
 import { getPendingEdits } from "@/lib/church-profile";

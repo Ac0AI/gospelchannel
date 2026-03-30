@@ -1,6 +1,6 @@
 import { desc, eq, gte, inArray, sql } from "drizzle-orm";
 import { getDb, hasDatabaseConfig, schema } from "@/db";
-import { createAdminClient, hasSupabaseServiceConfig } from "@/lib/supabase";
+import { createAdminClient, hasSupabaseServiceConfig } from "@/lib/neon-client";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
 import type {
   ChurchPlaylistReview,

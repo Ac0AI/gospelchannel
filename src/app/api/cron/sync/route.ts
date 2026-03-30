@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { refreshChurchUpdatesBatch } from "@/lib/church-updates";
-import { getChurchStatsAsync, revalidatePublicChurchContent } from "@/lib/content";
+import { getChurchStatsAsync, revalidateCronSync, revalidatePublicChurchContent } from "@/lib/content";
 
 function authorized(request: NextRequest): boolean {
   const configuredSecret = process.env.CRON_SECRET;
@@ -19,7 +19,15 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  revalidatePublicChurchContent();
+  // ?full=true forces nuclear invalidation (use after schema changes, bulk imports, etc.)
+  const forceAll = request.nextUrl.searchParams.get("full") === "true";
+
+  if (forceAll) {
+    revalidatePublicChurchContent();
+  } else {
+    revalidateCronSync();
+  }
+
   revalidateTag("video-catalog", "max");
   revalidateTag("discover", "max");
   const { churchCount } = await getChurchStatsAsync();
@@ -28,6 +36,7 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({
     ok: true,
     churchesRevalidated: churchCount,
+    revalidationMode: forceAll ? "full" : "cron",
     updates,
     runAt: new Date().toISOString(),
   });

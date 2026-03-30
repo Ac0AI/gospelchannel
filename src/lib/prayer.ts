@@ -1,5 +1,5 @@
 import { revalidateTag, unstable_cache } from "next/cache";
-import { createAdminClient, hasSupabaseServiceConfig } from "@/lib/supabase";
+import { createAdminClient, hasSupabaseServiceConfig } from "@/lib/neon-client";
 import type { Prayer } from "@/types/gospel";
 import { getChurchSlugsByCountry, getChurchSlugsByCity, getChurchSlugsForNetwork } from "@/lib/prayer-filters";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";

@@ -3,9 +3,9 @@ import { getChurchLatestUpdates } from "@/lib/church-updates";
 import { uniqueSpotifyPlaylistIds } from "@/lib/spotify-playlist";
 import type { ChurchProfileEdit, YouTubeVideo, ChurchEnrichment, ChurchProfileScore } from "@/types/gospel";
 import type { ChurchConfig } from "@/types/gospel";
-import { getChurchesAsync, getChurchBySlugAsync, getLocalChurchSnapshot } from "@/lib/content";
+import { getChurchBySlugAsync, getLocalChurchSnapshot } from "@/lib/content";
 import { CONTENT_UPDATED_AT, normalizeText, tokenSimilarity } from "@/lib/utils";
-import { hasSupabaseServiceConfig, createAdminClient } from "@/lib/supabase";
+import { hasSupabaseServiceConfig, createAdminClient } from "@/lib/neon-client";
 import { getCampusBySlug } from "@/lib/church-networks";
 import { getApprovedProfileEditsForChurch, buildMergedProfile } from "@/lib/church-profile";
 import { calculateProfileScore } from "@/lib/profile-score";
@@ -943,8 +943,18 @@ export async function getNearbyChurches(
   const nearbyRows = (data as NearbyChurchRow[] | null) ?? [];
   if (nearbyRows.length === 0) return [];
 
-  const allChurches = await getChurchesAsync();
-  const churchMap = new Map(allChurches.map((c) => [c.slug, c]));
+  const matchedSlugs = nearbyRows.map((row) => row.church_slug);
+  const { data: churchRows } = await sb
+    .from("churches")
+    .select("slug,name,country,location")
+    .in("slug", matchedSlugs)
+    .eq("status", "approved");
+
+  const churchMap = new Map(
+    ((churchRows as Array<{ slug: string; name: string; country: string | null; location: string | null }>) ?? []).map(
+      (row) => [row.slug, { slug: row.slug, name: row.name, country: row.country || "", location: row.location || undefined }]
+    )
+  );
 
   return nearbyRows
     .map((row): { slug: string; name: string; distance: number; country: string; location?: string } | null => {
