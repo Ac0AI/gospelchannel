@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { ChurchGridFilter } from "@/components/ChurchGridFilter";
 import { HeroSearch } from "@/components/HeroSearch";
-import { getChurchIndexData } from "@/lib/church";
 import { getPrayers } from "@/lib/prayer";
 import { PrayerFeed } from "@/components/PrayerFeed";
+import {
+  getChurchDirectorySeedAsync,
+  getChurchStatsAsync,
+  getHomepageShowcaseChurches,
+} from "@/lib/content";
 
 export const revalidate = 3600;
 
@@ -56,50 +60,21 @@ function buildHomeFaqSchema(churchCountLabel: string, countryCount: number) {
   };
 }
 
-type HomeChurch = Awaited<ReturnType<typeof getChurchIndexData>>[number];
-
-function formatChurchCountLabel(count: number): string {
-  const rounded = Math.floor(count / 100) * 100;
-  return `${rounded.toLocaleString("en-US")}+`;
-}
-
-function pickHomepageChurches(churches: HomeChurch[], count: number): HomeChurch[] {
-  let pool = churches.filter((church) => church.promotionTier === "promotable");
-  // Fallback: if no promotable churches, use best by displayScore
-  if (pool.length === 0) {
-    pool = [...churches].sort((a, b) => (b.displayScore ?? 0) - (a.displayScore ?? 0)).slice(0, count * 2);
-  }
-  // Fisher-Yates shuffle — different churches every visit
-  for (let i = pool.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [pool[i], pool[j]] = [pool[j], pool[i]];
-  }
-  return pool.slice(0, count);
-}
-
 export default async function HomePage() {
-  const [churches, recentPrayers] = await Promise.all([
-    getChurchIndexData(),
+  const [showcaseChurches, stats, directorySeed, recentPrayers] = await Promise.all([
+    getHomepageShowcaseChurches(),
+    getChurchStatsAsync(),
+    getChurchDirectorySeedAsync(),
     getPrayers({ limit: 5 }),
   ]);
-  const searchChurches = churches.map((church) => ({
-    slug: church.slug,
-    name: church.name,
-    country: church.country,
-    location: church.location,
-    thumbnailUrl: church.thumbnailUrl,
-    logoUrl: church.logo,
-  }));
-  const churchCountLabel = formatChurchCountLabel(churches.length);
-  const countryCount = new Set(churches.map((church) => church.country).filter(Boolean)).size;
+  const churchCountLabel = stats.churchCountLabel;
+  const countryCount = stats.countryCount;
   const homeFaqSchema = buildHomeFaqSchema(churchCountLabel, countryCount);
-  const featured = pickHomepageChurches(churches, 24);
-  const surpriseSlugs = featured
-    .filter((c) => c.promotionTier === "promotable")
-    .map((c) => c.slug);
+  const featured = showcaseChurches.slice(0, 24);
+  const surpriseSlugs = showcaseChurches.slice(0, 48).map((church) => church.slug);
   const visiblePrayerSlugs = new Set(recentPrayers.map((prayer) => prayer.churchSlug));
   const churchNames = Object.fromEntries(
-    churches
+    directorySeed
       .filter((church) => visiblePrayerSlugs.has(church.slug))
       .map((church) => [church.slug, church.name]),
   );
@@ -121,7 +96,7 @@ export default async function HomePage() {
           Compare worship style, tradition, language, and service details before your first visit.
         </p>
         <div className="mx-auto mt-5 flex justify-center">
-          <HeroSearch churches={searchChurches} surpriseSlugs={surpriseSlugs} variant="page" />
+          <HeroSearch surpriseSlugs={surpriseSlugs} variant="page" />
         </div>
       </section>
 
@@ -190,10 +165,10 @@ export default async function HomePage() {
           updatedAt: church.updatedAt,
           musicStyle: church.musicStyle,
           thumbnailUrl: church.thumbnailUrl,
-          serviceTimes: church.enrichmentHint?.serviceTimes,
-          enrichmentSummary: church.enrichmentHint?.summary,
+          serviceTimes: undefined,
+          enrichmentSummary: undefined,
         }))}
-        totalCount={churches.length}
+        totalCount={stats.churchCount}
       />
 
       {/* Prayer Wall */}

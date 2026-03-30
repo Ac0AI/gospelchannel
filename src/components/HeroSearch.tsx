@@ -54,6 +54,7 @@ export function HeroSearch({ churches = [], surpriseSlugs = [], variant = "hero"
   const [open, setOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const deferredQuery = useDeferredValue(query.trim());
+  const canSurprise = surpriseSlugs.length > 0 || churches.length > 0;
 
   const results = useMemo(() => {
     const q = deferredQuery.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -134,7 +135,7 @@ export function HeroSearch({ churches = [], surpriseSlugs = [], variant = "hero"
         >
           Find
         </button>
-        {churches.length > 0 && (
+        {canSurprise && (
           <button
             type="button"
             onClick={handleSurprise}
@@ -148,7 +149,7 @@ export function HeroSearch({ churches = [], surpriseSlugs = [], variant = "hero"
           </button>
         )}
       </form>
-      {churches.length > 0 && (
+      {canSurprise && (
         <button
           type="button"
           onClick={handleSurprise}

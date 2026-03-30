@@ -7,6 +7,13 @@ import type { ChurchConfig, CatalogVideo } from "@/types/gospel";
 import { hasSupabaseServiceConfig, createAdminClient } from "@/lib/supabase";
 import { rewriteLegacySupabaseMediaUrl } from "@/lib/media";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
+import {
+  getCompactLocationLabel,
+  isGeneratedChurchDescription,
+  isPlayableSpotifyUrl,
+  normalizeDisplayText,
+} from "@/lib/content-quality";
+import { uniqueSpotifyPlaylistIds } from "@/lib/spotify-playlist";
 
 const CHURCH_CONTENT_TAG = "church-content";
 const CHURCH_INDEX_TAG = "church-index";
@@ -20,6 +27,19 @@ export type ChurchDirectorySeed = Pick<
   ChurchConfig,
   "slug" | "name" | "country" | "location" | "musicStyle" | "denomination"
 >;
+
+export type HomepageShowcaseChurch = {
+  slug: string;
+  name: string;
+  description: string;
+  country: string;
+  location?: string;
+  logo?: string;
+  playlistCount?: number;
+  updatedAt?: string;
+  musicStyle?: string[];
+  thumbnailUrl?: string;
+};
 
 type ChurchDirectorySeedRow = {
   slug: string;
@@ -107,6 +127,75 @@ function toChurchDirectorySeed(church: ChurchConfig): ChurchDirectorySeed {
     musicStyle: church.musicStyle,
     denomination: church.denomination,
   };
+}
+
+function getHomepageShowcaseDescription(church: ChurchConfig): string {
+  const description = normalizeDisplayText(church.description);
+  if (description && !isGeneratedChurchDescription(description)) return description;
+
+  const location = getCompactLocationLabel(church.location, church.country);
+  if (location) return `${church.name} is a church in ${location}.`;
+  if (description) return description;
+  return `Explore ${church.name} on GospelChannel.`;
+}
+
+function getHomepageShowcaseScore(church: ChurchConfig): number {
+  const description = normalizeDisplayText(church.description);
+  const playlistCount = uniqueSpotifyPlaylistIds([
+    ...church.spotifyPlaylistIds,
+    ...(church.additionalPlaylists ?? []),
+  ]).length;
+  const hasMusic = playlistCount > 0 || isPlayableSpotifyUrl(church.spotifyUrl);
+  const hasLongText = Boolean(description && !isGeneratedChurchDescription(description) && description.length >= 80);
+  const hasVisual = Boolean(rewriteLegacySupabaseMediaUrl(church.headerImage) || rewriteLegacySupabaseMediaUrl(church.logo));
+  const hasLocation = Boolean(getCompactLocationLabel(church.location, church.country));
+  const hasStyle = (church.musicStyle?.length ?? 0) > 0;
+
+  let score = 0;
+  if (hasMusic) score += 30;
+  if (hasLongText) score += 25;
+  if (hasVisual) score += 20;
+  if (hasLocation) score += 15;
+  if (hasStyle) score += 10;
+
+  return score;
+}
+
+function getStableChurchHash(value: string): number {
+  let hash = 0;
+  for (let index = 0; index < value.length; index += 1) {
+    hash = (hash * 31 + value.charCodeAt(index)) | 0;
+  }
+  return Math.abs(hash);
+}
+
+function mapChurchToHomepageShowcase(church: ChurchConfig): HomepageShowcaseChurch {
+  return {
+    slug: church.slug,
+    name: church.name,
+    description: getHomepageShowcaseDescription(church),
+    country: church.country,
+    location: getCompactLocationLabel(church.location, church.country),
+    logo: rewriteLegacySupabaseMediaUrl(church.logo) || undefined,
+    playlistCount: uniqueSpotifyPlaylistIds([
+      ...church.spotifyPlaylistIds,
+      ...(church.additionalPlaylists ?? []),
+    ]).length,
+    updatedAt: church.verifiedAt,
+    musicStyle: church.musicStyle,
+    thumbnailUrl: rewriteLegacySupabaseMediaUrl(church.headerImage) || undefined,
+  };
+}
+
+function buildHomepageShowcaseChurches(churches: ChurchConfig[]): HomepageShowcaseChurch[] {
+  return [...churches]
+    .sort((left, right) => {
+      const scoreDiff = getHomepageShowcaseScore(right) - getHomepageShowcaseScore(left);
+      if (scoreDiff !== 0) return scoreDiff;
+      return getStableChurchHash(left.slug) - getStableChurchHash(right.slug);
+    })
+    .slice(0, 96)
+    .map(mapChurchToHomepageShowcase);
 }
 
 function mergeChurchFallback(church: ChurchConfig): ChurchConfig {
@@ -371,6 +460,12 @@ export async function getChurchStatsAsync(): Promise<{
 }> {
   return getApprovedChurchStatsCached();
 }
+
+export const getHomepageShowcaseChurches = unstable_cache(
+  async (): Promise<HomepageShowcaseChurch[]> => buildHomepageShowcaseChurches(tryLoadLocalChurchSnapshot()),
+  ["homepage-showcase-v1"],
+  { revalidate: 3600, tags: [CHURCH_CONTENT_TAG, HOME_TAG] }
+);
 
 export function revalidatePublicChurchContent(): void {
   revalidateTag(CHURCH_CONTENT_TAG, "max");
