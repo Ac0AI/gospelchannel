@@ -144,6 +144,7 @@ export type ChurchCandidate = {
   discoverySource?: "spotify-search" | "youtube-search" | "suggestion-upgrade" | "google-search" | "directory-import";
   sourceKind?: string;
   candidateId?: string;
+  headerImage?: string;
   status: "pending" | "approved" | "rejected";
 };
 

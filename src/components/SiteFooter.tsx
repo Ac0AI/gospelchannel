@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { COPYRIGHT_YEAR } from "@/lib/utils";
-import { CookieSettingsLink } from "./CookieSettingsLink";
 
 export function SiteFooter() {
   return (
@@ -64,8 +63,6 @@ export function SiteFooter() {
           <Link href="/privacy" prefetch={false} className="transition-colors hover:text-espresso">Privacy Policy</Link>
           {" · "}
           <a href="mailto:hello@gospelchannel.com" className="transition-colors hover:text-espresso">Contact</a>
-          {" · "}
-          <CookieSettingsLink />
         </p>
       </div>
     </footer>

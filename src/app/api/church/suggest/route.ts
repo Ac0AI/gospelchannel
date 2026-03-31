@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { addChurchSuggestion } from "@/lib/church-community";
 import { getClientIp, hasKvRateLimit, isBotTrapFilled, setKvRateLimit } from "@/lib/request-guards";
 import { getPostHogClient } from "@/lib/posthog-server";
+import { enrichFromWebsite, saveEnrichmentToSuggestion } from "@/lib/auto-enrich";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 
 function sanitize(value: string, maxLen: number): string {
   return value.trim().slice(0, maxLen);
@@ -98,6 +100,20 @@ export async function POST(request: NextRequest) {
     event: "church_suggestion_received",
     properties: { church_name: name, country, language, suggestion_id: suggestion.id },
   });
+
+  // Auto-enrich in the background (don't block the response)
+  try {
+    const { ctx } = await getCloudflareContext({ async: true });
+    ctx.waitUntil(
+      enrichFromWebsite({ name, website, country, city, denomination })
+        .then((result) => {
+          if (result) return saveEnrichmentToSuggestion(suggestion.id, result);
+        })
+        .catch((err) => console.error("[auto-enrich] Background error:", err))
+    );
+  } catch {
+    // Enrichment is best-effort; don't fail the suggestion
+  }
 
   return NextResponse.json({
     success: true,

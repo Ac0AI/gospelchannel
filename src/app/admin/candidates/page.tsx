@@ -65,6 +65,7 @@ type CandidateRow = {
   discovery_source?: ChurchCandidate["discoverySource"] | null;
   source_kind?: ChurchCandidate["sourceKind"] | null;
   candidate_id?: string | null;
+  header_image?: string | null;
   status: ChurchCandidate["status"];
 };
 
@@ -147,6 +148,7 @@ function mapCandidate(row: CandidateRow): ChurchCandidate {
     discoverySource: row.discovery_source ?? undefined,
     sourceKind: row.source_kind ?? undefined,
     candidateId: row.candidate_id ?? undefined,
+    headerImage: row.header_image ?? undefined,
     status: row.status,
   };
 }

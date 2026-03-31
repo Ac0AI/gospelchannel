@@ -12,6 +12,7 @@ type Props = {
   initialEmail?: string;
   initialLocation?: string;
   initialCountry?: string;
+  initialHeaderImage?: string;
 };
 
 export function AdminCandidateDetailsForm({
@@ -21,6 +22,7 @@ export function AdminCandidateDetailsForm({
   initialEmail = "",
   initialLocation = "",
   initialCountry = "",
+  initialHeaderImage = "",
 }: Props) {
   const router = useRouter();
   const [name, setName] = useState(initialName);
@@ -28,9 +30,11 @@ export function AdminCandidateDetailsForm({
   const [email, setEmail] = useState(initialEmail);
   const [location, setLocation] = useState(initialLocation);
   const [country, setCountry] = useState(initialCountry);
+  const [headerImage, setHeaderImage] = useState(initialHeaderImage);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   // Auto-resolve email from website if not already set
   useEffect(() => {
@@ -64,6 +68,7 @@ export function AdminCandidateDetailsForm({
         email,
         location,
         country,
+        headerImage,
       });
 
       setSaved(true);
@@ -142,6 +147,33 @@ export function AdminCandidateDetailsForm({
             className="w-full rounded-2xl border border-rose-200/80 bg-white px-3 py-2 text-sm text-espresso outline-none transition focus:border-rose-gold focus:ring-2 focus:ring-rose-gold/20"
           />
         </div>
+      </div>
+
+      <div>
+        <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-warm-brown">
+          Hero image URL
+        </label>
+        <input
+          type="text"
+          value={headerImage}
+          onChange={(event) => { setHeaderImage(event.target.value); setImgError(false); }}
+          placeholder="https://media.gospelchannel.com/heroes/slug.jpg"
+          className="w-full rounded-2xl border border-rose-200/80 bg-white px-3 py-2 text-sm text-espresso outline-none transition focus:border-rose-gold focus:ring-2 focus:ring-rose-gold/20"
+        />
+        {headerImage && !imgError && (
+          <div className="mt-2 overflow-hidden rounded-xl border border-rose-200/60">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={headerImage}
+              alt="Hero preview"
+              className="h-32 w-full object-cover"
+              onError={() => setImgError(true)}
+            />
+          </div>
+        )}
+        {imgError && (
+          <p className="mt-1 text-xs text-red-600">Image failed to load - check URL</p>
+        )}
       </div>
 
       <div className="flex flex-wrap items-center gap-3">

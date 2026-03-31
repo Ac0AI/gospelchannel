@@ -9,15 +9,13 @@ const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY ?? "";
 const POSTHOG_HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://eu.i.posthog.com";
 
 if (typeof window !== "undefined" && POSTHOG_KEY) {
-  const consent = localStorage.getItem("cookie_consent");
   posthog.init(POSTHOG_KEY, {
     api_host: "/ingest",
     ui_host: POSTHOG_HOST,
     capture_pageview: false,
     capture_pageleave: true,
-    persistence: consent === "yes" ? "localStorage+cookie" : "memory",
-    opt_out_capturing_by_default: consent !== "yes",
-    opt_out_persistence_by_default: consent !== "yes",
+    persistence: "memory",
+    person_profiles: "never",
   });
 }
 

@@ -48,6 +48,7 @@ export type AdminCandidateRecord = {
   reason?: string;
   discoveredAt: string;
   discoverySource?: string;
+  headerImage?: string;
   status: "pending" | "approved" | "rejected";
   screening?: AdminCandidateScreening;
   playlistReviewStatuses: Record<string, "kept" | "rejected">;
@@ -511,6 +512,7 @@ export function AdminCandidatesPanel({ candidates }: Props) {
                             initialEmail={candidate.email || screening?.websiteEmails[0] || ""}
                             initialLocation={candidate.location || ""}
                             initialCountry={candidate.country || ""}
+                            initialHeaderImage={candidate.headerImage || screening?.headerImageUrl || ""}
                           />
                         </div>
                       </div>

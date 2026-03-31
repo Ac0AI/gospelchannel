@@ -5,7 +5,6 @@ import "./globals.css";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { PostHogProvider } from "@/components/PostHogProvider";
-import { CookieBanner } from "@/components/CookieBanner";
 import { getChurchStatsAsync } from "@/lib/content";
 
 const sans = Nunito({
@@ -122,11 +121,9 @@ export default function RootLayout({
           }}
         />
         <PostHogProvider>
-          <CookieBanner>
             <SiteHeader />
             <main>{children}</main>
             <SiteFooter />
-          </CookieBanner>
         </PostHogProvider>
       </body>
     </html>

@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
+import { cfImage } from "@/lib/media";
 
 type ChurchCardImageProps = {
   name: string;
@@ -11,20 +11,29 @@ type ChurchCardImageProps = {
   isThumbnail: boolean;
 };
 
+const CARD_WIDTHS = [320, 480, 640] as const;
+
 export function ChurchCardImage({ name, initials, gradient, mediaUrl, isThumbnail }: ChurchCardImageProps) {
   const [failed, setFailed] = useState(false);
   const showImage = mediaUrl && !failed;
+
+  const srcSet = showImage
+    ? CARD_WIDTHS.map((w) => `${cfImage(mediaUrl, { width: w, height: Math.round(w * 0.44), quality: 70 })} ${w}w`).join(", ")
+    : undefined;
 
   return (
     <div className={`relative h-28 overflow-hidden rounded-xl ${showImage ? "" : `flex items-center justify-center bg-gradient-to-br ${gradient}`}`}>
       {showImage ? (
         <>
-          <Image
-            src={mediaUrl}
-            alt={`${name} worship`}
-            fill
-            className={`${isThumbnail ? "object-cover" : "object-contain p-4"} transition duration-500 group-hover:scale-105`}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={cfImage(mediaUrl, { width: 480, height: 212, quality: 70 })}
+            srcSet={srcSet}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            alt={`${name} worship`}
+            loading="lazy"
+            decoding="async"
+            className={`absolute inset-0 h-full w-full ${isThumbnail ? "object-cover" : "object-contain p-4"} transition duration-500 group-hover:scale-105`}
             onError={() => setFailed(true)}
           />
           {isThumbnail ? (

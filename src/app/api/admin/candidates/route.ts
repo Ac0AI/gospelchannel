@@ -14,6 +14,7 @@ export async function POST(request: NextRequest) {
     email?: string;
     location?: string;
     country?: string;
+    headerImage?: string;
   } | null;
 
   if (!payload?.slug) {
@@ -25,6 +26,7 @@ export async function POST(request: NextRequest) {
   const email = payload.email?.trim() ?? "";
   const location = payload.location?.trim() ?? "";
   const country = payload.country?.trim() ?? "";
+  const headerImage = payload.headerImage?.trim();
 
   if (!name) {
     return admin.json({ error: "Church name is required" }, { status: 400 });
@@ -39,7 +41,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    await updateChurchDetails(payload.slug, { name, website, email, location, country });
+    await updateChurchDetails(payload.slug, { name, website, email, location, country, headerImage });
     revalidatePublicChurchContent();
     return admin.json({ success: true });
   } catch (err) {

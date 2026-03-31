@@ -610,6 +610,7 @@ export async function updateChurchDetails(
     email?: string | null;
     location?: string | null;
     country?: string | null;
+    headerImage?: string | null;
   }
 ): Promise<void> {
   if (!isSupabaseAdminEnabled()) {
@@ -621,21 +622,22 @@ export async function updateChurchDetails(
   const email = details.email?.trim() || null;
   const location = details.location?.trim() || null;
   const country = details.country?.trim() || null;
+  const headerImage = details.headerImage?.trim() || null;
 
   if (!name) {
     throw new Error("Church name is required");
   }
 
   const supabase = createAdminClient();
+  const update: Record<string, string | null> = { name, website, email, location, country };
+  // Only include header_image if explicitly provided (even if empty string to clear it)
+  if (details.headerImage !== undefined) {
+    update.header_image = headerImage;
+  }
+
   const { error } = await supabase
     .from("churches")
-    .update({
-      name,
-      website,
-      email,
-      location,
-      country,
-    })
+    .update(update)
     .eq("slug", slug);
 
   if (error) {
