@@ -155,9 +155,14 @@ function getTextMatchScore(church: ChurchDirectoryEntry, query: string): number 
     else if (alias.includes(q)) score = Math.max(score, 60);
   }
 
-  // Location/city matches are highly relevant — a search for "göteborg"
-  // should strongly prefer churches located there over churches that merely
-  // mention the city in their description.
+  // Location is fuzzy: "goteborg" matches "gothenburg, goteborg, göteborg" etc.
+  // Split on commas/spaces so "Stockholm, Sweden" matches on "stockholm".
+  const locationParts = location.split(/[,\s]+/).filter(Boolean);
+  for (const part of locationParts) {
+    if (part.startsWith(q)) score = Math.max(score, 85);
+    else if (part.includes(q)) score = Math.max(score, 60);
+  }
+  // Also match against the full location string for multi-word locations
   if (location.startsWith(q)) score = Math.max(score, 85);
   else if (location.includes(q)) score = Math.max(score, 60);
 
@@ -165,13 +170,11 @@ function getTextMatchScore(church: ChurchDirectoryEntry, query: string): number 
   else if (country.includes(q)) score = Math.max(score, 30);
   if (denomination.includes(q)) score = Math.max(score, 35);
   if (styles.some((s) => s.includes(q))) score = Math.max(score, 30);
-  // Description matches are weak signals — don't let them outrank location
-  if (description.includes(q)) score = Math.max(score, 10);
 
-  // Multi-word: if query has spaces, check if ALL words match somewhere
+  // Multi-word: if query has spaces, check if ALL words match structured fields
   const words = q.split(/\s+/).filter((w) => w.length > 1);
   if (words.length > 1) {
-    const haystack = [name, location, country, denomination, ...styles, ...aliases, description].join(" ");
+    const haystack = [name, location, country, denomination, ...styles, ...aliases].join(" ");
     const allMatch = words.every((w) => haystack.includes(w));
     if (allMatch) score = Math.max(score, 50 + words.length * 10);
   }
