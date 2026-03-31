@@ -155,11 +155,18 @@ function getTextMatchScore(church: ChurchDirectoryEntry, query: string): number 
     else if (alias.includes(q)) score = Math.max(score, 60);
   }
 
-  if (location.includes(q)) score = Math.max(score, 40);
-  if (country.includes(q)) score = Math.max(score, 30);
+  // Location/city matches are highly relevant — a search for "göteborg"
+  // should strongly prefer churches located there over churches that merely
+  // mention the city in their description.
+  if (location.startsWith(q)) score = Math.max(score, 85);
+  else if (location.includes(q)) score = Math.max(score, 60);
+
+  if (country.startsWith(q)) score = Math.max(score, 35);
+  else if (country.includes(q)) score = Math.max(score, 30);
   if (denomination.includes(q)) score = Math.max(score, 35);
   if (styles.some((s) => s.includes(q))) score = Math.max(score, 30);
-  if (description.includes(q)) score = Math.max(score, 15);
+  // Description matches are weak signals — don't let them outrank location
+  if (description.includes(q)) score = Math.max(score, 10);
 
   // Multi-word: if query has spaces, check if ALL words match somewhere
   const words = q.split(/\s+/).filter((w) => w.length > 1);
