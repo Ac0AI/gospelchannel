@@ -16,6 +16,11 @@ if (typeof window !== "undefined" && POSTHOG_KEY) {
     capture_pageleave: true,
     persistence: "memory",
     person_profiles: "never",
+    disable_session_recording: true,
+    disable_surveys: true,
+    disable_scroll_properties: true,
+    advanced_disable_decide: true,
+    on_xhr_error: () => {},
   });
 }
 
