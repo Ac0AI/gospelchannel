@@ -58,7 +58,11 @@ Given the following data sources, extract these fields as JSON. Be thorough — 
 Fields to extract:
 - officialChurchName: The parent church's actual/official registered name. For worship labels, this is the church they belong to (e.g. "Bethel Church" for "Bethel Music", "Passion City Church" for "Passion"). Look for "a ministry of...", "part of...", church name in headers/footers/about pages. null ONLY if the entity is clearly an independent band with no church affiliation.
 - theologicalOrientation: Doctrinal stance. Use ONE of: "charismatic", "reformed", "evangelical", "pentecostal", "lutheran", "catholic", "orthodox", "anglican", "baptist", "methodist", "non-denominational", "progressive". Infer from worship style, statement of faith, language used (e.g. "spirit-filled" = charismatic). Can combine: "charismatic evangelical".
-- denominationNetwork: Parent denomination, network, or movement. Examples: "Assemblies of God", "Hillsong Network", "Vineyard", "Church of Sweden", "Southern Baptist Convention", "Redeemed Christian Church of God", "Winners Chapel". Look for logos, affiliations, "we are part of..." text. null if clearly independent.
+- denominationNetwork: The specific denomination body or church network this church belongs to.
+  For multi-campus networks: "Hillsong", "Vineyard", "C3 Church", "ICF", "Bethel".
+  For denominations: use the COUNTRY-SPECIFIC body. Examples: Sweden → "Church of Sweden", Norway → "Church of Norway", Denmark → "Evangelical Lutheran Church in Denmark", Germany → "EKD" or regional Landeskirche, Finland → "Evangelical Lutheran Church of Finland", USA → "Southern Baptist Convention", "Assemblies of God", etc.
+  CRITICAL: A German Lutheran church is NOT "Church of Sweden". Match denomination to the church's actual country.
+  Look for logos, affiliations, "we are part of..." text. null if independent or unclear.
 - languages: Array of languages used. Detect from: (1) explicit mentions, (2) website content language, (3) country context. A Swedish church likely uses ["Swedish"] even if website is in English.
 - serviceTimes: Array of { day, time, label } objects. Look for: "Join us Sunday at 10am", footer times, "service times" pages. Times in local format. label can be "Morning Service", "Evening Service", etc.
 - childrenMinistry: boolean — any mention of kids church, Sunday school, children's ministry?
