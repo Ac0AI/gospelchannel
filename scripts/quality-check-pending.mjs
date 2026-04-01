@@ -37,7 +37,9 @@ if (!ANTHROPIC_API_KEY) throw new Error("Missing ANTHROPIC_API_KEY");
 const sql = neon(DATABASE_URL);
 const DRY_RUN = process.argv.includes("--dry-run");
 const SINGLE_SLUG = process.argv.find(a => a.startsWith("--slug="))?.split("=")[1];
-const LIMIT = Number(process.argv.find(a => a.startsWith("--limit="))?.split("=")[1]) || 999;
+const LIMIT = Number(process.argv.find(a => a.startsWith("--limit="))?.split("=")[1]) || 9999;
+const STATUS_FILTER = process.argv.find(a => a.startsWith("--status="))?.split("=")[1] || "pending";
+const HERO_ONLY = process.argv.includes("--hero-only");
 
 // Websites that are generic directories, not the church's own site
 const GENERIC_WEBSITE_HOSTS = [
@@ -59,7 +61,7 @@ const BLOCKED_IMAGE_HOSTS = [
 ];
 
 const FETCH_TIMEOUT = 12_000;
-const CONCURRENCY = 3; // Parallel church processing
+const CONCURRENCY = HERO_ONLY ? 8 : 3; // Higher concurrency when skipping Haiku
 
 // ─── Helpers ───
 
@@ -240,23 +242,45 @@ async function processChurch(church) {
     return { slug: church.slug, action: "skip", reason: "unreachable" };
   }
 
-  // Analyze with Haiku
-  const analysis = await analyzeChurchWebsite(church, html);
-  if (!analysis) {
-    return { slug: church.slug, action: "skip", reason: "haiku_parse_error" };
-  }
+  // In hero-only mode, extract og:image directly without Haiku
+  let analysis;
+  if (HERO_ONLY) {
+    const ogMatch = html.match(/<meta\s+(?:property|name)=["']og:image["']\s+content=["']([^"']+)["']/i)
+      || html.match(/<meta\s+content=["']([^"']+)["']\s+(?:property|name)=["']og:image["']/i);
+    const heroUrl = ogMatch?.[1] || null;
+    if (!heroUrl) {
+      // Try finding large images in the HTML
+      const imgMatches = [...html.matchAll(/<img[^>]+src=["']([^"']+)["'][^>]*>/gi)];
+      const heroCandidate = imgMatches
+        .map(m => m[1])
+        .find(src => /hero|banner|header|cover|slide|background/i.test(src) && !/logo|icon|avatar|favicon/i.test(src));
+      if (!heroCandidate) {
+        return { slug: church.slug, action: "skip", reason: "no_hero_found" };
+      }
+      analysis = { hero_image_url: heroCandidate.startsWith("http") ? heroCandidate : new URL(heroCandidate, church.website).toString(), quality: "good" };
+    } else {
+      analysis = { hero_image_url: heroUrl.startsWith("http") ? heroUrl : new URL(heroUrl, church.website).toString(), quality: "good" };
+    }
+    console.log(`  Hero candidate: ${analysis.hero_image_url?.slice(0, 80)}`);
+  } else {
+    // Analyze with Haiku
+    analysis = await analyzeChurchWebsite(church, html);
+    if (!analysis) {
+      return { slug: church.slug, action: "skip", reason: "haiku_parse_error" };
+    }
 
-  console.log(`  Quality: ${analysis.quality} (${analysis.quality_reason})`);
-  if (analysis.city) console.log(`  City: ${analysis.city}`);
-  if (analysis.description) console.log(`  Description: ${analysis.description?.slice(0, 80)}...`);
-  if (analysis.hero_image_url) console.log(`  Hero candidate: ${analysis.hero_image_url?.slice(0, 80)}`);
-  if (analysis.name_fix) console.log(`  Name fix: ${analysis.name_fix}`);
-  if (analysis.contact_email) console.log(`  Email found: ${analysis.contact_email}`);
+    console.log(`  Quality: ${analysis.quality} (${analysis.quality_reason})`);
+    if (analysis.city) console.log(`  City: ${analysis.city}`);
+    if (analysis.description) console.log(`  Description: ${analysis.description?.slice(0, 80)}...`);
+    if (analysis.hero_image_url) console.log(`  Hero candidate: ${analysis.hero_image_url?.slice(0, 80)}`);
+    if (analysis.name_fix) console.log(`  Name fix: ${analysis.name_fix}`);
+    if (analysis.contact_email) console.log(`  Email found: ${analysis.contact_email}`);
 
-  // Skip rejected churches
-  if (analysis.quality === "reject") {
-    console.log(`  ❌ Rejected: ${analysis.quality_reason}`);
-    return { slug: church.slug, action: "reject", reason: analysis.quality_reason, analysis };
+    // Skip rejected churches
+    if (analysis.quality === "reject") {
+      console.log(`  ❌ Rejected: ${analysis.quality_reason}`);
+      return { slug: church.slug, action: "reject", reason: analysis.quality_reason, analysis };
+    }
   }
 
   // Process hero image
@@ -330,7 +354,7 @@ async function processChurch(church) {
 
 async function main() {
   console.log("═══════════════════════════════════════════");
-  console.log("  Quality Check: Pending Churches");
+  console.log(`  Quality Check: ${STATUS_FILTER} churches${HERO_ONLY ? " (hero only)" : ""}`);
   console.log(`  Mode: ${DRY_RUN ? "DRY RUN" : "LIVE"}`);
   console.log("═══════════════════════════════════════════\n");
 
@@ -338,7 +362,7 @@ async function main() {
   if (SINGLE_SLUG) {
     query = sql`SELECT slug, name, location, country, email, website, description, header_image, spotify_url FROM churches WHERE slug = ${SINGLE_SLUG}`;
   } else {
-    query = sql`SELECT slug, name, location, country, email, website, description, header_image, spotify_url FROM churches WHERE status = 'pending' AND (header_image IS NULL OR header_image = '') ORDER BY name`;
+    query = sql`SELECT slug, name, location, country, email, website, description, header_image, spotify_url FROM churches WHERE status = ${STATUS_FILTER} AND (header_image IS NULL OR header_image = '') ORDER BY name`;
   }
 
   const churches = await query;
