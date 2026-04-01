@@ -1,5 +1,3 @@
-import { cfImage } from "@/lib/media";
-
 type ChurchCardImageProps = {
   name: string;
   initials: string;
@@ -8,15 +6,8 @@ type ChurchCardImageProps = {
   isThumbnail: boolean;
 };
 
-const CARD_WIDTHS = [320, 480, 640] as const;
-
 export function ChurchCardImage({ name, initials, gradient, mediaUrl, isThumbnail }: ChurchCardImageProps) {
   const showImage = Boolean(mediaUrl);
-
-  const src = showImage ? cfImage(mediaUrl!, { width: 480, height: 212, quality: 70 }) : undefined;
-  const srcSet = showImage
-    ? CARD_WIDTHS.map((w) => `${cfImage(mediaUrl!, { width: w, height: Math.round(w * 0.44), quality: 70 })} ${w}w`).join(", ")
-    : undefined;
 
   return (
     <div className={`relative h-28 overflow-hidden rounded-xl ${showImage ? "" : `flex items-center justify-center bg-gradient-to-br ${gradient}`}`}>
@@ -24,9 +15,7 @@ export function ChurchCardImage({ name, initials, gradient, mediaUrl, isThumbnai
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={cfImage(mediaUrl!, { width: 480, height: 212, quality: 70 })}
-            srcSet={srcSet}
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            src={mediaUrl}
             alt=""
             aria-hidden="true"
             loading="lazy"
