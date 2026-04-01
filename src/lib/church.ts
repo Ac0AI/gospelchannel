@@ -11,7 +11,11 @@ import { getApprovedProfileEditsForChurch, buildMergedProfile } from "@/lib/chur
 import { calculateProfileScore } from "@/lib/profile-score";
 import { rewriteLegacySupabaseMediaUrl } from "@/lib/media";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
-import { filterCanonicalChurchSlugRecords } from "@/lib/church-slugs";
+import {
+  filterCanonicalChurchSlugRecords,
+  getChurchSlugLookupCandidates,
+  resolveCanonicalChurchSlug,
+} from "@/lib/church-slugs";
 import {
   deriveDisplayAssessment,
   getFirstServiceTimeLabel,
@@ -476,6 +480,7 @@ export function deriveChurchQuality(church: ChurchConfig): {
 export async function getChurchEnrichment(slug: string): Promise<ChurchEnrichment | null> {
   if (!hasSupabaseServiceConfig()) return null;
   const sb = createAdminClient();
+  const canonicalSlug = resolveCanonicalChurchSlug(slug);
   type ChurchEnrichmentRow = {
     id: string;
     church_slug: string | null;
@@ -518,10 +523,10 @@ export async function getChurchEnrichment(slug: string): Promise<ChurchEnrichmen
   const { data } = await sb
     .from<ChurchEnrichmentRow>("church_enrichments")
     .select("*")
-    .eq("church_slug", slug)
-    .eq("enrichment_status", "complete")
-    .single();
-  const row = (data as ChurchEnrichmentRow | null) ?? null;
+    .in("church_slug", getChurchSlugLookupCandidates(canonicalSlug))
+    .eq("enrichment_status", "complete");
+  const enrichmentRows = (data as ChurchEnrichmentRow[] | null) ?? [];
+  const row = enrichmentRows.find((entry) => entry.church_slug === canonicalSlug) ?? enrichmentRows[0] ?? null;
   if (!row) return null;
   return {
     id: row.id,
@@ -921,6 +926,7 @@ export async function getNearbyChurches(
 ): Promise<Array<{ slug: string; name: string; distance: number; country: string; location?: string }>> {
   if (!hasSupabaseServiceConfig()) return [];
   const sb = createAdminClient();
+  const canonicalSlug = resolveCanonicalChurchSlug(slug);
   type NearbyChurchRow = {
     church_slug: string;
     latitude: number;
@@ -934,7 +940,6 @@ export async function getNearbyChurches(
   const { data } = await sb
     .from("church_enrichments")
     .select("church_slug, latitude, longitude")
-    .neq("church_slug", slug)
     .not("latitude", "is", null)
     .eq("enrichment_status", "complete")
     .gte("latitude", lat - latDelta)
@@ -944,7 +949,24 @@ export async function getNearbyChurches(
   const nearbyRows = (data as NearbyChurchRow[] | null) ?? [];
   if (nearbyRows.length === 0) return [];
 
-  const matchedSlugs = nearbyRows.map((row) => row.church_slug);
+  const nearbyByCanonicalSlug = new Map<string, number>();
+  for (const row of nearbyRows) {
+    const nearbyCanonicalSlug = resolveCanonicalChurchSlug(row.church_slug);
+    if (nearbyCanonicalSlug === canonicalSlug) continue;
+
+    const dlat = (row.latitude - lat) * 111;
+    const dlng = (row.longitude - lng) * 111 * Math.cos((lat * Math.PI) / 180);
+    const distance = Math.sqrt(dlat * dlat + dlng * dlng);
+    if (distance > MAX_RADIUS_KM) continue;
+
+    const existingDistance = nearbyByCanonicalSlug.get(nearbyCanonicalSlug);
+    if (typeof existingDistance !== "number" || distance < existingDistance) {
+      nearbyByCanonicalSlug.set(nearbyCanonicalSlug, distance);
+    }
+  }
+
+  const matchedSlugs = Array.from(nearbyByCanonicalSlug.keys());
+  if (matchedSlugs.length === 0) return [];
   const { data: churchRows } = await sb
     .from("churches")
     .select("slug,name,country,location")
@@ -957,14 +979,12 @@ export async function getNearbyChurches(
     )
   );
 
-  return nearbyRows
-    .map((row): { slug: string; name: string; distance: number; country: string; location?: string } | null => {
-      const dlat = (row.latitude - lat) * 111;
-      const dlng = (row.longitude - lng) * 111 * Math.cos((lat * Math.PI) / 180);
-      const distance = Math.sqrt(dlat * dlat + dlng * dlng);
-      if (distance > MAX_RADIUS_KM) return null;
-      const church = churchMap.get(row.church_slug);
-      return church ? { slug: row.church_slug, name: church.name, distance, country: church.country, location: church.location } : null;
+  return matchedSlugs
+    .map((matchedSlug): { slug: string; name: string; distance: number; country: string; location?: string } | null => {
+      const church = churchMap.get(matchedSlug);
+      const distance = nearbyByCanonicalSlug.get(matchedSlug);
+      if (!church || typeof distance !== "number") return null;
+      return { slug: matchedSlug, name: church.name, distance, country: church.country, location: church.location };
     })
     .filter((c): c is { slug: string; name: string; distance: number; country: string; location?: string } => c !== null)
     .sort(
@@ -1057,6 +1077,7 @@ async function getEnrichmentMeta(): Promise<Map<string, IndexEnrichmentHint>> {
   const map = new Map<string, IndexEnrichmentHint>();
   for (const row of data ?? []) {
     if (!row.church_slug) continue;
+    const canonicalSlug = resolveCanonicalChurchSlug(row.church_slug);
     const summaryLength = (row.summary ?? "").length;
     const hasSocial = !!(row.instagram_url || row.facebook_url || row.youtube_url);
     const serviceTimes = getFirstServiceTimeLabel((row.service_times as Array<{ day: string; time: string }> | null) ?? []);
@@ -1065,7 +1086,7 @@ async function getEnrichmentMeta(): Promise<Map<string, IndexEnrichmentHint>> {
     if ((row.service_times as unknown[])?.length) score += 30;
     if (row.street_address) score += 20;
     if (hasSocial) score += 10;
-    map.set(row.church_slug, {
+    const hint: IndexEnrichmentHint = {
       summary: summaryLength >= 40 ? normalizeDisplayText(row.summary as string) : undefined,
       summaryLength,
       serviceTimes,
@@ -1075,7 +1096,13 @@ async function getEnrichmentMeta(): Promise<Map<string, IndexEnrichmentHint>> {
       dataRichnessScore: score,
       coverImageUrl: rewriteLegacySupabaseMediaUrl(row.cover_image_url ?? undefined),
       logoImageUrl: rewriteLegacySupabaseMediaUrl(row.logo_image_url ?? undefined),
-    });
+    };
+    const existing = map.get(canonicalSlug);
+    if (!existing || hint.dataRichnessScore > existing.dataRichnessScore || (
+      hint.dataRichnessScore === existing.dataRichnessScore && row.church_slug === canonicalSlug
+    )) {
+      map.set(canonicalSlug, hint);
+    }
   }
   return map;
 }

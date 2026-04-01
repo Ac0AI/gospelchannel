@@ -15,6 +15,7 @@ import {
 } from "@/lib/content-quality";
 import {
   filterCanonicalChurchSlugRecords,
+  getChurchSlugLookupCandidates,
   resolveCanonicalChurchSlug,
 } from "@/lib/church-slugs";
 import { uniqueSpotifyPlaylistIds } from "@/lib/spotify-playlist";
@@ -224,9 +225,11 @@ function mergeChurchFallback(church: ChurchConfig): ChurchConfig {
 
 async function fetchApprovedEnrichmentMap(sb: ReturnType<typeof createAdminClient>, slugs: string[]) {
   const map = new Map<string, Record<string, unknown>>();
+  const canonicalSlugs = Array.from(new Set(slugs.map((slug) => resolveCanonicalChurchSlug(slug)).filter(Boolean)));
+  const lookupSlugs = Array.from(new Set(canonicalSlugs.flatMap((slug) => getChurchSlugLookupCandidates(slug))));
 
-  for (let index = 0; index < slugs.length; index += 200) {
-    const batch = slugs.slice(index, index + 200);
+  for (let index = 0; index < lookupSlugs.length; index += 200) {
+    const batch = lookupSlugs.slice(index, index + 200);
     const { data, error } = await sb
       .from<{ church_slug: string } & Record<string, unknown>>("church_enrichments")
       .select("church_slug,contact_email,instagram_url,facebook_url,youtube_url,cover_image_url")
@@ -237,7 +240,11 @@ async function fetchApprovedEnrichmentMap(sb: ReturnType<typeof createAdminClien
     }
 
     for (const row of ((data as Array<{ church_slug: string } & Record<string, unknown>> | null) ?? [])) {
-      map.set(row.church_slug, row as Record<string, unknown>);
+      const canonicalSlug = resolveCanonicalChurchSlug(row.church_slug);
+      if (!canonicalSlugs.includes(canonicalSlug)) continue;
+      if (!map.has(canonicalSlug) || row.church_slug === canonicalSlug) {
+        map.set(canonicalSlug, row as Record<string, unknown>);
+      }
     }
   }
 
@@ -348,10 +355,10 @@ async function fetchSingleChurchBySlug(slug: string): Promise<ChurchConfig | und
   const { data: enrichmentRows } = await sb
     .from("church_enrichments")
     .select("church_slug,contact_email,instagram_url,facebook_url,youtube_url,cover_image_url")
-    .eq("church_slug", slug)
-    .limit(1);
+    .in("church_slug", getChurchSlugLookupCandidates(slug));
 
-  const enrichment = (enrichmentRows as Array<Record<string, unknown>> | null)?.[0];
+  const enrichmentCandidates = (enrichmentRows as Array<Record<string, unknown> & { church_slug?: string }> | null) ?? [];
+  const enrichment = enrichmentCandidates.find((row) => row.church_slug === slug) ?? enrichmentCandidates[0];
 
   return mapRowToChurchConfig(churchRow as ChurchDataRow, enrichment);
 }

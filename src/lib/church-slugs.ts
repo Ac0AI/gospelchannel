@@ -3,8 +3,23 @@ const CHURCH_SLUG_REDIRECTS: Record<string, string> = {
   "pingstkyrkan-stockholm": "filadelfiakyrkan-stockholm",
 };
 
+const CANONICAL_CHURCH_SLUG_ALIASES = Object.entries(CHURCH_SLUG_REDIRECTS).reduce<Record<string, string[]>>(
+  (acc, [aliasSlug, canonicalSlug]) => {
+    const aliases = acc[canonicalSlug] ?? [];
+    aliases.push(aliasSlug);
+    acc[canonicalSlug] = aliases;
+    return acc;
+  },
+  {}
+);
+
 export function resolveCanonicalChurchSlug(slug: string): string {
   return CHURCH_SLUG_REDIRECTS[slug] ?? slug;
+}
+
+export function getChurchSlugLookupCandidates(slug: string): string[] {
+  const canonicalSlug = resolveCanonicalChurchSlug(slug);
+  return [canonicalSlug, ...(CANONICAL_CHURCH_SLUG_ALIASES[canonicalSlug] ?? [])];
 }
 
 export function isCanonicalChurchSlug(slug: string): boolean {
