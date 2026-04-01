@@ -79,7 +79,7 @@ async function fetchEnrichmentMap(slugs) {
   for (const batch of chunk(slugs, 200)) {
     const { data, error } = await supabase
       .from("church_enrichments")
-      .select("church_slug,contact_email,instagram_url,facebook_url,youtube_url,cover_image_url")
+      .select("church_slug,contact_email,instagram_url,facebook_url,youtube_url,cover_image_url,logo_image_url")
       .in("church_slug", batch);
 
     if (error) {
@@ -140,7 +140,7 @@ function toSnapshotChurch(row, legacySnapshotBySlug, enrichmentMap) {
     website: row.website || "",
     ...((row.email || enrichment?.contact_email) && { email: row.email || enrichment?.contact_email }),
     ...(row.language && { language: row.language }),
-    logo: row.logo || "",
+    logo: row.logo || enrichment?.logo_image_url || "",
     ...((enrichment?.instagram_url || legacy?.instagramUrl) && { instagramUrl: enrichment?.instagram_url || legacy?.instagramUrl }),
     ...((enrichment?.facebook_url || legacy?.facebookUrl) && { facebookUrl: enrichment?.facebook_url || legacy?.facebookUrl }),
     ...((enrichment?.youtube_url || legacy?.youtubeUrl) && { youtubeUrl: enrichment?.youtube_url || legacy?.youtubeUrl }),

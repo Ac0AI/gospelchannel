@@ -1,13 +1,26 @@
+"use client";
+
+import { useState } from "react";
+
 type ChurchCardImageProps = {
-  name: string;
   initials: string;
   gradient: string;
-  mediaUrl?: string;
-  isThumbnail: boolean;
+  thumbnailUrl?: string;
+  logoUrl?: string;
 };
 
-export function ChurchCardImage({ name, initials, gradient, mediaUrl, isThumbnail }: ChurchCardImageProps) {
-  const showImage = Boolean(mediaUrl);
+export function ChurchCardImage({ initials, gradient, thumbnailUrl, logoUrl }: ChurchCardImageProps) {
+  const [imageUrl, setImageUrl] = useState<string | undefined>(thumbnailUrl || logoUrl);
+  const showImage = Boolean(imageUrl);
+  const isThumbnail = Boolean(thumbnailUrl) && imageUrl === thumbnailUrl;
+
+  function handleError() {
+    if (imageUrl === thumbnailUrl && logoUrl && logoUrl !== thumbnailUrl) {
+      setImageUrl(logoUrl);
+      return;
+    }
+    setImageUrl(undefined);
+  }
 
   return (
     <div className={`relative h-28 overflow-hidden rounded-xl ${showImage ? "" : `flex items-center justify-center bg-gradient-to-br ${gradient}`}`}>
@@ -15,11 +28,12 @@ export function ChurchCardImage({ name, initials, gradient, mediaUrl, isThumbnai
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={mediaUrl}
+            src={imageUrl}
             alt=""
             aria-hidden="true"
             loading="lazy"
             decoding="async"
+            onError={handleError}
             className={`absolute inset-0 h-full w-full ${isThumbnail ? "object-cover" : "object-contain p-4"} transition duration-500 group-hover:scale-105`}
           />
           {isThumbnail ? (

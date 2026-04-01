@@ -12,7 +12,7 @@ import { readFileSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { createClient } from "@supabase/supabase-js";
+import { neon } from "@neondatabase/serverless";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -20,62 +20,47 @@ const ROOT_DIR = join(__dirname, "..");
 
 loadLocalEnv(ROOT_DIR);
 
-const sb = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SECRET_KEY,
-  { auth: { autoRefreshToken: false, persistSession: false } }
-);
+const DATABASE_URL = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
+if (!DATABASE_URL) {
+  throw new Error("Missing DATABASE_URL or DATABASE_URL_UNPOOLED");
+}
 
-async function fetchEnrichmentMap(slugs) {
+const sql = neon(DATABASE_URL);
+
+async function fetchEnrichmentMap() {
   const map = new Map();
+  const rows = await sql`
+    select
+      e.church_slug,
+      e.contact_email,
+      e.instagram_url,
+      e.facebook_url,
+      e.youtube_url,
+      e.cover_image_url,
+      e.logo_image_url
+    from church_enrichments e
+    join churches c on c.slug = e.church_slug
+    where c.status = 'approved'
+  `;
 
-  for (let index = 0; index < slugs.length; index += 200) {
-    const batch = slugs.slice(index, index + 200);
-    const { data, error } = await sb
-      .from("church_enrichments")
-      .select("church_slug,contact_email,instagram_url,facebook_url,youtube_url,cover_image_url")
-      .in("church_slug", batch);
-
-    if (error) {
-      console.error("Failed to fetch church enrichments:", error.message);
-      process.exit(1);
-    }
-
-    for (const row of data || []) {
-      map.set(row.church_slug, row);
-    }
+  for (const row of rows) {
+    map.set(row.church_slug, row);
   }
 
   return map;
 }
 
-// Fetch all approved churches (handle pagination for >1000)
-let allData = [];
-let from = 0;
-const PAGE_SIZE = 1000;
-
-while (true) {
-  const { data, error } = await sb
-    .from("churches")
-    .select("*")
-    .eq("status", "approved")
-    .order("name")
-    .range(from, from + PAGE_SIZE - 1);
-
-  if (error) {
-    console.error("Failed to fetch churches:", error.message);
-    process.exit(1);
-  }
-
-  allData.push(...data);
-  if (data.length < PAGE_SIZE) break;
-  from += PAGE_SIZE;
-}
+const allData = await sql`
+  select *
+  from churches
+  where status = 'approved'
+  order by name
+`;
 
 // Map to ChurchConfig shape (camelCase)
 const existingSnapshot = JSON.parse(readFileSync(join(ROOT_DIR, "src/data/churches.json"), "utf8"));
 const legacySnapshotBySlug = new Map(existingSnapshot.map((church) => [church.slug, church]));
-const enrichmentMap = await fetchEnrichmentMap(allData.map((row) => row.slug));
+const enrichmentMap = await fetchEnrichmentMap();
 const churches = allData.map((row) => ({
   ...(enrichmentMap.get(row.slug)?.instagram_url || legacySnapshotBySlug.get(row.slug)?.instagramUrl
     ? { instagramUrl: enrichmentMap.get(row.slug)?.instagram_url || legacySnapshotBySlug.get(row.slug)?.instagramUrl }
@@ -96,7 +81,7 @@ const churches = allData.map((row) => ({
   website: row.website || "",
   ...((row.email || enrichmentMap.get(row.slug)?.contact_email) && { email: row.email || enrichmentMap.get(row.slug)?.contact_email }),
   ...(row.language && { language: row.language }),
-  logo: row.logo || "",
+  logo: row.logo || enrichmentMap.get(row.slug)?.logo_image_url || "",
   ...((row.header_image || enrichmentMap.get(row.slug)?.cover_image_url) && { headerImage: row.header_image || enrichmentMap.get(row.slug)?.cover_image_url }),
   ...(row.header_image_attribution && { headerImageAttribution: row.header_image_attribution }),
   spotifyUrl: row.spotify_url || "",
@@ -115,5 +100,5 @@ const churches = allData.map((row) => ({
 }));
 
 const outPath = join(ROOT_DIR, "src/data/churches.json");
-await writeFile(outPath, JSON.stringify(churches, null, 2));
+await writeFile(outPath, `${JSON.stringify(churches, null, 2)}\n`);
 console.log(`Generated churches.json with ${churches.length} approved churches`);

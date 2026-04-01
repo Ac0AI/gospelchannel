@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const currentFilePath = fileURLToPath(import.meta.url);
 const root = path.resolve(path.dirname(currentFilePath), "..");
+const publicRoot = path.join(root, "public");
 const args = new Set(process.argv.slice(2));
 const jsonMode = args.has("--json");
 
@@ -131,11 +132,31 @@ function isPlayableSpotifyUrl(value) {
   return PLAYABLE_SPOTIFY_PATH.test(parsed.pathname);
 }
 
+function resolveLocalMediaPath(value) {
+  const normalized = normalizeDisplayText(value);
+  if (!normalized?.startsWith("/")) return undefined;
+  const relativePath = normalized.split(/[?#]/, 1)[0].replace(/^\/+/, "");
+  if (!relativePath) return undefined;
+  const fullPath = path.resolve(publicRoot, relativePath);
+  if (fullPath !== publicRoot && !fullPath.startsWith(`${publicRoot}${path.sep}`)) return undefined;
+  return fullPath;
+}
+
 function isValidMediaAsset(value) {
   const normalized = normalizeDisplayText(value);
   if (!normalized) return false;
-  if (normalized.startsWith("/")) return true;
+  if (normalized.startsWith("/")) {
+    const fullPath = resolveLocalMediaPath(normalized);
+    return Boolean(fullPath) && fs.existsSync(fullPath);
+  }
   return isValidPublicUrl(normalized);
+}
+
+function isExternalMediaAsset(value) {
+  const normalized = normalizeDisplayText(value);
+  if (!normalized || normalized.startsWith("/")) return false;
+  if (!isValidPublicUrl(normalized)) return false;
+  return new URL(normalized).hostname !== "media.gospelchannel.com";
 }
 
 function normalizeDay(day) {
@@ -325,6 +346,14 @@ function main() {
 
     if (!isValidMediaAsset(church.logo)) {
       addIssue(state, "warning", "warning_missing_logo", church, "Missing valid logo");
+    }
+
+    if (isExternalMediaAsset(church.logo)) {
+      addIssue(state, "critical", "critical_external_logo", church, "Logo must be hosted on media.gospelchannel.com");
+    }
+
+    if (isExternalMediaAsset(church.headerImage)) {
+      addIssue(state, "critical", "critical_external_header_image", church, "Header image must be hosted on media.gospelchannel.com");
     }
 
     if (!isValidPublicUrl(church.website)) {

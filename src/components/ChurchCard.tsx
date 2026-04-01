@@ -75,8 +75,6 @@ export function ChurchCard({
   const displayDescription = normalizeDisplayText(enrichmentSummary) || normalizeDisplayText(description) || "Church profile";
   const compactDescription = displayDescription.length > 128 ? `${displayDescription.slice(0, 125).trimEnd()}...` : displayDescription;
   const hasPlaylist = typeof playlistCount === "number" && playlistCount > 0;
-  const mediaUrl = thumbnailUrl || logoUrl;
-  const isThumbnail = Boolean(thumbnailUrl);
   const normalizedServiceTimes = getValidServiceTimeLabel(serviceTimes);
   const metaLabel = buildChurchCardMetaLabel({
     location: enrichmentLocation,
@@ -91,11 +89,10 @@ export function ChurchCard({
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-rose-200/70 bg-white/80 p-3 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-rose-300 hover:shadow-md active:scale-[0.97] sm:hover:-translate-y-1">
       <Link href={`/church/${slug}`} prefetch={false} className="group flex flex-1 flex-col">
         <ChurchCardImage
-          name={name}
           initials={initials}
           gradient={gradient}
-          mediaUrl={mediaUrl}
-          isThumbnail={isThumbnail}
+          thumbnailUrl={thumbnailUrl}
+          logoUrl={logoUrl}
         />
 
         <div className="flex flex-1 flex-col pt-3">
