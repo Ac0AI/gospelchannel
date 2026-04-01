@@ -108,7 +108,7 @@ Extract JSON:
   "hero_image_url": "Best hero/banner image URL from HTML (og:image, large hero images, header backgrounds). Full URL. null if none.",
   "contact_email": "Contact email from site. null if none.",
   "service_times": "Brief service times if found, e.g. 'Sundays 10:30am'. null if not found.",
-  "denomination": "Denomination or tradition (e.g. Baptist, Pentecostal, Anglican, Catholic, Non-denominational). null if unclear.",
+  "denomination": "Use EXACTLY one of: Pentecostal, Charismatic, Evangelical, Baptist, Non-denominational, Anglican, Lutheran, Catholic, Methodist, Reformed, Orthodox. Pick the closest match. null if truly unclear.",
   "languages": ["Array of languages used in services"],
   "quality": "good | mediocre | reject",
   "quality_reason": "Brief reason. reject = unrelated to church, church closed, or site broken.",

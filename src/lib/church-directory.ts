@@ -1,5 +1,6 @@
 import type { ChurchConfig } from "@/types/gospel";
 import { slugify } from "@/lib/slugify";
+import { DENOMINATIONS } from "@/lib/denomination-taxonomy";
 
 type ChurchDirectoryEnrichmentHint = {
   dataRichnessScore?: number;
@@ -103,15 +104,11 @@ export const STYLE_FILTERS: StyleFilter[] = [
   },
 ];
 
-export const DENOMINATION_FILTERS: DenominationFilter[] = [
-  { slug: "non-denominational", label: "Non-denominational", match: ["non-denominational"] },
-  { slug: "pentecostal", label: "Pentecostal", match: ["pentecostal", "assemblies of god", "disciples of christ"] },
-  { slug: "evangelical", label: "Evangelical", match: ["evangelical"] },
-  { slug: "charismatic", label: "Charismatic", match: ["charismatic"] },
-  { slug: "baptist", label: "Baptist", match: ["baptist"] },
-  { slug: "anglican", label: "Anglican", match: ["anglican", "church of england"] },
-  { slug: "lutheran", label: "Lutheran", match: ["lutheran"] },
-];
+export const DENOMINATION_FILTERS: DenominationFilter[] = DENOMINATIONS.map((d) => ({
+  slug: d.slug,
+  label: d.label,
+  match: d.match,
+}));
 
 export function extractCity(location?: string): string | undefined {
   if (!location) return undefined;
