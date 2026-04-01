@@ -4,10 +4,6 @@ import { ChurchDirectoryGrid } from "@/components/ChurchDirectoryGrid";
 import {
   buildSearchSummary,
   filterChurchDirectory,
-  getCityLinks,
-  getCountryLinks,
-  getDenominationLinks,
-  getStyleLinks,
   paginateChurches,
 } from "@/lib/church-directory";
 import { getChurchIndexData } from "@/lib/church";
@@ -37,29 +33,6 @@ function buildPageHref(page: number, query: string): string {
   if (page > 1) params.set("page", `${page}`);
   const qs = params.toString();
   return qs ? `/church?${qs}` : "/church";
-}
-
-function buildBrowseLabel(title: string, links: Array<{ href: string; label: string; count: number }>) {
-  return (
-    <section className="space-y-4">
-      <div>
-        <h2 className="font-serif text-2xl font-semibold text-espresso">{title}</h2>
-      </div>
-      <div className="-mx-4 px-4 sm:mx-0 sm:px-0">
-        <div className="scrollbar-hide flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="inline-flex shrink-0 rounded-full border border-rose-200/70 bg-white/80 px-4 py-2 text-sm font-semibold text-warm-brown transition-colors hover:border-rose-300 hover:bg-blush-light hover:text-espresso"
-            >
-              {link.label} ({link.count})
-            </Link>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
 }
 
 export async function generateMetadata({ searchParams }: ChurchIndexPageProps): Promise<Metadata> {
@@ -118,10 +91,6 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
   const filtered = filterChurchDirectory(churches, { query });
   const { currentPage, totalCount, totalPages, pageItems } = paginateChurches(filtered, requestedPage, PAGE_SIZE);
 
-  const countryLinks = getCountryLinks(churches, 18);
-  const cityLinks = getCityLinks(churches, 18);
-  const styleLinks = getStyleLinks(churches, 8);
-  const denominationLinks = getDenominationLinks(churches, 8);
   const searchSummary = query ? buildSearchSummary(query) : null;
 
   const directorySchema = query
@@ -181,11 +150,6 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
           ) : null}
         </form>
       </section>
-
-      {!query ? buildBrowseLabel("Browse by Country", countryLinks) : null}
-      {!query ? buildBrowseLabel("Browse by City", cityLinks) : null}
-      {!query ? buildBrowseLabel("Browse by Worship Style", styleLinks) : null}
-      {!query ? buildBrowseLabel("Browse by Tradition", denominationLinks) : null}
 
       <section className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
