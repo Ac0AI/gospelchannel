@@ -24,10 +24,11 @@ export function ChurchCardImage({ name, initials, gradient, mediaUrl, isThumbnai
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={src}
+            src={mediaUrl}
             srcSet={srcSet}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            alt={`${name} worship`}
+            alt=""
+            aria-hidden="true"
             loading="lazy"
             decoding="async"
             className={`absolute inset-0 h-full w-full ${isThumbnail ? "object-cover" : "object-contain p-4"} transition duration-500 group-hover:scale-105`}
