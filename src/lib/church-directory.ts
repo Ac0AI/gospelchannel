@@ -126,7 +126,13 @@ function getPlaylistCount(church: Pick<ChurchDirectoryEntry, "playlistCount" | "
 
 /** Strip accents so "malaga" matches "Málaga", "église" matches "eglise" etc. */
 function normalize(text: string): string {
-  return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/['’`]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
 }
 
 /** Split query into words for multi-word matching ("hillsong stockholm" matches both fields) */
@@ -140,7 +146,6 @@ function getTextMatchScore(church: ChurchDirectoryEntry, query: string): number 
   const denomination = normalize(church.denomination ?? "");
   const styles = (church.musicStyle ?? []).map(normalize);
   const aliases = (church.aliases ?? []).map(normalize);
-  const description = normalize(church.description ?? "");
 
   // Single-pass scoring for the full query
   let score = 0;

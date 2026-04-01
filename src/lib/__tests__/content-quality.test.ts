@@ -7,6 +7,7 @@ import {
   getValidServiceTimeLabel,
   isGeneratedChurchDescription,
   isCriticalDisplayFlag,
+  isValidOfficialWebsiteUrl,
   sanitizeServiceTimes,
 } from "../content-quality";
 
@@ -102,5 +103,11 @@ describe("content-quality", () => {
   it("formats nearby church places safely", () => {
     expect(getNearbyChurchPlaceLabel("Strasbourg", "France")).toBe("Strasbourg, France");
     expect(getNearbyChurchPlaceLabel(undefined, "France")).toBe("France");
+  });
+
+  it("rejects directory hosts as official church websites", () => {
+    expect(isValidOfficialWebsiteUrl("https://www.eniro.se/")).toBe(false);
+    expect(isValidOfficialWebsiteUrl("https://www.facebook.com/examplechurch")).toBe(false);
+    expect(isValidOfficialWebsiteUrl("https://www.filadelfiakyrkan.se")).toBe(true);
   });
 });

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { Suspense } from "react";
 import { ChurchLatestUpdatesSection } from "@/components/ChurchLatestUpdatesSection";
 import { ChurchNetworkSection } from "@/components/ChurchNetworkSection";
@@ -25,6 +25,7 @@ import {
   getPublicHostLabel,
   isPlayableSpotifyUrl,
   isValidPublicEmail,
+  isValidOfficialWebsiteUrl,
   isValidPublicPhone,
   isValidPublicUrl,
   normalizeDisplayText,
@@ -35,6 +36,7 @@ import { slugify } from "@/lib/prayer-filters";
 import { uniqueSpotifyPlaylistIds } from "@/lib/spotify-playlist";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { HeroImage } from "@/components/HeroImage";
+import { resolveCanonicalChurchSlug } from "@/lib/church-slugs";
 
 type ChurchPageProps = {
   params: Promise<{ slug: string }>;
@@ -51,18 +53,46 @@ function formatSocialCount(n: number): string {
   return n.toLocaleString("en-US");
 }
 
+function normalizeChurchNameForMatch(value: string): string[] {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .split(" ")
+    .filter(Boolean);
+}
+
+function pickDisplayChurchName(churchName: string, officialChurchName?: string): string {
+  const official = normalizeDisplayText(officialChurchName);
+  if (!official) return churchName;
+
+  const baseTokens = new Set(normalizeChurchNameForMatch(churchName));
+  const officialTokens = new Set(normalizeChurchNameForMatch(official));
+  if (baseTokens.size === 0 || officialTokens.size === 0) return churchName;
+
+  let overlap = 0;
+  for (const token of baseTokens) {
+    if (officialTokens.has(token)) overlap += 1;
+  }
+
+  const tokenSimilarity = (2 * overlap) / (baseTokens.size + officialTokens.size);
+  return tokenSimilarity >= 0.6 ? official : churchName;
+}
+
 /* ─── metadata (unchanged) ─── */
 
 export async function generateMetadata({ params }: ChurchPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const pageData = await getChurchPublicPageData(slug);
+  const canonicalSlug = resolveCanonicalChurchSlug(slug);
+  const pageData = await getChurchPublicPageData(canonicalSlug);
 
   if (!pageData) {
     return { title: "Church Not Found" };
   }
 
   const { church, enrichment } = pageData;
-  const displayName = enrichment?.officialChurchName || church.name;
+  const displayName = pickDisplayChurchName(church.name, enrichment?.officialChurchName);
   const hasPlaylists = (church.spotifyPlaylistIds?.length ?? 0) > 0
     || (church.additionalPlaylists?.length ?? 0) > 0;
 
@@ -101,7 +131,12 @@ export async function generateMetadata({ params }: ChurchPageProps): Promise<Met
 
 export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   const { slug } = await params;
-  const pageData = await getChurchPublicPageData(slug);
+  const canonicalSlug = resolveCanonicalChurchSlug(slug);
+  if (canonicalSlug !== slug) {
+    permanentRedirect(`/church/${canonicalSlug}`);
+  }
+
+  const pageData = await getChurchPublicPageData(canonicalSlug);
   if (!pageData) notFound();
 
   const { church, videos, latestUpdates, enrichment, mergedProfile, badgeEligible } = pageData;
@@ -143,11 +178,11 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
     coverImageUrl: enrichment?.coverImageUrl,
   }) || "";
   const churchLogo = isValidPublicUrl(enrichment?.logoImageUrl) ? enrichment!.logoImageUrl : null;
-  const websiteUrl = isValidPublicUrl((mergedProfile.websiteUrl as string | undefined) || enrichment?.websiteUrl || church.website)
+  const websiteUrl = isValidOfficialWebsiteUrl((mergedProfile.websiteUrl as string | undefined) || enrichment?.websiteUrl || church.website)
     ? ((mergedProfile.websiteUrl as string | undefined) || enrichment?.websiteUrl || church.website)
     : undefined;
   const websiteHostLabel = getPublicHostLabel(websiteUrl);
-  const displayName = enrichment?.officialChurchName || church.name;
+  const displayName = pickDisplayChurchName(church.name, enrichment?.officialChurchName);
   const serviceTimes = sanitizeServiceTimes(enrichment?.serviceTimes);
   const serviceTimeLabel = getFirstServiceTimeLabel(serviceTimes);
   const streetAddress = normalizeDisplayText(enrichment?.streetAddress);
@@ -247,7 +282,11 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
       name: `${church.name} Playlist`,
       description: `Stream ${church.name} worship playlist. Curated songs, videos, and gospel music.`,
       url: pageUrl,
-      about: { "@type": "Organization", name: church.name, url: church.website },
+      about: {
+        "@type": "Organization",
+        name: church.name,
+        ...(websiteUrl && { url: websiteUrl }),
+      },
     },
     {
       "@context": "https://schema.org",

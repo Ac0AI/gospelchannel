@@ -13,6 +13,10 @@ import {
   isPlayableSpotifyUrl,
   normalizeDisplayText,
 } from "@/lib/content-quality";
+import {
+  filterCanonicalChurchSlugRecords,
+  resolveCanonicalChurchSlug,
+} from "@/lib/church-slugs";
 import { uniqueSpotifyPlaylistIds } from "@/lib/spotify-playlist";
 
 const CHURCH_CONTENT_TAG = "church-content";
@@ -85,7 +89,7 @@ function tryLoadLocalChurchSnapshot(): ChurchConfig[] {
     return localChurchSnapshotCache;
   }
 
-  localChurchSnapshotCache = churchesJson as ChurchConfig[];
+  localChurchSnapshotCache = filterCanonicalChurchSlugRecords(churchesJson as ChurchConfig[]);
   return localChurchSnapshotCache;
 }
 
@@ -380,7 +384,7 @@ async function fetchApprovedChurchDirectorySeedFromSupabase(): Promise<ChurchDir
     from += PAGE_SIZE;
   }
 
-  return rows;
+  return filterCanonicalChurchSlugRecords(rows);
 }
 
 function formatChurchCountLabel(count: number): string {
@@ -402,7 +406,7 @@ const getApprovedChurchDirectorySeedCached = unstable_cache(
           createEmptyChurchDirectoryError(),
         ).map(toChurchDirectorySeed);
       }
-      return churches;
+      return filterCanonicalChurchSlugRecords(churches);
     } catch (error) {
       return getFallbackChurchSnapshot("directory-seed", error).map(toChurchDirectorySeed);
     }
@@ -432,7 +436,7 @@ const getApprovedChurches = cache(async (): Promise<ChurchConfig[]> => {
   }
 
   try {
-    const churches = await fetchApprovedChurchesFromSupabase();
+    const churches = filterCanonicalChurchSlugRecords(await fetchApprovedChurchesFromSupabase());
     if (churches.length === 0) {
       return getFallbackChurchSnapshot("churches", createEmptyChurchDirectoryError());
     }
@@ -440,11 +444,6 @@ const getApprovedChurches = cache(async (): Promise<ChurchConfig[]> => {
   } catch (error) {
     return getFallbackChurchSnapshot("churches", error);
   }
-});
-
-const getApprovedChurchLookup = cache(async (): Promise<Map<string, ChurchConfig>> => {
-  const churches = await getApprovedChurches();
-  return new Map(churches.map((church) => [church.slug, church]));
 });
 
 /**
@@ -472,17 +471,19 @@ export function getLocalChurchSnapshot(): ChurchConfig[] {
 export async function getChurchBySlugAsync(
   slug: string
 ): Promise<ChurchConfig | undefined> {
+  const canonicalSlug = resolveCanonicalChurchSlug(slug);
+
   if (isOfflinePublicBuild() || !hasSupabaseServiceConfig()) {
-    return getFallbackChurchMap().get(slug);
+    return getFallbackChurchMap().get(canonicalSlug);
   }
 
   try {
-    const church = await fetchSingleChurchBySlug(slug);
+    const church = await fetchSingleChurchBySlug(canonicalSlug);
     if (church) return church;
-    return getFallbackChurchMap().get(slug);
+    return getFallbackChurchMap().get(canonicalSlug);
   } catch (error) {
-    logChurchSnapshotFallback(`church-by-slug:${slug}`, error);
-    return getFallbackChurchMap().get(slug);
+    logChurchSnapshotFallback(`church-by-slug:${canonicalSlug}`, error);
+    return getFallbackChurchMap().get(canonicalSlug);
   }
 }
 
@@ -490,7 +491,8 @@ export async function getChurchBySlugAsync(
  * Local snapshot slug lookup for scripts/offline use only.
  */
 export function getLocalChurchBySlug(slug: string): ChurchConfig | undefined {
-  return getLocalChurchSnapshot().find((church) => church.slug === slug);
+  const canonicalSlug = resolveCanonicalChurchSlug(slug);
+  return getLocalChurchSnapshot().find((church) => church.slug === canonicalSlug);
 }
 
 export async function getChurchStatsAsync(): Promise<{

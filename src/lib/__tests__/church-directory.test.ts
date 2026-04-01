@@ -63,6 +63,24 @@ const churches: ChurchDirectoryEntry[] = [
     additionalPlaylists: [],
     playlistCount: 0,
   },
+  {
+    slug: "stmarys-malaga",
+    name: "St Mary's Málaga",
+    aliases: ["St Marys Malaga"],
+    description: "Historic church community in Málaga.",
+    country: "Spain",
+    location: "Málaga, Spain",
+    musicStyle: ["Contemporary Worship"],
+    denomination: "Anglican",
+    displayReady: true,
+    promotionTier: "catalog_only" as const,
+    displayScore: 58,
+    qualityScore: 60,
+    enrichmentHint: { dataRichnessScore: 30, location: "Málaga", serviceTimes: "Sunday 10:30", summary: "St Mary's Málaga" },
+    spotifyPlaylistIds: [],
+    additionalPlaylists: [],
+    playlistCount: 0,
+  },
 ];
 
 describe("church-directory", () => {
@@ -77,6 +95,13 @@ describe("church-directory", () => {
     expect(filterChurchDirectory([...churches], { citySlug: "berlin" }).map((church) => church.slug)).toEqual(["grace-berlin"]);
   });
 
+  it("matches diacritics and apostrophes loosely in search", () => {
+    expect(filterChurchDirectory([...churches], { query: "malaga" }).map((church) => church.slug)).toContain("stmarys-malaga");
+    expect(filterChurchDirectory([...churches], { query: "málaga" }).map((church) => church.slug)).toContain("stmarys-malaga");
+    expect(filterChurchDirectory([...churches], { query: "st marys" }).map((church) => church.slug)).toContain("stmarys-malaga");
+    expect(filterChurchDirectory([...churches], { query: "st mary's" }).map((church) => church.slug)).toContain("stmarys-malaga");
+  });
+
   it("filters by style and denomination", () => {
     expect(filterChurchDirectory([...churches], { styleSlug: "gospel" }).map((church) => church.slug)).toEqual(["grace-berlin"]);
     expect(filterChurchDirectory([...churches], { denominationSlug: "pentecostal" }).map((church) => church.slug)).toEqual(["victory-stockholm"]);
@@ -86,7 +111,7 @@ describe("church-directory", () => {
     const result = paginateChurches(filterChurchDirectory([...churches]), 2, 2);
     expect(result.currentPage).toBe(2);
     expect(result.totalPages).toBe(2);
-    expect(result.pageItems).toHaveLength(1);
+    expect(result.pageItems).toHaveLength(2);
   });
 
   it("uses SEO labels for style landing links", () => {

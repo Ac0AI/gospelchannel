@@ -23,6 +23,23 @@ const SUSPICIOUS_TEXT_PATTERN = /\b(?:null|undefined)\b/i;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_PATTERN = /^\+[\d\s().-]{7,}$/;
 const PLAYABLE_SPOTIFY_PATH = /^\/(?:playlist|album|artist|track|show|episode)\//i;
+const NON_OFFICIAL_WEBSITE_HOST_PATTERNS = [
+  "facebook.com",
+  "instagram.com",
+  "youtube.com",
+  "youtu.be",
+  "spotify.com",
+  "soundcloud.com",
+  "linktr.ee",
+  "tiktok.com",
+  "x.com",
+  "twitter.com",
+  "eniro.se",
+  "hitta.se",
+  "findachurch.co.uk",
+  "yelp.com",
+  "tripadvisor.com",
+];
 const GENERATED_CHURCH_DESCRIPTION_PATTERNS = [
   /^discover worship music and playlists from .+/i,
   /^listen to (?:worship )?music and playlists from .+/i,
@@ -64,6 +81,16 @@ export function isValidPublicUrl(value: string | null | undefined): value is str
   } catch {
     return false;
   }
+}
+
+function isBlockedOfficialWebsiteHost(hostname: string): boolean {
+  const host = hostname.replace(/^www\./i, "").toLowerCase();
+  return NON_OFFICIAL_WEBSITE_HOST_PATTERNS.some((pattern) => host === pattern || host.endsWith(`.${pattern}`));
+}
+
+export function isValidOfficialWebsiteUrl(value: string | null | undefined): value is string {
+  if (!isValidPublicUrl(value)) return false;
+  return !isBlockedOfficialWebsiteHost(new URL(value).hostname);
 }
 
 export function isPlayableSpotifyUrl(value: string | null | undefined): value is string {
@@ -228,7 +255,7 @@ export function deriveDisplayAssessment(input: DisplayAssessmentInput): {
 } {
   const displayFlags: string[] = [];
 
-  if (input.websiteUrl && !isValidPublicUrl(input.websiteUrl)) {
+  if (input.websiteUrl && !isValidOfficialWebsiteUrl(input.websiteUrl)) {
     displayFlags.push("warning_invalid_website_url");
   }
 

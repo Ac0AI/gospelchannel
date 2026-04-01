@@ -11,6 +11,7 @@ import { getApprovedProfileEditsForChurch, buildMergedProfile } from "@/lib/chur
 import { calculateProfileScore } from "@/lib/profile-score";
 import { rewriteLegacySupabaseMediaUrl } from "@/lib/media";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
+import { filterCanonicalChurchSlugRecords } from "@/lib/church-slugs";
 import {
   deriveDisplayAssessment,
   getFirstServiceTimeLabel,
@@ -1140,7 +1141,7 @@ function mapChurchToIndexRecord(church: ChurchConfig, enrichmentHint?: IndexEnri
 
 async function _getChurchIndexData() {
   if (isOfflinePublicBuild() || !hasSupabaseServiceConfig()) {
-    return getLocalChurchSnapshot().map((church) => mapChurchToIndexRecord(church));
+    return filterCanonicalChurchSlugRecords(getLocalChurchSnapshot()).map((church) => mapChurchToIndexRecord(church));
   }
 
   try {
@@ -1151,10 +1152,10 @@ async function _getChurchIndexData() {
 
     if (rows.length === 0) {
       console.error("[church-index] Falling back to local snapshot: public query returned 0 churches");
-      return getLocalChurchSnapshot().map((church) => mapChurchToIndexRecord(church));
+      return filterCanonicalChurchSlugRecords(getLocalChurchSnapshot()).map((church) => mapChurchToIndexRecord(church));
     }
 
-    const churches = rows.map((row) => {
+    const churches = filterCanonicalChurchSlugRecords(rows).map((row) => {
       const enrichmentHint = enrichmentMeta.get(row.slug);
       const church: ChurchConfig = {
         slug: row.slug,
@@ -1183,14 +1184,14 @@ async function _getChurchIndexData() {
 
     if (churches.length === 0) {
       console.error("[church-index] Falling back to local snapshot: mapped church index was empty");
-      return getLocalChurchSnapshot().map((church) => mapChurchToIndexRecord(church));
+      return filterCanonicalChurchSlugRecords(getLocalChurchSnapshot()).map((church) => mapChurchToIndexRecord(church));
     }
 
     return churches;
   } catch (error) {
     const detail = error instanceof Error ? error.message : String(error);
     console.error(`[church-index] Falling back to local snapshot: ${detail}`);
-    return getLocalChurchSnapshot().map((church) => mapChurchToIndexRecord(church));
+    return filterCanonicalChurchSlugRecords(getLocalChurchSnapshot()).map((church) => mapChurchToIndexRecord(church));
   }
 }
 

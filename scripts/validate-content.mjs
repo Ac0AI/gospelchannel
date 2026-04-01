@@ -18,6 +18,23 @@ const SUSPICIOUS_TEXT_PATTERN = /\b(?:null|undefined)\b/i;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PLAYABLE_SPOTIFY_PATH = /^\/(?:playlist|album|artist|track|show|episode)\//i;
 const ALIAS_STOP_WORDS = new Set(["worship", "music", "church", "ministries", "ministry", "official"]);
+const NON_OFFICIAL_WEBSITE_HOST_PATTERNS = [
+  "facebook.com",
+  "instagram.com",
+  "youtube.com",
+  "youtu.be",
+  "spotify.com",
+  "soundcloud.com",
+  "linktr.ee",
+  "tiktok.com",
+  "x.com",
+  "twitter.com",
+  "eniro.se",
+  "hitta.se",
+  "findachurch.co.uk",
+  "yelp.com",
+  "tripadvisor.com",
+];
 
 function normalizeDisplayText(value) {
   if (typeof value !== "string") return undefined;
@@ -107,6 +124,12 @@ function isValidPublicUrl(value) {
   } catch {
     return false;
   }
+}
+
+function isValidOfficialWebsiteUrl(value) {
+  if (!isValidPublicUrl(value)) return false;
+  const host = new URL(value).hostname.replace(/^www\./i, "").toLowerCase();
+  return !NON_OFFICIAL_WEBSITE_HOST_PATTERNS.some((pattern) => host === pattern || host.endsWith(`.${pattern}`));
 }
 
 function isCorruptEmail(value) {
@@ -235,7 +258,7 @@ function deriveDisplayAssessment(church) {
     displayFlags.push("critical_invalid_description_text");
   }
 
-  if (church.website && !isValidPublicUrl(church.website)) {
+  if (church.website && !isValidOfficialWebsiteUrl(church.website)) {
     displayFlags.push("warning_invalid_website_url");
   }
 
@@ -356,7 +379,7 @@ function main() {
       addIssue(state, "critical", "critical_external_header_image", church, "Header image must be hosted on media.gospelchannel.com");
     }
 
-    if (!isValidPublicUrl(church.website)) {
+    if (!isValidOfficialWebsiteUrl(church.website)) {
       addIssue(state, "warning", "warning_missing_website", church, "Missing valid website");
     }
 
