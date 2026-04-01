@@ -24,7 +24,7 @@ export function ChurchCardImage({ name, initials, gradient, mediaUrl, isThumbnai
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={mediaUrl}
+            src={cfImage(mediaUrl!, { width: 480, height: 212, quality: 70 })}
             srcSet={srcSet}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
             alt=""
