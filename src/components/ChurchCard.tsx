@@ -22,6 +22,7 @@ type ChurchCardProps = {
   enrichmentLocation?: string;
   serviceTimes?: string;
   enrichmentSummary?: string;
+  verified?: boolean;
 };
 
 const GRADIENTS = [
@@ -68,6 +69,7 @@ export function ChurchCard({
   enrichmentLocation,
   serviceTimes,
   enrichmentSummary,
+  verified,
 }: ChurchCardProps) {
   const initials = getInitials(name);
   const gradient = getGradient(name);
@@ -114,6 +116,11 @@ export function ChurchCard({
           </div>
           <h3 className="line-clamp-2 font-serif text-base font-semibold text-espresso transition-colors group-hover:text-rose-gold sm:min-h-[3rem]">
             {name}
+            {verified && (
+              <svg className="ml-1 inline-block h-3.5 w-3.5 align-baseline text-blue-500" viewBox="0 0 20 20" fill="currentColor" aria-label="Verified">
+                <path fillRule="evenodd" d="M16.403 12.652a3 3 0 010-5.304 3 3 0 00-3.75-3.751 3 3 0 00-5.305 0 3 3 0 00-3.751 3.75 3 3 0 000 5.305 3 3 0 003.75 3.751 3 3 0 005.305 0 3 3 0 003.751-3.75zm-2.546-4.46a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
+              </svg>
+            )}
           </h3>
           <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-muted-warm sm:min-h-[3.5rem]">{compactDescription}</p>
         </div>

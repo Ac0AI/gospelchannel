@@ -1304,6 +1304,16 @@ export async function checkChurchClaimed(slug: string): Promise<boolean> {
   return (((data as Array<{ id: string }> | null) ?? []).length) > 0;
 }
 
+export async function getClaimedChurchSlugs(): Promise<Set<string>> {
+  if (!hasServiceConfig()) return new Set();
+  const client = createAdminClient();
+  const { data } = await client
+    .from<{ church_slug: string }>('church_memberships')
+    .select('church_slug')
+    .eq('status', 'active');
+  return new Set(((data as Array<{ church_slug: string }> | null) ?? []).map((r) => r.church_slug));
+}
+
 export async function getChurchProfileScore(slug: string) {
   const [church, enrichment, edits, isClaimed] = await Promise.all([
     getChurchBySlugAsync(slug),

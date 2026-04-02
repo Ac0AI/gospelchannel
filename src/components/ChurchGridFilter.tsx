@@ -17,6 +17,7 @@ type ChurchItem = {
   thumbnailUrl?: string;
   serviceTimes?: string;
   enrichmentSummary?: string;
+  verified?: boolean;
 };
 
 type Tab = {
@@ -128,6 +129,7 @@ export function ChurchGridFilter({ churches, totalCount }: ChurchGridFilterProps
             enrichmentLocation={church.location}
             serviceTimes={church.serviceTimes}
             enrichmentSummary={church.enrichmentSummary}
+            verified={church.verified}
           />
         ))}
       </div>

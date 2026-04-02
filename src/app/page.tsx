@@ -8,6 +8,7 @@ import {
   getChurchStatsAsync,
   getHomepageShowcaseChurches,
 } from "@/lib/content";
+import { getClaimedChurchSlugs } from "@/lib/church";
 
 export const revalidate = 3600;
 
@@ -61,11 +62,12 @@ function buildHomeFaqSchema(churchCountLabel: string, countryCount: number) {
 }
 
 export default async function HomePage() {
-  const [showcaseChurches, stats, directorySeed, recentPrayers] = await Promise.all([
+  const [showcaseChurches, stats, directorySeed, recentPrayers, claimedSlugs] = await Promise.all([
     getHomepageShowcaseChurches(),
     getChurchStatsAsync(),
     getChurchDirectorySeedAsync(),
     getPrayers({ limit: 5 }),
+    getClaimedChurchSlugs(),
   ]);
   const churchCountLabel = stats.churchCountLabel;
   const countryCount = stats.countryCount;
@@ -120,6 +122,7 @@ export default async function HomePage() {
           thumbnailUrl: church.thumbnailUrl,
           serviceTimes: undefined,
           enrichmentSummary: undefined,
+          verified: claimedSlugs.has(church.slug),
         }))}
         totalCount={stats.churchCount}
       />
