@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { hasSupabaseServiceConfig, createAdminClient } from "@/lib/neon-client";
+import { hasServiceConfig, createAdminClient } from "@/lib/neon-client";
 import { getClientIp, hasKvRateLimit, isBotTrapFilled, setKvRateLimit } from "@/lib/request-guards";
 import { getPostHogClient } from "@/lib/posthog-server";
 
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid email" }, { status: 400 });
   }
 
-  if (!hasSupabaseServiceConfig()) {
+  if (!hasServiceConfig()) {
     return NextResponse.json({ error: "Service unavailable" }, { status: 503 });
   }
 

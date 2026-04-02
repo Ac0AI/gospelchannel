@@ -3,7 +3,7 @@ import { extractCity } from "@/lib/church-directory";
 import { getPublicHostLabel, isValidPublicUrl, normalizeDisplayText } from "@/lib/content-quality";
 import { getApprovedProfileEditsForChurch, buildMergedProfile, type PublicProfileEdit } from "@/lib/church-profile";
 import { getChurchBySlugAsync, getChurchDirectorySeedAsync } from "@/lib/content";
-import { createAdminClient, hasSupabaseServiceConfig } from "@/lib/neon-client";
+import { createAdminClient, hasServiceConfig } from "@/lib/neon-client";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
 import type {
   ChurchConfig,
@@ -365,7 +365,7 @@ async function discoverWebsiteFeedUrl(websiteUrl: string): Promise<string | unde
 }
 
 async function getUpdateEnrichment(slug: string): Promise<ChurchEnrichment | null> {
-  if (!hasSupabaseServiceConfig()) return null;
+  if (!hasServiceConfig()) return null;
   const sb = createAdminClient();
   const { data } = await sb
     .from<EnrichmentRow>("church_enrichments")
@@ -461,7 +461,7 @@ function deriveDesiredSources(input: {
 }
 
 async function listSourceRowsForChurch(slug: string): Promise<SourceRow[]> {
-  if (isOfflinePublicBuild() || !hasSupabaseServiceConfig() || churchUpdateStoreUnavailable) return [];
+  if (isOfflinePublicBuild() || !hasServiceConfig() || churchUpdateStoreUnavailable) return [];
   try {
     const sb = createAdminClient();
     const { data, error } = await sb
@@ -505,7 +505,7 @@ export async function ensureChurchUpdateSources(input: {
   edits?: PublicProfileEdit[];
   mergedProfile?: Record<string, unknown>;
 }): Promise<ChurchUpdateSource[]> {
-  if (isOfflinePublicBuild() || !hasSupabaseServiceConfig() || churchUpdateStoreUnavailable) return [];
+  if (isOfflinePublicBuild() || !hasServiceConfig() || churchUpdateStoreUnavailable) return [];
 
   try {
     const sb = createAdminClient();
@@ -550,7 +550,7 @@ export async function getChurchLatestUpdates(
   slug: string,
   limit = DEFAULT_UPDATE_LIMIT,
 ): Promise<ChurchUpdateItem[]> {
-  if (isOfflinePublicBuild() || !hasSupabaseServiceConfig() || churchUpdateStoreUnavailable) return [];
+  if (isOfflinePublicBuild() || !hasServiceConfig() || churchUpdateStoreUnavailable) return [];
   try {
     const sb = createAdminClient();
     const { data, error } = await sb
@@ -611,7 +611,7 @@ async function upsertChurchUpdateItems(
   source: ChurchUpdateSource,
   items: ParsedFeedItem[],
 ): Promise<number> {
-  if (isOfflinePublicBuild() || !hasSupabaseServiceConfig() || churchUpdateStoreUnavailable || items.length === 0) return 0;
+  if (isOfflinePublicBuild() || !hasServiceConfig() || churchUpdateStoreUnavailable || items.length === 0) return 0;
 
   const sb = createAdminClient();
   const rows = items
@@ -647,7 +647,7 @@ async function markSourceRefresh(
     error?: string;
   },
 ): Promise<void> {
-  if (isOfflinePublicBuild() || !hasSupabaseServiceConfig() || churchUpdateStoreUnavailable) return;
+  if (isOfflinePublicBuild() || !hasServiceConfig() || churchUpdateStoreUnavailable) return;
   const sb = createAdminClient();
   const now = new Date().toISOString();
   const { error } = await sb
@@ -697,7 +697,7 @@ async function runWithConcurrency<T, R>(
 }
 
 async function bootstrapMissingChurchUpdateSources(limit: number): Promise<number> {
-  if (isOfflinePublicBuild() || !hasSupabaseServiceConfig() || churchUpdateStoreUnavailable || limit <= 0) return 0;
+  if (isOfflinePublicBuild() || !hasServiceConfig() || churchUpdateStoreUnavailable || limit <= 0) return 0;
 
   const sb = createAdminClient();
   const [churches, sourceRows] = await Promise.all([
@@ -722,7 +722,7 @@ async function bootstrapMissingChurchUpdateSources(limit: number): Promise<numbe
 }
 
 async function listDueSources(limit: number): Promise<ChurchUpdateSource[]> {
-  if (isOfflinePublicBuild() || !hasSupabaseServiceConfig() || churchUpdateStoreUnavailable || limit <= 0) return [];
+  if (isOfflinePublicBuild() || !hasServiceConfig() || churchUpdateStoreUnavailable || limit <= 0) return [];
   const sb = createAdminClient();
   const { data, error } = await sb
     .from("church_update_sources")
@@ -755,7 +755,7 @@ export async function refreshChurchUpdatesBatch(input?: {
   itemWrites: number;
   errors: Array<{ sourceId: string; message: string }>;
 }> {
-  if (isOfflinePublicBuild() || !hasSupabaseServiceConfig() || churchUpdateStoreUnavailable) {
+  if (isOfflinePublicBuild() || !hasServiceConfig() || churchUpdateStoreUnavailable) {
     return { bootstrapped: 0, refreshedSources: 0, itemWrites: 0, errors: [] };
   }
 

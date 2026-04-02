@@ -1,4 +1,4 @@
-import { createAdminClient, hasSupabaseServiceConfig } from "@/lib/neon-client";
+import { createAdminClient, hasServiceConfig } from "@/lib/neon-client";
 
 const PAGE_SIZE = 100;
 const FETCH_PAGE_SIZE = 1000;
@@ -96,12 +96,12 @@ function sortUnique(values: string[]): string[] {
 }
 
 async function loadApprovedChurches(): Promise<ChurchBaseRow[]> {
-  const supabase = createAdminClient();
+  const client = createAdminClient();
   const rows: ChurchBaseRow[] = [];
   let from = 0;
 
   while (true) {
-    const { data, error } = await supabase
+    const { data, error } = await client
       .from("churches")
       .select("slug, name, location, country, website")
       .eq("status", "approved")
@@ -124,12 +124,12 @@ async function loadApprovedChurches(): Promise<ChurchBaseRow[]> {
 }
 
 async function loadChurchWebsiteTechRows(): Promise<ChurchWebsiteTechRow[]> {
-  const supabase = createAdminClient();
+  const client = createAdminClient();
   const rows: ChurchWebsiteTechRow[] = [];
   let from = 0;
 
   while (true) {
-    const { data, error } = await supabase
+    const { data, error } = await client
       .from("church_website_tech")
       .select("church_slug, website_url, final_url, http_status, primary_platform, technologies, sales_angle, error, last_checked_at")
       .order("church_slug", { ascending: true })
@@ -149,7 +149,7 @@ async function loadChurchWebsiteTechRows(): Promise<ChurchWebsiteTechRow[]> {
 }
 
 export async function loadChurchWebsiteTechRecords(): Promise<ChurchWebsiteTechRecord[]> {
-  if (!hasSupabaseServiceConfig()) return [];
+  if (!hasServiceConfig()) return [];
 
   const [churches, techRows] = await Promise.all([
     loadApprovedChurches(),

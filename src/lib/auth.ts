@@ -3,7 +3,7 @@ function normalizeEmail(value?: string | null): string {
 }
 
 export function createTemporaryUserPassword(): string {
-  // Supabase Auth enforces a max password length, and OTP login only needs
+  // Auth enforces a max password length, and OTP login only needs
   // a random placeholder secret for accounts created during claim verification.
   return crypto.randomUUID();
 }

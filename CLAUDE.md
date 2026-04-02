@@ -37,7 +37,7 @@ Zonen `gospelchannel.com` kör Enterprise med $5000 credits.
 - `worker.ts` - Cloudflare Worker entry point + cron handler
 - `wrangler.jsonc` - Worker config, R2-bindings, cron
 - `open-next.config.ts` - OpenNext/Cloudflare bridge config
-- `src/lib/media.ts` - `cfImage()` och `rewriteLegacySupabaseMediaUrl()`
+- `src/lib/media.ts` - `cfImage()` och `rewriteLegacyMediaUrl()`
 - `src/lib/auto-enrich.ts` - Haiku-baserad auto-enrichment vid suggestions
 - `scripts/quality-check-pending.mjs` - Batch-kvalitetskontroll av kyrkor
 - `scripts/backfill-emails.mjs` - Crawla kyrk-hemsidor efter kontakt-email

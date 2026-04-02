@@ -5,11 +5,11 @@ import type { ChurchProfileEdit, YouTubeVideo, ChurchEnrichment, ChurchProfileSc
 import type { ChurchConfig } from "@/types/gospel";
 import { getChurchBySlugAsync, getLocalChurchSnapshot } from "@/lib/content";
 import { CONTENT_UPDATED_AT, normalizeText, tokenSimilarity } from "@/lib/utils";
-import { hasSupabaseServiceConfig, createAdminClient } from "@/lib/neon-client";
+import { hasServiceConfig, createAdminClient } from "@/lib/neon-client";
 import { getCampusBySlug } from "@/lib/church-networks";
 import { getApprovedProfileEditsForChurch, buildMergedProfile } from "@/lib/church-profile";
 import { calculateProfileScore } from "@/lib/profile-score";
-import { rewriteLegacySupabaseMediaUrl } from "@/lib/media";
+import { rewriteLegacyMediaUrl } from "@/lib/media";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
 import {
   filterCanonicalChurchSlugRecords,
@@ -478,7 +478,7 @@ export function deriveChurchQuality(church: ChurchConfig): {
 }
 
 export async function getChurchEnrichment(slug: string): Promise<ChurchEnrichment | null> {
-  if (!hasSupabaseServiceConfig()) return null;
+  if (!hasServiceConfig()) return null;
   const sb = createAdminClient();
   const canonicalSlug = resolveCanonicalChurchSlug(slug);
   type ChurchEnrichmentRow = {
@@ -924,7 +924,7 @@ export async function getNearbyChurches(
   lng: number,
   limit = 4
 ): Promise<Array<{ slug: string; name: string; distance: number; country: string; location?: string }>> {
-  if (!hasSupabaseServiceConfig()) return [];
+  if (!hasServiceConfig()) return [];
   const sb = createAdminClient();
   const canonicalSlug = resolveCanonicalChurchSlug(slug);
   type NearbyChurchRow = {
@@ -1055,7 +1055,7 @@ type IndexEnrichmentHint = EnrichmentHint & {
 };
 
 async function getEnrichmentMeta(): Promise<Map<string, IndexEnrichmentHint>> {
-  if (isOfflinePublicBuild() || !hasSupabaseServiceConfig()) return new Map();
+  if (isOfflinePublicBuild() || !hasServiceConfig()) return new Map();
   type EnrichmentMetaRow = {
     church_slug: string | null;
     summary: string | null;
@@ -1094,8 +1094,8 @@ async function getEnrichmentMeta(): Promise<Map<string, IndexEnrichmentHint>> {
       languages: row.languages ?? undefined,
       hasSocial,
       dataRichnessScore: score,
-      coverImageUrl: rewriteLegacySupabaseMediaUrl(row.cover_image_url ?? undefined),
-      logoImageUrl: rewriteLegacySupabaseMediaUrl(row.logo_image_url ?? undefined),
+      coverImageUrl: rewriteLegacyMediaUrl(row.cover_image_url ?? undefined),
+      logoImageUrl: rewriteLegacyMediaUrl(row.logo_image_url ?? undefined),
     };
     const existing = map.get(canonicalSlug);
     if (!existing || hint.dataRichnessScore > existing.dataRichnessScore || (
@@ -1108,7 +1108,7 @@ async function getEnrichmentMeta(): Promise<Map<string, IndexEnrichmentHint>> {
 }
 
 async function getChurchIndexRows(): Promise<ChurchIndexRow[]> {
-  if (isOfflinePublicBuild() || !hasSupabaseServiceConfig()) return [];
+  if (isOfflinePublicBuild() || !hasServiceConfig()) return [];
   return fetchAllRows((sb, from, to) =>
     sb.from<ChurchIndexRow[]>("churches")
       .select("slug, name, description, spotify_playlist_ids, additional_playlists, logo, website, spotify_url, country, denomination, location, music_style, email, header_image, verified_at, last_researched, aliases, language, source_kind")
@@ -1121,8 +1121,8 @@ async function getChurchIndexRows(): Promise<ChurchIndexRow[]> {
 function mapChurchToIndexRecord(church: ChurchConfig, enrichmentHint?: IndexEnrichmentHint) {
   const normalizedChurch: ChurchConfig = {
     ...church,
-    logo: rewriteLegacySupabaseMediaUrl(church.logo) || "",
-    headerImage: rewriteLegacySupabaseMediaUrl(church.headerImage || enrichmentHint?.coverImageUrl),
+    logo: rewriteLegacyMediaUrl(church.logo) || "",
+    headerImage: rewriteLegacyMediaUrl(church.headerImage || enrichmentHint?.coverImageUrl),
   };
   const metrics = deriveChurchQuality(normalizedChurch);
   const resolvedDescription = resolveChurchPublicDescription({
@@ -1167,7 +1167,7 @@ function mapChurchToIndexRecord(church: ChurchConfig, enrichmentHint?: IndexEnri
 }
 
 async function _getChurchIndexData() {
-  if (isOfflinePublicBuild() || !hasSupabaseServiceConfig()) {
+  if (isOfflinePublicBuild() || !hasServiceConfig()) {
     return filterCanonicalChurchSlugRecords(getLocalChurchSnapshot()).map((church) => mapChurchToIndexRecord(church));
   }
 
@@ -1189,7 +1189,7 @@ async function _getChurchIndexData() {
         name: row.name,
         description: row.description || "",
         spotifyPlaylistIds: row.spotify_playlist_ids || [],
-        logo: rewriteLegacySupabaseMediaUrl(row.logo) || "",
+        logo: rewriteLegacyMediaUrl(row.logo) || "",
         website: row.website || "",
         spotifyUrl: row.spotify_url || "",
         country: row.country || "",
@@ -1198,7 +1198,7 @@ async function _getChurchIndexData() {
         musicStyle: row.music_style || undefined,
         additionalPlaylists: row.additional_playlists || undefined,
         email: row.email || undefined,
-        headerImage: rewriteLegacySupabaseMediaUrl(row.header_image || enrichmentHint?.coverImageUrl),
+        headerImage: rewriteLegacyMediaUrl(row.header_image || enrichmentHint?.coverImageUrl),
         verifiedAt: row.verified_at || undefined,
         lastResearched: row.last_researched || undefined,
         aliases: row.aliases || undefined,
@@ -1293,9 +1293,9 @@ export async function getChurchIndexSummaryLookup(): Promise<Map<string, ChurchI
 }
 
 export async function checkChurchClaimed(slug: string): Promise<boolean> {
-  if (!hasSupabaseServiceConfig()) return false;
-  const supabase = createAdminClient();
-  const { data } = await supabase
+  if (!hasServiceConfig()) return false;
+  const client = createAdminClient();
+  const { data } = await client
     .from<{ id: string }>('church_memberships')
     .select('id')
     .eq('church_slug', slug)

@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { createAdminClient, hasSupabaseServiceConfig } from "@/lib/neon-client";
+import { createAdminClient, hasServiceConfig } from "@/lib/neon-client";
 import { AdminLogout } from "@/components/AdminLogout";
 import { AdminNav } from "@/components/admin/AdminNav";
 import { getPendingEdits } from "@/lib/church-profile";
 
 async function getPendingCounts() {
-  if (!hasSupabaseServiceConfig()) {
+  if (!hasServiceConfig()) {
     return {
       suggestions: 0,
       feedback: 0,
@@ -15,13 +15,13 @@ async function getPendingCounts() {
     };
   }
 
-  const supabase = createAdminClient();
+  const client = createAdminClient();
 
   const [suggestions, feedback, claims, candidates, editsRows] = await Promise.all([
-    supabase.from("church_suggestions").select("id", { count: "exact", head: true }).eq("status", "pending"),
-    supabase.from("church_feedback").select("id", { count: "exact", head: true }).eq("status", "pending"),
-    supabase.from("church_claims").select("id", { count: "exact", head: true }).eq("status", "pending"),
-    supabase.from("churches").select("slug", { count: "exact", head: true }).eq("status", "pending"),
+    client.from("church_suggestions").select("id", { count: "exact", head: true }).eq("status", "pending"),
+    client.from("church_feedback").select("id", { count: "exact", head: true }).eq("status", "pending"),
+    client.from("church_claims").select("id", { count: "exact", head: true }).eq("status", "pending"),
+    client.from("churches").select("slug", { count: "exact", head: true }).eq("status", "pending"),
     getPendingEdits(),
   ]);
 

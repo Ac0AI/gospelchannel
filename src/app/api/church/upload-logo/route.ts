@@ -29,12 +29,12 @@ export async function POST(request: NextRequest) {
   const membership = await getChurchMembershipForUserAndSlug(user.id, churchSlug);
   if (!membership) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
-  const supabase = createAdminClient();
+  const client = createAdminClient();
   const ext = file.name.split('.').pop() ?? 'png';
   const filePath = `church-logos/${churchSlug}/logo-${Date.now()}.${ext}`;
 
   const buffer = Buffer.from(await file.arrayBuffer());
-  const { error: uploadError } = await supabase.storage
+  const { error: uploadError } = await client.storage
     .from('church-assets')
     .upload(filePath, buffer, { contentType: file.type, upsert: true });
 
@@ -42,6 +42,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Uppladdning misslyckades' }, { status: 500 });
   }
 
-  const { data: urlData } = supabase.storage.from('church-assets').getPublicUrl(filePath);
+  const { data: urlData } = client.storage.from('church-assets').getPublicUrl(filePath);
   return NextResponse.json({ url: urlData.publicUrl });
 }

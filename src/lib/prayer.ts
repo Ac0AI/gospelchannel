@@ -1,5 +1,5 @@
 import { revalidateTag, unstable_cache } from "next/cache";
-import { createAdminClient, hasSupabaseServiceConfig } from "@/lib/neon-client";
+import { createAdminClient, hasServiceConfig } from "@/lib/neon-client";
 import type { Prayer } from "@/types/gospel";
 import { getChurchSlugsByCountry, getChurchSlugsByCity, getChurchSlugsForNetwork } from "@/lib/prayer-filters";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
@@ -39,7 +39,7 @@ function isPrayerStoreEnabled(): boolean {
   if (prayerStoreUnavailableSince > 0 && Date.now() - prayerStoreUnavailableSince > STORE_RETRY_MS) {
     prayerStoreUnavailableSince = 0; // reset, allow retry
   }
-  return hasSupabaseServiceConfig() && !isOfflinePublicBuild() && prayerStoreUnavailableSince === 0;
+  return hasServiceConfig() && !isOfflinePublicBuild() && prayerStoreUnavailableSince === 0;
 }
 
 function listMemoryPrayers(): Prayer[] {

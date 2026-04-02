@@ -465,11 +465,11 @@ async function authPost(path: string, body: Record<string, unknown>) {
   };
 }
 
-export function hasSupabasePublicConfig() {
+export function hasPublicConfig() {
   return hasBetterAuthConfig();
 }
 
-export function hasSupabaseServiceConfig() {
+export function hasServiceConfig() {
   return hasDatabaseConfig();
 }
 

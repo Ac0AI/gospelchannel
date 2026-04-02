@@ -1,6 +1,6 @@
 import { desc, eq, gte, inArray, sql } from "drizzle-orm";
 import { getDb, hasDatabaseConfig, schema } from "@/db";
-import { createAdminClient, hasSupabaseServiceConfig } from "@/lib/neon-client";
+import { createAdminClient, hasServiceConfig } from "@/lib/neon-client";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
 import type {
   ChurchPlaylistReview,
@@ -230,18 +230,18 @@ export async function getTopChurchSlugs(periodDays = 30, limit = 10): Promise<Ar
   }
 }
 
-/* ── Supabase helpers ── */
+/* ── Admin client helpers ── */
 
-function isSupabaseAdminEnabled(): boolean {
-  return hasSupabaseServiceConfig();
+function isAdminEnabled(): boolean {
+  return hasServiceConfig();
 }
 
 /* ── Church suggestions ── */
 
 export async function getChurchSuggestions(): Promise<ChurchSuggestion[]> {
-  if (!isSupabaseAdminEnabled()) return [];
-  const supabase = createAdminClient();
-  const { data } = await supabase
+  if (!isAdminEnabled()) return [];
+  const client = createAdminClient();
+  const { data } = await client
     .from<SuggestionRow>("church_suggestions")
     .select()
     .order("submitted_at", { ascending: false });
@@ -251,13 +251,13 @@ export async function getChurchSuggestions(): Promise<ChurchSuggestion[]> {
 export async function addChurchSuggestion(
   suggestion: Omit<ChurchSuggestion, "id" | "submittedAt" | "status">
 ): Promise<ChurchSuggestion> {
-  if (!isSupabaseAdminEnabled()) {
-    throw new Error("Supabase is not configured");
+  if (!isAdminEnabled()) {
+    throw new Error("Database is not configured");
   }
   // Admin client needed: anon INSERT policy exists but .select().single()
   // requires SELECT permission which is restricted to authenticated users.
-  const supabase = createAdminClient();
-  const { data, error } = await supabase
+  const client = createAdminClient();
+  const { data, error } = await client
     .from<SuggestionRow>("church_suggestions")
     .insert({
       name: suggestion.name,
@@ -282,9 +282,9 @@ export async function addChurchSuggestion(
 /* ── Church feedback ── */
 
 export async function getChurchFeedback(): Promise<ChurchFeedback[]> {
-  if (!isSupabaseAdminEnabled()) return [];
-  const supabase = createAdminClient();
-  const { data } = await supabase
+  if (!isAdminEnabled()) return [];
+  const client = createAdminClient();
+  const { data } = await client
     .from<FeedbackRow>("church_feedback")
     .select()
     .order("submitted_at", { ascending: false });
@@ -294,12 +294,12 @@ export async function getChurchFeedback(): Promise<ChurchFeedback[]> {
 export async function addChurchFeedback(
   feedback: Omit<ChurchFeedback, "id" | "submittedAt" | "status">
 ): Promise<ChurchFeedback> {
-  if (!isSupabaseAdminEnabled()) {
-    throw new Error("Supabase is not configured");
+  if (!isAdminEnabled()) {
+    throw new Error("Database is not configured");
   }
   // Admin client needed: same RLS limitation as suggestions/claims.
-  const supabase = createAdminClient();
-  const { data, error } = await supabase
+  const client = createAdminClient();
+  const { data, error } = await client
     .from<FeedbackRow>("church_feedback")
     .insert({
       church_slug: feedback.churchSlug,
@@ -323,9 +323,9 @@ export async function addChurchFeedback(
 /* ── Church claims ── */
 
 export async function getChurchClaims(): Promise<ChurchClaim[]> {
-  if (!isSupabaseAdminEnabled()) return [];
-  const supabase = createAdminClient();
-  const { data } = await supabase
+  if (!isAdminEnabled()) return [];
+  const client = createAdminClient();
+  const { data } = await client
     .from<ClaimRow>("church_claims")
     .select()
     .order("submitted_at", { ascending: false });
@@ -335,14 +335,14 @@ export async function getChurchClaims(): Promise<ChurchClaim[]> {
 export async function addChurchClaim(
   claim: Omit<ChurchClaim, "id" | "submittedAt" | "status">
 ): Promise<ChurchClaim> {
-  if (!isSupabaseAdminEnabled()) {
-    throw new Error("Supabase is not configured");
+  if (!isAdminEnabled()) {
+    throw new Error("Database is not configured");
   }
   // Use admin client for insert because anon RLS allows INSERT but not
   // SELECT on church_claims, and .select().single() requires both.
   // This is a server-only function called from API routes, never from the browser.
-  const supabase = createAdminClient();
-  const { data, error } = await supabase
+  const client = createAdminClient();
+  const { data, error } = await client
     .from<ClaimRow>("church_claims")
     .insert({
       church_slug: claim.churchSlug,
@@ -361,10 +361,10 @@ export async function addChurchClaim(
 }
 
 export async function getChurchMembershipsForUser(userId: string): Promise<ChurchMembership[]> {
-  if (!isSupabaseAdminEnabled()) return [];
+  if (!isAdminEnabled()) return [];
 
-  const supabase = createAdminClient();
-  const { data, error } = await supabase
+  const client = createAdminClient();
+  const { data, error } = await client
     .from<MembershipRow>("church_memberships")
     .select()
     .eq("user_id", userId)
@@ -379,10 +379,10 @@ export async function getChurchMembershipsForUser(userId: string): Promise<Churc
 }
 
 export async function getActiveChurchMembershipByEmail(email: string): Promise<ChurchMembership | null> {
-  if (!isSupabaseAdminEnabled()) return null;
+  if (!isAdminEnabled()) return null;
 
-  const supabase = createAdminClient();
-  const { data, error } = await supabase
+  const client = createAdminClient();
+  const { data, error } = await client
     .from<MembershipRow>("church_memberships")
     .select()
     .ilike("email", email)
@@ -404,10 +404,10 @@ export async function ensureChurchAccessForEmail(email: string): Promise<ChurchM
     return existingMembership;
   }
 
-  if (!isSupabaseAdminEnabled()) return null;
+  if (!isAdminEnabled()) return null;
 
-  const supabase = createAdminClient();
-  const { data: claim, error } = await supabase
+  const client = createAdminClient();
+  const { data: claim, error } = await client
     .from<Pick<ClaimRow, "id">>("church_claims")
     .select("id")
     .ilike("email", normalizedEmail)
@@ -432,10 +432,10 @@ export async function getChurchMembershipForUserAndSlug(
   userId: string,
   churchSlug: string
 ): Promise<ChurchMembership | null> {
-  if (!isSupabaseAdminEnabled()) return null;
+  if (!isAdminEnabled()) return null;
 
-  const supabase = createAdminClient();
-  const { data, error } = await supabase
+  const client = createAdminClient();
+  const { data, error } = await client
     .from<MembershipRow>("church_memberships")
     .select()
     .eq("user_id", userId)
@@ -452,12 +452,12 @@ export async function getChurchMembershipForUserAndSlug(
 }
 
 export async function verifyChurchClaim(id: string): Promise<{ email: string; churchSlug: string; name: string }> {
-  if (!isSupabaseAdminEnabled()) {
-    throw new Error("Supabase admin is not configured");
+  if (!isAdminEnabled()) {
+    throw new Error("Admin client is not configured");
   }
 
-  const supabase = createAdminClient();
-  const { data: claim, error: claimError } = await supabase
+  const client = createAdminClient();
+  const { data: claim, error: claimError } = await client
     .from<ClaimRow>("church_claims")
     .select()
     .eq("id", id)
@@ -481,7 +481,7 @@ export async function verifyChurchClaim(id: string): Promise<{ email: string; ch
   let page = 1;
 
   while (!userId) {
-    const { data: usersPage, error: usersError } = await supabase.auth.admin.listUsers({
+    const { data: usersPage, error: usersError } = await client.auth.admin.listUsers({
       page,
       perPage: 200,
     });
@@ -504,7 +504,7 @@ export async function verifyChurchClaim(id: string): Promise<{ email: string; ch
   }
 
   if (!userId) {
-    const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
+    const { data: newUser, error: createError } = await client.auth.admin.createUser({
       email,
       email_confirm: true,
       user_metadata: {
@@ -519,7 +519,7 @@ export async function verifyChurchClaim(id: string): Promise<{ email: string; ch
     userId = newUser.user.id;
   }
 
-  const { error: membershipError } = await supabase
+  const { error: membershipError } = await client
     .from<MembershipRow>("church_memberships")
     .upsert(
       {
@@ -540,7 +540,7 @@ export async function verifyChurchClaim(id: string): Promise<{ email: string; ch
     throw new Error(membershipError.message);
   }
 
-  const { error: statusError } = await supabase
+  const { error: statusError } = await client
     .from<ClaimRow>("church_claims")
     .update({ status: "verified" })
     .eq("id", id);
@@ -561,13 +561,13 @@ export async function updateStatus(
   id: string,
   status: string
 ): Promise<void> {
-  if (!isSupabaseAdminEnabled()) {
-    throw new Error("Supabase admin is not configured");
+  if (!isAdminEnabled()) {
+    throw new Error("Admin client is not configured");
   }
-  const supabase = createAdminClient();
+  const client = createAdminClient();
   // The churches table uses slug as PK instead of uuid id
   const column = table === "churches" ? "slug" : "id";
-  const { error } = await supabase.from(table).update({ status }).eq(column, id);
+  const { error } = await client.from(table).update({ status }).eq(column, id);
   if (error) {
     throw new Error(error.message);
   }
@@ -578,12 +578,12 @@ export async function upsertPlaylistReview(
   playlistId: string,
   status: ChurchPlaylistReview["status"]
 ): Promise<void> {
-  if (!isSupabaseAdminEnabled()) {
-    throw new Error("Supabase admin is not configured");
+  if (!isAdminEnabled()) {
+    throw new Error("Admin client is not configured");
   }
 
-  const supabase = createAdminClient();
-  const { error } = await supabase
+  const client = createAdminClient();
+  const { error } = await client
     .from("church_playlist_reviews")
     .upsert(
       {
@@ -613,8 +613,8 @@ export async function updateChurchDetails(
     headerImage?: string | null;
   }
 ): Promise<void> {
-  if (!isSupabaseAdminEnabled()) {
-    throw new Error("Supabase admin is not configured");
+  if (!isAdminEnabled()) {
+    throw new Error("Admin client is not configured");
   }
 
   const name = details.name.trim();
@@ -628,14 +628,14 @@ export async function updateChurchDetails(
     throw new Error("Church name is required");
   }
 
-  const supabase = createAdminClient();
+  const client = createAdminClient();
   const update: Record<string, string | null> = { name, website, email, location, country };
   // Only include header_image if explicitly provided (even if empty string to clear it)
   if (details.headerImage !== undefined) {
     update.header_image = headerImage;
   }
 
-  const { error } = await supabase
+  const { error } = await client
     .from("churches")
     .update(update)
     .eq("slug", slug);
@@ -709,10 +709,10 @@ function mapMembership(row: MembershipRow): ChurchMembership {
 /* ── Church Outreach ── */
 
 export async function addOutreachRecord(churchSlug: string, email: string): Promise<ChurchOutreach> {
-  if (!isSupabaseAdminEnabled()) throw new Error('Supabase not configured');
-  const supabase = createAdminClient();
+  if (!isAdminEnabled()) throw new Error('Database not configured');
+  const client = createAdminClient();
 
-  const { data, error } = await supabase
+  const { data, error } = await client
     .from<OutreachRow>('church_outreach')
     .insert({ church_slug: churchSlug, email })
     .select()
@@ -734,13 +734,13 @@ export async function updateOutreachStatus(
   status: 'bounced' | 'claimed',
   claimId?: string,
 ): Promise<void> {
-  if (!isSupabaseAdminEnabled()) throw new Error('Supabase not configured');
-  const supabase = createAdminClient();
+  if (!isAdminEnabled()) throw new Error('Database not configured');
+  const client = createAdminClient();
 
   const update: Record<string, unknown> = { status };
   if (claimId) update.claim_id = claimId;
 
-  const { error } = await supabase
+  const { error } = await client
     .from('church_outreach')
     .update(update)
     .eq('id', id);
@@ -749,10 +749,10 @@ export async function updateOutreachStatus(
 }
 
 export async function getOutreachForChurch(churchSlug: string): Promise<ChurchOutreach[]> {
-  if (!isSupabaseAdminEnabled()) return [];
-  const supabase = createAdminClient();
+  if (!isAdminEnabled()) return [];
+  const client = createAdminClient();
 
-  const { data } = await supabase
+  const { data } = await client
     .from<OutreachRow>('church_outreach')
     .select()
     .eq('church_slug', churchSlug)

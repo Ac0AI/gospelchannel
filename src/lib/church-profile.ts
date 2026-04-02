@@ -1,4 +1,4 @@
-import { createAdminClient, hasSupabaseServiceConfig } from '@/lib/neon-client';
+import { createAdminClient, hasServiceConfig } from '@/lib/neon-client';
 import { getDb, schema } from '@/db';
 import type {
   ChurchProfileEdit,
@@ -72,7 +72,7 @@ export async function submitProfileEdit(params: {
   fieldValue: unknown;
   enrichment: ChurchEnrichment | null;
 }): Promise<ChurchProfileEdit> {
-  if (!hasSupabaseServiceConfig()) throw new Error('Supabase not configured');
+  if (!hasServiceConfig()) throw new Error('Database not configured');
   const db = getDb();
 
   const enrichmentMatch = autoVerifyField(params.fieldName, params.fieldValue, params.enrichment);
@@ -116,10 +116,10 @@ export async function submitProfileEdit(params: {
 }
 
 export async function getProfileEditsForChurch(churchSlug: string): Promise<ChurchProfileEdit[]> {
-  if (!hasSupabaseServiceConfig()) return [];
-  const supabase = createAdminClient();
+  if (!hasServiceConfig()) return [];
+  const client = createAdminClient();
 
-  const { data } = await supabase
+  const { data } = await client
     .from<ProfileEditRow>('church_profile_edits')
     .select()
     .eq('church_slug', churchSlug)
@@ -129,8 +129,8 @@ export async function getProfileEditsForChurch(churchSlug: string): Promise<Chur
 }
 
 export async function getApprovedProfileEditsForChurch(churchSlug: string): Promise<PublicProfileEdit[]> {
-  if (!hasSupabaseServiceConfig()) return [];
-  const supabase = createAdminClient();
+  if (!hasServiceConfig()) return [];
+  const client = createAdminClient();
   type ApprovedProfileEditRow = {
     field_name: string;
     field_value: unknown;
@@ -138,7 +138,7 @@ export async function getApprovedProfileEditsForChurch(churchSlug: string): Prom
     submitted_at: string;
   };
 
-  const { data } = await supabase
+  const { data } = await client
     .from<ApprovedProfileEditRow>('church_profile_edits')
     .select('field_name, field_value, review_status, submitted_at')
     .eq('church_slug', churchSlug)
@@ -154,10 +154,10 @@ export async function getApprovedProfileEditsForChurch(churchSlug: string): Prom
 }
 
 export async function getPendingEdits(): Promise<ChurchProfileEdit[]> {
-  if (!hasSupabaseServiceConfig()) return [];
-  const supabase = createAdminClient();
+  if (!hasServiceConfig()) return [];
+  const client = createAdminClient();
 
-  const { data } = await supabase
+  const { data } = await client
     .from<ProfileEditRow>('church_profile_edits')
     .select()
     .eq('review_status', 'pending')
@@ -172,10 +172,10 @@ export async function reviewProfileEdit(
   reviewedBy: string,
   rejectionReason?: string,
 ): Promise<void> {
-  if (!hasSupabaseServiceConfig()) throw new Error('Supabase not configured');
-  const supabase = createAdminClient();
+  if (!hasServiceConfig()) throw new Error('Database not configured');
+  const client = createAdminClient();
 
-  const { error } = await supabase
+  const { error } = await client
     .from('church_profile_edits')
     .update({
       review_status: action,

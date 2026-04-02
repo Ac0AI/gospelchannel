@@ -4,8 +4,8 @@ import churchesJson from "@/data/churches.json";
 import staffPicksJson from "@/data/staff-picks.json";
 import trendingJson from "@/data/cache/trending.json";
 import type { ChurchConfig, CatalogVideo } from "@/types/gospel";
-import { hasSupabaseServiceConfig, createAdminClient } from "@/lib/neon-client";
-import { rewriteLegacySupabaseMediaUrl } from "@/lib/media";
+import { hasServiceConfig, createAdminClient } from "@/lib/neon-client";
+import { rewriteLegacyMediaUrl } from "@/lib/media";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
 import {
   getCompactLocationLabel,
@@ -152,7 +152,7 @@ function getHomepageShowcaseScore(church: ChurchConfig): number {
   ]).length;
   const hasMusic = playlistCount > 0 || isPlayableSpotifyUrl(church.spotifyUrl);
   const hasLongText = Boolean(description && !isGeneratedChurchDescription(description) && description.length >= 80);
-  const hasVisual = Boolean(rewriteLegacySupabaseMediaUrl(church.headerImage) || rewriteLegacySupabaseMediaUrl(church.logo));
+  const hasVisual = Boolean(rewriteLegacyMediaUrl(church.headerImage) || rewriteLegacyMediaUrl(church.logo));
   const hasLocation = Boolean(getCompactLocationLabel(church.location, church.country));
   const hasStyle = (church.musicStyle?.length ?? 0) > 0;
 
@@ -181,14 +181,14 @@ function mapChurchToHomepageShowcase(church: ChurchConfig): HomepageShowcaseChur
     description: getHomepageShowcaseDescription(church),
     country: church.country,
     location: getCompactLocationLabel(church.location, church.country),
-    logo: rewriteLegacySupabaseMediaUrl(church.logo) || undefined,
+    logo: rewriteLegacyMediaUrl(church.logo) || undefined,
     playlistCount: uniqueSpotifyPlaylistIds([
       ...church.spotifyPlaylistIds,
       ...(church.additionalPlaylists ?? []),
     ]).length,
     updatedAt: church.verifiedAt,
     musicStyle: church.musicStyle,
-    thumbnailUrl: rewriteLegacySupabaseMediaUrl(church.headerImage) || undefined,
+    thumbnailUrl: rewriteLegacyMediaUrl(church.headerImage) || undefined,
   };
 }
 
@@ -212,8 +212,8 @@ function mergeChurchFallback(church: ChurchConfig): ChurchConfig {
 
   return {
     ...church,
-    logo: rewriteLegacySupabaseMediaUrl(church.logo || fallback.logo) || "",
-    headerImage: rewriteLegacySupabaseMediaUrl(church.headerImage || fallback.headerImage),
+    logo: rewriteLegacyMediaUrl(church.logo || fallback.logo) || "",
+    headerImage: rewriteLegacyMediaUrl(church.headerImage || fallback.headerImage),
     headerImageAttribution: church.headerImageAttribution || fallback.headerImageAttribution,
     youtubeChannelId: church.youtubeChannelId || fallback.youtubeChannelId,
     instagramUrl: church.instagramUrl || fallback.instagramUrl,
@@ -263,7 +263,7 @@ function mapRowToChurchDirectorySeed(row: ChurchDirectorySeedRow): ChurchDirecto
 }
 
 /**
- * Map a Supabase churches row to a ChurchConfig object.
+ * Map a churches row to a ChurchConfig object.
  */
 function mapRowToChurchConfig(row: ChurchDataRow, enrichment?: Record<string, unknown>): ChurchConfig {
   return mergeChurchFallback({
@@ -272,7 +272,7 @@ function mapRowToChurchConfig(row: ChurchDataRow, enrichment?: Record<string, un
     description: row.description || "",
     spotifyPlaylistIds: row.spotify_playlist_ids || [],
     spotifyPlaylists: row.spotify_playlists || undefined,
-    logo: rewriteLegacySupabaseMediaUrl(row.logo) || "",
+    logo: rewriteLegacyMediaUrl(row.logo) || "",
     website: row.website || "",
     spotifyUrl: row.spotify_url || "",
     country: row.country || "",
@@ -288,7 +288,7 @@ function mapRowToChurchConfig(row: ChurchDataRow, enrichment?: Record<string, un
     instagramUrl: row.instagram_url || (enrichment?.instagram_url as string | undefined) || undefined,
     facebookUrl: row.facebook_url || (enrichment?.facebook_url as string | undefined) || undefined,
     youtubeUrl: row.youtube_url || (enrichment?.youtube_url as string | undefined) || undefined,
-    headerImage: rewriteLegacySupabaseMediaUrl(row.header_image || (enrichment?.cover_image_url as string | undefined)),
+    headerImage: rewriteLegacyMediaUrl(row.header_image || (enrichment?.cover_image_url as string | undefined)),
     headerImageAttribution: row.header_image_attribution || undefined,
     lastResearched: row.last_researched || undefined,
     verifiedAt: row.verified_at || undefined,
@@ -300,7 +300,7 @@ function mapRowToChurchConfig(row: ChurchDataRow, enrichment?: Record<string, un
   });
 }
 
-async function fetchApprovedChurchesFromSupabase(): Promise<ChurchConfig[]> {
+async function fetchApprovedChurchesFromDb(): Promise<ChurchConfig[]> {
   const sb = createAdminClient();
   const PAGE_SIZE = 1000;
   const rows: Record<string, unknown>[] = [];
@@ -363,7 +363,7 @@ async function fetchSingleChurchBySlug(slug: string): Promise<ChurchConfig | und
   return mapRowToChurchConfig(churchRow as ChurchDataRow, enrichment);
 }
 
-async function fetchApprovedChurchDirectorySeedFromSupabase(): Promise<ChurchDirectorySeed[]> {
+async function fetchApprovedChurchDirectorySeedFromDb(): Promise<ChurchDirectorySeed[]> {
   const sb = createAdminClient();
   const PAGE_SIZE = 1000;
   const rows: ChurchDirectorySeed[] = [];
@@ -401,12 +401,12 @@ function formatChurchCountLabel(count: number): string {
 
 const getApprovedChurchDirectorySeedCached = unstable_cache(
   async (): Promise<ChurchDirectorySeed[]> => {
-    if (isOfflinePublicBuild() || !hasSupabaseServiceConfig()) {
+    if (isOfflinePublicBuild() || !hasServiceConfig()) {
       return tryLoadLocalChurchSnapshot().map(toChurchDirectorySeed);
     }
 
     try {
-      const churches = await fetchApprovedChurchDirectorySeedFromSupabase();
+      const churches = await fetchApprovedChurchDirectorySeedFromDb();
       if (churches.length === 0) {
         return getFallbackChurchSnapshot(
           "directory-seed",
@@ -438,12 +438,12 @@ const getApprovedChurchStatsCached = unstable_cache(
 // Full church payload now exceeds Next's 2 MB data-cache ceiling, so keep it
 // memoized in-process for a request/build and reserve unstable_cache for slimmer projections.
 const getApprovedChurches = cache(async (): Promise<ChurchConfig[]> => {
-  if (isOfflinePublicBuild() || !hasSupabaseServiceConfig()) {
+  if (isOfflinePublicBuild() || !hasServiceConfig()) {
     return tryLoadLocalChurchSnapshot();
   }
 
   try {
-    const churches = filterCanonicalChurchSlugRecords(await fetchApprovedChurchesFromSupabase());
+    const churches = filterCanonicalChurchSlugRecords(await fetchApprovedChurchesFromDb());
     if (churches.length === 0) {
       return getFallbackChurchSnapshot("churches", createEmptyChurchDirectoryError());
     }
@@ -480,7 +480,7 @@ export async function getChurchBySlugAsync(
 ): Promise<ChurchConfig | undefined> {
   const canonicalSlug = resolveCanonicalChurchSlug(slug);
 
-  if (isOfflinePublicBuild() || !hasSupabaseServiceConfig()) {
+  if (isOfflinePublicBuild() || !hasServiceConfig()) {
     return getFallbackChurchMap().get(canonicalSlug);
   }
 

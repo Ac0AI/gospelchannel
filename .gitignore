@@ -47,7 +47,6 @@ scripts/.discovery-checkpoint.json
 .npm-cache/
 /output/
 /tmp/
-/supabase/.temp/
 
 # vercel
 .vercel

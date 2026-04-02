@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import Link from "next/link";
-import { createAdminClient, hasSupabaseServiceConfig } from "@/lib/neon-client";
+import { createAdminClient, hasServiceConfig } from "@/lib/neon-client";
 import { AdminNav } from "@/components/admin/AdminNav";
 import {
   AdminCandidatesPanel,
@@ -154,17 +154,17 @@ function mapCandidate(row: CandidateRow): ChurchCandidate {
 }
 
 async function getCandidates(): Promise<ChurchCandidate[]> {
-  if (!hasSupabaseServiceConfig()) {
+  if (!hasServiceConfig()) {
     return [];
   }
 
-  const supabase = createAdminClient();
+  const client = createAdminClient();
   const PAGE_SIZE = 1000;
   const all: ChurchCandidate[] = [];
   let from = 0;
 
   while (true) {
-    const { data, error } = await supabase
+    const { data, error } = await client
       .from("churches")
       .select()
       .order("created_at", { ascending: false })
@@ -193,12 +193,12 @@ async function getScreeningMap(): Promise<Map<string, AdminCandidateScreening>> 
 }
 
 async function getPlaylistReviewMap(): Promise<Map<string, Record<string, ChurchPlaylistReview["status"]>>> {
-  if (!hasSupabaseServiceConfig()) {
+  if (!hasServiceConfig()) {
     return new Map();
   }
 
-  const supabase = createAdminClient();
-  const { data, error } = await supabase
+  const client = createAdminClient();
+  const { data, error } = await client
     .from("church_playlist_reviews")
     .select("church_slug, playlist_id, status");
 

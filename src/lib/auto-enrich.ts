@@ -148,9 +148,9 @@ export async function saveEnrichmentToSuggestion(
   // We store enrichment data as a JSON column on the suggestion
   // so the admin panel can display it during review
   const { createAdminClient } = await import("@/lib/neon-client");
-  const supabase = createAdminClient();
+  const client = createAdminClient();
 
-  await supabase
+  await client
     .from("church_suggestions")
     .update({
       enrichment_data: {

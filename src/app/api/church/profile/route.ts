@@ -10,8 +10,8 @@ import { submitProfileEdit, getProfileEditsForChurch } from '@/lib/church-profil
 import type { ChurchEnrichment } from '@/types/gospel';
 
 async function getChurchEnrichmentBySlug(slug: string): Promise<ChurchEnrichment | null> {
-  const supabase = createAdminClient();
-  const { data } = await supabase
+  const client = createAdminClient();
+  const { data } = await client
     .from<ChurchEnrichment>('church_enrichments')
     .select()
     .eq('church_slug', slug)

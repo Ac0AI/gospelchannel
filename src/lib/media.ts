@@ -1,4 +1,4 @@
-const SUPABASE_PUBLIC_PREFIX = "/storage/v1/object/public/church-assets/";
+const LEGACY_STORAGE_PREFIX = "/storage/v1/object/public/church-assets/";
 
 const MEDIA_BASE_URL = (process.env.NEXT_PUBLIC_MEDIA_BASE_URL || "https://media.gospelchannel.com").replace(/\/$/, "");
 
@@ -6,18 +6,18 @@ function getMediaBaseUrl() {
   return MEDIA_BASE_URL;
 }
 
-export function rewriteLegacySupabaseMediaUrl(value: string | null | undefined): string | undefined {
+export function rewriteLegacyMediaUrl(value: string | null | undefined): string | undefined {
   const trimmed = value?.trim();
   if (!trimmed) return undefined;
 
   try {
     const parsed = new URL(trimmed);
-    const index = parsed.pathname.indexOf(SUPABASE_PUBLIC_PREFIX);
+    const index = parsed.pathname.indexOf(LEGACY_STORAGE_PREFIX);
     if (index < 0) {
       return trimmed;
     }
 
-    const key = parsed.pathname.slice(index + SUPABASE_PUBLIC_PREFIX.length).replace(/^\/+/, "");
+    const key = parsed.pathname.slice(index + LEGACY_STORAGE_PREFIX.length).replace(/^\/+/, "");
     if (!key) {
       return trimmed;
     }
