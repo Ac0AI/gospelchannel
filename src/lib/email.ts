@@ -44,44 +44,6 @@ async function sendBrevoEmail(params: {
   return true;
 }
 
-async function sendResendEmail(params: {
-  to: string;
-  subject: string;
-  html: string;
-  from?: string;
-}): Promise<boolean> {
-  const RESEND_API_KEY = process.env.RESEND_API_KEY;
-  console.log("[email] Resend key present:", !!RESEND_API_KEY);
-
-  if (!RESEND_API_KEY) {
-    return false;
-  }
-
-  const { NOTIFY_FROM_EMAIL } = getEmailConfig();
-
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${RESEND_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: params.from || NOTIFY_FROM_EMAIL,
-      to: [params.to],
-      subject: params.subject,
-      html: params.html,
-    }),
-  });
-
-  if (!res.ok) {
-    const body = await res.text().catch(() => "");
-    console.error(`[email] Resend error ${res.status}: ${body}`);
-    return false;
-  }
-
-  return true;
-}
-
 async function sendEmail(params: {
   to: string;
   subject: string;
@@ -90,15 +52,11 @@ async function sendEmail(params: {
 }) {
   console.log("[email] Sending to:", params.to, "subject:", params.subject);
 
-  if (await sendResendEmail(params)) {
-    return;
-  }
-
   if (await sendBrevoEmail(params)) {
     return;
   }
 
-  console.warn("[email] No configured provider accepted the email");
+  console.warn("[email] Brevo not configured or failed, email not sent");
 }
 
 export async function sendAuthOtpEmail(params: {
