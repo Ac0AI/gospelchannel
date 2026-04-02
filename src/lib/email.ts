@@ -1,9 +1,10 @@
 import { getConfiguredSiteUrl } from "@/lib/site-url";
 
-const BREVO_API_KEY = process.env.BREVO_API_KEY;
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const AUTH_FROM_EMAIL = process.env.AUTH_FROM_EMAIL || "noreply@gospelchannel.com";
-const NOTIFY_FROM_EMAIL = process.env.NOTIFY_FROM_EMAIL || AUTH_FROM_EMAIL;
+function getEmailConfig() {
+  const AUTH_FROM_EMAIL = process.env.AUTH_FROM_EMAIL || "noreply@gospelchannel.com";
+  const NOTIFY_FROM_EMAIL = process.env.NOTIFY_FROM_EMAIL || AUTH_FROM_EMAIL;
+  return { AUTH_FROM_EMAIL, NOTIFY_FROM_EMAIL };
+}
 
 async function sendBrevoEmail(params: {
   to: string;
@@ -11,9 +12,14 @@ async function sendBrevoEmail(params: {
   html: string;
   from?: string;
 }): Promise<boolean> {
+  const BREVO_API_KEY = process.env.BREVO_API_KEY;
+  console.log("[email] Brevo key present:", !!BREVO_API_KEY);
+
   if (!BREVO_API_KEY) {
     return false;
   }
+
+  const { NOTIFY_FROM_EMAIL } = getEmailConfig();
 
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
@@ -44,9 +50,14 @@ async function sendResendEmail(params: {
   html: string;
   from?: string;
 }): Promise<boolean> {
+  const RESEND_API_KEY = process.env.RESEND_API_KEY;
+  console.log("[email] Resend key present:", !!RESEND_API_KEY);
+
   if (!RESEND_API_KEY) {
     return false;
   }
+
+  const { NOTIFY_FROM_EMAIL } = getEmailConfig();
 
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -77,6 +88,8 @@ async function sendEmail(params: {
   html: string;
   from?: string;
 }) {
+  console.log("[email] Sending to:", params.to, "subject:", params.subject);
+
   if (await sendResendEmail(params)) {
     return;
   }
@@ -92,6 +105,8 @@ export async function sendAuthOtpEmail(params: {
   email: string;
   otp: string;
 }): Promise<void> {
+  const { AUTH_FROM_EMAIL } = getEmailConfig();
+
   const html = `
     <div style="font-family: Georgia, serif; max-width: 520px; margin: 0 auto; color: #3b2f2f;">
       <h2 style="margin-bottom: 4px;">Your sign-in code</h2>
@@ -116,6 +131,7 @@ export async function sendClaimVerifiedEmail(params: {
   churchName: string;
   churchSlug: string;
 }): Promise<void> {
+  const { NOTIFY_FROM_EMAIL } = getEmailConfig();
   const siteUrl = getConfiguredSiteUrl();
   const loginUrl = `${siteUrl}/church-admin/login`;
   const churchUrl = `${siteUrl}/church/${params.churchSlug}`;
@@ -124,7 +140,7 @@ export async function sendClaimVerifiedEmail(params: {
     <div style="font-family: Georgia, serif; max-width: 520px; margin: 0 auto; color: #3b2f2f;">
       <h2 style="margin-bottom: 4px;">Your claim has been verified</h2>
       <p>
-        Great news — your claim for <strong>${params.churchName}</strong> has been approved.
+        Great news - your claim for <strong>${params.churchName}</strong> has been approved.
         You can now sign in to your church admin dashboard to update your listing.
       </p>
       <p style="margin: 24px 0;">
@@ -137,7 +153,7 @@ export async function sendClaimVerifiedEmail(params: {
       </p>
       <hr style="border: none; border-top: 1px solid #e8d8d0; margin: 24px 0;" />
       <p style="font-size: 13px; color: #9a8a7a;">
-        <a href="${churchUrl}" style="color: #c08888;">View your church page</a> · Gospel Channel
+        <a href="${churchUrl}" style="color: #c08888;">View your church page</a> &middot; Gospel Channel
       </p>
     </div>
   `.trim();
@@ -148,4 +164,93 @@ export async function sendClaimVerifiedEmail(params: {
     subject: `Your claim for ${params.churchName} has been verified`,
     html,
   });
+}
+
+export async function sendClaimReceivedEmail(params: {
+  to: string;
+  name: string;
+  churchName: string;
+  churchSlug: string;
+}): Promise<void> {
+  const { NOTIFY_FROM_EMAIL } = getEmailConfig();
+  const siteUrl = getConfiguredSiteUrl();
+  const churchUrl = `${siteUrl}/church/${params.churchSlug}`;
+
+  const html = `
+    <div style="font-family: Georgia, serif; max-width: 520px; margin: 0 auto; color: #3b2f2f;">
+      <h2 style="margin-bottom: 4px;">We received your claim</h2>
+      <p>
+        Hi ${params.name}, thanks for submitting a claim for
+        <strong><a href="${churchUrl}" style="color: #b06a50; text-decoration: none;">${params.churchName}</a></strong>.
+      </p>
+      <p>
+        We'll review your claim and get back to you within <strong>48 hours</strong>.
+        Once approved you'll be able to sign in and manage your church listing.
+      </p>
+      <p style="margin: 24px 0;">
+        <a href="${churchUrl}" style="background: #c08888; color: #fff; padding: 12px 28px; border-radius: 999px; text-decoration: none; font-weight: 600;">
+          View church page
+        </a>
+      </p>
+      <hr style="border: none; border-top: 1px solid #e8d8d0; margin: 24px 0;" />
+      <p style="font-size: 13px; color: #9a8a7a;">
+        If you did not submit this claim, you can safely ignore this email.
+      </p>
+    </div>
+  `.trim();
+
+  await sendEmail({
+    to: params.to,
+    from: NOTIFY_FROM_EMAIL,
+    subject: `Claim received for ${params.churchName}`,
+    html,
+  });
+}
+
+export async function sendClaimAdminNotification(params: {
+  claimantName: string;
+  claimantEmail: string;
+  role?: string;
+  churchName: string;
+  churchSlug: string;
+  message?: string;
+}): Promise<void> {
+  const adminEmailsRaw = process.env.ADMIN_EMAILS;
+  if (!adminEmailsRaw) {
+    console.warn("[email] ADMIN_EMAILS not set, skipping admin notification");
+    return;
+  }
+
+  const { NOTIFY_FROM_EMAIL } = getEmailConfig();
+  const siteUrl = getConfiguredSiteUrl();
+  const adminUrl = `${siteUrl}/admin/claims`;
+  const churchUrl = `${siteUrl}/church/${params.churchSlug}`;
+
+  const html = `
+    <div style="font-family: Georgia, serif; max-width: 520px; margin: 0 auto; color: #3b2f2f;">
+      <h2 style="margin-bottom: 4px;">New claim: ${params.churchName}</h2>
+      <table style="font-size: 15px; margin: 16px 0; border-collapse: collapse;">
+        <tr><td style="padding: 4px 12px 4px 0; color: #7a6a5a;">Name</td><td>${params.claimantName}</td></tr>
+        <tr><td style="padding: 4px 12px 4px 0; color: #7a6a5a;">Email</td><td><a href="mailto:${params.claimantEmail}" style="color: #b06a50;">${params.claimantEmail}</a></td></tr>
+        ${params.role ? `<tr><td style="padding: 4px 12px 4px 0; color: #7a6a5a;">Role</td><td>${params.role}</td></tr>` : ""}
+        <tr><td style="padding: 4px 12px 4px 0; color: #7a6a5a;">Church</td><td><a href="${churchUrl}" style="color: #b06a50;">${params.churchName}</a></td></tr>
+        ${params.message ? `<tr><td style="padding: 4px 12px 4px 0; color: #7a6a5a;">Message</td><td>${params.message}</td></tr>` : ""}
+      </table>
+      <p style="margin: 24px 0;">
+        <a href="${adminUrl}" style="background: #c08888; color: #fff; padding: 12px 28px; border-radius: 999px; text-decoration: none; font-weight: 600;">
+          Review claims
+        </a>
+      </p>
+    </div>
+  `.trim();
+
+  const adminEmails = adminEmailsRaw.split(",").map((e) => e.trim()).filter(Boolean);
+  for (const adminEmail of adminEmails) {
+    await sendEmail({
+      to: adminEmail,
+      from: NOTIFY_FROM_EMAIL,
+      subject: `New claim: ${params.churchName}`,
+      html,
+    });
+  }
 }

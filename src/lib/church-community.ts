@@ -322,6 +322,18 @@ export async function addChurchFeedback(
 
 /* ── Church claims ── */
 
+export async function hasPendingClaimForChurch(churchSlug: string): Promise<boolean> {
+  if (!isAdminEnabled()) return false;
+  const client = createAdminClient();
+  const { data } = await client
+    .from("church_claims")
+    .select("id")
+    .eq("church_slug", churchSlug)
+    .eq("status", "pending")
+    .limit(1);
+  return ((data as Array<{ id: string }> | null) ?? []).length > 0;
+}
+
 export async function getChurchClaims(): Promise<ChurchClaim[]> {
   if (!isAdminEnabled()) return [];
   const client = createAdminClient();

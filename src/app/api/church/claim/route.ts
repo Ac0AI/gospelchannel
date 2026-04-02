@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { addChurchClaim } from "@/lib/church-community";
 import { getChurchBySlugAsync } from "@/lib/content";
+import { sendClaimReceivedEmail, sendClaimAdminNotification } from "@/lib/email";
 import { getClientIp, hasKvRateLimit, isBotTrapFilled, setKvRateLimit } from "@/lib/request-guards";
 import { getPostHogClient } from "@/lib/posthog-server";
 
@@ -41,7 +42,8 @@ export async function POST(request: NextRequest) {
   const ip = getClientIp(request);
   const rateLimitKey = ip ? `church:claim:${churchSlug}:${ip}` : null;
 
-  if (!churchSlug || !(await getChurchBySlugAsync(churchSlug))) {
+  const church = await getChurchBySlugAsync(churchSlug);
+  if (!churchSlug || !church) {
     return NextResponse.json({ error: "Unknown church" }, { status: 404 });
   }
 
@@ -75,6 +77,24 @@ export async function POST(request: NextRequest) {
       event: "church_claim_received",
       properties: { church_slug: churchSlug, role: role || undefined, claim_id: claim.id },
     });
+
+    const churchName = church.name || churchSlug;
+
+    sendClaimReceivedEmail({
+      to: email,
+      name,
+      churchName,
+      churchSlug,
+    }).catch((err) => console.error("[claim] Failed to send confirmation email:", err));
+
+    sendClaimAdminNotification({
+      claimantName: name,
+      claimantEmail: email,
+      role: role || undefined,
+      churchName,
+      churchSlug,
+      message: message || undefined,
+    }).catch((err) => console.error("[claim] Failed to send admin notification:", err));
 
     return NextResponse.json({
       success: true,

@@ -2,13 +2,9 @@ import { checkChurchClaimed } from "@/lib/church";
 
 export async function VerifiedChurchBadge({
   churchSlug,
-  badgeEligible,
 }: {
   churchSlug: string;
-  badgeEligible: boolean;
 }) {
-  if (!badgeEligible) return null;
-
   const isClaimed = await checkChurchClaimed(churchSlug);
   if (!isClaimed) return null;
 
