@@ -39,6 +39,22 @@
     "sourceKind": "discovered"
   },
   {
+    "slug": "121-church-barcelona",
+    "name": "121 Church Barcelona",
+    "description": "121 Church is a bilingual Christian church in Barcelona communicating in both English and Spanish. They describe themselves as a life-giving church with a mission to reach and lift the eyes of the city to know, love and worship God.",
+    "country": "Spain",
+    "location": "Barcelona",
+    "denomination": "Non-denominational",
+    "website": "https://www.121bcn.com/",
+    "email": "hello@121bcn.com",
+    "language": "English",
+    "logo": "",
+    "headerImage": "https://media.gospelchannel.com/heroes/121-church-barcelona.jpg",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
     "instagramUrl": "https://www.instagram.com/611churchosaka/",
     "facebookUrl": "https://www.facebook.com/611churchosaka",
     "youtubeUrl": "https://www.youtube.com/c/Osaka611Curch",
@@ -591,6 +607,21 @@
     "sourceKind": "discovered"
   },
   {
+    "slug": "alive-church-germany",
+    "name": "Alive Church Germany",
+    "description": "Alive Church is a contemporary Christian community in Germany. Their website emphasizes 'Welcome Home' as their core message.",
+    "country": "Germany",
+    "location": "Karlsruhe",
+    "denomination": "Non-denominational",
+    "website": "https://www.alivechurch.de/",
+    "language": "English",
+    "logo": "",
+    "headerImage": "https://media.gospelchannel.com/heroes/alive-church-germany.jpg",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
     "instagramUrl": "https://www.instagram.com/alivechurchmtl/",
     "facebookUrl": "https://www.facebook.com/AliveChurchMtl",
     "youtubeUrl": "https://www.youtube.com/channel/UC_ZDB3xrhMy_3TZ4xFVBv_Q",
@@ -755,24 +786,6 @@
     "sourceKind": "discovered"
   },
   {
-    "instagramUrl": "https://www.instagram.com/churchinwales/",
-    "facebookUrl": "https://www.facebook.com/ChurchinWales/",
-    "slug": "all-saints",
-    "name": "All Saints",
-    "description": "All Saints is an anglican church in Porthcawl. Explore their worship and community details before your first visit.",
-    "country": "United Kingdom",
-    "location": "Porthcawl",
-    "denomination": "Anglican",
-    "website": "https://www.churchinwales.org.uk/",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/heroes/all-saints.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-25T22:00:07.370Z",
-    "verifiedAt": "2026-03-25T22:00:07.370Z",
-    "sourceKind": "discovered"
-  },
-  {
     "slug": "all-saints-cheltenham",
     "name": "All Saints",
     "description": "All Saints is an anglican church in Cheltenham. Explore their worship and community details before your first visit.",
@@ -799,6 +812,24 @@
     "email": "admin@allsaintsfaringdon.org",
     "logo": "",
     "headerImage": "https://media.gospelchannel.com/heroes/all-saints-faringdon.webp",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "lastResearched": "2026-03-25T22:00:07.370Z",
+    "verifiedAt": "2026-03-25T22:00:07.370Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "instagramUrl": "https://www.instagram.com/churchinwales/",
+    "facebookUrl": "https://www.facebook.com/ChurchinWales/",
+    "slug": "all-saints",
+    "name": "All Saints",
+    "description": "All Saints is an anglican church in Porthcawl. Explore their worship and community details before your first visit.",
+    "country": "United Kingdom",
+    "location": "Porthcawl",
+    "denomination": "Anglican",
+    "website": "https://www.churchinwales.org.uk/",
+    "logo": "",
+    "headerImage": "https://media.gospelchannel.com/heroes/all-saints.jpg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-25T22:00:07.370Z",
@@ -1236,7 +1267,7 @@
     "email": "contact@antiochgospelchurch.com",
     "logo": "",
     "headerImage": "https://media.gospelchannel.com/heroes/antioch-gospel-church-sydney-campus.jpg",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/artist/7hQhvaDRtEZJVFpY1ac7KG",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
@@ -1476,6 +1507,7 @@
     "denomination": "Non-denominational",
     "website": "https://www.ashbychurch.co.uk/",
     "logo": "https://media.gospelchannel.com/logos/enrichments/ashby-christadelphian-church.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/ashby-christadelphian-church.jpg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-25T21:52:44.562Z",
@@ -2694,6 +2726,26 @@
     "sourceKind": "discovered"
   },
   {
+    "slug": "bethany-church-baton-rouge",
+    "name": "Bethany Church",
+    "description": "Global charismatic church family headquartered in Baton Rouge, Louisiana. Active missions network and vibrant worship culture.",
+    "country": "USA",
+    "location": "Baton Rouge, Louisiana",
+    "denomination": "Charismatic",
+    "website": "https://bethany.com/",
+    "logo": "",
+    "headerImage": "https://media.gospelchannel.com/heroes/bethany-church-baton-rouge.jpg",
+    "spotifyUrl": "https://open.spotify.com/playlist/1aeFlO1Sok4cveyh4QxzU8",
+    "spotifyPlaylistIds": [
+      "1aeFlO1Sok4cveyh4QxzU8"
+    ],
+    "musicStyle": [
+      "contemporary worship"
+    ],
+    "verifiedAt": "2026-04-02T21:29:52.223Z",
+    "sourceKind": "manual"
+  },
+  {
     "facebookUrl": "https://www.facebook.com/sharer/sharer.php",
     "youtubeUrl": "https://www.youtube.com/@BethanyFellowshipFGC",
     "slug": "bethany-fellowship-full-gospel-church-claremont-cape-town",
@@ -2724,99 +2776,6 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://instagram.com/bethany_church/",
-    "facebookUrl": "https://facebook.com/bethanyonline",
-    "youtubeUrl": "https://www.youtube.com/c/BethanyOnline",
-    "slug": "bethany-music",
-    "name": "Bethany Music",
-    "description": "Baton Rouge worship team creating powerful modern worship anthems.",
-    "country": "USA",
-    "location": "Baker, Louisiana, United States",
-    "denomination": "Non-denominational",
-    "founded": 1963,
-    "website": "https://bethany.church",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/heroes/bethany-music.jpg",
-    "spotifyUrl": "https://open.spotify.com/playlist/1aeFlO1Sok4cveyh4QxzU8",
-    "spotifyPlaylistIds": [
-      "1aeFlO1Sok4cveyh4QxzU8"
-    ],
-    "additionalPlaylists": [
-      "42fou9wrrG54xFUX8HvjF3",
-      "7K6tdLPstrA5RwrX0rjg4B",
-      "2w8fKTHLyEWhbTVnC4icvo",
-      "4WU4bOCXa93WeNSgHwew67"
-    ],
-    "musicStyle": [
-      "contemporary worship"
-    ],
-    "youtubeChannelId": "UCxQZ5Z0Z1Z0Z0Z0Z0Z0Z0Z0",
-    "youtubeVideos": [
-      {
-        "title": "Worth The Wait: Jonathan Stockstill Live Album Experience",
-        "videoId": "IPSnKDAiRXw",
-        "channelTitle": "Bethany Music",
-        "thumbnailUrl": "https://i.ytimg.com/vi/IPSnKDAiRXw/hqdefault.jpg"
-      },
-      {
-        "title": "Fill The Room (Live) ",
-        "videoId": "GS9dlGIw6IE",
-        "channelTitle": " Michael Bethany",
-        "thumbnailUrl": "https://i.ytimg.com/vi/GS9dlGIw6IE/hqdefault.jpg"
-      },
-      {
-        "title": "Easy to Worship ",
-        "videoId": "FqiV-azA6PA",
-        "channelTitle": " Bethany Music feat. Nick Day & Danielle Burns ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/FqiV-azA6PA/hqdefault.jpg"
-      },
-      {
-        "title": "Speak ",
-        "videoId": "aOXPVSRxttU",
-        "channelTitle": " Bethany Music ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/aOXPVSRxttU/hqdefault.jpg"
-      },
-      {
-        "title": "When We Praise ",
-        "videoId": "0OJU3nOfZfU",
-        "channelTitle": " Bethany Music feat. Nick Day ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/0OJU3nOfZfU/hqdefault.jpg"
-      },
-      {
-        "title": "In the Middle (feat. Danielle Burns) ",
-        "videoId": "gjjGrThST8A",
-        "channelTitle": " Bethany Music",
-        "thumbnailUrl": "https://i.ytimg.com/vi/gjjGrThST8A/hqdefault.jpg"
-      },
-      {
-        "title": "Best Bethel Music Gospel Famous Songs 2020 - Powerful Playlist Of Bethel Music Nonstop",
-        "videoId": "Vu0MR4ceyYE",
-        "channelTitle": "Gospel Music",
-        "thumbnailUrl": "https://i.ytimg.com/vi/Vu0MR4ceyYE/hqdefault.jpg"
-      },
-      {
-        "title": "Overflow Acoustic Experience with Michael Bethany ",
-        "videoId": "a8jF3TGKjXI",
-        "channelTitle": " Worship Together Session",
-        "thumbnailUrl": "https://i.ytimg.com/vi/a8jF3TGKjXI/hqdefault.jpg"
-      },
-      {
-        "title": "Worship Flow #1 ",
-        "videoId": "muJxd3lUCuQ",
-        "channelTitle": " Jonathan Stockstill ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/muJxd3lUCuQ/hqdefault.jpg"
-      },
-      {
-        "title": "Worship Flow #3 ",
-        "videoId": "jTcwtp8pJw0",
-        "channelTitle": " Danielle Burns ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/jTcwtp8pJw0/hqdefault.jpg"
-      }
-    ],
-    "lastResearched": "2026-02-27T00:00:00.000Z",
-    "sourceKind": "manual"
   },
   {
     "slug": "bethel-ag-church",
@@ -2859,6 +2818,25 @@
     "sourceKind": "discovered"
   },
   {
+    "instagramUrl": "https://www.instagram.com/bethelinllantwit/",
+    "facebookUrl": "https://www.facebook.com/bethelinllantwit",
+    "youtubeUrl": "https://www.youtube.com/channel/UC1BmohSIQm7e0RrTyr6eqww",
+    "slug": "bethel",
+    "name": "Bethel Baptist Church",
+    "description": "Bethel Baptist Church is a welcoming community of Jesus followers in Llantwit Major, Wales, offering worship, fellowship, and spiritual support to those seeking belonging.",
+    "country": "United Kingdom",
+    "location": "Llantwit Major",
+    "denomination": "Baptist",
+    "website": "https://www.bethel-llantwit.org.uk/",
+    "logo": "https://media.gospelchannel.com/logos/enrichments/bethel.ico",
+    "headerImage": "https://media.gospelchannel.com/heroes/bethel.jpg",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "lastResearched": "2026-03-30T05:08:24.845Z",
+    "verifiedAt": "2026-03-30T05:08:24.845Z",
+    "sourceKind": "discovered"
+  },
+  {
     "instagramUrl": "https://instagram.com/bethelbedwas",
     "facebookUrl": "https://facebook.com/bethelbedwas",
     "youtubeUrl": "https://www.youtube.com/@bethelbedwas",
@@ -2877,25 +2855,6 @@
     "youtubeChannelId": "UC3O7bpRi8rO9aejlFIpvF-Q",
     "lastResearched": "2026-03-25T21:52:44.562Z",
     "verifiedAt": "2026-03-25T21:52:44.562Z",
-    "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/bethelinllantwit/",
-    "facebookUrl": "https://www.facebook.com/bethelinllantwit",
-    "youtubeUrl": "https://www.youtube.com/channel/UC1BmohSIQm7e0RrTyr6eqww",
-    "slug": "bethel",
-    "name": "Bethel Baptist Church",
-    "description": "Bethel Baptist Church is a welcoming community of Jesus followers in Llantwit Major, Wales, offering worship, fellowship, and spiritual support to those seeking belonging.",
-    "country": "United Kingdom",
-    "location": "Llantwit Major",
-    "denomination": "Baptist",
-    "website": "https://www.bethel-llantwit.org.uk/",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/bethel.ico",
-    "headerImage": "https://media.gospelchannel.com/heroes/bethel.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-30T05:08:24.845Z",
-    "verifiedAt": "2026-03-30T05:08:24.845Z",
     "sourceKind": "discovered"
   },
   {
@@ -2937,6 +2896,28 @@
     "lastResearched": "2026-03-25T21:52:44.562Z",
     "verifiedAt": "2026-03-25T21:52:44.562Z",
     "sourceKind": "discovered"
+  },
+  {
+    "slug": "bethel-church-redding",
+    "name": "Bethel Church Redding",
+    "description": "Charismatic megachurch in Northern California, home of the Bethel Music worship movement. Known for supernatural ministry and a global influence on worship culture.",
+    "country": "USA",
+    "location": "Redding, California",
+    "denomination": "Charismatic",
+    "website": "https://www.bethel.com/",
+    "logo": "",
+    "headerImage": "https://media.gospelchannel.com/heroes/bethel-church-redding.jpg",
+    "spotifyUrl": "https://open.spotify.com/playlist/1npOQhBieNKJZRjSO04jbv",
+    "spotifyPlaylistIds": [
+      "1npOQhBieNKJZRjSO04jbv"
+    ],
+    "musicStyle": [
+      "contemporary worship",
+      "prophetic worship",
+      "charismatic worship"
+    ],
+    "verifiedAt": "2026-04-02T21:29:51.070Z",
+    "sourceKind": "manual"
   },
   {
     "instagramUrl": "http://instagram.com/bethelnewport",
@@ -2990,207 +2971,6 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/bethelmusic/",
-    "facebookUrl": "https://www.facebook.com/bethelmusic",
-    "youtubeUrl": "https://www.youtube.com/@BethelMusic",
-    "slug": "bethel-music",
-    "name": "Bethel Music",
-    "description": "There's something about Bethel's worship that feels like stepping into a prayer room. Intimate, prophetic, and deeply Spirit-led — from 'Goodness of God' to spontaneous moments that never made the album.",
-    "country": "USA",
-    "location": "Redding, California, USA",
-    "denomination": "Non-denominational",
-    "founded": 2001,
-    "website": "https://bethelmusic.com",
-    "email": "info@bethelmusic.com",
-    "logo": "https://media.gospelchannel.com/logos/churches/bethel-music.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/bethel-music.webp",
-    "spotifyUrl": "https://open.spotify.com/playlist/1npOQhBieNKJZRjSO04jbv",
-    "spotifyPlaylistIds": [
-      "1npOQhBieNKJZRjSO04jbv"
-    ],
-    "additionalPlaylists": [
-      "6e7ChXh3ETwWHReYaOH7xJ",
-      "0G53dT54BtMMmNAM4l5pQi",
-      "74KS58QZjDI1JFuhcyyxp5"
-    ],
-    "musicStyle": [
-      "contemporary worship",
-      "prophetic worship",
-      "charismatic worship"
-    ],
-    "notableArtists": [
-      "Brian Johnson",
-      "Jenn Johnson",
-      "Kari Jobe Carnes",
-      "Cody Carnes",
-      "Josh Baldwin",
-      "Kristene DiMarco"
-    ],
-    "youtubeChannelId": "UCxJ01Wj2jLIj6XjH0P0BOJA",
-    "youtubeVideos": [
-      {
-        "title": "Worthy / You Are Holy / We Fall Down (Live) - @JohnWilds , Bethel Music",
-        "videoId": "L0u0hKWbmX8",
-        "channelTitle": "Bethel Music",
-        "thumbnailUrl": "https://i.ytimg.com/vi/L0u0hKWbmX8/hqdefault.jpg"
-      },
-      {
-        "title": "No One Like The Lord (Live) - Bethel Music, Jenn Johnson",
-        "videoId": "6DjKbUQfe9U",
-        "channelTitle": "Bethel Music and Jenn Johnson",
-        "thumbnailUrl": "https://i.ytimg.com/vi/6DjKbUQfe9U/hqdefault.jpg"
-      },
-      {
-        "title": "Holy Forever (Live) - Bethel Music, Jenn Johnson, and Natalie Grant",
-        "videoId": "h3UxoIlptWI",
-        "channelTitle": "Bethel Music and Jenn Johnson",
-        "thumbnailUrl": "https://i.ytimg.com/vi/h3UxoIlptWI/hqdefault.jpg"
-      },
-      {
-        "title": "He Has Done Great Things (Live) - Bethel Music, Jenn Johnson",
-        "videoId": "5Y4hG-Bq_AY",
-        "channelTitle": "Bethel Music and Jenn Johnson",
-        "thumbnailUrl": "https://i.ytimg.com/vi/5Y4hG-Bq_AY/hqdefault.jpg"
-      },
-      {
-        "title": "Night of Worship & Ministry — Bethel Music x UPPERROOM x Michael Koulianos",
-        "videoId": "tKraaQeolzs",
-        "channelTitle": "Bethel Music",
-        "thumbnailUrl": "https://i.ytimg.com/vi/tKraaQeolzs/hqdefault.jpg"
-      },
-      {
-        "title": "Bethel Music GATHERING ",
-        "videoId": "_HTSBarfYNg",
-        "channelTitle": " Franklin, TN",
-        "thumbnailUrl": "https://i.ytimg.com/vi/_HTSBarfYNg/hqdefault.jpg"
-      },
-      {
-        "title": "Bethel Worship - Goodness of God, Raise a Hallelujah, Living Hope [FULL CONCERT at Victory Tour]",
-        "videoId": "v8RQyuMpZAU",
-        "channelTitle": "Spirit-Led Prayer",
-        "thumbnailUrl": "https://i.ytimg.com/vi/v8RQyuMpZAU/hqdefault.jpg"
-      },
-      {
-        "title": "Bethel Music (Feat. Dante Bowe, Cory Asbury and kalley) at Legacy Nashville",
-        "videoId": "WB6Q-oOaYcs",
-        "channelTitle": "Legacy Nashville",
-        "thumbnailUrl": "https://i.ytimg.com/vi/WB6Q-oOaYcs/hqdefault.jpg"
-      },
-      {
-        "title": "Touch of Heaven - David Funk ",
-        "videoId": "_fY3l9AKPa0",
-        "channelTitle": " Worship Night",
-        "thumbnailUrl": "https://i.ytimg.com/vi/_fY3l9AKPa0/hqdefault.jpg"
-      },
-      {
-        "title": "Homecoming ",
-        "videoId": "ZapMdPTrYFs",
-        "channelTitle": " The Live Recording",
-        "thumbnailUrl": "https://i.ytimg.com/vi/ZapMdPTrYFs/hqdefault.jpg"
-      }
-    ],
-    "aliases": [
-      "Bethel",
-      "Bethel Worship",
-      "Bethel Church Music"
-    ],
-    "lastResearched": "2026-02-27T00:00:00.000Z",
-    "sourceKind": "manual"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/bethelmusickids/",
-    "facebookUrl": "https://www.facebook.com/bethelmusickids",
-    "youtubeUrl": "https://www.youtube.com/ibethelmusic",
-    "slug": "bethel-music-kids",
-    "name": "Bethel Music Kids",
-    "description": "Children's worship from Bethel Music with joyful, family-friendly songs.",
-    "country": "USA",
-    "location": "Redding, California, United States",
-    "denomination": "Non-denominational",
-    "founded": 2009,
-    "website": "https://bethelmusickids.com/",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/heroes/bethel-music-kids.jpg",
-    "spotifyUrl": "https://open.spotify.com/playlist/5380vvBPV7fhsoTDdeJUyx",
-    "spotifyPlaylistIds": [
-      "5380vvBPV7fhsoTDdeJUyx"
-    ],
-    "additionalPlaylists": [
-      "4Wsxak00jTfJOmvF8P8q9G",
-      "2taiWMJ9U70RSZGij7ZOQV",
-      "6w9FmqgiDeFHyoBZocNE13"
-    ],
-    "musicStyle": [
-      "contemporary worship",
-      "kids worship"
-    ],
-    "youtubeChannelId": "UCbertc-gMbkkHuSmg0qwnxw",
-    "youtubeVideos": [
-      {
-        "title": "1 Hour of Kids Praise Music",
-        "videoId": "PFlW1QEZ4w8",
-        "channelTitle": "Hillsong Kids",
-        "thumbnailUrl": "https://i.ytimg.com/vi/PFlW1QEZ4w8/hqdefault.jpg"
-      },
-      {
-        "title": "Deep Cries Out - Bethel Music Kids ",
-        "videoId": "1gFwpOjF-5o",
-        "channelTitle": " Come Alive",
-        "thumbnailUrl": "https://i.ytimg.com/vi/1gFwpOjF-5o/hqdefault.jpg"
-      },
-      {
-        "title": "O Taste and See - Bethel Music Kids ",
-        "videoId": "FJdFKYZRxcM",
-        "channelTitle": " Come Alive",
-        "thumbnailUrl": "https://i.ytimg.com/vi/FJdFKYZRxcM/hqdefault.jpg"
-      },
-      {
-        "title": "This Is Amazing Grace - Bethel Music Kids ",
-        "videoId": "ZxVadCcRfoI",
-        "channelTitle": " Come Alive",
-        "thumbnailUrl": "https://i.ytimg.com/vi/ZxVadCcRfoI/hqdefault.jpg"
-      },
-      {
-        "title": "Breaking Through - Bethel Music Kids ",
-        "videoId": "KFtTDYUua_0",
-        "channelTitle": " Come Alive",
-        "thumbnailUrl": "https://i.ytimg.com/vi/KFtTDYUua_0/hqdefault.jpg"
-      },
-      {
-        "title": "Freedom - Bethel Music Kids ",
-        "videoId": "IrgViuuyYAQ",
-        "channelTitle": " Come Alive",
-        "thumbnailUrl": "https://i.ytimg.com/vi/IrgViuuyYAQ/hqdefault.jpg"
-      },
-      {
-        "title": "This Is What You Do - Bethel Music Kids ",
-        "videoId": "eXhMfGK00ZA",
-        "channelTitle": " Come Alive",
-        "thumbnailUrl": "https://i.ytimg.com/vi/eXhMfGK00ZA/hqdefault.jpg"
-      },
-      {
-        "title": "One Thing Remains - Bethel Music Kids ",
-        "videoId": "cKf6UZQEiA0",
-        "channelTitle": " Come Alive",
-        "thumbnailUrl": "https://i.ytimg.com/vi/cKf6UZQEiA0/hqdefault.jpg"
-      },
-      {
-        "title": "Ever Be - Bethel Music Kids ",
-        "videoId": "RG22jk-YUXY",
-        "channelTitle": " Come Alive",
-        "thumbnailUrl": "https://i.ytimg.com/vi/RG22jk-YUXY/hqdefault.jpg"
-      },
-      {
-        "title": "Chasing You - Bethel Music Kids ",
-        "videoId": "0JPiaRiyPuk",
-        "channelTitle": " Come Alive",
-        "thumbnailUrl": "https://i.ytimg.com/vi/0JPiaRiyPuk/hqdefault.jpg"
-      }
-    ],
-    "lastResearched": "2026-02-27T00:00:00.000Z",
-    "sourceKind": "manual"
   },
   {
     "instagramUrl": "https://www.instagram.com/bethelnewengland/",
@@ -3360,6 +3140,20 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
     "verifiedAt": "2026-03-29T22:05:05.769Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "bilbao-international-church",
+    "name": "Bilbao International Church",
+    "description": "",
+    "country": "Spain",
+    "location": "Bilbao",
+    "denomination": "Evangelical",
+    "website": "https://bilbaointernationalchurch.com/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
   {
@@ -4892,6 +4686,20 @@
     "sourceKind": "manual"
   },
   {
+    "slug": "c3-liverpool",
+    "name": "C3 Liverpool",
+    "description": "C3 Liverpool is a contemporary Christian church serving the people of Liverpool and Merseyside. They focus on being a welcoming, people-centered community of faith.",
+    "country": "United Kingdom",
+    "location": "Liverpool",
+    "denomination": "Charismatic",
+    "website": "https://c3liverpool.church/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
     "facebookUrl": "https://www.facebook.com/Calvary-Chapel-Manila-119244221451814/",
     "slug": "calvary-chapel-manila",
     "name": "CALVARY CHAPEL MANILA",
@@ -5016,6 +4824,20 @@
     "sourceKind": "discovered"
   },
   {
+    "slug": "cffan-stuttgart",
+    "name": "CFFAN Stuttgart",
+    "description": "",
+    "country": "Germany",
+    "location": "Stuttgart",
+    "denomination": "Charismatic",
+    "website": "https://cffan.de/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
     "slug": "christ-church-glasgow",
     "name": "CHRIST CHURCH GLASGOW",
     "description": "",
@@ -5044,6 +4866,20 @@
     "email": "office@cigwien.at",
     "logo": "",
     "headerImage": "https://media.gospelchannel.com/heroes/cig-christliche-internationale-gemeinde.jpg",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "cig-vienna",
+    "name": "CIG Vienna",
+    "description": "Christian International Church Vienna (CIG Wien) is a bilingual evangelical community offering Sunday services in German and English with simultaneous translation. They focus on Jesus-centered worship and community engagement.",
+    "country": "Austria",
+    "location": "Vienna",
+    "denomination": "Evangelical",
+    "website": "https://www.cigwien.at/en/",
+    "language": "English",
+    "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -5455,6 +5291,20 @@
     "sourceKind": "discovered"
   },
   {
+    "slug": "calvary-chapel-porto",
+    "name": "Calvary Chapel Porto",
+    "description": "",
+    "country": "Portugal",
+    "location": "Porto",
+    "denomination": "Evangelical",
+    "website": "https://www.site.calvarychapelporto.pt/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
     "slug": "calvary-christian-church-brisbane",
     "name": "Calvary Christian Church Brisbane",
     "description": "",
@@ -5464,7 +5314,7 @@
     "email": "brisbane@calvarycc.global",
     "logo": "",
     "headerImage": "https://media.gospelchannel.com/heroes/calvary-christian-church-brisbane.jpg",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/artist/3xzyQQDIX3QaQ1noqJn7Nc",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
@@ -5913,6 +5763,22 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-30T05:08:24.845Z",
     "verifiedAt": "2026-03-30T05:08:24.845Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "carrubbers-christian-centre",
+    "name": "Carrubbers Christian Centre",
+    "description": "Non-denominational evangelical church on Edinburgh's Royal Mile offering Sunday services, Christianity Explored courses, and community outreach including a soup kitchen for homeless individuals.",
+    "country": "United Kingdom",
+    "location": "Edinburgh",
+    "denomination": "Evangelical",
+    "website": "https://www.carrubbers.org/",
+    "email": "office@carrubbers.org",
+    "language": "English",
+    "logo": "",
+    "headerImage": "https://media.gospelchannel.com/heroes/carrubbers-christian-centre.jpg",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
   {
@@ -6413,21 +6279,6 @@
     "sourceKind": "discovered"
   },
   {
-    "slug": "central-methodist-church",
-    "name": "Central Methodist Church",
-    "description": "Central Methodist Church is a methodist church in Tamworth. Explore their worship and community details before your first visit.",
-    "country": "United Kingdom",
-    "location": "Tamworth",
-    "denomination": "Methodist",
-    "website": "http://tamworthcentralmethodistchurch.btck.co.uk/",
-    "logo": "",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-25T21:52:44.562Z",
-    "verifiedAt": "2026-03-25T21:52:44.562Z",
-    "sourceKind": "discovered"
-  },
-  {
     "slug": "central-methodist-church-chippenham",
     "name": "Central Methodist Church",
     "description": "Central Methodist Church is a methodist church in Chippenham. Explore their worship and community details before your first visit.",
@@ -6436,6 +6287,21 @@
     "denomination": "Methodist",
     "website": "https://www.northwiltsmethodistcircuit.org.uk/",
     "email": "circuitoffice@northwilts.me",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "lastResearched": "2026-03-25T21:52:44.562Z",
+    "verifiedAt": "2026-03-25T21:52:44.562Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "central-methodist-church",
+    "name": "Central Methodist Church",
+    "description": "Central Methodist Church is a methodist church in Tamworth. Explore their worship and community details before your first visit.",
+    "country": "United Kingdom",
+    "location": "Tamworth",
+    "denomination": "Methodist",
+    "website": "http://tamworthcentralmethodistchurch.btck.co.uk/",
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
@@ -7571,7 +7437,7 @@
     "email": "hello@ccm.org.uk",
     "logo": "https://media.gospelchannel.com/logos/churches/christ-church-manchester.png",
     "headerImage": "https://media.gospelchannel.com/heroes/christ-church-manchester.jpg",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/artist/4Mnkb9kPN7X3jWy0oA6gx4",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
@@ -8010,24 +7876,6 @@
     "sourceKind": "discovered"
   },
   {
-    "facebookUrl": "https://www.facebook.com/ChristchurchClevedon/",
-    "slug": "christchurch-clevedon",
-    "name": "Christchurch",
-    "description": "Christchurch is an anglican church in Clevedon. Explore their worship and community details before your first visit.",
-    "country": "United Kingdom",
-    "location": "Clevedon",
-    "denomination": "Anglican",
-    "website": "https://www.christchurch-clevedon.org.uk/",
-    "email": "bookings@christchurch-clevedon.org.uk",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/heroes/christchurch-clevedon.png",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-25T21:52:44.562Z",
-    "verifiedAt": "2026-03-25T21:52:44.562Z",
-    "sourceKind": "discovered"
-  },
-  {
     "instagramUrl": "https://www.instagram.com/christchurchnp/",
     "slug": "christchurch",
     "name": "Christchurch",
@@ -8039,6 +7887,24 @@
     "email": "office@christchurchnewport.co.uk",
     "logo": "",
     "headerImage": "https://media.gospelchannel.com/heroes/christchurch.png",
+    "spotifyUrl": "https://open.spotify.com/artist/1Kvau9rB3vlPV6p67RLYAW",
+    "spotifyPlaylistIds": [],
+    "lastResearched": "2026-03-25T21:52:44.562Z",
+    "verifiedAt": "2026-03-25T21:52:44.562Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "facebookUrl": "https://www.facebook.com/ChristchurchClevedon/",
+    "slug": "christchurch-clevedon",
+    "name": "Christchurch",
+    "description": "Christchurch is an anglican church in Clevedon. Explore their worship and community details before your first visit.",
+    "country": "United Kingdom",
+    "location": "Clevedon",
+    "denomination": "Anglican",
+    "website": "https://www.christchurch-clevedon.org.uk/",
+    "email": "bookings@christchurch-clevedon.org.uk",
+    "logo": "",
+    "headerImage": "https://media.gospelchannel.com/heroes/christchurch-clevedon.png",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-25T21:52:44.562Z",
@@ -9672,6 +9538,21 @@
     "sourceKind": "discovered"
   },
   {
+    "slug": "city-church-warsaw",
+    "name": "City Church Warsaw",
+    "description": "City Church Warsaw is a contemporary Protestant church in Warsaw, Poland that gathers a diverse, international community for worship and spiritual growth.",
+    "country": "Poland",
+    "location": "Warsaw",
+    "denomination": "Evangelical",
+    "website": "https://www.citychurchwarsaw.org/",
+    "language": "English",
+    "logo": "",
+    "headerImage": "https://media.gospelchannel.com/heroes/city-church-warsaw.jpg",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
     "youtubeUrl": "https://www.youtube.com/playlist?list=PL9aMWUGp2czVXACZYSya7YibzDrLRV08-",
     "slug": "city-church-w-rzburg",
     "name": "City Church Würzburg",
@@ -9904,7 +9785,7 @@
     "email": "office@citychurch.sk",
     "logo": "https://media.gospelchannel.com/logos/enrichments/citychurch-bratislava.jpg",
     "headerImage": "https://media.gospelchannel.com/heroes/citychurch-bratislava.jpg",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/album/1Hkeibt8ppSHLbPfwwmN4B",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
@@ -11593,6 +11474,21 @@
     "sourceKind": "discovered"
   },
   {
+    "slug": "destiny-church-edinburgh",
+    "name": "Destiny Church Edinburgh",
+    "description": "Destiny Church Edinburgh is a welcoming Christian community that meets weekly for worship and fellowship. Located in the Leith area, they emphasize an inclusive, hopeful approach to faith and community connection.",
+    "country": "United Kingdom",
+    "location": "Edinburgh",
+    "denomination": "Non-denominational",
+    "website": "https://www.destiny-church.com/edinburgh",
+    "email": "social.action@destiny-church.com",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
     "youtubeUrl": "https://www.youtube.com/channel/Destiny%20Germany",
     "slug": "destiny-church-germany",
     "name": "Destiny Church Germany",
@@ -11647,6 +11543,20 @@
     "email": "info@destinychurch.cz",
     "logo": "https://media.gospelchannel.com/logos/enrichments/destiny-church-prague.png",
     "headerImage": "https://media.gospelchannel.com/heroes/destiny-church-prague.jpg",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "destiny-prague",
+    "name": "Destiny Prague",
+    "description": "",
+    "country": "Czech Republic",
+    "location": "Prague",
+    "denomination": "Evangelical",
+    "website": "https://www.destinychurch.cz/en",
+    "language": "English",
+    "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -12255,7 +12165,7 @@
     "email": "contact@eglisesoslyon.com",
     "logo": "",
     "headerImage": "https://media.gospelchannel.com/heroes/eglise-sos-lyon.webp",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/intl-fr/artist/3k25eo4Zrj3sq5gYnclM5i",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCmgiD_uCIoERf3iyO8_P_fw",
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -12934,7 +12844,7 @@
     "email": "contact@egliselyoncentre.fr",
     "logo": "https://media.gospelchannel.com/logos/enrichments/eglise-lyon-centre.ico",
     "headerImage": "https://media.gospelchannel.com/heroes/eglise-lyon-centre.jpg",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/artist/5SaDoznUSMhdS3HNjTE0Hn",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCe3DhiMnJ5rY0H8wXsRpV4A",
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -13326,7 +13236,7 @@
     "email": "info@ibc-eindhoven.com",
     "logo": "",
     "headerImage": "https://media.gospelchannel.com/covers/eindhoven-international-baptist-church.jpg",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/playlist/2Ptjc9S7eE4mcIfnjztyhn",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
     "verifiedAt": "2026-03-29T22:05:05.769Z",
@@ -13452,108 +13362,22 @@
     "sourceKind": "discovered"
   },
   {
-    "instagramUrl": "https://www.instagram.com/elevationworship/",
-    "youtubeUrl": "https://www.youtube.com/channel/UCSf-NCzjwcnXErUBW_qeFvA",
-    "slug": "elevation-worship",
-    "name": "Elevation Worship",
-    "description": "Born from Elevation Church in Charlotte, NC — their worship is raw, passionate, and unapologetically bold. Songs like 'Jireh' and 'Graves Into Gardens' feel like they were written for your exact situation.",
+    "slug": "elevation-church",
+    "name": "Elevation Church",
+    "description": "Multi-site megachurch based in Charlotte, North Carolina, led by Steven Furtick. Their worship team Elevation Worship is one of the most-streamed in the world.",
     "country": "USA",
-    "location": "Charlotte, North Carolina, USA",
+    "location": "Charlotte, North Carolina",
     "denomination": "Non-denominational",
-    "founded": 2006,
-    "website": "https://www.elevationworship.com",
-    "email": "lori@mergepr.com",
-    "logo": "https://media.gospelchannel.com/logos/churches/elevation-worship.jpg",
-    "headerImage": "https://media.gospelchannel.com/heroes/elevation-worship.jpg",
+    "website": "https://elevationchurch.org/",
+    "logo": "",
     "spotifyUrl": "https://open.spotify.com/playlist/2yypRwEgD80fSvtZtSciqC",
     "spotifyPlaylistIds": [
       "2yypRwEgD80fSvtZtSciqC"
     ],
-    "additionalPlaylists": [
-      "5gAb6gDdge2P7bwEo1Cf8t",
-      "1WJXRuBlzBkdakSVHsho6G",
-      "4kyRirNePO7JD938LJU59H"
-    ],
     "musicStyle": [
       "contemporary worship music"
     ],
-    "notableArtists": [
-      "Steven Furtick",
-      "Brandon Lake",
-      "Chandler Moore",
-      "Chris Brown",
-      "Leeland Mooring",
-      "Pat Barrett"
-    ],
-    "youtubeChannelId": "UCSf-NCzjwcnXErUBW_qeFvA",
-    "youtubeVideos": [
-      {
-        "title": "Praise (feat. Brandon Lake, Chris Brown & Chandler Moore) ",
-        "videoId": "f2oxGYpuLkw",
-        "channelTitle": " Elevation Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/f2oxGYpuLkw/hqdefault.jpg"
-      },
-      {
-        "title": "Your Name Is God ",
-        "videoId": "wjJ-izYndWs",
-        "channelTitle": " Elevation Worship & Leeland Mooring",
-        "thumbnailUrl": "https://i.ytimg.com/vi/wjJ-izYndWs/hqdefault.jpg"
-      },
-      {
-        "title": "Jesus Be The Name ",
-        "videoId": "cej4vn4sWtE",
-        "channelTitle": " Elevation Worship (feat. Tiffany Hudson)",
-        "thumbnailUrl": "https://i.ytimg.com/vi/cej4vn4sWtE/hqdefault.jpg"
-      },
-      {
-        "title": "SO BE IT ",
-        "videoId": "edZVnKxKEUU",
-        "channelTitle": " Elevation Worship (feat. Tiffany Hudson & Chris Brown)",
-        "thumbnailUrl": "https://i.ytimg.com/vi/edZVnKxKEUU/hqdefault.jpg"
-      },
-      {
-        "title": "Trust In God (feat. Chris Brown & Isaiah Templeton) ",
-        "videoId": "QS04WbSnxok",
-        "channelTitle": " Elevation Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/QS04WbSnxok/hqdefault.jpg"
-      },
-      {
-        "title": "Jireh ",
-        "videoId": "mC-zw0zCCtg",
-        "channelTitle": " Elevation Worship & Maverick City",
-        "thumbnailUrl": "https://i.ytimg.com/vi/mC-zw0zCCtg/hqdefault.jpg"
-      },
-      {
-        "title": "Top Elevation Worship Songs ✝️ O Come to the Altar Elevation Worship - Elevation Playlist 2026 Mix",
-        "videoId": "7_u-XzqxjKY",
-        "channelTitle": "Top Praise and Worship Songs",
-        "thumbnailUrl": "https://i.ytimg.com/vi/7_u-XzqxjKY/hqdefault.jpg"
-      },
-      {
-        "title": "Best Elevation Worship Songs of All Time ",
-        "videoId": "Xuar5LR8oco",
-        "channelTitle": " Nonstop Christian Music Playlist",
-        "thumbnailUrl": "https://i.ytimg.com/vi/Xuar5LR8oco/hqdefault.jpg"
-      },
-      {
-        "title": "Anywhere Sessions ",
-        "videoId": "rwsByFZKqLA",
-        "channelTitle": " Golden Hour ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/rwsByFZKqLA/hqdefault.jpg"
-      },
-      {
-        "title": "Anywhere Sessions ",
-        "videoId": "dNSo9MKYy0c",
-        "channelTitle": " Living Room ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/dNSo9MKYy0c/hqdefault.jpg"
-      }
-    ],
-    "aliases": [
-      "Elevation",
-      "Elevation Church Worship",
-      "Elevation Music"
-    ],
-    "lastResearched": "2026-02-27T00:00:00.000Z",
+    "verifiedAt": "2026-04-02T21:29:51.307Z",
     "sourceKind": "manual"
   },
   {
@@ -14258,6 +14082,20 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCsrmi9NdlmG_Vor6raljIBg",
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "equippers-church",
+    "name": "Equippers Church",
+    "description": "Equippers Church is a multi-campus, multi-cultural church in Auckland that equips people to extend God's kingdom across all areas of life including education, healthcare, business, arts, media, and government.",
+    "country": "New Zealand",
+    "location": "Auckland",
+    "denomination": "Pentecostal",
+    "website": "https://www.equipperschurch.com/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
   {
@@ -15327,6 +15165,20 @@
     "sourceKind": "discovered"
   },
   {
+    "slug": "every-nation-dublin",
+    "name": "Every Nation Dublin",
+    "description": "",
+    "country": "Ireland",
+    "location": "Dublin",
+    "denomination": "Charismatic",
+    "website": "https://everynationdublin.com/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
     "instagramUrl": "https://www.instagram.com/everynationdurban_",
     "youtubeUrl": "https://www.youtube.com/channel/UCngCkvhRqBuo8xD2A-K0klg",
     "slug": "every-nation-durban",
@@ -16104,7 +15956,7 @@
     "email": "pastorlayne@fellowship-warsaw.org",
     "logo": "https://media.gospelchannel.com/logos/enrichments/fellowship-church-warsaw.jpg",
     "headerImage": "https://media.gospelchannel.com/heroes/fellowship-church-warsaw.jpg",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/playlist/5JkTCGw7KPyLSEPGtfxqlT",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
@@ -17164,22 +17016,6 @@
     "sourceKind": "discovered"
   },
   {
-    "instagramUrl": "https://www.instagram.com/freedomchurchlimassol",
-    "facebookUrl": "https://www.facebook.com/FreedomChurchLimassol",
-    "slug": "freedom-church-limassol",
-    "name": "Freedom Church",
-    "description": "",
-    "country": "Cyprus",
-    "location": "Limassol",
-    "denomination": "Non-denominational",
-    "website": "https://www.freedomchurch.cy/",
-    "email": "lewis.greenow@freedomchurch.cy",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/freedom-church-limassol.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
-  },
-  {
     "instagramUrl": "https://www.instagram.com/freedomchurchcc/",
     "facebookUrl": "https://www.facebook.com/FreedomChurchCC",
     "youtubeUrl": "https://www.youtube.com/@freedomchurchcc",
@@ -17198,6 +17034,22 @@
     "youtubeChannelId": "UCzE5fV9d98d7juPpkhQnbIg",
     "lastResearched": "2026-03-25T21:52:44.562Z",
     "verifiedAt": "2026-03-25T21:52:44.562Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "instagramUrl": "https://www.instagram.com/freedomchurchlimassol",
+    "facebookUrl": "https://www.facebook.com/FreedomChurchLimassol",
+    "slug": "freedom-church-limassol",
+    "name": "Freedom Church",
+    "description": "",
+    "country": "Cyprus",
+    "location": "Limassol",
+    "denomination": "Non-denominational",
+    "website": "https://www.freedomchurch.cy/",
+    "email": "lewis.greenow@freedomchurch.cy",
+    "logo": "https://media.gospelchannel.com/logos/enrichments/freedom-church-limassol.jpg",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
   {
@@ -17223,6 +17075,21 @@
     "website": "http://www.freedomchurch.cc/locations/cardiff",
     "logo": "https://media.gospelchannel.com/logos/enrichments/freedom-church-cardiff.ico",
     "headerImage": "https://media.gospelchannel.com/heroes/freedom-church-cardiff.jpg",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "freedom-city-church",
+    "name": "Freedom City Church",
+    "description": "An international church in Lisbon that conducts services in English. They emphasize their passion for Jesus and serving people in the community.",
+    "country": "Portugal",
+    "location": "Lisbon",
+    "denomination": "Charismatic",
+    "website": "https://freedomcity.pt/",
+    "language": "English",
+    "logo": "",
+    "headerImage": "https://media.gospelchannel.com/heroes/freedom-city-church.jpg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -18555,6 +18422,25 @@
     "sourceKind": "manual"
   },
   {
+    "slug": "gateway-church-southlake",
+    "name": "Gateway Church",
+    "description": "One of the largest churches in America, based in the Dallas-Fort Worth area. Founded by Robert Morris, known for a strong worship culture.",
+    "country": "USA",
+    "location": "Southlake, Texas",
+    "denomination": "Non-denominational",
+    "website": "https://gatewaypeople.com/",
+    "logo": "",
+    "spotifyUrl": "https://open.spotify.com/playlist/4O5jj8kAKnchh6sCF6bOu0",
+    "spotifyPlaylistIds": [
+      "4O5jj8kAKnchh6sCF6bOu0"
+    ],
+    "musicStyle": [
+      "contemporary worship"
+    ],
+    "verifiedAt": "2026-04-02T21:29:51.681Z",
+    "sourceKind": "manual"
+  },
+  {
     "slug": "gateway-church",
     "name": "Gateway Church",
     "description": "",
@@ -18583,94 +18469,6 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
-  },
-  {
-    "youtubeUrl": "https://www.youtube.com/channel/Gateway%20Church",
-    "slug": "gateway-worship",
-    "name": "Gateway Worship",
-    "description": "Dallas-based worship with anthemic sound and heart for global church.",
-    "country": "USA",
-    "location": "Southlake, Texas, United States",
-    "denomination": "Non-denominational",
-    "founded": 2003,
-    "website": "https://gatewaypeople.com",
-    "logo": "https://media.gospelchannel.com/logos/churches/gateway-worship.svg",
-    "headerImage": "https://media.gospelchannel.com/heroes/gateway-worship.jpg",
-    "spotifyUrl": "https://open.spotify.com/playlist/4O5jj8kAKnchh6sCF6bOu0",
-    "spotifyPlaylistIds": [
-      "4O5jj8kAKnchh6sCF6bOu0"
-    ],
-    "additionalPlaylists": [
-      "7mlMSc5J22fqkkvAyqjhz3",
-      "0vGEGSWMkZsh827yb8QV7V"
-    ],
-    "musicStyle": [
-      "contemporary worship"
-    ],
-    "youtubeVideos": [
-      {
-        "title": "Greatly To Be Praised (Full Album Live Recording) ",
-        "videoId": "N_1DWdZK3o8",
-        "channelTitle": " Gateway Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/N_1DWdZK3o8/hqdefault.jpg"
-      },
-      {
-        "title": "Night of Worship & Prayer (Live at Gateway) ",
-        "videoId": "3FRhhg6TBQg",
-        "channelTitle": " January 16, 2025 ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/3FRhhg6TBQg/hqdefault.jpg"
-      },
-      {
-        "title": "Night of Worship with Cody Carnes, Kari Jobe Carnes and Martin Smith ",
-        "videoId": "3sMWPKHgc_I",
-        "channelTitle": " 2.24.25 ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/3sMWPKHgc_I/hqdefault.jpg"
-      },
-      {
-        "title": "Worship Set: The Blood, I Exalt Thee, Who Else ",
-        "videoId": "pz_Pwy-RD78",
-        "channelTitle": " David Mwonga & Jessie Harris ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/pz_Pwy-RD78/hqdefault.jpg"
-      },
-      {
-        "title": "Heart of Worship + How Great Is Our God ",
-        "videoId": "P6ic0fElhno",
-        "channelTitle": " feat. Bryan & Katie Torwalt ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/P6ic0fElhno/hqdefault.jpg"
-      },
-      {
-        "title": "Known By You ",
-        "videoId": "Avi4sMPQqzI",
-        "channelTitle": " feat. Jessie Harris ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/Avi4sMPQqzI/hqdefault.jpg"
-      },
-      {
-        "title": "Shout To The Lord ",
-        "videoId": "SkTJ9jklOSE",
-        "channelTitle": " feat. Jessie Harris ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/SkTJ9jklOSE/hqdefault.jpg"
-      },
-      {
-        "title": "Who Else ",
-        "videoId": "oujEfZie7jg",
-        "channelTitle": " feat. Abbie Gamboa ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/oujEfZie7jg/hqdefault.jpg"
-      },
-      {
-        "title": "Holy Forever (Christmas Version) ",
-        "videoId": "j46dRbeXS-Y",
-        "channelTitle": " feat. Jessie Harris ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/j46dRbeXS-Y/hqdefault.jpg"
-      },
-      {
-        "title": "Goodness of God ",
-        "videoId": "5aGLRjTMLps",
-        "channelTitle": " feat. Michael Bethany ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/5aGLRjTMLps/hqdefault.jpg"
-      }
-    ],
-    "lastResearched": "2026-02-27T00:00:00.000Z",
-    "sourceKind": "manual"
   },
   {
     "instagramUrl": "http://instagram.com/gospelchurchgdansk",
@@ -18932,6 +18730,20 @@
     "email": "gkkk@kalamkudusindonesia.org",
     "logo": "",
     "headerImage": "https://media.gospelchannel.com/heroes/gereja-kristen-kalam-kudus-medan.jpg",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "gereja-mawar-sharon",
+    "name": "Gereja Mawar Sharon",
+    "description": "",
+    "country": "Indonesia",
+    "location": "Jakarta",
+    "denomination": "Charismatic",
+    "website": "https://www.gms.church/",
+    "language": "English",
+    "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -19985,20 +19797,6 @@
     "sourceKind": "discovered"
   },
   {
-    "slug": "gospel-music-workshop-amer-inc",
-    "name": "Gospel Music Workshop-Amer Inc.",
-    "description": "",
-    "country": "USA",
-    "location": "Atlanta",
-    "denomination": "Non-denominational",
-    "website": "https://www.atlantagmwa.org/",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/heroes/gospel-music-workshop-amer-inc.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
-  },
-  {
     "slug": "gospel-of-god-church-kenya",
     "name": "Gospel Of God Church, Kenya",
     "description": "",
@@ -20906,20 +20704,6 @@
     "sourceKind": "discovered"
   },
   {
-    "slug": "greek-evangelical-church-nicosia",
-    "name": "Greek Evangelical Church",
-    "description": "Greek Evangelical Church with congregations in Nicosia and Larnaca, Cyprus, offering Sunday worship services and prayer meetings for the evangelical Christian community.",
-    "country": "Cyprus",
-    "location": "Nicosia",
-    "denomination": "Evangelical",
-    "website": "https://www.geccy.org/en/",
-    "email": "evangelikiel@gmail.com",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/greek-evangelical-church-nicosia.png",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
-  },
-  {
     "slug": "greek-evangelical-church-larnaca",
     "name": "Greek Evangelical Church",
     "description": "Greek Evangelical Church with congregations in Nicosia and Larnaca offering Sunday worship services and prayer meetings. Led by Rev. Telis Chinoglou.",
@@ -20929,6 +20713,20 @@
     "website": "https://www.geccy.org/en/",
     "email": "geclarnaca@gmail.com",
     "logo": "https://media.gospelchannel.com/logos/enrichments/greek-evangelical-church-larnaca.png",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "greek-evangelical-church-nicosia",
+    "name": "Greek Evangelical Church",
+    "description": "Greek Evangelical Church with congregations in Nicosia and Larnaca, Cyprus, offering Sunday worship services and prayer meetings for the evangelical Christian community.",
+    "country": "Cyprus",
+    "location": "Nicosia",
+    "denomination": "Evangelical",
+    "website": "https://www.geccy.org/en/",
+    "email": "evangelikiel@gmail.com",
+    "logo": "https://media.gospelchannel.com/logos/enrichments/greek-evangelical-church-nicosia.png",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -21520,6 +21318,20 @@
     "email": "info@heartcity.church",
     "logo": "",
     "headerImage": "https://media.gospelchannel.com/heroes/heart-city-church.png",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "heart-prague",
+    "name": "Heart Prague",
+    "description": "",
+    "country": "Czech Republic",
+    "location": "Prague",
+    "denomination": "Evangelical",
+    "website": "https://www.heartprague.com/en/",
+    "language": "English",
+    "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -22409,6 +22221,20 @@
     "sourceKind": "manual"
   },
   {
+    "slug": "hillsong-denmark",
+    "name": "Hillsong Denmark",
+    "description": "",
+    "country": "Denmark",
+    "location": "Copenhagen",
+    "denomination": "Charismatic",
+    "website": "https://hillsong.com/denmark/copenhagen/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
     "instagramUrl": "https://www.instagram.com/hillsongduesseldorf/",
     "slug": "hillsong-dusseldorf",
     "name": "Hillsong Dusseldorf",
@@ -23254,6 +23080,20 @@
     "sourceKind": "manual"
   },
   {
+    "slug": "hillsong-sweden",
+    "name": "Hillsong Sweden",
+    "description": "",
+    "country": "Sweden",
+    "location": "Stockholm",
+    "denomination": "Charismatic",
+    "website": "https://hillsong.se/en/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
     "instagramUrl": "https://www.instagram.com/hillsong.australia/",
     "youtubeUrl": "https://www.youtube.com/@Hillsong.Australia",
     "slug": "hillsong-sydney-bondi",
@@ -23484,206 +23324,6 @@
     "sourceKind": "manual"
   },
   {
-    "instagramUrl": "https://www.instagram.com/hillsong/",
-    "facebookUrl": "https://www.facebook.com/hillsongchurch",
-    "youtubeUrl": "https://www.youtube.com/hillsong",
-    "slug": "hillsong-worship",
-    "name": "Hillsong Worship",
-    "description": "From the shores of Australia to every corner of the earth — Hillsong's anthems have defined modern worship for a generation. If you've ever lifted your hands to 'What A Beautiful Name' or 'Oceans,' you already know.",
-    "country": "Australia",
-    "location": "Sydney, New South Wales, Australia",
-    "denomination": "Pentecostal",
-    "founded": 1983,
-    "website": "https://hillsong.com",
-    "email": "hillsong@hillsong.com",
-    "logo": "https://media.gospelchannel.com/logos/churches/hillsong-worship.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/hillsong-worship.jpg",
-    "spotifyUrl": "https://open.spotify.com/playlist/4DJDKoEz7sqx4TbO5NgU0N",
-    "spotifyPlaylistIds": [
-      "4DJDKoEz7sqx4TbO5NgU0N"
-    ],
-    "additionalPlaylists": [
-      "spotify:playlist:37i9dQZF1DZ52esNNBUFIp",
-      "17tw7L3cHFF9FcsFuiTcJA",
-      "16mP2iulyc7BzPr95HUBi4",
-      "6dMmwxABfRjLIDIYdVHeh0"
-    ],
-    "musicStyle": [
-      "contemporary worship",
-      "modern worship"
-    ],
-    "notableArtists": [
-      "Brooke Ligertwood",
-      "Reuben Morgan",
-      "Joel Houston"
-    ],
-    "youtubeChannelId": "UCwG7i-S8WpcPPgFUHiJ5thA",
-    "youtubeVideos": [
-      {
-        "title": "Oceans (Where Feet May Fail) - Hillsong UNITED - Live in Israel",
-        "videoId": "OP-00EwLdiU",
-        "channelTitle": "Hillsong UNITED",
-        "thumbnailUrl": "https://i.ytimg.com/vi/OP-00EwLdiU/hqdefault.jpg"
-      },
-      {
-        "title": "What A Beautiful Name - Hillsong Worship",
-        "videoId": "nQWFzMvCfLE",
-        "channelTitle": "Hillsong Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/nQWFzMvCfLE/hqdefault.jpg"
-      },
-      {
-        "title": "In Control - Hillsong Worship",
-        "videoId": "rW9MbYQrTUI",
-        "channelTitle": "Hillsong Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/rW9MbYQrTUI/hqdefault.jpg"
-      },
-      {
-        "title": "Through It All - Hillsong Worship",
-        "videoId": "4GthZbt1lPo",
-        "channelTitle": "Hillsong Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/4GthZbt1lPo/hqdefault.jpg"
-      },
-      {
-        "title": "So Will I (100 Billion X) - Hillsong Worship",
-        "videoId": "GfVd5x9W1Xc",
-        "channelTitle": "Hillsong Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/GfVd5x9W1Xc/hqdefault.jpg"
-      },
-      {
-        "title": "New Wine - Hillsong Worship",
-        "videoId": "1ozGKlOzEVc",
-        "channelTitle": "Hillsong Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/1ozGKlOzEVc/hqdefault.jpg"
-      },
-      {
-        "title": "Shout To The Lord - Hillsong Worship",
-        "videoId": "5_aIauL2xKA",
-        "channelTitle": "Hillsong Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/5_aIauL2xKA/hqdefault.jpg"
-      },
-      {
-        "title": "Morning Worship Songs 2026, Special Hillsong Worship Songs Collection, Christian Songs With Lyrics",
-        "videoId": "oc34cF9JqoY",
-        "channelTitle": "Worship Songs",
-        "thumbnailUrl": "https://i.ytimg.com/vi/oc34cF9JqoY/hqdefault.jpg"
-      },
-      {
-        "title": "Hillsong Worship ",
-        "videoId": "rb3xn-n7zrQ",
-        "channelTitle": " Christian Music Playlist 2026 ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/rb3xn-n7zrQ/hqdefault.jpg"
-      },
-      {
-        "title": "Best Hillsong Worship Songs of All Time ",
-        "videoId": "8YKJVx4qxcs",
-        "channelTitle": " Nonstop Christian Music Playlist",
-        "thumbnailUrl": "https://i.ytimg.com/vi/8YKJVx4qxcs/hqdefault.jpg"
-      }
-    ],
-    "aliases": [
-      "Hillsong",
-      "Hillsong Music",
-      "Hillsong Church Worship",
-      "Hillsong Playlist"
-    ],
-    "lastResearched": "2026-02-27T00:00:00.000Z",
-    "sourceKind": "manual"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/youngandfree/",
-    "facebookUrl": "https://www.facebook.com/HillsongYoungAndFree",
-    "youtubeUrl": "https://www.youtube.com/channel/UCkz279yr_NLgqMguzVo8udw",
-    "slug": "hillsong-young-free",
-    "name": "Hillsong Young & Free",
-    "description": "Youth-focused worship with energetic, contemporary pop-influenced sound from Hillsong Church.",
-    "country": "Australia",
-    "location": "Sydney, New South Wales, Australia",
-    "denomination": "Pentecostal",
-    "founded": 2012,
-    "website": "https://hillsong.com/youngandfree/",
-    "logo": "https://media.gospelchannel.com/logos/churches/hillsong-young-free.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/hillsong-young-free.jpg",
-    "spotifyUrl": "https://open.spotify.com/playlist/5z4TcWCOxIKwGMNSlGVkCa",
-    "spotifyPlaylistIds": [
-      "5z4TcWCOxIKwGMNSlGVkCa"
-    ],
-    "additionalPlaylists": [
-      "4yd3mbetdrxH4b241duXg9",
-      "3gJK7mezahihZoZIVZBsFt",
-      "1RdTMYuE2O2yXz3iKYJIqV",
-      "6wqEc2mGurvc1MzeIeAhfV"
-    ],
-    "musicStyle": [
-      "contemporary worship",
-      "Christian EDM"
-    ],
-    "youtubeChannelId": "UCkz279yr_NLgqMguzVo8udw",
-    "youtubeVideos": [
-      {
-        "title": "III (Live at Hillsong Conference) - Hillsong Young & Free",
-        "videoId": "qTAcq-Z_l9A",
-        "channelTitle": "Young & Free",
-        "thumbnailUrl": "https://i.ytimg.com/vi/qTAcq-Z_l9A/hqdefault.jpg"
-      },
-      {
-        "title": "Highs & Lows (Official Music Video) ",
-        "videoId": "7ESO6SHEwGk",
-        "channelTitle": " Hillsong Young and Free",
-        "thumbnailUrl": "https://i.ytimg.com/vi/7ESO6SHEwGk/hqdefault.jpg"
-      },
-      {
-        "title": "Phenomena (DA DA) [Official Live Video] - Hillsong Young & Free",
-        "videoId": "6UQRYaKLQZo",
-        "channelTitle": "Young & Free",
-        "thumbnailUrl": "https://i.ytimg.com/vi/6UQRYaKLQZo/hqdefault.jpg"
-      },
-      {
-        "title": "Indescribable (Live) - Hillsong Young & Free",
-        "videoId": "zc_Ohvo86bA",
-        "channelTitle": "Young & Free",
-        "thumbnailUrl": "https://i.ytimg.com/vi/zc_Ohvo86bA/hqdefault.jpg"
-      },
-      {
-        "title": "As I Am (Live) - Hillsong Young & Free",
-        "videoId": "PNx6bMH41Tk",
-        "channelTitle": "Young & Free",
-        "thumbnailUrl": "https://i.ytimg.com/vi/PNx6bMH41Tk/hqdefault.jpg"
-      },
-      {
-        "title": "House Of The Lord (Official Live Video) - Hillsong Young & Free",
-        "videoId": "5IsHCZmLGRY",
-        "channelTitle": "Young & Free",
-        "thumbnailUrl": "https://i.ytimg.com/vi/5IsHCZmLGRY/hqdefault.jpg"
-      },
-      {
-        "title": "Sinking Deep (Live at Hillsong Conference) - Hillsong Young & Free",
-        "videoId": "q8ZBH3mcb-o",
-        "channelTitle": "Young & Free",
-        "thumbnailUrl": "https://i.ytimg.com/vi/q8ZBH3mcb-o/hqdefault.jpg"
-      },
-      {
-        "title": "P E A C E (Live at Hillsong Conference) - Hillsong Young & Free",
-        "videoId": "FZNDD2qxJYo",
-        "channelTitle": "Young & Free",
-        "thumbnailUrl": "https://i.ytimg.com/vi/FZNDD2qxJYo/hqdefault.jpg"
-      },
-      {
-        "title": "First Love (Live at Hillsong Conference) - Hillsong Young & Free",
-        "videoId": "MYqFcI-V50M",
-        "channelTitle": "Young & Free",
-        "thumbnailUrl": "https://i.ytimg.com/vi/MYqFcI-V50M/hqdefault.jpg"
-      },
-      {
-        "title": "Let Go (Music Video) - Hillsong Young & Free",
-        "videoId": "8k2d3xIvSMg",
-        "channelTitle": "Young & Free",
-        "thumbnailUrl": "https://i.ytimg.com/vi/8k2d3xIvSMg/hqdefault.jpg"
-      }
-    ],
-    "lastResearched": "2026-02-27T00:00:00.000Z",
-    "sourceKind": "manual"
-  },
-  {
     "slug": "hillsong-zurich",
     "name": "Hillsong Zurich",
     "description": "Hillsong Church Zurich is part of the global Hillsong family, bringing people together through contemporary worship, biblical teaching, and community.",
@@ -23890,24 +23530,6 @@
     "sourceKind": "discovered"
   },
   {
-    "facebookUrl": "https://www.facebook.com/htboa/",
-    "slug": "holy-trinity-church",
-    "name": "Holy Trinity Church",
-    "description": "Holy Trinity Church is an anglican church in Bradford on Avon. Explore their worship and community details before your first visit.",
-    "country": "United Kingdom",
-    "location": "Bradford on Avon",
-    "denomination": "Anglican",
-    "website": "http://htboa.org/",
-    "email": "beneficeoffice@htboa.org",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/holy-trinity-church.jpg",
-    "headerImage": "https://media.gospelchannel.com/heroes/holy-trinity-church.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-25T21:52:44.562Z",
-    "verifiedAt": "2026-03-25T21:52:44.562Z",
-    "sourceKind": "discovered"
-  },
-  {
     "instagramUrl": "https://www.instagram.com/holytrinitytewkesbury/",
     "facebookUrl": "https://www.facebook.com/holytrinitytewkesbury/",
     "youtubeUrl": "https://www.youtube.com/channel/UCKq_BnryjI-RGxnYZI0KDxw",
@@ -23934,6 +23556,24 @@
     "denomination": "Anglican",
     "website": "http://holytrinitybelbroughton.co.uk/",
     "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "lastResearched": "2026-03-25T21:52:44.562Z",
+    "verifiedAt": "2026-03-25T21:52:44.562Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "facebookUrl": "https://www.facebook.com/htboa/",
+    "slug": "holy-trinity-church",
+    "name": "Holy Trinity Church",
+    "description": "Holy Trinity Church is an anglican church in Bradford on Avon. Explore their worship and community details before your first visit.",
+    "country": "United Kingdom",
+    "location": "Bradford on Avon",
+    "denomination": "Anglican",
+    "website": "http://htboa.org/",
+    "email": "beneficeoffice@htboa.org",
+    "logo": "https://media.gospelchannel.com/logos/enrichments/holy-trinity-church.jpg",
+    "headerImage": "https://media.gospelchannel.com/heroes/holy-trinity-church.jpg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-25T21:52:44.562Z",
@@ -24726,6 +24366,34 @@
     "sourceKind": "discovered"
   },
   {
+    "slug": "ibc-cologne",
+    "name": "IBC Cologne",
+    "description": "",
+    "country": "Germany",
+    "location": "Cologne",
+    "denomination": "Baptist",
+    "website": "https://www.ibc-cologne.com/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "iccrome",
+    "name": "ICCRome",
+    "description": "",
+    "country": "Italy",
+    "location": "Rome",
+    "denomination": "Pentecostal",
+    "website": "https://iccrome.com/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
     "slug": "icep-miami",
     "name": "ICEP Miami",
     "description": "",
@@ -25143,6 +24811,20 @@
     "sourceKind": "manual"
   },
   {
+    "slug": "icf-church-zurich",
+    "name": "ICF Church Zurich",
+    "description": "",
+    "country": "Switzerland",
+    "location": "Zurich",
+    "denomination": "Non-denominational",
+    "website": "https://www.icf.church/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
     "instagramUrl": "https://instagram.com/icfessen",
     "youtubeUrl": "https://www.youtube.com/c/ICFEssenonline",
     "slug": "icf-essen",
@@ -25170,6 +24852,20 @@
     "website": "https://www.icf-essen.de/",
     "logo": "https://media.gospelchannel.com/logos/churches/icf-essen-kirche-neu-erleben.png",
     "headerImage": "https://media.gospelchannel.com/heroes/icf-essen-kirche-neu-erleben.jpg",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "icf-frankfurt",
+    "name": "ICF Frankfurt",
+    "description": "",
+    "country": "Germany",
+    "location": "Frankfurt",
+    "denomination": "Evangelical",
+    "website": "https://www.icf-frankfurt.com/",
+    "language": "English",
+    "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -25300,7 +24996,7 @@
     "language": "Czech",
     "logo": "https://media.gospelchannel.com/logos/enrichments/icf-praha.jpg",
     "headerImage": "https://media.gospelchannel.com/heroes/icf-praha.jpg",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/artist/6XbTDRrOfzOLcjNOxWJvqR",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-30T05:10:43.090Z",
     "verifiedAt": "2026-03-30T05:10:43.090Z",
@@ -25324,6 +25020,20 @@
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UC3U0mCjxyP45kRwKTrUH8kQ",
     "lastResearched": "2026-03-13T00:00:00.000Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "icf-rotterdam",
+    "name": "ICF Rotterdam",
+    "description": "",
+    "country": "Netherlands",
+    "location": "Rotterdam",
+    "denomination": "Evangelical",
+    "website": "https://www.icfrotterdamnoord.nl/en/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
   {
@@ -26120,7 +25830,7 @@
     "website": "http://www.iglesiacristianamissio.com/",
     "email": "contacto@iglesiacristianamissio.com",
     "logo": "https://media.gospelchannel.com/logos/enrichments/iglesia-cristiana-missio-cordoba.png",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/intl-es/artist/0UKRhvGyvZcyBNQeWUAzWc",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
@@ -27536,7 +27246,7 @@
     "email": "contato@maranata-sp.org.br",
     "logo": "",
     "headerImage": "https://media.gospelchannel.com/heroes/igreja-crist-maranata.webp",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/intl-pt/artist/5uHVTjDKPw2JgH4kUyGWBS",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCq7QhnR3nvvnzF_9MwrqnsA",
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -28096,105 +27806,6 @@
     "sourceKind": "discovered"
   },
   {
-    "instagramUrl": "https://www.instagram.com/influencemusicworship/",
-    "youtubeUrl": "https://www.youtube.com/influencemusicofficial",
-    "slug": "influence-music",
-    "name": "Influence Music",
-    "description": "Worship collective from Influence Church with modern, spirit-filled songs.",
-    "country": "USA",
-    "location": "Anaheim Hills, California, United States",
-    "denomination": "Non-denominational",
-    "founded": 2017,
-    "website": "https://www.influencemusicworship.com/",
-    "logo": "https://media.gospelchannel.com/logos/churches/influence-music.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/influence-music.png",
-    "spotifyUrl": "https://open.spotify.com/playlist/6wGj36Y4jhhXTisqRoSKcZ",
-    "spotifyPlaylistIds": [
-      "6wGj36Y4jhhXTisqRoSKcZ"
-    ],
-    "additionalPlaylists": [
-      "4oQaEHeGiVZEmkuNrHBlEo",
-      "6X3QSVXFb1YDUHmZoBFEE9"
-    ],
-    "musicStyle": [
-      "contemporary worship",
-      "prophetic worship"
-    ],
-    "notableArtists": [
-      "Melody Noel",
-      "Matt Gilman",
-      "Michael Ketterer",
-      "Whitney Medina",
-      "Zach Johnson",
-      "Mack Brock"
-    ],
-    "youtubeChannelId": "UCdFNIiWjqOYfdGkcCAmQKbw",
-    "youtubeVideos": [
-      {
-        "title": "Influence Music & Melody Noel ft. William Matthews - I Am (Official Music Video)",
-        "videoId": "hLLDxdjrcP4",
-        "channelTitle": "Influence Music",
-        "thumbnailUrl": "https://i.ytimg.com/vi/hLLDxdjrcP4/hqdefault.jpg"
-      },
-      {
-        "title": "Spirit Lead Me (Official Video) - Influence Music & Michael Ketterer",
-        "videoId": "1Ko4yroBP0A",
-        "channelTitle": "Influence Music",
-        "thumbnailUrl": "https://i.ytimg.com/vi/1Ko4yroBP0A/hqdefault.jpg"
-      },
-      {
-        "title": "Glory, Honor, Power ",
-        "videoId": "eejxamfk5j0",
-        "channelTitle": " Influence Music, Melody Noel, & Matt Gilman ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/eejxamfk5j0/hqdefault.jpg"
-      },
-      {
-        "title": "Shout To The Lord// What a Beautiful Name // Melody Noel and Michael Ketterer Worship",
-        "videoId": "NdHbb2tArOo",
-        "channelTitle": "Influence Music",
-        "thumbnailUrl": "https://i.ytimg.com/vi/NdHbb2tArOo/hqdefault.jpg"
-      },
-      {
-        "title": "Breathe ",
-        "videoId": "5b7ys3uT1sQ",
-        "channelTitle": " Influence Music & Matt Gilman ft Meredith Andrews ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/5b7ys3uT1sQ/hqdefault.jpg"
-      },
-      {
-        "title": "Prophesy ",
-        "videoId": "4V6EIr4-Has",
-        "channelTitle": " Influence Music & Melody Noel ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/4V6EIr4-Has/hqdefault.jpg"
-      },
-      {
-        "title": "DAHUNOG ",
-        "videoId": "Xrn2AfbsjiE",
-        "channelTitle": " INFLUENCE WORSHIP Official Music Video",
-        "thumbnailUrl": "https://i.ytimg.com/vi/Xrn2AfbsjiE/hqdefault.jpg"
-      },
-      {
-        "title": "Refiner ",
-        "videoId": "9MQs4hBVvPc",
-        "channelTitle": " Influence Music & Matt Gilman ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/9MQs4hBVvPc/hqdefault.jpg"
-      },
-      {
-        "title": "GUGMA MO ",
-        "videoId": "b0tfxd97N0Q",
-        "channelTitle": " INFLUENCE WORSHIP Official Music Video",
-        "thumbnailUrl": "https://i.ytimg.com/vi/b0tfxd97N0Q/hqdefault.jpg"
-      },
-      {
-        "title": "Influence Worship Music Playlist 2025",
-        "videoId": "4c7ot1xllco",
-        "channelTitle": "StrikeMusicVibes ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/4c7ot1xllco/hqdefault.jpg"
-      }
-    ],
-    "lastResearched": "2026-02-27T00:00:00.000Z",
-    "sourceKind": "manual"
-  },
-  {
     "slug": "influencers-church",
     "name": "Influencers Church",
     "description": "Influencers Church is a Non-denominational church in Gold Coast, Queensland, Australia, bringing people together through worship, teaching, and community.",
@@ -28478,7 +28089,7 @@
     "email": "connect@iccnairobi.org",
     "logo": "https://media.gospelchannel.com/logos/enrichments/international-christian-centre-nairobi-icc-nairobi.ico",
     "headerImage": "https://media.gospelchannel.com/heroes/international-christian-centre-nairobi-icc-nairobi.jpg",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/artist/26ndJIpkmiF9pLYn0X8U0g",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
@@ -28586,6 +28197,34 @@
     "sourceKind": "discovered"
   },
   {
+    "slug": "international-christian-fellowship-rome",
+    "name": "International Christian Fellowship Rome",
+    "description": "",
+    "country": "Italy",
+    "location": "Rome",
+    "denomination": "Evangelical",
+    "website": "https://icfrome.org/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "international-christian-fellowship-warsaw",
+    "name": "International Christian Fellowship Warsaw",
+    "description": "",
+    "country": "Poland",
+    "location": "Warsaw",
+    "denomination": "Evangelical",
+    "website": "https://icfwarsaw.org/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
     "youtubeUrl": "https://www.youtube.com/channel/UCnNgldMOjkXCclTtRE6ouTA",
     "slug": "international-christian-fellowship-of-warsaw",
     "name": "International Christian Fellowship of Warsaw",
@@ -28657,6 +28296,20 @@
     "sourceKind": "discovered"
   },
   {
+    "slug": "international-church-of-bordeaux",
+    "name": "International Church of Bordeaux",
+    "description": "",
+    "country": "France",
+    "location": "Bordeaux",
+    "denomination": "Evangelical",
+    "website": "https://bordeauxchurch.org/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
     "instagramUrl": "https://www.instagram.com/bordeauxchurch/",
     "facebookUrl": "https://www.facebook.com/BordeauxChurch",
     "slug": "bordeaux-international-church",
@@ -28670,6 +28323,20 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
     "verifiedAt": "2026-03-29T22:05:05.769Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "international-church-of-bucharest",
+    "name": "International Church of Bucharest",
+    "description": "",
+    "country": "Romania",
+    "location": "Bucharest",
+    "denomination": "Evangelical",
+    "website": "https://bucharestchurch.com/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
   {
@@ -28730,6 +28397,34 @@
     "email": "admin@icl.ch",
     "logo": "https://media.gospelchannel.com/logos/enrichments/international-church-of-luzern.png",
     "headerImage": "https://media.gospelchannel.com/heroes/international-church-of-luzern.jpg",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "international-church-of-milan",
+    "name": "International Church of Milan",
+    "description": "",
+    "country": "Italy",
+    "location": "Milan",
+    "denomination": "Non-denominational",
+    "website": "https://www.icm-milan.com/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "international-church-of-prague",
+    "name": "International Church of Prague",
+    "description": "",
+    "country": "Czech Republic",
+    "location": "Prague",
+    "denomination": "Non-denominational",
+    "website": "https://www.icprague.cz/",
+    "language": "English",
+    "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -28798,6 +28493,20 @@
       "contemporary worship"
     ],
     "youtubeVideos": [],
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "international-evangelical-church-helsinki",
+    "name": "International Evangelical Church Helsinki",
+    "description": "",
+    "country": "Finland",
+    "location": "Helsinki",
+    "denomination": "Evangelical",
+    "website": "https://www.church.fi/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
   {
@@ -29220,107 +28929,19 @@
     "email": "contact@jpcc.org",
     "logo": "https://media.gospelchannel.com/logos/enrichments/jpcc-jakarta-praise-community-church.jpg",
     "headerImage": "https://media.gospelchannel.com/heroes/jpcc-jakarta-praise-community-church.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "musicStyle": [
-      "contemporary worship"
-    ],
-    "youtubeVideos": [],
-    "sourceKind": "discovered"
-  },
-  {
-    "slug": "jpcc-worship",
-    "name": "JPCC Worship",
-    "description": "Jakarta megachurch with powerful contemporary worship reaching millions across Indonesian archipelago.",
-    "country": "Indonesia",
-    "location": "Jakarta, Indonesia",
-    "denomination": "Non-denominational",
-    "founded": 2004,
-    "website": "https://jpcc.org",
-    "email": "contact@jpcc.org",
-    "logo": "https://media.gospelchannel.com/logos/churches/jpcc-worship.svg",
-    "headerImage": "https://media.gospelchannel.com/heroes/jpcc-worship.png",
     "spotifyUrl": "https://open.spotify.com/playlist/3QGpAT2WpNUtdi196gaFi5",
     "spotifyPlaylistIds": [
       "3QGpAT2WpNUtdi196gaFi5"
-    ],
-    "additionalPlaylists": [
-      "18Triwhu18rJcttZ9ZmW0i",
-      "4ZwfAE9Umy4FFW9Fm0E6dg",
-      "3HNMjplm62zL2OAHh8h6jW"
     ],
     "musicStyle": [
       "contemporary worship",
       "praise and worship"
     ],
-    "youtubeChannelId": "UCxxxxxxxxx",
     "spotifyArtistIds": [
       "4GKPfwrzMoTyu7bYd4aqU1"
     ],
-    "youtubeVideos": [
-      {
-        "title": "Bejana-Mu (Official Music Video) - JPCC Worship",
-        "videoId": "hls4Tm4v6XM",
-        "channelTitle": "InsightUnlimitedID and JPCC Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/hls4Tm4v6XM/hqdefault.jpg"
-      },
-      {
-        "title": "Kumilik-Mu (Official Lyric Video) - JPCC Worship Youth",
-        "videoId": "D81OXqGb40s",
-        "channelTitle": "JPCC Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/D81OXqGb40s/hqdefault.jpg"
-      },
-      {
-        "title": "God is For Me (Official Instrumental Audio) - JPCC Worship",
-        "videoId": "KFb0eF04AVk",
-        "channelTitle": "JPCC Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/KFb0eF04AVk/hqdefault.jpg"
-      },
-      {
-        "title": "Bejana-Mu (Official Lyric Video) - JPCC Worship",
-        "videoId": "WchPzYOaHHE",
-        "channelTitle": "JPCC Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/WchPzYOaHHE/hqdefault.jpg"
-      },
-      {
-        "title": "More Than Enough (Official Lyric Video) - JPCC Worship",
-        "videoId": "4iZ6CQxXTFk",
-        "channelTitle": "JPCC Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/4iZ6CQxXTFk/hqdefault.jpg"
-      },
-      {
-        "title": "Ajaib Kau Tuhan (Official Music Video) - JPCC Worship",
-        "videoId": "u4OuBnoEpcc",
-        "channelTitle": "InsightUnlimitedID and JPCC Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/u4OuBnoEpcc/hqdefault.jpg"
-      },
-      {
-        "title": "JPCC Worship - 'Kau Ada Online Worship Night",
-        "videoId": "NDZKZ_kUaKI",
-        "channelTitle": "JPCC Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/NDZKZ_kUaKI/hqdefault.jpg"
-      },
-      {
-        "title": "Mengenal-Mu",
-        "videoId": "xDFx4flfzUM",
-        "channelTitle": "JPCC Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/xDFx4flfzUM/hqdefault.jpg"
-      },
-      {
-        "title": "lagu Rohani JPCC Worship Terbaik 2023 Full Album - Lagu Rohani Kristen Paling Menyejukkan Hati",
-        "videoId": "rr62e-gYuug",
-        "channelTitle": "El Shaddai Production",
-        "thumbnailUrl": "https://i.ytimg.com/vi/rr62e-gYuug/hqdefault.jpg"
-      },
-      {
-        "title": "SYMPHONY WORSHIP, JCC WORSHIP, NDC WORSHIP, JPCC WORSHIP FULL ALBUM LIRIK ",
-        "videoId": "24eA-MJC4nE",
-        "channelTitle": " LAGU ROHANI TERBARU 2025",
-        "thumbnailUrl": "https://i.ytimg.com/vi/24eA-MJC4nE/hqdefault.jpg"
-      }
-    ],
-    "lastResearched": "2026-02-27T00:00:00.000Z",
-    "sourceKind": "manual"
+    "youtubeVideos": [],
+    "sourceKind": "discovered"
   },
   {
     "youtubeUrl": "https://www.youtube.com/channel/UC2LLiH8bhF-2lM9cqWA-RQg",
@@ -29786,7 +29407,7 @@
     "website": "http://internationalchurch.nu/",
     "logo": "https://media.gospelchannel.com/logos/enrichments/jonkoping-international-church.jpg",
     "headerImage": "https://media.gospelchannel.com/heroes/jonkoping-international-church.jpg",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/album/1euLMsqNNqdayUQGlKyX1J",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
     "verifiedAt": "2026-03-29T22:05:05.769Z",
@@ -30448,13 +30069,13 @@
     "sourceKind": "discovered"
   },
   {
-    "slug": "kingdom-hall-of-jehovah-s-witnesses",
+    "slug": "kingdom-hall-of-jehovah-s-witnesses-andover",
     "name": "Kingdom Hall of Jehovah's Witnesses",
     "description": "Discover worship music and playlists from Kingdom Hall of Jehovah's Witnesses. Based in United Kingdom.",
     "country": "United Kingdom",
-    "location": "Cardiff",
+    "location": "Andover",
     "denomination": "Jehovahs Witness",
-    "website": "https://jw.org/",
+    "website": "https://www.jw.org/",
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
@@ -30463,13 +30084,13 @@
     "sourceKind": "discovered"
   },
   {
-    "slug": "kingdom-hall-of-jehovah-s-witnesses-andover",
+    "slug": "kingdom-hall-of-jehovah-s-witnesses",
     "name": "Kingdom Hall of Jehovah's Witnesses",
     "description": "Discover worship music and playlists from Kingdom Hall of Jehovah's Witnesses. Based in United Kingdom.",
     "country": "United Kingdom",
-    "location": "Andover",
+    "location": "Cardiff",
     "denomination": "Jehovahs Witness",
-    "website": "https://www.jw.org/",
+    "website": "https://jw.org/",
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
@@ -30490,7 +30111,7 @@
     "website": "https://kingdomcity.com",
     "logo": "https://media.gospelchannel.com/logos/enrichments/kingdomcity-church.png",
     "headerImage": "https://media.gospelchannel.com/heroes/kingdomcity-church.svg",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/artist/4syoo7XFyGlEBWp88G5rHM",
     "spotifyPlaylistIds": [],
     "musicStyle": [
       "contemporary worship"
@@ -31352,6 +30973,20 @@
     "sourceKind": "discovered"
   },
   {
+    "slug": "life-church-lisbon",
+    "name": "LIFE Church Lisbon",
+    "description": "",
+    "country": "Portugal",
+    "location": "Lisbon",
+    "denomination": "Evangelical",
+    "website": "https://www.lifechurchlisbon.com/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
     "instagramUrl": "https://www.instagram.com/lifemelbs/",
     "facebookUrl": "https://www.facebook.com/lifemelbs",
     "youtubeUrl": "https://www.youtube.com/lifemelbourne",
@@ -31412,6 +31047,20 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
     "verifiedAt": "2026-03-29T22:05:05.769Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "lagoinha-baptist-church",
+    "name": "Lagoinha Baptist Church",
+    "description": "",
+    "country": "Brazil",
+    "location": "Belo Horizonte",
+    "denomination": "Baptist",
+    "website": "https://lagoinha.com/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
   {
@@ -31978,6 +31627,20 @@
     "sourceKind": "discovered"
   },
   {
+    "slug": "liberty-church-amsterdam",
+    "name": "Liberty Church Amsterdam",
+    "description": "",
+    "country": "Netherlands",
+    "location": "Amsterdam",
+    "denomination": "Charismatic",
+    "website": "https://libertychurch.amsterdam/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
     "instagramUrl": "https://www.instagram.com/libertychurchlondon/",
     "facebookUrl": "https://www.facebook.com/LibertyChurchLND",
     "youtubeUrl": "https://www.youtube.com/channel/UCBvbiSTr6Zbx6Xt7TsyR-sA",
@@ -32197,102 +31860,15 @@
     "email": "giving@life.church",
     "logo": "https://media.gospelchannel.com/logos/enrichments/life-church.png",
     "headerImage": "https://media.gospelchannel.com/heroes/life-church.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
+    "spotifyUrl": "https://open.spotify.com/playlist/46EceTzPNIdAFLr0kxIHp7",
+    "spotifyPlaylistIds": [
+      "46EceTzPNIdAFLr0kxIHp7"
+    ],
     "musicStyle": [
       "contemporary worship"
     ],
     "youtubeVideos": [],
     "sourceKind": "discovered"
-  },
-  {
-    "slug": "life-church-worship",
-    "name": "Life.Church Worship",
-    "description": "Multi-site megachurch worship with accessible, contemporary congregational songs.",
-    "country": "USA",
-    "location": "Edmond, Oklahoma, United States",
-    "denomination": "Evangelical",
-    "founded": 1990,
-    "website": "https://live.life.church",
-    "email": "prayer@life.church",
-    "logo": "https://media.gospelchannel.com/logos/churches/life-church-worship.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/life-church-worship.jpg",
-    "spotifyUrl": "https://open.spotify.com/playlist/46EceTzPNIdAFLr0kxIHp7",
-    "spotifyPlaylistIds": [
-      "46EceTzPNIdAFLr0kxIHp7"
-    ],
-    "additionalPlaylists": [
-      "55HQxNGUQmPdT5GfmBdIfW",
-      "5wnqDMgvoQIQ1rRCG0q4wk",
-      "0R33Qxtks6PWdWcgHlc2AD"
-    ],
-    "musicStyle": [
-      "contemporary worship"
-    ],
-    "youtubeVideos": [
-      {
-        "title": "\"So Much\" ",
-        "videoId": "3GWCaR4p-HI",
-        "channelTitle": " Live Performance Video ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/3GWCaR4p-HI/hqdefault.jpg"
-      },
-      {
-        "title": "Clean Heart  ",
-        "videoId": "p9Tu2v0a9uo",
-        "channelTitle": " Official Live Performance Video ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/p9Tu2v0a9uo/hqdefault.jpg"
-      },
-      {
-        "title": "\"Worth The Praise\" ",
-        "videoId": "ql0jAcEo5yU",
-        "channelTitle": " Live Performance Video ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/ql0jAcEo5yU/hqdefault.jpg"
-      },
-      {
-        "title": "“Thank You” ",
-        "videoId": "ixMdRVL7ae8",
-        "channelTitle": " Church Studio Sessions ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/ixMdRVL7ae8/hqdefault.jpg"
-      },
-      {
-        "title": "As You Are ",
-        "videoId": "aAdOO3bsLRY",
-        "channelTitle": " Official Lyric Video ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/aAdOO3bsLRY/hqdefault.jpg"
-      },
-      {
-        "title": "It Is What It Is ",
-        "videoId": "v7nOL1Socfg",
-        "channelTitle": " Official Live Performance Video ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/v7nOL1Socfg/hqdefault.jpg"
-      },
-      {
-        "title": "\"Make Way\" ",
-        "videoId": "bPXg5pbdR8g",
-        "channelTitle": " Live Performance Video ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/bPXg5pbdR8g/hqdefault.jpg"
-      },
-      {
-        "title": "Heaven’s All Around ",
-        "videoId": "kIoKHyVub20",
-        "channelTitle": " Official Lyric Video ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/kIoKHyVub20/hqdefault.jpg"
-      },
-      {
-        "title": "Satisfied ",
-        "videoId": "FaHRpew9Ap4",
-        "channelTitle": " Official Lyric Video ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/FaHRpew9Ap4/hqdefault.jpg"
-      },
-      {
-        "title": "\"So Much\" ",
-        "videoId": "xOyWfN-nftk",
-        "channelTitle": " Official Lyric Video ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/xOyWfN-nftk/hqdefault.jpg"
-      }
-    ],
-    "lastResearched": "2026-02-27T00:00:00.000Z",
-    "sourceKind": "manual"
   },
   {
     "instagramUrl": "https://www.instagram.com/lifechurchmcr/",
@@ -32330,6 +31906,20 @@
     "spotifyPlaylistIds": [
       "1d47CBVlaACKNhROsHJ4od"
     ],
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "lifepoint-church-brussels",
+    "name": "LifePoint Church Brussels",
+    "description": "",
+    "country": "Belgium",
+    "location": "Brussels",
+    "denomination": "Baptist",
+    "website": "https://lifepoint.be/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
   {
@@ -32450,6 +32040,20 @@
     "sourceKind": "discovered"
   },
   {
+    "slug": "lighthouse-christian-centre-helsinki",
+    "name": "Lighthouse Christian Centre Helsinki",
+    "description": "",
+    "country": "Finland",
+    "location": "Helsinki",
+    "denomination": "Pentecostal",
+    "website": "https://lcclight.com/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
     "instagramUrl": "https://instagram.com/lighthousechurchottawa",
     "facebookUrl": "https://facebook.com/lighthousechurchottawa",
     "youtubeUrl": "https://www.youtube.com/@lighthousechurchottawa",
@@ -32542,7 +32146,7 @@
     "email": "info@thelighthouse.org.za",
     "logo": "https://media.gospelchannel.com/logos/enrichments/lighthouse-to-the-nations-church-orchards-site-church-offices.png",
     "headerImage": "https://media.gospelchannel.com/heroes/lighthouse-to-the-nations-church-orchards-site-church-offices.jpg",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/playlist/3U5qzgO9TLE96yuTbahk52",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
@@ -32661,6 +32265,20 @@
     "email": "info@nycfoodpolicy.org",
     "logo": "",
     "headerImage": "https://media.gospelchannel.com/heroes/little-rock-baptist-church.jpg",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "liverpool-one-church",
+    "name": "Liverpool One Church",
+    "description": "",
+    "country": "United Kingdom",
+    "location": "Liverpool",
+    "denomination": "Evangelical",
+    "website": "https://www.liverpoolonechurch.com/",
+    "language": "English",
+    "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -32974,7 +32592,7 @@
     "email": "contato@livres.church",
     "logo": "https://media.gospelchannel.com/logos/enrichments/livres-church.png",
     "headerImage": "https://media.gospelchannel.com/heroes/livres-church.jpg",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/intl-pt/artist/1eKT4nyBWQbYdHm19DrV2P",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
     "sourceKind": "discovered"
@@ -33059,7 +32677,7 @@
     "website": "https://lobpreishaus.org/",
     "logo": "https://media.gospelchannel.com/logos/enrichments/lobpreishaus-dresden.png",
     "headerImage": "https://media.gospelchannel.com/heroes/lobpreishaus-dresden.png",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/playlist/23H3BruKst8whC91ti8llK",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
@@ -33122,6 +32740,20 @@
     "sourceKind": "discovered"
   },
   {
+    "slug": "london-international-christian-church",
+    "name": "London International Christian Church",
+    "description": "",
+    "country": "United Kingdom",
+    "location": "London",
+    "denomination": "Non-denominational",
+    "website": "http://londonchurch.org.uk/",
+    "logo": "https://media.gospelchannel.com/logos/enrichments/london-international-christian-church.webp",
+    "headerImage": "https://media.gospelchannel.com/heroes/london-international-christian-church.jpg",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
     "instagramUrl": "https://www.instagram.com/londonicc/",
     "facebookUrl": "https://www.facebook.com/TheLondonICC/",
     "youtubeUrl": "https://www.youtube.com/@LondonDisciples",
@@ -33137,20 +32769,6 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
     "verifiedAt": "2026-03-29T22:05:05.769Z",
-    "sourceKind": "discovered"
-  },
-  {
-    "slug": "london-international-christian-church",
-    "name": "London International Christian Church",
-    "description": "",
-    "country": "United Kingdom",
-    "location": "London",
-    "denomination": "Non-denominational",
-    "website": "http://londonchurch.org.uk/",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/london-international-christian-church.webp",
-    "headerImage": "https://media.gospelchannel.com/heroes/london-international-christian-church.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
   {
@@ -33842,7 +33460,7 @@
     "email": "kontor@mariagerfjordfrikirke.dk",
     "logo": "https://media.gospelchannel.com/logos/enrichments/mariagerfjord-frikirke.png",
     "headerImage": "https://media.gospelchannel.com/heroes/mariagerfjord-frikirke.jpg",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/artist/2XxhfmEbAcUKtiKmTrBL5O",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
     "sourceKind": "discovered"
@@ -33877,118 +33495,6 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
     "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/maverickcitymusic/",
-    "facebookUrl": "https://www.facebook.com/pg/MaverickCityMusic",
-    "youtubeUrl": "https://www.youtube.com/tribl",
-    "slug": "maverick-city",
-    "name": "Maverick City Music",
-    "description": "They broke the mold. Maverick City brought spontaneous, diverse, gospel-rooted worship to the mainstream and changed what Sunday mornings sound like. Raw harmonies, real moments, Holy Spirit in every session.",
-    "country": "USA",
-    "location": "Atlanta, Georgia, USA",
-    "denomination": "Non-denominational",
-    "founded": 2018,
-    "website": "https://www.maverickcitymusic.com",
-    "logo": "https://media.gospelchannel.com/logos/churches/maverick-city.webp",
-    "headerImage": "https://media.gospelchannel.com/heroes/maverick-city.webp",
-    "spotifyUrl": "https://open.spotify.com/playlist/1npOQhBieNKJZRjSO04jbv",
-    "spotifyPlaylistIds": [
-      "1npOQhBieNKJZRjSO04jbv"
-    ],
-    "additionalPlaylists": [
-      "4kyRirNePO7JD938LJU59H",
-      "2UEBuQaplvfE5UllY96QJi",
-      "2ujxvTVytbudtifaMsLcrQ"
-    ],
-    "musicStyle": [
-      "contemporary worship",
-      "gospel",
-      "spontaneous worship"
-    ],
-    "notableArtists": [
-      "Tony Brown",
-      "Jonathan Jay",
-      "Chandler Moore",
-      "Naomi Raine",
-      "Brandon Lake",
-      "Eniola Abioye",
-      "Joe L Barnes",
-      "Dante Bowe",
-      "Maryanne Joshua George",
-      "Aaron Moses"
-    ],
-    "youtubeChannelId": "UCVT3UKkqcjxS1cHBxV5Uw8w",
-    "youtubeVideos": [
-      {
-        "title": "Best Maverick City Music Songs of All Time ",
-        "videoId": "RXVtqCtBP0I",
-        "channelTitle": " Nonstop Christian Music Playlist",
-        "thumbnailUrl": "https://i.ytimg.com/vi/RXVtqCtBP0I/hqdefault.jpg"
-      },
-      {
-        "title": "Welcome To Maverick City Tour- Atlanta, GA ",
-        "videoId": "wBNB7S3brSs",
-        "channelTitle": " Maverick City Music",
-        "thumbnailUrl": "https://i.ytimg.com/vi/wBNB7S3brSs/hqdefault.jpg"
-      },
-      {
-        "title": "Promises (feat. Joe L Barnes & Naomi Raine) ",
-        "videoId": "q5m09rqOoxE",
-        "channelTitle": " Maverick City Music ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/q5m09rqOoxE/hqdefault.jpg"
-      },
-      {
-        "title": "Jireh ",
-        "videoId": "mC-zw0zCCtg",
-        "channelTitle": " Elevation Worship & Maverick City",
-        "thumbnailUrl": "https://i.ytimg.com/vi/mC-zw0zCCtg/hqdefault.jpg"
-      },
-      {
-        "title": "I Was Made To Glorify Your Name ",
-        "videoId": "8WRW098w9ik",
-        "channelTitle": " Maverick City Music, Grace Idowu, Dante Bowe ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/8WRW098w9ik/hqdefault.jpg"
-      },
-      {
-        "title": "Wait On You ",
-        "videoId": "K3TYG7Q_fj4",
-        "channelTitle": " Elevation Worship & Maverick City",
-        "thumbnailUrl": "https://i.ytimg.com/vi/K3TYG7Q_fj4/hqdefault.jpg"
-      },
-      {
-        "title": "Promises (feat. Joe L Barnes & Naomi Raine) - Maverick City ",
-        "videoId": "yNOw5iBoCd0",
-        "channelTitle": " TRIBL",
-        "thumbnailUrl": "https://i.ytimg.com/vi/yNOw5iBoCd0/hqdefault.jpg"
-      },
-      {
-        "title": "For My Good - Maverick City Music ",
-        "videoId": "lnHfNb0UNf4",
-        "channelTitle": " Chandler Moore ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/lnHfNb0UNf4/hqdefault.jpg"
-      },
-      {
-        "title": "🙏Jireh, Most Beautiful, Firm Foundation...",
-        "videoId": "bv-RKMFi1K4",
-        "channelTitle": " Chandler Moore ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/bv-RKMFi1K4/hqdefault.jpg"
-      },
-      {
-        "title": "Jireh, Most Beautiful, Firm Foundation...",
-        "videoId": "nNYNuw0d9h0",
-        "channelTitle": " Chandler Moore ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/nNYNuw0d9h0/hqdefault.jpg"
-      }
-    ],
-    "aliases": [
-      "Maverick City",
-      "Maverick City Worship",
-      "Maverick",
-      "Maverick City Playlist"
-    ],
-    "lastResearched": "2026-02-27T00:00:00.000Z",
-    "sourceKind": "manual"
   },
   {
     "instagramUrl": "https://www.instagram.com/mavuno/",
@@ -34720,8 +34226,10 @@
     "email": "info@mosaic.org",
     "logo": "",
     "headerImage": "https://media.gospelchannel.com/heroes/mosaic-church.gif",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
+    "spotifyUrl": "https://open.spotify.com/playlist/7mGEuULOciOjiaWka8LxCl",
+    "spotifyPlaylistIds": [
+      "7mGEuULOciOjiaWka8LxCl"
+    ],
     "musicStyle": [
       "contemporary worship"
     ],
@@ -34746,99 +34254,18 @@
     "sourceKind": "discovered"
   },
   {
-    "instagramUrl": "https://www.instagram.com/mosaicmsc/",
-    "facebookUrl": "https://www.facebook.com/MosaicMsc",
-    "youtubeUrl": "https://www.youtube.com/@MosaicMSC",
-    "slug": "mosaic-msc",
-    "name": "Mosaic MSC",
-    "description": "LA-based collective with diverse, multicultural worship and creative expression.",
-    "country": "USA",
-    "location": "Los Angeles, California, United States",
-    "denomination": "Non-denominational",
-    "founded": 2014,
-    "website": "https://mosaicmsc.com",
-    "logo": "https://media.gospelchannel.com/logos/churches/mosaic-msc.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/mosaic-msc.jpg",
-    "spotifyUrl": "https://open.spotify.com/playlist/7mGEuULOciOjiaWka8LxCl",
-    "spotifyPlaylistIds": [
-      "7mGEuULOciOjiaWka8LxCl"
-    ],
-    "additionalPlaylists": [
-      "37i9dQZF1E4qFoUBRwnDPt",
-      "3VxCxT80LO3v8ITXHRijvE",
-      "5giOAfDgjPiiaUX5Mis1NI"
-    ],
-    "musicStyle": [
-      "contemporary worship"
-    ],
-    "notableArtists": [
-      "Mariah McManus"
-    ],
-    "youtubeChannelId": "UCz9PqE5Qr9avopAPkfCZcSQ",
-    "youtubeVideos": [
-      {
-        "title": "Mosaic MSC - This Is How I Thank the Lord (Live)",
-        "videoId": "JBerGoPIlfk",
-        "channelTitle": "Mosaic MSC",
-        "thumbnailUrl": "https://i.ytimg.com/vi/JBerGoPIlfk/hqdefault.jpg"
-      },
-      {
-        "title": "Mosaic MSC - Everything At Your Feet (Live)",
-        "videoId": "AfXxDi5H5m8",
-        "channelTitle": "Mosaic MSC",
-        "thumbnailUrl": "https://i.ytimg.com/vi/AfXxDi5H5m8/hqdefault.jpg"
-      },
-      {
-        "title": "Mosaic MSC - Desperate (Live at Mosaic, Los Angeles, 2023) [Official Audio]",
-        "videoId": "jeMb1Y6_Ei8",
-        "channelTitle": "Mosaic MSC",
-        "thumbnailUrl": "https://i.ytimg.com/vi/jeMb1Y6_Ei8/hqdefault.jpg"
-      },
-      {
-        "title": "MOSAIC MSC- Glory & Wonder (Official Audio)",
-        "videoId": "pzytI5bS-dE",
-        "channelTitle": "Mosaic MSC",
-        "thumbnailUrl": "https://i.ytimg.com/vi/pzytI5bS-dE/hqdefault.jpg"
-      },
-      {
-        "title": "Mosaic MSC - Unexpected Roads (Live at Mosaic Conference)",
-        "videoId": "yIO-ffmu8QU",
-        "channelTitle": "Mosaic MSC",
-        "thumbnailUrl": "https://i.ytimg.com/vi/yIO-ffmu8QU/hqdefault.jpg"
-      },
-      {
-        "title": "MOSAIC MSC- Glory & Wonder (Official Live Video)",
-        "videoId": "youfz19ekI8",
-        "channelTitle": "Mosaic MSC",
-        "thumbnailUrl": "https://i.ytimg.com/vi/youfz19ekI8/hqdefault.jpg"
-      },
-      {
-        "title": "MOSAIC MSC - Tremble (Office Acoustic Video) [Live]",
-        "videoId": "cPtT7UrEq6g",
-        "channelTitle": "Mosaic MSC",
-        "thumbnailUrl": "https://i.ytimg.com/vi/cPtT7UrEq6g/hqdefault.jpg"
-      },
-      {
-        "title": "Mosaic MSC - This Is How I Thank the Lord (Acoustic)",
-        "videoId": "_Fh4VwoIJXo",
-        "channelTitle": "Mosaic MSC",
-        "thumbnailUrl": "https://i.ytimg.com/vi/_Fh4VwoIJXo/hqdefault.jpg"
-      },
-      {
-        "title": "Mosaic MSC - This Is How I Thank the Lord (Lyric Video)",
-        "videoId": "qSPizNvXORY",
-        "channelTitle": "Mosaic MSC",
-        "thumbnailUrl": "https://i.ytimg.com/vi/qSPizNvXORY/hqdefault.jpg"
-      },
-      {
-        "title": "Ashwood House ",
-        "videoId": "i_2h9Sv0vmw",
-        "channelTitle": " ft. Mosaic MSC",
-        "thumbnailUrl": "https://i.ytimg.com/vi/i_2h9Sv0vmw/hqdefault.jpg"
-      }
-    ],
-    "lastResearched": "2026-02-27T00:00:00.000Z",
-    "sourceKind": "manual"
+    "slug": "mosaico-church",
+    "name": "Mosaico Church",
+    "description": "",
+    "country": "Italy",
+    "location": "Florence",
+    "denomination": "Evangelical",
+    "website": "https://mosaicochurch.org/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
   },
   {
     "instagramUrl": "https://instagram.com/motionchurchutrecht",
@@ -35356,7 +34783,7 @@
     "email": "info@newhopepdx.org",
     "logo": "https://media.gospelchannel.com/logos/enrichments/new-hope-church.png",
     "headerImage": "https://media.gospelchannel.com/heroes/new-hope-church.jpg",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/playlist/1HBKpXnByvXsXHmXsaP50Y",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
@@ -35589,22 +35016,6 @@
     "sourceKind": "discovered"
   },
   {
-    "facebookUrl": "http://www.facebook.com/NewLifeStockholm",
-    "youtubeUrl": "https://www.youtube.com/channel/UCHD5K2qFsw8-hGIEsZrsqeQ",
-    "slug": "stockholm-new-life",
-    "name": "New Life Church Stockholm",
-    "description": "We are a church made up of people from all walks of life, from over 50 nations, worshiping Jesus Christ together and impacting our world with hope!",
-    "country": "Sweden",
-    "location": "33 Bromma",
-    "website": "http://www.newlife.nu/",
-    "logo": "",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-30T05:08:24.845Z",
-    "verifiedAt": "2026-03-30T05:08:24.845Z",
-    "sourceKind": "discovered"
-  },
-  {
     "slug": "new-life-church-stockholm",
     "name": "New Life Church Stockholm",
     "description": "",
@@ -35618,6 +35029,22 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "facebookUrl": "http://www.facebook.com/NewLifeStockholm",
+    "youtubeUrl": "https://www.youtube.com/channel/UCHD5K2qFsw8-hGIEsZrsqeQ",
+    "slug": "stockholm-new-life",
+    "name": "New Life Church Stockholm",
+    "description": "We are a church made up of people from all walks of life, from over 50 nations, worshiping Jesus Christ together and impacting our world with hope!",
+    "country": "Sweden",
+    "location": "33 Bromma",
+    "website": "http://www.newlife.nu/",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "lastResearched": "2026-03-30T05:08:24.845Z",
+    "verifiedAt": "2026-03-30T05:08:24.845Z",
     "sourceKind": "discovered"
   },
   {
@@ -35784,7 +35211,7 @@
     "website": "https://newsongbromsgrove.org.uk/",
     "logo": "https://media.gospelchannel.com/logos/enrichments/new-song-community-church.jpg",
     "headerImage": "https://media.gospelchannel.com/heroes/new-song-community-church.jpg",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/playlist/5jJS96VpesobUPTyM75UVt",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCHnfueN0UAAEt6Ho1sO2Qug",
     "lastResearched": "2026-03-25T21:52:44.562Z",
@@ -35873,99 +35300,6 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/newwineengland/",
-    "facebookUrl": "https://www.facebook.com/NewWineEngland",
-    "youtubeUrl": "https://www.youtube.com/NewWineEngland",
-    "slug": "new-wine-worship",
-    "name": "New Wine Worship",
-    "description": "UK renewal movement with charismatic, Spirit-led worship songs.",
-    "country": "United Kingdom",
-    "location": "United Kingdom",
-    "denomination": "Charismatic",
-    "founded": 1989,
-    "website": "https://new-wine.org",
-    "email": "info@new-wine.org",
-    "logo": "https://media.gospelchannel.com/logos/churches/new-wine-worship.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/new-wine-worship.jpg",
-    "spotifyUrl": "https://open.spotify.com/playlist/51CQAeWxH2SxyTBhgoMPVr",
-    "spotifyPlaylistIds": [
-      "51CQAeWxH2SxyTBhgoMPVr"
-    ],
-    "additionalPlaylists": [
-      "6Sf6RoTCxZ6x8uX9T0K5Qn",
-      "7rf5kb2LBHiPIHYYFSltLQ"
-    ],
-    "musicStyle": [
-      "contemporary worship",
-      "charismatic worship"
-    ],
-    "youtubeChannelId": "UCEfeosM7I7f8Qp2ANRuQjIw",
-    "youtubeVideos": [
-      {
-        "title": "Song of Repentance - New Wine Worship (OFFICIAL LYRIC VIDEO)",
-        "videoId": "NvtK8NLQ0g0",
-        "channelTitle": "New Wine",
-        "thumbnailUrl": "https://i.ytimg.com/vi/NvtK8NLQ0g0/hqdefault.jpg"
-      },
-      {
-        "title": "New Wine, Take a Moment + Spontaneous ",
-        "videoId": "yQGCnaj72rA",
-        "channelTitle": " Rose Worship Studio Session (feat. Adam and Hannah Smucker)",
-        "thumbnailUrl": "https://i.ytimg.com/vi/yQGCnaj72rA/hqdefault.jpg"
-      },
-      {
-        "title": "New Wine - Hillsong Worship",
-        "videoId": "1ozGKlOzEVc",
-        "channelTitle": "Hillsong Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/1ozGKlOzEVc/hqdefault.jpg"
-      },
-      {
-        "title": "New Wine (Acoustic) - Hillsong Worship",
-        "videoId": "mRozmcAL22M",
-        "channelTitle": "Hillsong Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/mRozmcAL22M/hqdefault.jpg"
-      },
-      {
-        "title": "New Wine Medley I 3 Hour Prayer & Soaking Worship Piano Instrumental by MBM Worship",
-        "videoId": "N3HWARG16ns",
-        "channelTitle": "MBM Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/N3HWARG16ns/hqdefault.jpg"
-      },
-      {
-        "title": "Big Circle Worship - New Wine/Satisfied (feat. Reuben, Comfort, Hope & Sharon)",
-        "videoId": "v9fqfWMFsuo",
-        "channelTitle": "BIG CIRCLE WORSHIP",
-        "thumbnailUrl": "https://i.ytimg.com/vi/v9fqfWMFsuo/hqdefault.jpg"
-      },
-      {
-        "title": "Praise King Jesus ",
-        "videoId": "2ovHR9iJMhI",
-        "channelTitle": " New Wine Worship (Official Live Video)",
-        "thumbnailUrl": "https://i.ytimg.com/vi/2ovHR9iJMhI/hqdefault.jpg"
-      },
-      {
-        "title": "Ancient of Days ",
-        "videoId": "HQh3E7L7PAs",
-        "channelTitle": " New Wine Worship (Official Live Video)",
-        "thumbnailUrl": "https://i.ytimg.com/vi/HQh3E7L7PAs/hqdefault.jpg"
-      },
-      {
-        "title": "You're Not Done ",
-        "videoId": "rBc28ZQsg4w",
-        "channelTitle": " New Wine Worship (Official Live Video)",
-        "thumbnailUrl": "https://i.ytimg.com/vi/rBc28ZQsg4w/hqdefault.jpg"
-      },
-      {
-        "title": "Worthy Is the Lord ",
-        "videoId": "96qhKc8bKZY",
-        "channelTitle": " New Wine Worship (Official Live Video)",
-        "thumbnailUrl": "https://i.ytimg.com/vi/96qhKc8bKZY/hqdefault.jpg"
-      }
-    ],
-    "lastResearched": "2026-02-27T00:00:00.000Z",
-    "sourceKind": "manual"
   },
   {
     "slug": "new-york-gospel-ministries",
@@ -36688,6 +36022,20 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-30T05:10:43.090Z",
     "verifiedAt": "2026-03-30T05:10:43.090Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "oasis-international-church",
+    "name": "Oasis International Church",
+    "description": "",
+    "country": "Spain",
+    "location": "Seville",
+    "denomination": "Evangelical",
+    "website": "https://www.oasischurchsevilla.org/en/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
   {
@@ -37901,20 +37249,6 @@
     "sourceKind": "discovered"
   },
   {
-    "slug": "parroquia-san-juan-ap-stol-y-evangelista",
-    "name": "Parroquia San Juan Apóstol y Evangelista",
-    "description": "This Catholic parish in Massamagrell offers multiple daily Masses in Spanish with a rich liturgical life centered on Eucharistic adoration. The church holds Adoración del Santísimo every Wednesday at 6 PM and daily rosary prayers, creating a devotional rhythm for parishioners seeking deeper spiritual practice.",
-    "country": "Spain",
-    "location": "Massamagrell",
-    "denomination": "Catholic",
-    "website": "https://www.parroquiasanjuanapostol.es/",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/heroes/parroquia-san-juan-ap-stol-y-evangelista.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
-  },
-  {
     "slug": "parroquia-san-juan-apostol-y-evangelista",
     "name": "Parroquia San Juan Apóstol y Evangelista",
     "description": "This Catholic parish in Massamagrell offers multiple daily Mass times including three services on Sundays. The church maintains traditional devotional practices with weekly Eucharistic Adoration every Wednesday and daily Rosary prayers from Monday through Saturday.",
@@ -37925,6 +37259,20 @@
     "language": "Spanish",
     "logo": "",
     "headerImage": "https://media.gospelchannel.com/heroes/parroquia-san-juan-apostol-y-evangelista.png",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "parroquia-san-juan-ap-stol-y-evangelista",
+    "name": "Parroquia San Juan Apóstol y Evangelista",
+    "description": "This Catholic parish in Massamagrell offers multiple daily Masses in Spanish with a rich liturgical life centered on Eucharistic adoration. The church holds Adoración del Santísimo every Wednesday at 6 PM and daily rosary prayers, creating a devotional rhythm for parishioners seeking deeper spiritual practice.",
+    "country": "Spain",
+    "location": "Massamagrell",
+    "denomination": "Catholic",
+    "website": "https://www.parroquiasanjuanapostol.es/",
+    "logo": "",
+    "headerImage": "https://media.gospelchannel.com/heroes/parroquia-san-juan-ap-stol-y-evangelista.jpg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -38711,7 +38059,7 @@
     "email": "info@pingstjonkoping.se",
     "logo": "https://media.gospelchannel.com/logos/enrichments/pingstforsamlingen-i-jonkoping.png",
     "headerImage": "https://media.gospelchannel.com/heroes/pingstforsamlingen-i-jonkoping.jpg",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/artist/6gLXR0fKzAeqBl3GrgVJgU",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
@@ -39440,23 +38788,6 @@
     "sourceKind": "discovered"
   },
   {
-    "slug": "prague-christian-fellowship",
-    "name": "Prague Christian Fellowship",
-    "description": "Prague Christian Fellowship is a Non-denominational church in Prague, Czech Republic, bringing people together through worship, teaching, and community.",
-    "country": "Czech Republic",
-    "location": "Prague",
-    "denomination": "Non-denominational",
-    "website": "https://pcf.cz",
-    "logo": "",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "musicStyle": [
-      "contemporary worship"
-    ],
-    "youtubeVideos": [],
-    "sourceKind": "discovered"
-  },
-  {
     "instagramUrl": "https://www.instagram.com/pcf_followinggod/",
     "facebookUrl": "https://www.facebook.com/PragueFellowship.cz/",
     "youtubeUrl": "https://www.youtube.com/channel/UC-b2YU-CKXI9_T790YvmcvA",
@@ -39474,6 +38805,23 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
     "verifiedAt": "2026-03-29T22:05:05.769Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "prague-christian-fellowship",
+    "name": "Prague Christian Fellowship",
+    "description": "Prague Christian Fellowship is a Non-denominational church in Prague, Czech Republic, bringing people together through worship, teaching, and community.",
+    "country": "Czech Republic",
+    "location": "Prague",
+    "denomination": "Non-denominational",
+    "website": "https://pcf.cz",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "musicStyle": [
+      "contemporary worship"
+    ],
+    "youtubeVideos": [],
     "sourceKind": "discovered"
   },
   {
@@ -40120,97 +39468,22 @@
     "sourceKind": "discovered"
   },
   {
-    "instagramUrl": "https://www.instagram.com/redrockschurch/",
-    "facebookUrl": "https://www.facebook.com/redrockschurch",
-    "youtubeUrl": "https://www.youtube.com/channel/UCKfYGS9fbZ7X5FCEpyZKGFw",
-    "slug": "red-rocks-worship",
-    "name": "Red Rocks Worship",
-    "description": "Denver-based worship with cinematic, mountain-inspired contemporary sound.",
+    "slug": "red-rocks-church",
+    "name": "Red Rocks Church",
+    "description": "Fast-growing multi-site church in Colorado known for creative, high-energy worship and reaching unchurched communities.",
     "country": "USA",
-    "location": "Denver, Colorado, United States",
+    "location": "Littleton, Colorado",
     "denomination": "Non-denominational",
-    "founded": 2005,
-    "website": "https://redrockschurch.com",
-    "email": "worship@redrockschurch.com",
-    "logo": "https://media.gospelchannel.com/logos/churches/red-rocks-worship.jpg",
-    "headerImage": "https://media.gospelchannel.com/heroes/red-rocks-worship.webp",
+    "website": "https://redrockschurch.com/",
+    "logo": "",
     "spotifyUrl": "https://open.spotify.com/playlist/5qeRGnxUNCJEGTgateT94g",
     "spotifyPlaylistIds": [
       "5qeRGnxUNCJEGTgateT94g"
     ],
-    "additionalPlaylists": [
-      "37i9dQZF1DZ06evO2pUZTG",
-      "3PY6ZhSthbkEutv294JEcy",
-      "1CZFmlnUwwB99KPyTAZB6C",
-      "3Y1SWHx8FZfDiuMEJAmfcO"
-    ],
     "musicStyle": [
       "contemporary worship"
     ],
-    "youtubeChannelId": "UCyCcknSQSxyZw9TkCrQLNEg",
-    "youtubeVideos": [
-      {
-        "title": "Red Rocks Worship - Good Plans (Official Live Video)",
-        "videoId": "O-3lMrhm8HQ",
-        "channelTitle": "Red Rocks Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/O-3lMrhm8HQ/hqdefault.jpg"
-      },
-      {
-        "title": "Red Rocks Worship - Echo Holy (Live from Littleton) [Official Lyric Video]",
-        "videoId": "pz5t7XTCxNE",
-        "channelTitle": "Red Rocks Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/pz5t7XTCxNE/hqdefault.jpg"
-      },
-      {
-        "title": "Red Rocks Worship - I Will Trust (Live)",
-        "videoId": "ktXehVI8BNg",
-        "channelTitle": "Red Rocks Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/ktXehVI8BNg/hqdefault.jpg"
-      },
-      {
-        "title": "Red Rocks Worship - Things of Heaven (Official Live Video)",
-        "videoId": "m_Cf336Tpb8",
-        "channelTitle": "Red Rocks Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/m_Cf336Tpb8/hqdefault.jpg"
-      },
-      {
-        "title": "Red Rocks Worship - Good Plans/Doxology (Official Live Video)",
-        "videoId": "bgi4Hw6QR8w",
-        "channelTitle": "Red Rocks Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/bgi4Hw6QR8w/hqdefault.jpg"
-      },
-      {
-        "title": "Red Rocks Worship - Breakthrough (Live)",
-        "videoId": "yhyVW6sbZeA",
-        "channelTitle": "Red Rocks Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/yhyVW6sbZeA/hqdefault.jpg"
-      },
-      {
-        "title": "Red Rocks Worship - The Battle Is Yours (Official Live Video)",
-        "videoId": "uasrrkzLQ0A",
-        "channelTitle": "Red Rocks Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/uasrrkzLQ0A/hqdefault.jpg"
-      },
-      {
-        "title": "Red Rocks Worship, Tyler Roberts - The King Is Coming (Official Live Video)",
-        "videoId": "P5X47zvMJYE",
-        "channelTitle": "Red Rocks Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/P5X47zvMJYE/hqdefault.jpg"
-      },
-      {
-        "title": "WORSHIP @ RED ROCKS 2025 - Sub Focus, Dimension, Culture Shock, 1991",
-        "videoId": "Ldz5vItdjRo",
-        "channelTitle": "WORSHIP and 4 more",
-        "thumbnailUrl": "https://i.ytimg.com/vi/Ldz5vItdjRo/hqdefault.jpg"
-      },
-      {
-        "title": "RED ROCKS WORSHIP: The Lord Is With Me - Song Session",
-        "videoId": "SVe4dTok7Lw",
-        "channelTitle": "Essential Worship and Red Rocks Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/SVe4dTok7Lw/hqdefault.jpg"
-      }
-    ],
-    "lastResearched": "2026-02-27T00:00:00.000Z",
+    "verifiedAt": "2026-04-02T21:29:51.915Z",
     "sourceKind": "manual"
   },
   {
@@ -40484,7 +39757,7 @@
     "email": "info@regiogemeinde.ch",
     "logo": "https://media.gospelchannel.com/logos/enrichments/regiogemeinde-riehen.png",
     "headerImage": "https://media.gospelchannel.com/covers/regiogemeinde-riehen.jpg",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/artist/58AuwMqJdxFJQuuLSTiOdR",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCvJhzN6Utt6kKToHuYVqwqw",
     "lastResearched": "2026-03-13T00:00:00.000Z",
@@ -40507,102 +39780,6 @@
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCg_dmZVO90RFV8Kql7Mrn3g",
     "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/rendcollective/",
-    "facebookUrl": "https://www.facebook.com/rendcollective",
-    "youtubeUrl": "https://www.youtube.com/user/RendCollective",
-    "slug": "rend-collective",
-    "name": "Rend Collective",
-    "description": "Folk worship collective from Bangor, Northern Ireland with an organic, joyful and celebratory sound.",
-    "country": "United Kingdom",
-    "location": "Bangor",
-    "denomination": "Non-denominational",
-    "founded": 2002,
-    "website": "https://rendcollective.com",
-    "email": "hello@sixstitch.com",
-    "logo": "https://media.gospelchannel.com/logos/churches/rend-collective.jpg",
-    "headerImage": "https://media.gospelchannel.com/heroes/rend-collective.jpg",
-    "spotifyUrl": "https://open.spotify.com/playlist/5qoFjCi09D3Mjv1uc4QLES",
-    "spotifyPlaylistIds": [
-      "5qoFjCi09D3Mjv1uc4QLES"
-    ],
-    "additionalPlaylists": [
-      "2m8BrtTH1xiKAetU71dK6l",
-      "0eaPxm8jIuqaJimsS1UaZW",
-      "7K7Ny0lRm91g1OoKEvuHVB"
-    ],
-    "musicStyle": [
-      "contemporary worship",
-      "folk rock",
-      "Celtic"
-    ],
-    "youtubeChannelId": "UCxktJLxhBR3hv_PPEYCxVyw",
-    "youtubeVideos": [
-      {
-        "title": "Rend Collective - Build Your Kingdom Here OFFICIAL",
-        "videoId": "sbdJXKqVgtg",
-        "channelTitle": "Rend Collective",
-        "thumbnailUrl": "https://i.ytimg.com/vi/sbdJXKqVgtg/hqdefault.jpg"
-      },
-      {
-        "title": "Rend Collective - My Lighthouse (Official Video)",
-        "videoId": "reAlJKv7ptU",
-        "channelTitle": "Rend Collective",
-        "thumbnailUrl": "https://i.ytimg.com/vi/reAlJKv7ptU/hqdefault.jpg"
-      },
-      {
-        "title": "Rend Collective - Fight Of My Life (Official Lyric Video)",
-        "videoId": "_1JA-4Ky0rA",
-        "channelTitle": "Rend Collective",
-        "thumbnailUrl": "https://i.ytimg.com/vi/_1JA-4Ky0rA/hqdefault.jpg"
-      },
-      {
-        "title": "Rend Collective - Rescuer (Good News) [Official Music Video]",
-        "videoId": "sAg7rn7fH3Q",
-        "channelTitle": "Rend Collective",
-        "thumbnailUrl": "https://i.ytimg.com/vi/sAg7rn7fH3Q/hqdefault.jpg"
-      },
-      {
-        "title": "Rend Collective - REVIVAL ANTHEM (Official Video)",
-        "videoId": "Egw65U99qjU",
-        "channelTitle": "Rend Collective",
-        "thumbnailUrl": "https://i.ytimg.com/vi/Egw65U99qjU/hqdefault.jpg"
-      },
-      {
-        "title": "Rend Collective - Reap That Joy (Official Music Video)",
-        "videoId": "o5VhsF3FGq8",
-        "channelTitle": "Rend Collective",
-        "thumbnailUrl": "https://i.ytimg.com/vi/o5VhsF3FGq8/hqdefault.jpg"
-      },
-      {
-        "title": "Rend Collective - What I Was Made For (Official Visualizer)",
-        "videoId": "6kC-4PrB0n8",
-        "channelTitle": "Rend Collective",
-        "thumbnailUrl": "https://i.ytimg.com/vi/6kC-4PrB0n8/hqdefault.jpg"
-      },
-      {
-        "title": "Rend Collective - “Hallelujah Anyway” (Lyric Video)",
-        "videoId": "acM0WeAycBI",
-        "channelTitle": "Rend Collective",
-        "thumbnailUrl": "https://i.ytimg.com/vi/acM0WeAycBI/hqdefault.jpg"
-      },
-      {
-        "title": "Rend Collective - Build Your Kingdom Here",
-        "videoId": "8NAim0dYlh4",
-        "channelTitle": "Rend Collective",
-        "thumbnailUrl": "https://i.ytimg.com/vi/8NAim0dYlh4/hqdefault.jpg"
-      },
-      {
-        "title": "Rend Collective - Joy Of The Lord (Lyrics And Chords)",
-        "videoId": "x3gLeCiMJqI",
-        "channelTitle": "Rend Collective",
-        "thumbnailUrl": "https://i.ytimg.com/vi/x3gLeCiMJqI/hqdefault.jpg"
-      }
-    ],
-    "lastResearched": "2026-03-27T19:19:55.993Z",
-    "verifiedAt": "2026-03-27T19:19:55.993Z",
-    "sourceKind": "manual"
   },
   {
     "slug": "renew-communities-church",
@@ -40968,6 +40145,20 @@
     "email": "riversidechurchbudapest@gmail.com",
     "logo": "https://media.gospelchannel.com/logos/enrichments/riverside-church-budapest.png",
     "headerImage": "https://media.gospelchannel.com/heroes/riverside-church-budapest.jpg",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "riverside-international-church-porto",
+    "name": "Riverside International Church Porto",
+    "description": "",
+    "country": "Portugal",
+    "location": "Porto",
+    "denomination": "Non-denominational",
+    "website": "https://www.riversideporto.org/",
+    "language": "English",
+    "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -41568,7 +40759,7 @@
     "email": "info@saddleback.com",
     "logo": "https://media.gospelchannel.com/logos/enrichments/saddleback-church.svg",
     "headerImage": "https://media.gospelchannel.com/heroes/saddleback-church.svg",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/artist/3bYfSxyg0MnYn3KhZiR0nD",
     "spotifyPlaylistIds": [],
     "musicStyle": [
       "contemporary worship"
@@ -42302,6 +41493,46 @@
     "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
     "facebookUrl": "https://facebook.com/salvationarmyuk/",
     "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
+    "slug": "salvation-army-stroud",
+    "name": "Salvation Army",
+    "description": "Salvation Army is a salvation_army church in Stroud. Explore their worship and community details before your first visit.",
+    "country": "United Kingdom",
+    "location": "Stroud",
+    "denomination": "Methodist",
+    "website": "https://www.salvationarmy.org.uk/",
+    "email": "stroud@salvationarmy.org.uk",
+    "logo": "https://media.gospelchannel.com/logos/enrichments/salvation-army-stroud.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/salvation-army-stroud.png",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "lastResearched": "2026-03-25T22:00:07.370Z",
+    "verifiedAt": "2026-03-25T22:00:07.370Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
+    "facebookUrl": "https://facebook.com/salvationarmyuk/",
+    "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
+    "slug": "salvation-army-cardiff",
+    "name": "Salvation Army",
+    "description": "Salvation Army is a salvation_army church in Cardiff. Explore their worship and community details before your first visit.",
+    "country": "United Kingdom",
+    "location": "Cardiff",
+    "denomination": "Methodist",
+    "website": "https://www.salvationarmy.org.uk/",
+    "email": "cardiff.east@salvationarmy.org.uk",
+    "logo": "https://media.gospelchannel.com/logos/enrichments/salvation-army-cardiff.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/salvation-army-cardiff.png",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "lastResearched": "2026-03-25T22:00:07.370Z",
+    "verifiedAt": "2026-03-25T22:00:07.370Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
+    "facebookUrl": "https://facebook.com/salvationarmyuk/",
+    "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
     "slug": "salvation-army",
     "name": "Salvation Army",
     "description": "Salvation Army is a salvation_army church in Hednesford. Explore their worship and community details before your first visit.",
@@ -42323,18 +41554,19 @@
     "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
     "facebookUrl": "https://facebook.com/salvationarmyuk/",
     "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
-    "slug": "salvation-army-stroud",
+    "slug": "salvation-army-coventry",
     "name": "Salvation Army",
-    "description": "Salvation Army is a salvation_army church in Stroud. Explore their worship and community details before your first visit.",
+    "description": "Salvation Army is a salvation_army church in Coventry. Explore their worship and community details before your first visit.",
     "country": "United Kingdom",
-    "location": "Stroud",
+    "location": "Coventry",
     "denomination": "Methodist",
     "website": "https://www.salvationarmy.org.uk/",
-    "email": "stroud@salvationarmy.org.uk",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/salvation-army-stroud.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/salvation-army-stroud.png",
+    "email": "coventry.city.corps@salvationarmy.org.uk",
+    "logo": "https://media.gospelchannel.com/logos/enrichments/salvation-army-coventry.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/salvation-army-coventry.png",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
+    "youtubeChannelId": "UCumrUSuEb_oMLTVH6izs6mg",
     "lastResearched": "2026-03-25T22:00:07.370Z",
     "verifiedAt": "2026-03-25T22:00:07.370Z",
     "sourceKind": "discovered"
@@ -42343,36 +41575,16 @@
     "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
     "facebookUrl": "https://facebook.com/salvationarmyuk/",
     "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
-    "slug": "salvation-army-birmingham",
+    "slug": "salvation-army-exeter",
     "name": "Salvation Army",
-    "description": "Salvation Army is a salvation_army church in Birmingham. Explore their worship and community details before your first visit.",
+    "description": "Salvation Army is a salvation_army church in Exeter. Explore their worship and community details before your first visit.",
     "country": "United Kingdom",
-    "location": "Birmingham",
+    "location": "Exeter",
     "denomination": "Methodist",
     "website": "https://www.salvationarmy.org.uk/",
-    "email": "info@salvationarmy.org.uk",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/salvation-army-birmingham.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/salvation-army-birmingham.png",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-25T22:00:07.370Z",
-    "verifiedAt": "2026-03-25T22:00:07.370Z",
-    "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
-    "facebookUrl": "https://facebook.com/salvationarmyuk/",
-    "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
-    "slug": "salvation-army-redditch",
-    "name": "Salvation Army",
-    "description": "Salvation Army is a salvation_army church in Redditch. Explore their worship and community details before your first visit.",
-    "country": "United Kingdom",
-    "location": "Redditch",
-    "denomination": "Methodist",
-    "website": "https://www.salvationarmy.org.uk/",
-    "email": "redditch@salvationarmy.org.uk",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/salvation-army-redditch.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/salvation-army-redditch.png",
+    "email": "exeter.temple@salvationarmy.org.uk",
+    "logo": "https://media.gospelchannel.com/logos/enrichments/salvation-army-exeter.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/salvation-army-exeter.png",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-25T22:00:07.370Z",
@@ -42403,16 +41615,16 @@
     "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
     "facebookUrl": "https://facebook.com/salvationarmyuk/",
     "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
-    "slug": "salvation-army-exeter",
+    "slug": "salvation-army-redditch",
     "name": "Salvation Army",
-    "description": "Salvation Army is a salvation_army church in Exeter. Explore their worship and community details before your first visit.",
+    "description": "Salvation Army is a salvation_army church in Redditch. Explore their worship and community details before your first visit.",
     "country": "United Kingdom",
-    "location": "Exeter",
+    "location": "Redditch",
     "denomination": "Methodist",
     "website": "https://www.salvationarmy.org.uk/",
-    "email": "exeter.temple@salvationarmy.org.uk",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/salvation-army-exeter.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/salvation-army-exeter.png",
+    "email": "redditch@salvationarmy.org.uk",
+    "logo": "https://media.gospelchannel.com/logos/enrichments/salvation-army-redditch.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/salvation-army-redditch.png",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-25T22:00:07.370Z",
@@ -42423,37 +41635,16 @@
     "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
     "facebookUrl": "https://facebook.com/salvationarmyuk/",
     "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
-    "slug": "salvation-army-coventry",
+    "slug": "salvation-army-birmingham",
     "name": "Salvation Army",
-    "description": "Salvation Army is a salvation_army church in Coventry. Explore their worship and community details before your first visit.",
+    "description": "Salvation Army is a salvation_army church in Birmingham. Explore their worship and community details before your first visit.",
     "country": "United Kingdom",
-    "location": "Coventry",
+    "location": "Birmingham",
     "denomination": "Methodist",
     "website": "https://www.salvationarmy.org.uk/",
-    "email": "coventry.city.corps@salvationarmy.org.uk",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/salvation-army-coventry.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/salvation-army-coventry.png",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "youtubeChannelId": "UCumrUSuEb_oMLTVH6izs6mg",
-    "lastResearched": "2026-03-25T22:00:07.370Z",
-    "verifiedAt": "2026-03-25T22:00:07.370Z",
-    "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
-    "facebookUrl": "https://facebook.com/salvationarmyuk/",
-    "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
-    "slug": "salvation-army-cardiff",
-    "name": "Salvation Army",
-    "description": "Salvation Army is a salvation_army church in Cardiff. Explore their worship and community details before your first visit.",
-    "country": "United Kingdom",
-    "location": "Cardiff",
-    "denomination": "Methodist",
-    "website": "https://www.salvationarmy.org.uk/",
-    "email": "cardiff.east@salvationarmy.org.uk",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/salvation-army-cardiff.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/salvation-army-cardiff.png",
+    "email": "info@salvationarmy.org.uk",
+    "logo": "https://media.gospelchannel.com/logos/enrichments/salvation-army-birmingham.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/salvation-army-birmingham.png",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-25T22:00:07.370Z",
@@ -42906,7 +42097,7 @@
     "website": "https://www.shalombiblechurch.com/",
     "logo": "",
     "headerImage": "https://media.gospelchannel.com/heroes/shalom-bible-church.jpg",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/playlist/5ZEE3Tf4DUIx0ENqHse8AN",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
@@ -43219,6 +42410,20 @@
     "sourceKind": "discovered"
   },
   {
+    "slug": "smyrna-international-church",
+    "name": "Smyrna International Church",
+    "description": "",
+    "country": "Sweden",
+    "location": "Gothenburg",
+    "denomination": "Pentecostal",
+    "website": "http://www.smyrnainternational.com/",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
     "instagramUrl": "https://www.instagram.com/smyrnakyrkan/",
     "facebookUrl": "https://www.facebook.com/smyrnakyrkan",
     "youtubeUrl": "https://www.youtube.com/c/Smyrnakyrkan",
@@ -43413,101 +42618,6 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
-  },
-  {
-    "slug": "soul-survivor",
-    "name": "Soul Survivor",
-    "description": "Youth worship movement shaping British Christian music with passionate festivals and recordings.",
-    "country": "United Kingdom",
-    "location": "Watford",
-    "denomination": "Anglican",
-    "founded": 1993,
-    "website": "https://soulsurvivor.com",
-    "email": "info@soulsurvivor.com",
-    "logo": "https://media.gospelchannel.com/logos/churches/soul-survivor.webp",
-    "headerImage": "https://media.gospelchannel.com/heroes/soul-survivor.jpg",
-    "spotifyUrl": "https://open.spotify.com/playlist/2OW8mdi4WhdPvGFSVtwXPh",
-    "spotifyPlaylistIds": [
-      "2OW8mdi4WhdPvGFSVtwXPh"
-    ],
-    "additionalPlaylists": [
-      "37i9dQZF1DZ06evO1VpHxC",
-      "4hPvGhrEBSaoEp0FmL6Vp2",
-      "0bnabxgLYn7CFXNPzMj4IH",
-      "58c2cergSQekQlaNuHN2Ac"
-    ],
-    "musicStyle": [
-      "contemporary worship"
-    ],
-    "notableArtists": [
-      "Tim Hughes",
-      "Beth Croft",
-      "Tom Smith"
-    ],
-    "youtubeVideos": [
-      {
-        "title": "Soul Survivor - Hold On – OFFICIAL VIDEO ft. Beth Croft",
-        "videoId": "MEKIp2jQfXA",
-        "channelTitle": "SoulSurvivorVEVO",
-        "thumbnailUrl": "https://i.ytimg.com/vi/MEKIp2jQfXA/hqdefault.jpg"
-      },
-      {
-        "title": "Worship from Soul Survivor C",
-        "videoId": "Ulx755SlS5c",
-        "channelTitle": "Soul Survivor",
-        "thumbnailUrl": "https://i.ytimg.com/vi/Ulx755SlS5c/hqdefault.jpg"
-      },
-      {
-        "title": "So Will I (100 Billion X) // SOUL SURVIVOR 2019",
-        "videoId": "LQdHBqkz8Bc",
-        "channelTitle": "Soul Survivor",
-        "thumbnailUrl": "https://i.ytimg.com/vi/LQdHBqkz8Bc/hqdefault.jpg"
-      },
-      {
-        "title": "Soul Survivor 2015 Night 1, Parable of the Lost Son",
-        "videoId": "GopriM4y27o",
-        "channelTitle": "Soul Survivor Music Videos",
-        "thumbnailUrl": "https://i.ytimg.com/vi/GopriM4y27o/hqdefault.jpg"
-      },
-      {
-        "title": "The Heart of Worship",
-        "videoId": "-BJCCLBoUrU",
-        "channelTitle": "Soul Survivor - Topic",
-        "thumbnailUrl": "https://i.ytimg.com/vi/-BJCCLBoUrU/hqdefault.jpg"
-      },
-      {
-        "title": "Soul Survivor Live 1997 -The Heart of Worship (Full Album)",
-        "videoId": "-xYYv1FNn6M",
-        "channelTitle": "Brilliant Music Station",
-        "thumbnailUrl": "https://i.ytimg.com/vi/-xYYv1FNn6M/hqdefault.jpg"
-      },
-      {
-        "title": "Soul Survivor Live 1996 (Full Album)",
-        "videoId": "_cqg8R5ZtOM",
-        "channelTitle": "Brilliant Music Station",
-        "thumbnailUrl": "https://i.ytimg.com/vi/_cqg8R5ZtOM/hqdefault.jpg"
-      },
-      {
-        "title": "House of Worship ",
-        "videoId": "d8piySmi8oQ",
-        "channelTitle": " Friday 30th January ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/d8piySmi8oQ/hqdefault.jpg"
-      },
-      {
-        "title": "House of Worship ",
-        "videoId": "Fu6jQO8lAVc",
-        "channelTitle": " Friday 21st March ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/Fu6jQO8lAVc/hqdefault.jpg"
-      },
-      {
-        "title": "House of Worship ",
-        "videoId": "m0-R21WuWzs",
-        "channelTitle": " Friday 17th October ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/m0-R21WuWzs/hqdefault.jpg"
-      }
-    ],
-    "lastResearched": "2026-02-27T00:00:00.000Z",
-    "sourceKind": "manual"
   },
   {
     "slug": "sound-church",
@@ -44311,21 +43421,6 @@
     "sourceKind": "discovered"
   },
   {
-    "slug": "andorra-la-vella",
-    "name": "St George's Church",
-    "description": "An Anglican worship centre of St. George's Barcelona, providing services in English. The church building is shared with the Catholic and Evangelical communities.",
-    "country": "Andorra",
-    "location": "Carrer Sant Salvador",
-    "website": "http://stgeorges-andorra.org/",
-    "email": "englishchurch@runbox.eu",
-    "logo": "",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-30T05:08:24.845Z",
-    "verifiedAt": "2026-03-30T05:08:24.845Z",
-    "sourceKind": "discovered"
-  },
-  {
     "facebookUrl": "https://www.facebook.com/StGeorgesChurchBCN",
     "slug": "st-george-039-s-church",
     "name": "St George's Church",
@@ -44340,6 +43435,21 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "andorra-la-vella",
+    "name": "St George's Church",
+    "description": "An Anglican worship centre of St. George's Barcelona, providing services in English. The church building is shared with the Catholic and Evangelical communities.",
+    "country": "Andorra",
+    "location": "Carrer Sant Salvador",
+    "website": "http://stgeorges-andorra.org/",
+    "email": "englishchurch@runbox.eu",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "lastResearched": "2026-03-30T05:08:24.845Z",
+    "verifiedAt": "2026-03-30T05:08:24.845Z",
     "sourceKind": "discovered"
   },
   {
@@ -44649,7 +43759,7 @@
     "email": "hello@stjohnsharborne.org",
     "logo": "https://media.gospelchannel.com/logos/churches/st-john-s-harborne.webp",
     "headerImage": "https://media.gospelchannel.com/heroes/st-john-s-harborne.webp",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/playlist/19xSLMdbsSyrorOdpZ5HzQ",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
@@ -44897,25 +44007,6 @@
     "sourceKind": "discovered"
   },
   {
-    "instagramUrl": "https://www.instagram.com/beaminsterteam/",
-    "facebookUrl": "https://www.facebook.com/BeaminsterTeam/",
-    "youtubeUrl": "https://www.youtube.com/channel/UCjBlVoFtNwH-MRiTJS1DcCA",
-    "slug": "st-mary-s-beaminster",
-    "name": "St Mary's",
-    "description": "St Mary's is an anglican church in Beaminster. Explore their worship and community details before your first visit.",
-    "country": "United Kingdom",
-    "location": "Beaminster",
-    "denomination": "Anglican",
-    "website": "https://beaminsterteamchurches.org/",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/heroes/st-mary-s-beaminster.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-25T22:00:07.370Z",
-    "verifiedAt": "2026-03-25T22:00:07.370Z",
-    "sourceKind": "discovered"
-  },
-  {
     "instagramUrl": "https://www.instagram.com/ParishofMoseley/#",
     "facebookUrl": "https://www.facebook.com/ParishOfMoseley",
     "youtubeUrl": "https://www.youtube.com/channel/UCyh_tYAoNxxOxdqeq6AyM5g",
@@ -44932,6 +44023,25 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCyh_tYAoNxxOxdqeq6AyM5g",
+    "lastResearched": "2026-03-25T22:00:07.370Z",
+    "verifiedAt": "2026-03-25T22:00:07.370Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "instagramUrl": "https://www.instagram.com/beaminsterteam/",
+    "facebookUrl": "https://www.facebook.com/BeaminsterTeam/",
+    "youtubeUrl": "https://www.youtube.com/channel/UCjBlVoFtNwH-MRiTJS1DcCA",
+    "slug": "st-mary-s-beaminster",
+    "name": "St Mary's",
+    "description": "St Mary's is an anglican church in Beaminster. Explore their worship and community details before your first visit.",
+    "country": "United Kingdom",
+    "location": "Beaminster",
+    "denomination": "Anglican",
+    "website": "https://beaminsterteamchurches.org/",
+    "logo": "",
+    "headerImage": "https://media.gospelchannel.com/heroes/st-mary-s-beaminster.jpg",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-25T22:00:07.370Z",
     "verifiedAt": "2026-03-25T22:00:07.370Z",
     "sourceKind": "discovered"
@@ -45043,24 +44153,6 @@
     "sourceKind": "discovered"
   },
   {
-    "facebookUrl": "https://www.facebook.com/stmichaelsbudbrooke",
-    "youtubeUrl": "https://www.youtube.com/channel/UCRn6_DOepZblNSH75WCxFjw",
-    "slug": "st-michael",
-    "name": "St Michael",
-    "description": "St Michael is an anglican church in Budbrooke. Explore their worship and community details before your first visit.",
-    "country": "United Kingdom",
-    "location": "Budbrooke",
-    "denomination": "Anglican",
-    "website": "https://www.stmichaels-budbrooke.org.uk/",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/heroes/st-michael.webp",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-25T22:00:07.370Z",
-    "verifiedAt": "2026-03-25T22:00:07.370Z",
-    "sourceKind": "discovered"
-  },
-  {
     "instagramUrl": "https://www.instagram.com/churchinwales/",
     "facebookUrl": "https://www.facebook.com/ChurchinWales/",
     "slug": "st-michael-newtown",
@@ -45072,6 +44164,24 @@
     "website": "https://www.churchinwales.org.uk/",
     "logo": "",
     "headerImage": "https://media.gospelchannel.com/heroes/st-michael-newtown.jpg",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "lastResearched": "2026-03-25T22:00:07.370Z",
+    "verifiedAt": "2026-03-25T22:00:07.370Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "facebookUrl": "https://www.facebook.com/stmichaelsbudbrooke",
+    "youtubeUrl": "https://www.youtube.com/channel/UCRn6_DOepZblNSH75WCxFjw",
+    "slug": "st-michael",
+    "name": "St Michael",
+    "description": "St Michael is an anglican church in Budbrooke. Explore their worship and community details before your first visit.",
+    "country": "United Kingdom",
+    "location": "Budbrooke",
+    "denomination": "Anglican",
+    "website": "https://www.stmichaels-budbrooke.org.uk/",
+    "logo": "",
+    "headerImage": "https://media.gospelchannel.com/heroes/st-michael.webp",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-25T22:00:07.370Z",
@@ -45125,6 +44235,20 @@
     "location": "Prestbury",
     "denomination": "Anglican",
     "website": "https://www.prestbury.net/",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "st-pauls-castle-hill",
+    "name": "St Paul's Castle Hill",
+    "description": "",
+    "country": "Australia",
+    "location": "Castle Hill, New South Wales",
+    "denomination": "Anglican",
+    "website": "https://stpauls.church/",
+    "language": "English",
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
@@ -45805,7 +44929,7 @@
     "website": "https://www.stmarkscoventry.org/",
     "logo": "",
     "headerImage": "https://media.gospelchannel.com/heroes/st-mark-s-church-coventry.png",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/artist/2Ydm97HN7D2tDiQrJ0CFg5",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-25T21:52:44.562Z",
     "verifiedAt": "2026-03-25T21:52:44.562Z",
@@ -46011,7 +45135,7 @@
     "email": "eindhoven@stadskerk040.nl",
     "logo": "https://media.gospelchannel.com/logos/enrichments/stadskerk-040.png",
     "headerImage": "https://media.gospelchannel.com/heroes/stadskerk-040.jpg",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/playlist/1nPn5qMZrkLfYNeHEFTH5C",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
@@ -47279,6 +46403,19 @@
     "sourceKind": "discovered"
   },
   {
+    "slug": "the-church-of-jesus-christ-of-latter-day-saints",
+    "name": "The Church of Jesus Christ of Latter-day Saints",
+    "description": "The Church of Jesus Christ of Latter-day Saints in Odense conducts worship services in both Danish and English, making it accessible to international residents. The church features a comprehensive Relief Society program for women and organized ministries for all age groups, from Primary children's classes to Young Men and Young Women programs.",
+    "country": "Denmark",
+    "denomination": "Latter-Day Saints",
+    "website": "https://www.churchofjesuschrist.org/",
+    "logo": "",
+    "headerImage": "https://media.gospelchannel.com/heroes/the-church-of-jesus-christ-of-latter-day-saints.jpg",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
     "slug": "the-church-of-jesus-christ-of-latter-day-saints-burton-on-trent",
     "name": "The Church of Jesus Christ of Latter-day Saints",
     "description": "The Church of Jesus Christ of Latter-day Saints is a church in Burton-on-Trent. Explore their worship and community details before your first visit.",
@@ -47290,19 +46427,6 @@
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-25T21:52:44.562Z",
     "verifiedAt": "2026-03-25T21:52:44.562Z",
-    "sourceKind": "discovered"
-  },
-  {
-    "slug": "the-church-of-jesus-christ-of-latter-day-saints",
-    "name": "The Church of Jesus Christ of Latter-day Saints",
-    "description": "The Church of Jesus Christ of Latter-day Saints in Odense conducts worship services in both Danish and English, making it accessible to international residents. The church features a comprehensive Relief Society program for women and organized ministries for all age groups, from Primary children's classes to Young Men and Young Women programs.",
-    "country": "Denmark",
-    "denomination": "Latter-Day Saints",
-    "website": "https://www.churchofjesuschrist.org/",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/heroes/the-church-of-jesus-christ-of-latter-day-saints.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
   {
@@ -48237,6 +47361,66 @@
     "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
     "facebookUrl": "https://facebook.com/salvationarmyuk/",
     "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
+    "slug": "the-salvation-army-newport",
+    "name": "The Salvation Army",
+    "description": "The Salvation Army is a salvation_army church in Newport. Explore their worship and community details before your first visit.",
+    "country": "United Kingdom",
+    "location": "Newport",
+    "denomination": "Methodist",
+    "website": "https://www.salvationarmy.org.uk/",
+    "email": "newport@salvationarmy.org.uk",
+    "logo": "https://media.gospelchannel.com/logos/enrichments/the-salvation-army-newport.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/the-salvation-army-newport.png",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "lastResearched": "2026-03-25T22:00:07.370Z",
+    "verifiedAt": "2026-03-25T22:00:07.370Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
+    "facebookUrl": "https://facebook.com/salvationarmyuk/",
+    "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
+    "slug": "the-salvation-army-llanelli",
+    "name": "The Salvation Army",
+    "description": "The Salvation Army is a salvation_army church in Llanelli. Explore their worship and community details before your first visit.",
+    "country": "United Kingdom",
+    "location": "Llanelli",
+    "denomination": "Methodist",
+    "website": "https://www.salvationarmy.org.uk/",
+    "email": "llanelli@salvationarmy.org.uk",
+    "logo": "https://media.gospelchannel.com/logos/enrichments/the-salvation-army-llanelli.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/the-salvation-army-llanelli.png",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "lastResearched": "2026-03-25T22:00:07.370Z",
+    "verifiedAt": "2026-03-25T22:00:07.370Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
+    "facebookUrl": "https://facebook.com/salvationarmyuk/",
+    "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
+    "slug": "the-salvation-army-bath",
+    "name": "The Salvation Army",
+    "description": "The Salvation Army is a salvation_army church in Bath. Explore their worship and community details before your first visit.",
+    "country": "United Kingdom",
+    "location": "Bath",
+    "denomination": "Methodist",
+    "website": "https://www.salvationarmy.org.uk/",
+    "email": "bath.citadel@salvationarmy.org.uk",
+    "logo": "https://media.gospelchannel.com/logos/enrichments/the-salvation-army-bath.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/the-salvation-army-bath.png",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "lastResearched": "2026-03-25T22:00:07.370Z",
+    "verifiedAt": "2026-03-25T22:00:07.370Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
+    "facebookUrl": "https://facebook.com/salvationarmyuk/",
+    "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
     "slug": "the-salvation-army-weston-super-mare",
     "name": "The Salvation Army",
     "description": "The Salvation Army is a salvation_army church in Weston-super-Mare. Explore their worship and community details before your first visit.",
@@ -48257,16 +47441,36 @@
     "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
     "facebookUrl": "https://facebook.com/salvationarmyuk/",
     "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
-    "slug": "the-salvation-army-aberystwyth",
+    "slug": "the-salvation-army-malvern",
     "name": "The Salvation Army",
-    "description": "The Salvation Army is a salvation_army church in Aberystwyth. Explore their worship and community details before your first visit.",
+    "description": "The Salvation Army is a salvation_army church in Malvern. Explore their worship and community details before your first visit.",
     "country": "United Kingdom",
-    "location": "Aberystwyth",
+    "location": "Malvern",
     "denomination": "Methodist",
     "website": "https://www.salvationarmy.org.uk/",
-    "email": "aberystwyth@salvationarmy.org.uk",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/the-salvation-army-aberystwyth.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/the-salvation-army-aberystwyth.png",
+    "email": "Malvern@salvationarmy.org.uk",
+    "logo": "https://media.gospelchannel.com/logos/enrichments/the-salvation-army-malvern.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/the-salvation-army-malvern.png",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "lastResearched": "2026-03-25T22:00:07.370Z",
+    "verifiedAt": "2026-03-25T22:00:07.370Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
+    "facebookUrl": "https://facebook.com/salvationarmyuk/",
+    "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
+    "slug": "the-salvation-army-shrewsbury",
+    "name": "The Salvation Army",
+    "description": "The Salvation Army is a salvation_army church in Shrewsbury. Explore their worship and community details before your first visit.",
+    "country": "United Kingdom",
+    "location": "Shrewsbury",
+    "denomination": "Methodist",
+    "website": "https://www.salvationarmy.org.uk/",
+    "email": "shrewsbury@salvationarmy.org.uk",
+    "logo": "https://media.gospelchannel.com/logos/enrichments/the-salvation-army-shrewsbury.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/the-salvation-army-shrewsbury.png",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCumrUSuEb_oMLTVH6izs6mg",
@@ -48278,16 +47482,78 @@
     "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
     "facebookUrl": "https://facebook.com/salvationarmyuk/",
     "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
-    "slug": "the-salvation-army-bath",
+    "slug": "the-salvation-army-penarth",
     "name": "The Salvation Army",
-    "description": "The Salvation Army is a salvation_army church in Bath. Explore their worship and community details before your first visit.",
+    "description": "The Salvation Army is a salvation_army church in Penarth. Explore their worship and community details before your first visit.",
     "country": "United Kingdom",
-    "location": "Bath",
+    "location": "Penarth",
     "denomination": "Methodist",
     "website": "https://www.salvationarmy.org.uk/",
-    "email": "bath.citadel@salvationarmy.org.uk",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/the-salvation-army-bath.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/the-salvation-army-bath.png",
+    "email": "penarth@salvationarmy.org.uk",
+    "logo": "https://media.gospelchannel.com/logos/enrichments/the-salvation-army-penarth.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/the-salvation-army-penarth.png",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "lastResearched": "2026-03-25T22:00:07.370Z",
+    "verifiedAt": "2026-03-25T22:00:07.370Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
+    "facebookUrl": "https://facebook.com/salvationarmyuk/",
+    "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
+    "slug": "the-salvation-army-cardiff",
+    "name": "The Salvation Army",
+    "description": "The Salvation Army is a salvation_army church in Cardiff. Explore their worship and community details before your first visit.",
+    "country": "United Kingdom",
+    "location": "Cardiff",
+    "denomination": "Methodist",
+    "website": "https://www.salvationarmy.org.uk/",
+    "email": "info@salvationarmy.org.uk",
+    "logo": "https://media.gospelchannel.com/logos/enrichments/the-salvation-army-cardiff.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/the-salvation-army-cardiff.png",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "youtubeChannelId": "UCumrUSuEb_oMLTVH6izs6mg",
+    "lastResearched": "2026-03-25T22:00:07.370Z",
+    "verifiedAt": "2026-03-25T22:00:07.370Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
+    "facebookUrl": "https://facebook.com/salvationarmyuk/",
+    "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
+    "slug": "the-salvation-army-bristol",
+    "name": "The Salvation Army",
+    "description": "The Salvation Army is a salvation_army church in Bristol. Explore their worship and community details before your first visit.",
+    "country": "United Kingdom",
+    "location": "Bristol",
+    "denomination": "Methodist",
+    "website": "https://www.salvationarmy.org.uk/",
+    "email": "contactstaplehill@gmail.com",
+    "logo": "https://media.gospelchannel.com/logos/enrichments/the-salvation-army-bristol.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/the-salvation-army-bristol.png",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "youtubeChannelId": "UCumrUSuEb_oMLTVH6izs6mg",
+    "lastResearched": "2026-03-25T22:00:07.370Z",
+    "verifiedAt": "2026-03-25T22:00:07.370Z",
+    "sourceKind": "discovered"
+  },
+  {
+    "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
+    "facebookUrl": "https://facebook.com/salvationarmyuk/",
+    "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
+    "slug": "the-salvation-army-bournemouth",
+    "name": "The Salvation Army",
+    "description": "The Salvation Army is a salvation_army church in Bournemouth. Explore their worship and community details before your first visit.",
+    "country": "United Kingdom",
+    "location": "Bournemouth",
+    "denomination": "Methodist",
+    "website": "https://www.salvationarmy.org.uk/",
+    "email": "Winton@salvationarmy.org.uk",
+    "logo": "https://media.gospelchannel.com/logos/enrichments/the-salvation-army-bournemouth.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/the-salvation-army-bournemouth.png",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-25T22:00:07.370Z",
@@ -48340,158 +47606,16 @@
     "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
     "facebookUrl": "https://facebook.com/salvationarmyuk/",
     "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
-    "slug": "the-salvation-army-bournemouth",
+    "slug": "the-salvation-army-aberystwyth",
     "name": "The Salvation Army",
-    "description": "The Salvation Army is a salvation_army church in Bournemouth. Explore their worship and community details before your first visit.",
+    "description": "The Salvation Army is a salvation_army church in Aberystwyth. Explore their worship and community details before your first visit.",
     "country": "United Kingdom",
-    "location": "Bournemouth",
+    "location": "Aberystwyth",
     "denomination": "Methodist",
     "website": "https://www.salvationarmy.org.uk/",
-    "email": "Winton@salvationarmy.org.uk",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/the-salvation-army-bournemouth.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/the-salvation-army-bournemouth.png",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-25T22:00:07.370Z",
-    "verifiedAt": "2026-03-25T22:00:07.370Z",
-    "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
-    "facebookUrl": "https://facebook.com/salvationarmyuk/",
-    "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
-    "slug": "the-salvation-army-malvern",
-    "name": "The Salvation Army",
-    "description": "The Salvation Army is a salvation_army church in Malvern. Explore their worship and community details before your first visit.",
-    "country": "United Kingdom",
-    "location": "Malvern",
-    "denomination": "Methodist",
-    "website": "https://www.salvationarmy.org.uk/",
-    "email": "Malvern@salvationarmy.org.uk",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/the-salvation-army-malvern.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/the-salvation-army-malvern.png",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-25T22:00:07.370Z",
-    "verifiedAt": "2026-03-25T22:00:07.370Z",
-    "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
-    "facebookUrl": "https://facebook.com/salvationarmyuk/",
-    "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
-    "slug": "the-salvation-army-newport",
-    "name": "The Salvation Army",
-    "description": "The Salvation Army is a salvation_army church in Newport. Explore their worship and community details before your first visit.",
-    "country": "United Kingdom",
-    "location": "Newport",
-    "denomination": "Methodist",
-    "website": "https://www.salvationarmy.org.uk/",
-    "email": "newport@salvationarmy.org.uk",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/the-salvation-army-newport.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/the-salvation-army-newport.png",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-25T22:00:07.370Z",
-    "verifiedAt": "2026-03-25T22:00:07.370Z",
-    "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
-    "facebookUrl": "https://facebook.com/salvationarmyuk/",
-    "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
-    "slug": "the-salvation-army-llanelli",
-    "name": "The Salvation Army",
-    "description": "The Salvation Army is a salvation_army church in Llanelli. Explore their worship and community details before your first visit.",
-    "country": "United Kingdom",
-    "location": "Llanelli",
-    "denomination": "Methodist",
-    "website": "https://www.salvationarmy.org.uk/",
-    "email": "llanelli@salvationarmy.org.uk",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/the-salvation-army-llanelli.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/the-salvation-army-llanelli.png",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-25T22:00:07.370Z",
-    "verifiedAt": "2026-03-25T22:00:07.370Z",
-    "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
-    "facebookUrl": "https://facebook.com/salvationarmyuk/",
-    "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
-    "slug": "the-salvation-army-shrewsbury",
-    "name": "The Salvation Army",
-    "description": "The Salvation Army is a salvation_army church in Shrewsbury. Explore their worship and community details before your first visit.",
-    "country": "United Kingdom",
-    "location": "Shrewsbury",
-    "denomination": "Methodist",
-    "website": "https://www.salvationarmy.org.uk/",
-    "email": "shrewsbury@salvationarmy.org.uk",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/the-salvation-army-shrewsbury.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/the-salvation-army-shrewsbury.png",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "youtubeChannelId": "UCumrUSuEb_oMLTVH6izs6mg",
-    "lastResearched": "2026-03-25T22:00:07.370Z",
-    "verifiedAt": "2026-03-25T22:00:07.370Z",
-    "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
-    "facebookUrl": "https://facebook.com/salvationarmyuk/",
-    "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
-    "slug": "the-salvation-army-penarth",
-    "name": "The Salvation Army",
-    "description": "The Salvation Army is a salvation_army church in Penarth. Explore their worship and community details before your first visit.",
-    "country": "United Kingdom",
-    "location": "Penarth",
-    "denomination": "Methodist",
-    "website": "https://www.salvationarmy.org.uk/",
-    "email": "penarth@salvationarmy.org.uk",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/the-salvation-army-penarth.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/the-salvation-army-penarth.png",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-25T22:00:07.370Z",
-    "verifiedAt": "2026-03-25T22:00:07.370Z",
-    "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
-    "facebookUrl": "https://facebook.com/salvationarmyuk/",
-    "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
-    "slug": "the-salvation-army-bristol",
-    "name": "The Salvation Army",
-    "description": "The Salvation Army is a salvation_army church in Bristol. Explore their worship and community details before your first visit.",
-    "country": "United Kingdom",
-    "location": "Bristol",
-    "denomination": "Methodist",
-    "website": "https://www.salvationarmy.org.uk/",
-    "email": "contactstaplehill@gmail.com",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/the-salvation-army-bristol.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/the-salvation-army-bristol.png",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "youtubeChannelId": "UCumrUSuEb_oMLTVH6izs6mg",
-    "lastResearched": "2026-03-25T22:00:07.370Z",
-    "verifiedAt": "2026-03-25T22:00:07.370Z",
-    "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/salvationarmyuk/",
-    "facebookUrl": "https://facebook.com/salvationarmyuk/",
-    "youtubeUrl": "https://www.youtube.com/user/salvationarmyvideo",
-    "slug": "the-salvation-army-cardiff",
-    "name": "The Salvation Army",
-    "description": "The Salvation Army is a salvation_army church in Cardiff. Explore their worship and community details before your first visit.",
-    "country": "United Kingdom",
-    "location": "Cardiff",
-    "denomination": "Methodist",
-    "website": "https://www.salvationarmy.org.uk/",
-    "email": "info@salvationarmy.org.uk",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/the-salvation-army-cardiff.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/the-salvation-army-cardiff.png",
+    "email": "aberystwyth@salvationarmy.org.uk",
+    "logo": "https://media.gospelchannel.com/logos/enrichments/the-salvation-army-aberystwyth.png",
+    "headerImage": "https://media.gospelchannel.com/heroes/the-salvation-army-aberystwyth.png",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCumrUSuEb_oMLTVH6izs6mg",
@@ -49276,7 +48400,7 @@
     "email": "worship@audaciouschurch.com",
     "logo": "https://media.gospelchannel.com/logos/churches/the-sound-of-audacious-church.png",
     "headerImage": "https://media.gospelchannel.com/heroes/the-sound-of-audacious-church.png",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/artist/7DeOhE2vpc4L1SebSy1gUe",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCNlNN2Wf3LTw5MqKuI2bUFg",
     "sourceKind": "discovered"
@@ -49842,6 +48966,20 @@
     "email": "elaine@childrenschristian.com",
     "logo": "https://media.gospelchannel.com/logos/enrichments/trinity-gospel-church.ico",
     "headerImage": "https://media.gospelchannel.com/heroes/trinity-gospel-church.jpg",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "trinity-international-bible-church",
+    "name": "Trinity International Bible Church",
+    "description": "",
+    "country": "Greece",
+    "location": "Athens",
+    "denomination": "Evangelical",
+    "website": "https://www.actsseventeen.com/",
+    "language": "English",
+    "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -50633,6 +49771,20 @@
     "sourceKind": "discovered"
   },
   {
+    "slug": "urban-life-church",
+    "name": "Urban Life Church",
+    "description": "",
+    "country": "Germany",
+    "location": "Hamburg",
+    "denomination": "Non-denominational",
+    "website": "",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
     "instagramUrl": "https://www.instagram.com/motion.church/",
     "facebookUrl": "https://www.facebook.com/MOTION.Utrecht/",
     "youtubeUrl": "https://www.youtube.com/@motionchurchutrecht",
@@ -50676,99 +49828,10 @@
     "email": "finance@vivechurch.org",
     "logo": "https://media.gospelchannel.com/logos/churches/vive-church.png",
     "headerImage": "https://media.gospelchannel.com/heroes/vive-church.png",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/artist/6qKHvs6N15YORScDTh84vy",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCmHm-s_eSC0QSnoqpWaEMqg",
     "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://instagram.com/vouschurch",
-    "facebookUrl": "https://facebook.com/vouschurch",
-    "youtubeUrl": "https://www.youtube.com/vouschurch",
-    "slug": "vous-worship",
-    "name": "VOUS Worship",
-    "description": "Miami-based worship with bilingual Spanish-English songs and contemporary urban style.",
-    "country": "USA",
-    "location": "Miami, Florida, United States",
-    "denomination": "Non-denominational",
-    "website": "https://vouschurch.com",
-    "logo": "https://media.gospelchannel.com/logos/churches/vous-worship.jpg",
-    "headerImage": "https://media.gospelchannel.com/heroes/vous-worship.jpg",
-    "spotifyUrl": "https://open.spotify.com/playlist/7iQw3l4ZZHoCmolMZgA6Lz",
-    "spotifyPlaylistIds": [
-      "7iQw3l4ZZHoCmolMZgA6Lz"
-    ],
-    "additionalPlaylists": [
-      "4dWWiI1McxTP70Fe47hXXR"
-    ],
-    "musicStyle": [
-      "contemporary worship"
-    ],
-    "youtubeChannelId": "UCxKwE1LggfLlqJzLqLQhXFg",
-    "youtubeVideos": [
-      {
-        "title": "Give Me Jesus — VOUS Worship (Live From The Temple House)",
-        "videoId": "fcxUNzsdLT0",
-        "channelTitle": "VOUS Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/fcxUNzsdLT0/hqdefault.jpg"
-      },
-      {
-        "title": "\"I Need Revival\" Visual Album: Live From The Temple House — VOUS Worship",
-        "videoId": "ueiWBjj3HXw",
-        "channelTitle": "VOUS Church",
-        "thumbnailUrl": "https://i.ytimg.com/vi/ueiWBjj3HXw/hqdefault.jpg"
-      },
-      {
-        "title": "Up On This Rock — VOUS Worship (Official Music Video)",
-        "videoId": "5mFWxoHL5RM",
-        "channelTitle": "VOUS Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/5mFWxoHL5RM/hqdefault.jpg"
-      },
-      {
-        "title": "Shelter In — VOUS Worship (Live From The Temple House)",
-        "videoId": "jUnyHptnsRo",
-        "channelTitle": "VOUS Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/jUnyHptnsRo/hqdefault.jpg"
-      },
-      {
-        "title": "Awestruck — VOUS Worship (Official Music Video)",
-        "videoId": "6Sy07eu1U3k",
-        "channelTitle": "VOUS Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/6Sy07eu1U3k/hqdefault.jpg"
-      },
-      {
-        "title": "When You Speak — VOUS Worship (Live From The Temple House)",
-        "videoId": "zVpDFHJtc_U",
-        "channelTitle": "VOUS Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/zVpDFHJtc_U/hqdefault.jpg"
-      },
-      {
-        "title": "VOUS Worship — Worship Works ft. Ryan Horton (Official Music Video) — Live from VOUSCon",
-        "videoId": "194g_xnKlmo",
-        "channelTitle": "VOUS Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/194g_xnKlmo/hqdefault.jpg"
-      },
-      {
-        "title": "Through — VOUS Worship (Official Music Video)",
-        "videoId": "uiJskv_ZjDQ",
-        "channelTitle": "VOUS Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/uiJskv_ZjDQ/hqdefault.jpg"
-      },
-      {
-        "title": "Loyal (OMG) — VOUS Worship (Official Live Performance)",
-        "videoId": "ZHWNHLeyHoM",
-        "channelTitle": "VOUS Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/ZHWNHLeyHoM/hqdefault.jpg"
-      },
-      {
-        "title": "VOUS Worship — One Day (Official Music Video) — Live from VOUSCon",
-        "videoId": "vtmetDXkA5c",
-        "channelTitle": "VOUS Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/vtmetDXkA5c/hqdefault.jpg"
-      }
-    ],
-    "lastResearched": "2026-02-27T00:00:00.000Z",
-    "sourceKind": "manual"
   },
   {
     "instagramUrl": "https://www.instagram.com/valenciachurchscv/",
@@ -50963,101 +50026,6 @@
     "lastResearched": "2026-03-29T22:05:05.769Z",
     "verifiedAt": "2026-03-29T22:05:05.769Z",
     "sourceKind": "discovered"
-  },
-  {
-    "slug": "vertical-worship",
-    "name": "Vertical Worship",
-    "description": "Harvest Bible Chapel's worship team creating powerful contemporary congregational songs.",
-    "country": "USA",
-    "location": "Rolling Meadows, Illinois, United States",
-    "denomination": "Non-denominational",
-    "founded": 2012,
-    "website": "https://verticalworship.com",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/heroes/vertical-worship.jpg",
-    "spotifyUrl": "https://open.spotify.com/playlist/1N5Y6P44BFYE2u2xYbPZRT",
-    "spotifyPlaylistIds": [
-      "1N5Y6P44BFYE2u2xYbPZRT"
-    ],
-    "additionalPlaylists": [
-      "0LzuiVxgFRBcgXJ2GSTw3y",
-      "1rI7bmU2OkKwP3DLkIllzD",
-      "6gk6vRlJTDQnXkU4IbcZCX"
-    ],
-    "musicStyle": [
-      "contemporary worship",
-      "contemporary Christian"
-    ],
-    "notableArtists": [
-      "Andi Rozier",
-      "Jake France",
-      "Lauren Smith",
-      "Judd Harris"
-    ],
-    "youtubeVideos": [
-      {
-        "title": "Vertical Worship - Yes I Will (Official Lyric Video)",
-        "videoId": "NrTv39-lG4M",
-        "channelTitle": "Vertical Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/NrTv39-lG4M/hqdefault.jpg"
-      },
-      {
-        "title": "Vertical Worship - Faithful Now (Live)",
-        "videoId": "9YexUJ2WHik",
-        "channelTitle": "Vertical Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/9YexUJ2WHik/hqdefault.jpg"
-      },
-      {
-        "title": "Vertical Worship - Spirit of the Living God (Official Video)",
-        "videoId": "ogGOlGswStA",
-        "channelTitle": "Vertical Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/ogGOlGswStA/hqdefault.jpg"
-      },
-      {
-        "title": "Vertical Worship: Build An Altar (Live)",
-        "videoId": "DZK_vOti7OQ",
-        "channelTitle": "Vertical Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/DZK_vOti7OQ/hqdefault.jpg"
-      },
-      {
-        "title": "Vertical Worship - \"Exalted Over All\" (Official Lyric Video)",
-        "videoId": "WrlN8Yjl6PQ",
-        "channelTitle": "Vertical Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/WrlN8Yjl6PQ/hqdefault.jpg"
-      },
-      {
-        "title": "Vertical Worship - Strong God (Live Performance Video)",
-        "videoId": "1hig3RpyR3M",
-        "channelTitle": "Vertical Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/1hig3RpyR3M/hqdefault.jpg"
-      },
-      {
-        "title": "Vertical Worship - Worthy, Worthy (Live Performance Video)",
-        "videoId": "NA1mOQJouRg",
-        "channelTitle": "Vertical Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/NA1mOQJouRg/hqdefault.jpg"
-      },
-      {
-        "title": "Vertical Worship - Over All I Know (Live at the Planetarium)",
-        "videoId": "XhqR1-cP5Io",
-        "channelTitle": "Vertical Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/XhqR1-cP5Io/hqdefault.jpg"
-      },
-      {
-        "title": "How Great Is The Love (Live)",
-        "videoId": "CqcWrSh0LZI",
-        "channelTitle": "Vertical Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/CqcWrSh0LZI/hqdefault.jpg"
-      },
-      {
-        "title": "Vertical Worship - Exalted Over All",
-        "videoId": "HqnRj1N4blA",
-        "channelTitle": "Vertical Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/HqnRj1N4blA/hqdefault.jpg"
-      }
-    ],
-    "lastResearched": "2026-02-27T00:00:00.000Z",
-    "sourceKind": "manual"
   },
   {
     "instagramUrl": "https://www.instagram.com/vicenzabiblechurch",
@@ -51808,95 +50776,6 @@
     "sourceKind": "manual"
   },
   {
-    "slug": "vineyard-nordic-worship",
-    "name": "Vineyard Nordic Worship",
-    "description": "A movement of worshipers from Vineyard churches across all four Nordic countries. Writes and shares worship songs in Nordic languages.",
-    "country": "Sweden",
-    "location": "Nordic countries",
-    "denomination": "Vineyard",
-    "website": "https://www.vineyardnordic.org/",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/heroes/vineyard-nordic-worship.png",
-    "spotifyUrl": "https://open.spotify.com/playlist/7sQxMjkJCcMKdNwASbV6xv",
-    "spotifyPlaylistIds": [
-      "7sQxMjkJCcMKdNwASbV6xv"
-    ],
-    "additionalPlaylists": [
-      "7LbaoSarqbdPbRrGDrrs9P"
-    ],
-    "musicStyle": [
-      "acoustic worship",
-      "Swedish worship"
-    ],
-    "notableArtists": [
-      "Maria Lundbak Hinge"
-    ],
-    "youtubeVideos": [
-      {
-        "title": "Vineyard Nordic Worship - Worship Leaders Maria Lundbak Hinge and Sveinung Chercka-Simonsen",
-        "videoId": "Ne7d9goK3yg",
-        "channelTitle": "Vineyard in the Nordic Countries",
-        "thumbnailUrl": "https://i.ytimg.com/vi/Ne7d9goK3yg/hqdefault.jpg"
-      },
-      {
-        "title": "Come Do Your Work - Live ",
-        "videoId": "TZSlNDU0nwA",
-        "channelTitle": " Vineyard Nordic Youth ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/TZSlNDU0nwA/hqdefault.jpg"
-      },
-      {
-        "title": "Everything's Beautiful ",
-        "videoId": "XgGB1mETjcQ",
-        "channelTitle": " Vineyard Nordic Youth ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/XgGB1mETjcQ/hqdefault.jpg"
-      },
-      {
-        "title": "Because of You ",
-        "videoId": "vdLbatm-4xI",
-        "channelTitle": " Vineyard Nordic Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/vdLbatm-4xI/hqdefault.jpg"
-      },
-      {
-        "title": "Love Like You Do ",
-        "videoId": "oB2BeGrhnO0",
-        "channelTitle": " Vineyard Nordic Youth ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/oB2BeGrhnO0/hqdefault.jpg"
-      },
-      {
-        "title": "Nothing You Can't Do ",
-        "videoId": "u_0sghDMi_k",
-        "channelTitle": " Vineyard Nordic Youth ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/u_0sghDMi_k/hqdefault.jpg"
-      },
-      {
-        "title": "This Is Our Surrender ",
-        "videoId": "L6PlEGdbCiE",
-        "channelTitle": " Copenhagen Vineyard ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/L6PlEGdbCiE/hqdefault.jpg"
-      },
-      {
-        "title": "Mystery ",
-        "videoId": "3aQKZAARZOI",
-        "channelTitle": " Vineyard Nordic Youth ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/3aQKZAARZOI/hqdefault.jpg"
-      },
-      {
-        "title": "I Return to the Cross ",
-        "videoId": "1KEBtJbxr64",
-        "channelTitle": " Copenhagen Vineyard ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/1KEBtJbxr64/hqdefault.jpg"
-      },
-      {
-        "title": "Dry Bones ",
-        "videoId": "OK-pN3Xznfk",
-        "channelTitle": " Vineyard Nordic Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/OK-pN3Xznfk/hqdefault.jpg"
-      }
-    ],
-    "lastResearched": "2026-02-28T00:00:00.000Z",
-    "sourceKind": "manual"
-  },
-  {
     "slug": "vineyard-sao-paulo",
     "name": "Vineyard Sao Paulo",
     "description": "Vineyard Sao Paulo is part of the Vineyard family, a global church movement bringing people together through worship, community, and biblical teaching.",
@@ -52005,6 +50884,34 @@
     "sourceKind": "discovered"
   },
   {
+    "slug": "vive-church-milano",
+    "name": "Vive Church Milano",
+    "description": "",
+    "country": "Italy",
+    "location": "Milan",
+    "denomination": "Charismatic",
+    "website": "https://www.vivechurch.it/vivemilano",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
+    "slug": "vive-church-roma",
+    "name": "Vive Church Roma",
+    "description": "",
+    "country": "Italy",
+    "location": "Rome",
+    "denomination": "Charismatic",
+    "website": "https://www.vivechurch.it/viveroma",
+    "language": "English",
+    "logo": "",
+    "spotifyUrl": "",
+    "spotifyPlaylistIds": [],
+    "sourceKind": "discovered"
+  },
+  {
     "slug": "voice-of-christ-full-gospel-church-inc-of-san-francsico",
     "name": "Voice of Christ Full Gospel Church Inc. of San Francsico",
     "description": "",
@@ -52078,8 +50985,10 @@
     "website": "https://vouschurch.com",
     "logo": "https://media.gospelchannel.com/logos/enrichments/vous-church.jpg",
     "headerImage": "https://media.gospelchannel.com/heroes/vous-church.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
+    "spotifyUrl": "https://open.spotify.com/playlist/7iQw3l4ZZHoCmolMZgA6Lz",
+    "spotifyPlaylistIds": [
+      "7iQw3l4ZZHoCmolMZgA6Lz"
+    ],
     "musicStyle": [
       "contemporary worship"
     ],
@@ -52319,7 +51228,7 @@
     "email": "info@citychurchwarsaw.org",
     "logo": "",
     "headerImage": "https://media.gospelchannel.com/heroes/warsaw-city-church.jpg",
-    "spotifyUrl": "",
+    "spotifyUrl": "https://open.spotify.com/playlist/0eAtMxSBU3jYObyH1Y8RJK",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
     "verifiedAt": "2026-03-29T22:05:05.769Z",
@@ -53105,21 +52014,6 @@
     "sourceKind": "discovered"
   },
   {
-    "slug": "worship-music",
-    "name": "Worship & Music",
-    "description": "",
-    "country": "Nigeria",
-    "denomination": "Non-denominational",
-    "website": "https://www.thecathedrallagos.org/worship-and-music",
-    "email": "cathedral@thecathedrallagos.org",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/worship-music.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/worship-music.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-13T00:00:00.000Z",
-    "sourceKind": "discovered"
-  },
-  {
     "slug": "worship-center",
     "name": "Worship Center",
     "description": "",
@@ -53262,121 +52156,6 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
-  },
-  {
-    "slug": "worship-productions",
-    "name": "Worship Productions",
-    "description": "",
-    "country": "United Kingdom",
-    "location": "Leeds",
-    "website": "http://worshipproductions.org/",
-    "email": "customerservice@worshipproductions.org",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/worship-productions.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/worship-productions.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/worshiptogether/",
-    "facebookUrl": "https://www.facebook.com/worshiptogether",
-    "youtubeUrl": "https://www.youtube.com/channel/UCsTOvGh6rj41bHRkq2ZpIiQ",
-    "slug": "worship-together",
-    "name": "Worship Together",
-    "description": "Collective featuring multiple worship leaders and congregational resources.",
-    "country": "USA",
-    "location": "Nashville, Tennessee, United States",
-    "denomination": "Non-denominational",
-    "founded": 2013,
-    "website": "https://worshiptogether.com",
-    "logo": "https://media.gospelchannel.com/logos/churches/worship-together.svg",
-    "headerImage": "https://media.gospelchannel.com/heroes/worship-together.jpg",
-    "spotifyUrl": "https://open.spotify.com/playlist/6zGU9fSloTDCzjCNMF6Zzr",
-    "spotifyPlaylistIds": [
-      "6zGU9fSloTDCzjCNMF6Zzr"
-    ],
-    "additionalPlaylists": [
-      "7vVUcCvRzApJerz1OJ9ojT",
-      "3Ftt1a7bCOpilNHxzvtcre",
-      "0UueGt6OUpSaNPVM2tuvm1"
-    ],
-    "musicStyle": [
-      "contemporary worship"
-    ],
-    "notableArtists": [
-      "Chris Tomlin",
-      "Cody Carnes",
-      "Matt Redman",
-      "Bethel Music",
-      "Gateway Worship",
-      "UPPERROOM",
-      "Passion"
-    ],
-    "youtubeChannelId": "UCsTOvGh6rj41bHRkq2ZpIiQ",
-    "youtubeVideos": [
-      {
-        "title": "Chris Tomlin // Full Worship Set // Live From Worship Together Conference",
-        "videoId": "gIWCDgNt5ww",
-        "channelTitle": "Worship Together",
-        "thumbnailUrl": "https://i.ytimg.com/vi/gIWCDgNt5ww/hqdefault.jpg"
-      },
-      {
-        "title": "Worship Together Classics ",
-        "videoId": "N3af7du2Vqw",
-        "channelTitle": " Worship Together",
-        "thumbnailUrl": "https://i.ytimg.com/vi/N3af7du2Vqw/hqdefault.jpg"
-      },
-      {
-        "title": "One And Only // TAYA feat. Cody Carnes // Worship Together Session",
-        "videoId": "oxDPrtD8jDI",
-        "channelTitle": "Worship Together",
-        "thumbnailUrl": "https://i.ytimg.com/vi/oxDPrtD8jDI/hqdefault.jpg"
-      },
-      {
-        "title": "Worthy Of It All + Holy Forever // Danny Gokey // Worship Together Sessions",
-        "videoId": "EERoSPXJrq4",
-        "channelTitle": "Worship Together",
-        "thumbnailUrl": "https://i.ytimg.com/vi/EERoSPXJrq4/hqdefault.jpg"
-      },
-      {
-        "title": "Holy Forever // Chris Tomlin // Worship Together Session",
-        "videoId": "b0B3VEsHz7U",
-        "channelTitle": "Worship Together",
-        "thumbnailUrl": "https://i.ytimg.com/vi/b0B3VEsHz7U/hqdefault.jpg"
-      },
-      {
-        "title": "Songs Of Gratitude & Thanksgiving",
-        "videoId": "FU0QEhprQk8",
-        "channelTitle": "Worship Together",
-        "thumbnailUrl": "https://i.ytimg.com/vi/FU0QEhprQk8/hqdefault.jpg"
-      },
-      {
-        "title": "Nothing Else + The Heart of Worship ",
-        "videoId": "llJ5QVT_mto",
-        "channelTitle": " Kari Jobe ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/llJ5QVT_mto/hqdefault.jpg"
-      },
-      {
-        "title": "Best of Getty Music ",
-        "videoId": "huOKB5MNWbk",
-        "channelTitle": " Worship Together Session",
-        "thumbnailUrl": "https://i.ytimg.com/vi/huOKB5MNWbk/hqdefault.jpg"
-      },
-      {
-        "title": "NB Worship ",
-        "videoId": "nbHQLszars4",
-        "channelTitle": " Acoustic Sessions #1",
-        "thumbnailUrl": "https://i.ytimg.com/vi/nbHQLszars4/hqdefault.jpg"
-      },
-      {
-        "title": "The Lord Will Provide / What A Friend We Have In Jesus ",
-        "videoId": "t1v5uyIk2hc",
-        "channelTitle": "  Canaan Baca ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/t1v5uyIk2hc/hqdefault.jpg"
-      }
-    ],
-    "lastResearched": "2026-02-27T00:00:00.000Z",
-    "sourceKind": "manual"
   },
   {
     "instagramUrl": "https://www.instagram.com/worshipandwordgospelcentercork/",
@@ -53529,100 +52308,6 @@
     "youtubeChannelId": "UCWD1r9rnj0PRdkkuCz04XCw",
     "youtubeVideos": [],
     "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/youngandfree/",
-    "facebookUrl": "https://www.facebook.com/HillsongYoungAndFree",
-    "youtubeUrl": "https://www.youtube.com/channel/UCkz279yr_NLgqMguzVo8udw",
-    "slug": "young-free",
-    "name": "Young & Free",
-    "description": "Hillsong's youth movement with high-energy, pop-influenced worship.",
-    "country": "Australia",
-    "location": "Sydney, New South Wales, Australia",
-    "denomination": "Pentecostal",
-    "founded": 2012,
-    "website": "https://hillsong.com/youngandfree/",
-    "logo": "https://media.gospelchannel.com/logos/churches/young-free.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/young-free.jpg",
-    "spotifyUrl": "https://open.spotify.com/playlist/4Q9nKy9wLQM5bCLKb3oClr",
-    "spotifyPlaylistIds": [
-      "4Q9nKy9wLQM5bCLKb3oClr"
-    ],
-    "additionalPlaylists": [
-      "4yd3mbetdrxH4b241duXg9",
-      "1RdTMYuE2O2yXz3iKYJIqV",
-      "3ZgjPc6Gd0rsuVnucy5zg7",
-      "3AZiuNpBKvnWpKJ00VNwoO"
-    ],
-    "musicStyle": [
-      "contemporary worship",
-      "Christian EDM"
-    ],
-    "youtubeChannelId": "UCkz279yr_NLgqMguzVo8udw",
-    "youtubeVideos": [
-      {
-        "title": "Phenomena (DA DA) [Official Live Video] - Hillsong Young & Free",
-        "videoId": "6UQRYaKLQZo",
-        "channelTitle": "Young & Free",
-        "thumbnailUrl": "https://i.ytimg.com/vi/6UQRYaKLQZo/hqdefault.jpg"
-      },
-      {
-        "title": "III (Live at Hillsong Conference) - Hillsong Young & Free",
-        "videoId": "qTAcq-Z_l9A",
-        "channelTitle": "Young & Free",
-        "thumbnailUrl": "https://i.ytimg.com/vi/qTAcq-Z_l9A/hqdefault.jpg"
-      },
-      {
-        "title": "House Of The Lord (Official Live Video) - Hillsong Young & Free",
-        "videoId": "5IsHCZmLGRY",
-        "channelTitle": "Young & Free",
-        "thumbnailUrl": "https://i.ytimg.com/vi/5IsHCZmLGRY/hqdefault.jpg"
-      },
-      {
-        "title": "As I Am (Live) - Hillsong Young & Free",
-        "videoId": "PNx6bMH41Tk",
-        "channelTitle": "Young & Free",
-        "thumbnailUrl": "https://i.ytimg.com/vi/PNx6bMH41Tk/hqdefault.jpg"
-      },
-      {
-        "title": "Song For His Presence (Official Live Video) - Hillsong Young & Free",
-        "videoId": "ZEHLr4S7XvE",
-        "channelTitle": "Young & Free",
-        "thumbnailUrl": "https://i.ytimg.com/vi/ZEHLr4S7XvE/hqdefault.jpg"
-      },
-      {
-        "title": "First Love (Live at Hillsong Conference) - Hillsong Young & Free",
-        "videoId": "MYqFcI-V50M",
-        "channelTitle": "Young & Free",
-        "thumbnailUrl": "https://i.ytimg.com/vi/MYqFcI-V50M/hqdefault.jpg"
-      },
-      {
-        "title": "Real Love (Live) - Hillsong Young & Free",
-        "videoId": "t0kmvXlDBYI",
-        "channelTitle": "Young & Free",
-        "thumbnailUrl": "https://i.ytimg.com/vi/t0kmvXlDBYI/hqdefault.jpg"
-      },
-      {
-        "title": "Just Jesus (Live at Hillsong Conference) - Hillsong Young & Free",
-        "videoId": "bLbUgCkLu1M",
-        "channelTitle": "Young & Free",
-        "thumbnailUrl": "https://i.ytimg.com/vi/bLbUgCkLu1M/hqdefault.jpg"
-      },
-      {
-        "title": "Indescribable (Live) - Hillsong Young & Free",
-        "videoId": "zc_Ohvo86bA",
-        "channelTitle": "Young & Free",
-        "thumbnailUrl": "https://i.ytimg.com/vi/zc_Ohvo86bA/hqdefault.jpg"
-      },
-      {
-        "title": "Lord Send Revival (Live) ",
-        "videoId": "U5EAHk3uDXs",
-        "channelTitle": " Hillsong Young & Free",
-        "thumbnailUrl": "https://i.ytimg.com/vi/U5EAHk3uDXs/hqdefault.jpg"
-      }
-    ],
-    "lastResearched": "2026-02-27T00:00:00.000Z",
-    "sourceKind": "manual"
   },
   {
     "instagramUrl": "https://www.instagram.com/young_church_berlin/",
