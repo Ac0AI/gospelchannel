@@ -88,73 +88,51 @@ export function HeroSearch({ churches = [], surpriseSlugs = [], variant = "hero"
   }
 
   return (
-    <div className="relative w-full max-w-md">
-      <form onSubmit={handleSubmit} className="flex gap-2">
-        <div className="group/search relative min-w-0 flex-1">
-          {/* Holy shimmer — warm glow that moves slowly around the border */}
-          <div className={`pointer-events-none absolute -inset-[2px] rounded-full blur-[2px] transition-opacity group-focus-within/search:opacity-100 ${
-            isHero ? "opacity-70" : "opacity-50"
+    <div className="relative w-full max-w-lg sm:max-w-xl">
+      <form onSubmit={handleSubmit} className={`group/search flex items-center gap-0 rounded-full border transition-colors ${
+        isHero
+          ? "border-white/20 bg-white/15 backdrop-blur-sm focus-within:border-white/40"
+          : "border-espresso/12 bg-white shadow-sm focus-within:border-rose-gold focus-within:shadow-md"
+      }`}>
+        <svg
+          className={`pointer-events-none ml-5 h-4 w-4 shrink-0 ${isHero ? "text-white/50" : "text-warm-brown/40"}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+        </svg>
+        <input
+          ref={inputRef}
+          type="text"
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setOpen(true);
+          }}
+          onFocus={() => setOpen(true)}
+          onBlur={() => setTimeout(() => setOpen(false), 200)}
+          placeholder="Search churches..."
+          className={`min-w-0 flex-1 bg-transparent py-4 pl-3 pr-2 text-base outline-none ${
+            isHero
+              ? "text-white placeholder:text-white/50"
+              : "text-espresso placeholder:text-warm-brown/40"
           }`}
-            style={{
-              background: isHero
-                ? "conic-gradient(from var(--shimmer-angle, 0deg), transparent 0%, rgba(255,190,130,0.5) 10%, rgba(255,160,100,0.7) 15%, transparent 25%, transparent 50%, rgba(255,200,150,0.4) 60%, rgba(255,170,120,0.6) 65%, transparent 75%, transparent 100%)"
-                : "conic-gradient(from var(--shimmer-angle, 0deg), transparent 0%, rgba(194,120,80,0.5) 10%, rgba(180,100,60,0.7) 15%, transparent 25%, transparent 50%, rgba(194,130,90,0.4) 60%, rgba(180,110,70,0.6) 65%, transparent 75%, transparent 100%)",
-              animation: "holy-shimmer 6s linear infinite",
-            }}
-          />
-          <svg
-            className={`pointer-events-none absolute left-4 top-1/2 z-10 h-4 w-4 -translate-y-1/2 ${isHero ? "text-white/50" : "text-warm-brown/50"}`}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-          </svg>
-          <input
-            ref={inputRef}
-            type="text"
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setOpen(true);
-            }}
-            onFocus={() => setOpen(true)}
-            onBlur={() => setTimeout(() => setOpen(false), 200)}
-            placeholder="Search churches..."
-            className={`relative w-full rounded-full py-3 pl-11 pr-4 text-base outline-none transition-colors sm:text-sm ${
-              isHero
-                ? "border border-white/20 bg-white/15 text-white placeholder:text-white/50 backdrop-blur-sm focus:border-white/30 focus:ring-2 focus:ring-amber-200/15"
-                : "border border-rose-200/80 bg-white text-espresso shadow-sm placeholder:text-warm-brown/50 focus:border-rose-gold focus:ring-2 focus:ring-rose-gold/20"
-            }`}
-          />
-        </div>
+        />
         <button
           type="submit"
-          className="shrink-0 rounded-full bg-rose-gold px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-rose-gold-deep hover:shadow-md"
+          className="mr-1.5 shrink-0 rounded-full bg-rose-gold px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-rose-gold-deep"
         >
           Find
         </button>
-        {canSurprise && (
-          <button
-            type="button"
-            onClick={handleSurprise}
-            className={`hidden shrink-0 rounded-full px-4 py-3 text-sm font-semibold transition-all duration-200 sm:inline-flex ${
-              isHero
-                ? "border border-white/20 text-white/70 backdrop-blur-sm hover:bg-white/10 hover:text-white"
-                : "border border-rose-200/80 text-warm-brown hover:bg-blush-light hover:text-espresso"
-            }`}
-          >
-            Surprise me
-          </button>
-        )}
       </form>
       {canSurprise && (
         <button
           type="button"
           onClick={handleSurprise}
-          className={`mt-2 text-xs font-medium sm:hidden ${
-            isHero ? "text-white/60 hover:text-white" : "text-warm-brown hover:text-espresso"
+          className={`mt-3 w-full text-center text-sm font-medium tracking-wide ${
+            isHero ? "text-white/50 hover:text-white" : "text-warm-brown/50 hover:text-warm-brown"
           }`}
         >
           or surprise me →
