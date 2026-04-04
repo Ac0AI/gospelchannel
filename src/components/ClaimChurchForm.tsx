@@ -92,8 +92,7 @@ export function ClaimChurchForm({ slug, churchName }: Props) {
       <div className="rounded-3xl border border-rose-200/60 bg-white/80 p-8 shadow-sm backdrop-blur-sm">
         <h1 className="font-serif text-2xl font-bold text-espresso">Claim {churchName}</h1>
         <p className="mt-2 text-sm text-warm-brown">
-          Are you part of this church&apos;s leadership or worship team? Let us know and we&apos;ll verify your connection
-          so you can help keep the profile up to date.
+          Part of this church&apos;s leadership or worship team? Let us know so you can manage your page.
         </p>
         <p className="mt-2 text-xs text-muted-warm">
           We review all claims within 48 hours and will reach out via email.

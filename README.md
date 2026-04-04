@@ -1,105 +1,147 @@
 # GospelChannel.com
 
-Kuraterad gospel-streamingportal byggd med Next.js 16, OpenNext på Cloudflare Workers, Neon, YouTube Data API och Spotify Web API.
+Helping people find their way to the Lord - or just explore worship all over the world.
 
-## Node-version
+Curated gospel and worship discovery platform built with Next.js 16, OpenNext on Cloudflare Workers, Neon, Spotify, and YouTube.
 
-Projektet ska köras på **Node 22.x**.
+> Solo-maintained project, and my first open source project. This repository is public so people can report bugs, suggest improvements, and send small focused pull requests. I am still learning the open source side of things, so patience and clarity help a lot.
 
-- Lokalt: kör `nvm use` om du har `nvm` installerat. Repo:t innehåller `.nvmrc`.
-- Cloudflare/OpenNext-builden ska köras med `Node.js 22.x`. Nyare versioner kan ge build-fel med Next 16.
+## Status
 
-## Snabbstart
+- Production site: `https://gospelchannel.com`
+- Contributor language: English or Swedish is fine
+- Project direction is maintainer-led
+
+## What the app does
+
+- Browse curated church, worship, and gospel music content
+- Explore church pages with Spotify embeds and YouTube video grids
+- Submit church suggestions and ownership claims
+- Run scheduled content refresh jobs
+- Generate SEO assets such as `sitemap.xml`, `robots.txt`, and structured data
+
+## Stack
+
+- Next.js 16 (App Router)
+- OpenNext + Cloudflare Workers
+- Neon Postgres + Drizzle
+- Better Auth
+- Spotify Web API
+- YouTube Data API
+- Cloudflare R2 for media
+- PostHog for analytics
+
+## Local setup
+
+Prerequisites:
+
+- Node 22.x
+- npm
+
+If you use `nvm`, run:
 
 ```bash
-cd "/Users/dpr/Desktop/Egna Appar/Projekt/Gospelmigration"
 nvm use
-npm run setup
 ```
 
-Detta gör följande automatiskt:
-- skapar `.env.local` från `.env.example` (om den saknas)
-- installerar dependencies
-- kör `lint` och `build`
+Install and start:
 
-## Miljövariabler
+```bash
+npm install
+cp .env.example .env.local
+npm run dev
+```
 
-Fyll i dessa i `.env.local`:
+Helpful commands:
+
+```bash
+npm run lint
+npm run build
+npm run smoke
+npm run check:env
+```
+
+## Database (Neon)
+
+This project uses [Neon](https://neon.tech) serverless Postgres with Drizzle ORM.
+
+1. Create a free project at [neon.tech](https://neon.tech)
+2. Copy the connection strings into `.env.local`:
+   - `DATABASE_URL` - pooled connection string
+   - `DATABASE_URL_UNPOOLED` - direct connection (used by Drizzle migrations)
+3. Run migrations:
+   ```bash
+   npx drizzle-kit push
+   ```
+
+## Environment variables
+
+You do not need every external integration to read the code or work on docs and UI.
+
+Typical local development:
+
+- `NEXT_PUBLIC_SITE_URL`
+- `NEXT_PUBLIC_MEDIA_BASE_URL`
+- `BETTER_AUTH_URL`
+- `BETTER_AUTH_SECRET`
+- `DATABASE_URL`
+
+Needed for specific integrations and production-like flows:
+
 - `YOUTUBE_API_KEY`
 - `SPOTIFY_CLIENT_ID`
 - `SPOTIFY_CLIENT_SECRET`
 - `APIFY_TOKEN`
-- `DATABASE_URL`
-- `BETTER_AUTH_SECRET`
-- `BETTER_AUTH_URL`
-- `BETTER_AUTH_TRUSTED_ORIGINS`
-- `NEXT_PUBLIC_SITE_URL`
-- `NEXT_PUBLIC_MEDIA_BASE_URL`
-- `CRON_SECRET`
+- `ANTHROPIC_API_KEY`
+- `BREVO_API_KEY`
 - `ADMIN_EMAILS`
+- `CRON_SECRET`
 
-Valfritt:
-- `BREVO_API_KEY` för att skicka e-post när en claim verifieras
-- `RESEND_API_KEY` som alternativ mail-provider
-- `NEXT_PUBLIC_POSTHOG_KEY`
-- `NEXT_PUBLIC_POSTHOG_HOST`
+Notes:
 
-Kontrollera att allt är ifyllt:
+- `npm run build` uses offline mode for the content pipeline.
+- Full admin, mail, sync, and deployment flows need real service credentials.
+- Keep secrets in `.env.local`. Do not commit them.
+
+## Contributing
+
+Ideas, bug reports, and small PRs are welcome.
+
+If you want to help, the easiest path is:
+
+- open an issue
+- keep the idea or fix small
+- explain the problem in plain language
+
+Best ways to help:
+
+- Open an issue for bugs or feature ideas
+- Send focused PRs that solve one problem at a time
+- Include screenshots when changing UI
+- Update docs if behavior changes
+
+See `CONTRIBUTING.md` for the short version of how this repo is run.
+
+## Security
+
+Please do not post security issues publicly. See `SECURITY.md`.
+
+## Deployment
+
+The production app is deployed on Cloudflare Workers via OpenNext.
+Contributors usually do not need deployment access.
+
+Maintainer deploy command:
 
 ```bash
-npm run check:env
+npm run deploy
 ```
 
-## Lokala kommandon
+## Project notes
 
-```bash
-npm run dev         # starta lokalt
-npm run lint        # eslint
-npm run build       # produktionsbuild
-npm run check:data  # validera kyrk/kategori-data
-npm run churches:check  # verifiera approved church slugs mellan Neon och snapshot
-npm run churches:audit  # verifiera source-of-truth + playlist/campus-räkning
-npm run backfill:website-playlists -- --preview  # previewa säkra playlist-backfills från screening-cache
-npm run smoke       # starta dev-server + testa huvudrutter/API
-npm run discover:global -- --preview
-npm run screen:candidates -- --preview
-```
+- Spotify can require Extended Quota Mode for some external playlist access.
+- The app has manual data fallbacks in `src/data/manual/` for cases where API data is limited or unavailable.
 
-`discover:global` kör en quality-first intake via Apify Google Search, dedupar mot både `churches.json` och befintliga `church_candidates`, verifierar officiell host och försöker fylla `website`, `country`, `location` och officiell `contact_email` innan den sparar.
+## License
 
-`screen:candidates` granskar kandidatkön efter discovery och skriver `src/data/cache/church-candidate-screening.json` med verdicts, quality flags, header-bildsignal, officiell email och playlist-matchning för admin-review.
-
-`backfill:website-playlists` promotar bara Spotify playlist-URL:er som redan hittats på kyrkans website/social-länkar i screening-cachen till explicita playlist-fält på approved rows i `public.churches`. Kör sedan `node scripts/generate-churches-json.mjs` och `npm run churches:audit`.
-
-## Source of truth
-
-- `public.churches` i Neon är canonical source för approved church-data och explicita Spotify-fält.
-- `public.church_networks` + `public.church_campuses` i Neon är canonical source för network/campus-sidor.
-- `src/data/churches.json` är en genererad snapshot/fallback, inte write source.
-- `church_candidates`, `church_feedback`, `church_suggestions` och cache-filer under `src/data/cache/` är backlog eller arbetsdata, inte publik sanning.
-
-Detaljer och driftregler finns i [docs/data-source-of-truth.md](docs/data-source-of-truth.md).
-
-## Funktioner som finns implementerade
-
-- Hemsida med sektioner: Most Moved, Church Playlists, Staff Picks, känslo-/SEO-samlingar, trending
-- `/church` index + `/church/[slug]` med Spotify embed och YouTube-video-grid
-- `This Moved Me` reaktionssystem (cookie + IP-rate limit)
-- Databasdriven rate limiting och voting med in-memory fallback utan databas
-- Daglig cron-sync: `/api/cron/sync` (konfigurerad via Cloudflare cron trigger)
-- Sitemap + robots + JSON-LD
-- Tag-baserad cachning för relevanta routes
-
-## Deploy till Cloudflare
-
-1. Fyll i deploy-env i `.env.local` och Cloudflare-secrets/vars.
-2. Kör `npm run deploy`.
-3. Verifiera:
-   - `/`
-   - `/church`
-   - minst en `/church/[slug]`
-   - `/api/cron/sync?secret=DIN_CRON_SECRET`
-
-## Viktigt för Spotify (2026)
-
-Ansök om **Extended Quota Mode** i Spotify Developer Dashboard. Utan detta kan externa publika playlist-items vara blockerade. Appen har fallback till manuella JSON-listor i `src/data/manual/`.
+MIT. See `LICENSE`.

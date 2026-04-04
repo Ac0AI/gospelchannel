@@ -88,14 +88,13 @@ export default async function HomePage() {
       {/* Hero */}
       <section className="text-center">
         <p className="text-sm italic text-warm-brown/80">
-          &ldquo;Praise the Lord.&rdquo;{" "}
-          <span className="not-italic">— Psalm 150:6</span>
+          People find God in different ways.
         </p>
         <h1 className="mt-2 font-serif text-3xl font-semibold text-espresso sm:text-4xl lg:text-5xl">
-          Find a church where you&apos;ll fit right in
+          Find yours.
         </h1>
         <p className="mx-auto mt-3 max-w-lg text-base text-warm-brown">
-          Compare worship style, tradition, language, and service details before your first visit.
+          Listen to worship. Watch sermons. Find where you belong.
         </p>
         <div className="mx-auto mt-6 flex justify-center sm:mt-8">
           <HeroSearch surpriseSlugs={surpriseSlugs} variant="page" />
@@ -155,16 +154,16 @@ export default async function HomePage() {
 
       {/* Suggest CTA */}
       <section className="rounded-2xl border border-rose-200/60 bg-gradient-to-r from-blush-light/50 to-white px-5 py-5 text-center sm:px-8 sm:py-6">
-        <h2 className="font-serif text-xl font-semibold text-espresso sm:text-2xl">Don&apos;t see your church?</h2>
+        <h2 className="font-serif text-xl font-semibold text-espresso sm:text-2xl">Your church should be here</h2>
         <p className="mx-auto mt-2 max-w-md text-sm text-warm-brown">
-          If your church isn&apos;t here yet, let us know. A stronger directory means better first-visit confidence for the next person looking.
+          People are already searching for a church like yours. Add it so the next person finds the right information.
         </p>
         <Link
           href="/church/suggest"
           prefetch={false}
           className="mt-4 inline-flex rounded-full bg-rose-gold px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-rose-gold-deep hover:shadow-md"
         >
-          Suggest a church
+          Add a church
         </Link>
       </section>
     </div>

@@ -6,7 +6,7 @@ import { getChurchStatsAsync } from "@/lib/content";
 export const metadata: Metadata = {
   title: "For Churches",
   description:
-    "Help first-time visitors choose your church with confidence. Claim your page, verify your details, and strengthen your church channel on GospelChannel.",
+    "People are looking for a church like yours. They'll hear your worship and watch your sermons before they visit. Claim your free page on GospelChannel.",
   alternates: { canonical: "https://gospelchannel.com/for-churches" },
 };
 
@@ -47,10 +47,10 @@ export default async function ForChurchesPage() {
       <section className="text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-mauve">For churches</p>
         <h1 className="mx-auto mt-3 max-w-2xl font-serif text-3xl font-semibold leading-tight text-espresso sm:text-5xl">
-          Help first-time visitors choose your church with confidence
+          People are looking for a church like yours
         </h1>
         <p className="mx-auto mt-5 max-w-lg text-base leading-relaxed text-warm-brown sm:text-lg">
-          Claim your page, verify your details, and strengthen your church channel with clearer service info, playlists, and trust signals before people arrive. <strong className="text-espresso">Completely free.</strong>
+          They&apos;ll hear your worship and watch your sermons before they ever visit. Make sure what they find is right. <strong className="text-espresso">Completely free.</strong>
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link
@@ -89,7 +89,7 @@ export default async function ForChurchesPage() {
         <div className="mb-8 text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-mauve">Before and after</p>
           <h2 className="mt-2 font-serif text-2xl font-semibold text-espresso sm:text-3xl">
-            See how a stronger church channel reduces first-visit uncertainty
+            What visitors see today vs what they could see
           </h2>
         </div>
 
@@ -253,7 +253,7 @@ export default async function ForChurchesPage() {
         <div className="mb-8 text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-mauve">Get started</p>
           <h2 className="mt-2 font-serif text-2xl font-semibold text-espresso sm:text-3xl">
-            Three steps to a page worth sharing
+            Three steps. Then let your church speak for itself.
           </h2>
         </div>
 
@@ -261,18 +261,18 @@ export default async function ForChurchesPage() {
           {[
             {
               step: "1",
-              title: "Find or submit",
-              body: "Search the directory for your church. If it is not listed yet, submit it with your website, city, and a short description.",
+              title: "Find or add your church",
+              body: "Search for your church. If it's not listed yet, add it with your website and a short description.",
             },
             {
               step: "2",
-              title: "Claim and verify",
-              body: "Hit the claim button on your page. Add service times, address, contact email, and any Spotify playlists or YouTube channels.",
+              title: "Make it yours",
+              body: "Claim your page. Add your Spotify playlists, YouTube channel, service times, and anything that shows who you are.",
             },
             {
               step: "3",
-              title: "Share with confidence",
-              body: "Your verified page gives first-time visitors a clearer channel to understand your church before Sunday.",
+              title: "Let people find you",
+              body: "Visitors hear your music and watch your sermons before Sunday. They arrive already knowing this is their kind of place.",
             },
           ].map((item) => (
             <div key={item.step} className="text-center">

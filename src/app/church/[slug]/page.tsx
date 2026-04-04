@@ -10,7 +10,8 @@ import { PlayAllButton } from "@/components/PlayAllButton";
 import { ServiceTimesDisplay } from "@/components/ServiceTimesDisplay";
 import { SpotifyEmbedCard } from "@/components/SpotifyEmbedCard";
 import { SpotifyPlaylistShelf } from "@/components/SpotifyPlaylistShelf";
-import { PrayerForm } from "@/components/PrayerForm";
+import { ChurchPagePrayerSection } from "@/components/ChurchPagePrayerSection";
+import { getPrayers } from "@/lib/prayer";
 import { HelpImproveCard, type MissingField } from "@/components/HelpImproveCard";
 import { ClaimInterstitial, ClaimFooterLink } from "@/components/ClaimSection";
 import { VerifiedChurchBadge } from "@/components/VerifiedChurchBadge";
@@ -44,6 +45,17 @@ type ChurchPageProps = {
 };
 
 export const revalidate = 300;
+
+async function ChurchPrayerSection({ churchSlug, churchName }: { churchSlug: string; churchName: string }) {
+  const prayers = await getPrayers({ churchSlug, limit: 5 });
+  return (
+    <ChurchPagePrayerSection
+      churchSlug={churchSlug}
+      churchName={churchName}
+      initialPrayers={prayers}
+    />
+  );
+}
 
 /* ─── helpers ─── */
 
@@ -383,8 +395,8 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      {/* ━━━ 1. FULL-BLEED HERO ━━━ */}
-      <section className="relative flex min-h-[55vh] flex-col overflow-hidden bg-gradient-to-br from-[#1d0f0b] via-[#3b2016] to-[#7b4a34] sm:min-h-[60vh]">
+      {/* ━━━ 1. COMPACT HERO ━━━ */}
+      <section className="relative flex min-h-[35vh] flex-col overflow-hidden bg-gradient-to-br from-[#1d0f0b] via-[#3b2016] to-[#7b4a34] sm:min-h-[40vh]">
         {heroImage && (
           <>
             <HeroImage src={heroImage} className="absolute inset-0 h-full w-full object-cover object-[center_20%]" />
@@ -405,134 +417,100 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
         </nav>
 
         {/* Content anchored to bottom */}
-        <div className="relative z-10 mt-auto px-4 pb-10 pt-20 sm:px-6 sm:pb-14 lg:px-8 lg:pb-16">
+        <div className="relative z-10 mt-auto px-4 pb-8 pt-16 sm:px-6 sm:pb-10 lg:px-8 lg:pb-12">
           <div className="mx-auto max-w-7xl">
-            <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-              {/* Left: name, description, CTAs */}
-              <div className="max-w-3xl flex-1">
-                <div className="flex items-center gap-4">
-                  {churchLogo && (
-                    <HeroImage src={churchLogo} className="h-14 w-14 shrink-0 rounded-full border-2 border-white/30 object-cover shadow-lg sm:h-16 sm:w-16" />
-                  )}
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h1 className="text-3xl font-black leading-tight text-white sm:text-4xl lg:text-5xl">
-                        {displayName}
-                      </h1>
-                      <Suspense fallback={null}>
-                        <VerifiedChurchBadge churchSlug={church.slug} />
-                      </Suspense>
-                      {isCampus && network && (
-                        <Link href={`/network/${network.slug}`} className="inline-flex items-center rounded-full bg-white/15 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/25">
-                          Part of {network.name}
-                        </Link>
-                      )}
-                    </div>
-                    <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-white/50">
-                      {church.country}{styles[0] && ` · ${styles[0]}`}{allPlaylists.length > 0 && ` · ${allPlaylists.length} ${allPlaylists.length === 1 ? "playlist" : "playlists"}`}
-                    </p>
-                  </div>
-                </div>
-
-                <p className="mt-5 font-serif text-base leading-relaxed text-white/85 sm:text-lg lg:max-w-2xl">
-                  {enrichment?.summary || church.description}
-                </p>
-
-                {/* CTAs */}
-                <div className="mt-6 flex flex-wrap items-center gap-3">
-                  {hasPlayableSpotify && (
-                    <a
-                      href={church.spotifyUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 rounded-full bg-[#1DB954] px-5 py-2.5 text-sm font-bold text-white transition-all duration-200 hover:scale-[1.02] hover:bg-[#1aa34a] hover:shadow-lg hover:shadow-[#1DB954]/20"
-                    >
-                      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" /></svg>
-                      Tune in on Spotify
-                    </a>
-                  )}
-                  <FollowChurchButton churchSlug={church.slug} churchName={displayName} variant="hero" />
-                  {websiteUrl && websiteHostLabel && (
-                    <a
-                      href={websiteUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 rounded-full border border-white/25 px-4 py-2.5 text-sm font-semibold text-white/80 backdrop-blur-sm transition-all duration-200 hover:bg-white/10 hover:text-white"
-                    >
-                      {websiteHostLabel} ↗
-                    </a>
-                  )}
-                </div>
-
-                {/* Social pills */}
-                {socialLinks.length > 0 && (
-                  <div className="mt-5 flex flex-wrap items-center gap-2">
-                    {socialLinks.map((s) => {
-                      const stat = socialStats.find((st) => st.platform === s.platform);
-                      return (
-                        <a
-                          key={s.platform}
-                          href={s.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-medium text-white/70 backdrop-blur-sm transition-colors hover:bg-white/20 hover:text-white"
-                        >
-                          {s.icon === "youtube" && (
-                            <svg className="h-3.5 w-3.5 text-red-400" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" /></svg>
-                          )}
-                          {s.icon === "instagram" && (
-                            <svg className="h-3.5 w-3.5 text-pink-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z" /></svg>
-                          )}
-                          {s.icon === "facebook" && (
-                            <svg className="h-3.5 w-3.5 text-blue-400" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" /></svg>
-                          )}
-                          {s.platform}
-                          {stat && (
-                            <span className="text-white/40">{formatSocialCount(stat.count)}</span>
-                          )}
-                        </a>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-
-              {/* Right: Glass stats panel (desktop) */}
-              {(quickFacts.length > 0 || socialStats.length > 0) && (
-                <div className="hidden shrink-0 lg:block">
-                  <div className="w-72 rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur-md">
-                    {quickFacts.length > 0 && (
-                      <div className="space-y-3">
-                        {quickFacts.map((fact, i) => (
-                          <div key={i} className="flex items-center gap-2.5 text-sm text-white/80">
-                            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-rose-gold/80" />
-                            {fact}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    {socialStats.length > 0 && quickFacts.length > 0 && (
-                      <div className="my-4 border-t border-white/10" />
-                    )}
-                    {socialStats.length > 0 && (
-                      <div className="flex flex-wrap gap-4">
-                        {socialStats.map((s) => (
-                          <div key={s.platform} className="text-center">
-                            <div className="font-serif text-lg font-bold text-white">{formatSocialCount(s.count)}</div>
-                            <div className="text-[10px] uppercase tracking-wider text-white/50">{s.platform}</div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
+            <div className="flex items-center gap-4">
+              {churchLogo && (
+                <HeroImage src={churchLogo} className="h-14 w-14 shrink-0 rounded-full border-2 border-white/30 object-cover shadow-lg sm:h-16 sm:w-16" />
               )}
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <h1 className="text-3xl font-black leading-tight text-white sm:text-4xl lg:text-5xl">
+                    {displayName}
+                  </h1>
+                  <Suspense fallback={null}>
+                    <VerifiedChurchBadge churchSlug={church.slug} />
+                  </Suspense>
+                  {isCampus && network && (
+                    <Link href={`/network/${network.slug}`} className="inline-flex items-center rounded-full bg-white/15 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/25">
+                      Part of {network.name}
+                    </Link>
+                  )}
+                </div>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-white/50">
+                  {church.country}{styles[0] && ` · ${styles[0]}`}{allPlaylists.length > 0 && ` · ${allPlaylists.length} ${allPlaylists.length === 1 ? "playlist" : "playlists"}`}
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       <div className="mx-auto w-full max-w-7xl space-y-10 px-4 py-10 sm:px-6 lg:px-8">
+
+      {/* ━━━ ABOUT & CTAs ━━━ */}
+      <section className="space-y-5">
+        <p className="max-w-3xl font-serif text-base leading-relaxed text-warm-brown sm:text-lg">
+          {enrichment?.summary || church.description}
+        </p>
+
+        <div className="flex flex-wrap items-center gap-3">
+          {hasPlayableSpotify && (
+            <a
+              href={church.spotifyUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-full bg-[#1DB954] px-5 py-2.5 text-sm font-bold text-white transition-all duration-200 hover:scale-[1.02] hover:bg-[#1aa34a] hover:shadow-lg hover:shadow-[#1DB954]/20"
+            >
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" /></svg>
+              Tune in on Spotify
+            </a>
+          )}
+          <FollowChurchButton churchSlug={church.slug} churchName={displayName} variant="hero" />
+          {websiteUrl && websiteHostLabel && (
+            <a
+              href={websiteUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-espresso/15 px-4 py-2.5 text-sm font-semibold text-espresso transition-all duration-200 hover:border-espresso/30 hover:bg-linen-deep/50"
+            >
+              {websiteHostLabel} ↗
+            </a>
+          )}
+        </div>
+
+        {/* Social pills */}
+        {socialLinks.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2">
+            {socialLinks.map((s) => {
+              const stat = socialStats.find((st) => st.platform === s.platform);
+              return (
+                <a
+                  key={s.platform}
+                  href={s.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-espresso/10 bg-linen-deep/30 px-3 py-1.5 text-xs font-medium text-warm-brown transition-colors hover:border-espresso/20 hover:bg-linen-deep/50"
+                >
+                  {s.icon === "youtube" && (
+                    <svg className="h-3.5 w-3.5 text-red-500" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" /></svg>
+                  )}
+                  {s.icon === "instagram" && (
+                    <svg className="h-3.5 w-3.5 text-pink-500" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z" /></svg>
+                  )}
+                  {s.icon === "facebook" && (
+                    <svg className="h-3.5 w-3.5 text-blue-500" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" /></svg>
+                  )}
+                  {s.platform}
+                  {stat && (
+                    <span className="text-warm-brown/50">{formatSocialCount(stat.count)}</span>
+                  )}
+                </a>
+              );
+            })}
+          </div>
+        )}
+      </section>
 
       {/* Campus note */}
       {isCampus && parentChurchName && (
@@ -545,8 +523,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
       {hasAboutData && (
         <ScrollReveal>
           <section className="rounded-2xl border border-rose-200/40 bg-white/80 p-6 backdrop-blur-sm sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-mauve">At a glance</p>
-            <h2 className="mt-1 font-serif text-xl font-semibold text-espresso sm:text-2xl">Know before you go</h2>
+            <h2 className="font-serif text-xl font-semibold text-espresso sm:text-2xl">Know before you go</h2>
 
             <dl className="mt-6 grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2">
               {hasAddress && (
@@ -666,7 +643,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
         <ScrollReveal>
         <section className="space-y-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-mauve">Their channel</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-mauve">Their worship</p>
             <h2 className="mt-2 font-serif text-2xl font-semibold italic text-espresso sm:text-3xl">The sound of {displayName}</h2>
             {styles.length > 0 && (
               <div className="mt-3 flex flex-wrap gap-2">
@@ -678,7 +655,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
               </div>
             )}
             <p className="mt-3 max-w-3xl text-sm leading-relaxed text-warm-brown">
-              Tune in through worship, service cues, and what this church sounds like before you decide whether it feels like the right fit.
+              Hear what Sunday sounds like before you go.
             </p>
           </div>
           <div className="overflow-hidden rounded-2xl border border-rose-200/60 bg-gradient-to-br from-linen to-blush-light/40 shadow-sm">
@@ -712,7 +689,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
             <SpotifyPlaylistShelf
               eyebrow="More from their channel"
               title={`${church.name} channel collection`}
-              subtitle="Open more playlists if you want a wider feel for the room before your first visit."
+              subtitle="More from their worship."
               items={allPlaylists.slice(1)}
             />
           )}
@@ -749,7 +726,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
 
       {relatedBrowseLinks.length > 0 && (
         <section className="rounded-2xl border border-rose-200/60 bg-white p-5 shadow-sm sm:p-6">
-          <h2 className="font-serif text-lg font-semibold text-espresso">Browse More Church Channels</h2>
+          <h2 className="font-serif text-lg font-semibold text-espresso">Browse more churches</h2>
           <div className="mt-3 flex flex-wrap gap-2">
             {relatedBrowseLinks.map((link) => (
               <Link
@@ -775,12 +752,12 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
         <section className="space-y-5">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-rose-gold">Live Worship</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-rose-gold">Watch</p>
               <h2 className="font-serif text-xl font-bold text-espresso sm:text-2xl">
-                Experience {displayName} Live
+                See what it&apos;s like inside
               </h2>
               <p className="mt-1 text-sm text-warm-brown">
-                Sunday services, worship nights, and special events.
+                Sermons, worship nights, and Sunday mornings.
               </p>
             </div>
             <div className="flex shrink-0 items-center gap-3">
@@ -828,7 +805,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
         <div className="rounded-2xl border border-rose-200/60 bg-white p-5 shadow-sm sm:p-6">
           <h2 className="font-serif text-base font-semibold text-espresso">Pray for {displayName}</h2>
           <div className="mt-3">
-            <PrayerForm churchSlug={church.slug} churchName={displayName} />
+            <ChurchPrayerSection churchSlug={church.slug} churchName={displayName} />
           </div>
           <Link
             href={`/prayerwall/church/${church.slug}`}
