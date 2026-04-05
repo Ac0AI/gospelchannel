@@ -229,6 +229,11 @@ export function buildMergedProfile(
     if (enrichment.ministries) merged.ministries = enrichment.ministries;
     if (enrichment.churchSize) merged.churchSize = enrichment.churchSize;
     if (enrichment.seoDescription) merged.description = enrichment.seoDescription;
+    if (enrichment.pastorName) merged.pastorName = enrichment.pastorName;
+    if (enrichment.pastorTitle) merged.pastorTitle = enrichment.pastorTitle;
+    if (enrichment.livestreamUrl) merged.livestreamUrl = enrichment.livestreamUrl;
+    if (enrichment.givingUrl) merged.givingUrl = enrichment.givingUrl;
+    if (enrichment.whatToExpect) merged.whatToExpect = enrichment.whatToExpect;
   }
 
   // Override layer: approved edits (newest first, so first match wins)
@@ -266,6 +271,15 @@ export function buildMergedProfile(
       case 'ministries': merged.ministries = edit.fieldValue; break;
       case 'church_size': merged.churchSize = edit.fieldValue; break;
       case 'logo_url': merged.logoUrl = edit.fieldValue; break;
+      case 'pastor': {
+        const p = edit.fieldValue as { name: string; title?: string };
+        merged.pastorName = p.name;
+        if (p.title) merged.pastorTitle = p.title;
+        break;
+      }
+      case 'livestream_url': merged.livestreamUrl = edit.fieldValue; break;
+      case 'giving_url': merged.givingUrl = edit.fieldValue; break;
+      case 'what_to_expect': merged.whatToExpect = edit.fieldValue; break;
     }
   }
 

@@ -8,6 +8,20 @@
       "when": 1774711452769,
       "tag": "0000_sleepy_proudstar",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1775414308159,
+      "tag": "0001_shiny_blade",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1775415492448,
+      "tag": "0002_loose_runaways",
+      "breakpoints": true
     }
   ]
 }

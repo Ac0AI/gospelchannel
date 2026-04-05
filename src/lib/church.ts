@@ -512,6 +512,11 @@ export async function getChurchEnrichment(slug: string): Promise<ChurchEnrichmen
     logo_image_url: string | null;
     seo_description: string | null;
     summary: string | null;
+    pastor_name: string | null;
+    pastor_title: string | null;
+    livestream_url: string | null;
+    giving_url: string | null;
+    what_to_expect: string | null;
     sources: ChurchEnrichment["sources"] | null;
     enrichment_status: ChurchEnrichment["enrichmentStatus"];
     confidence: number;
@@ -559,6 +564,11 @@ export async function getChurchEnrichment(slug: string): Promise<ChurchEnrichmen
     logoImageUrl: row.logo_image_url ?? undefined,
     seoDescription: row.seo_description ?? undefined,
     summary: row.summary ?? undefined,
+    pastorName: row.pastor_name ?? undefined,
+    pastorTitle: row.pastor_title ?? undefined,
+    livestreamUrl: row.livestream_url ?? undefined,
+    givingUrl: row.giving_url ?? undefined,
+    whatToExpect: row.what_to_expect ?? undefined,
     sources: row.sources ?? undefined,
     enrichmentStatus: row.enrichment_status,
     confidence: row.confidence,

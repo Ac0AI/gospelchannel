@@ -263,6 +263,13 @@ export type ChurchEnrichment = {
   coverImageUrl?: string;
   logoImageUrl?: string;
 
+  // Profile fields
+  pastorName?: string;
+  pastorTitle?: string;
+  livestreamUrl?: string;
+  givingUrl?: string;
+  whatToExpect?: string;
+
   // Level 3
   seoDescription?: string;
   summary?: string;
@@ -349,9 +356,10 @@ export type ChurchProfileEdit = {
 export type ProfileFieldDefinition = {
   name: string;
   label: string;
+  hint?: string;
   category: 'badge' | 'bonus' | 'extra';
   points: number;
-  type: 'text' | 'url' | 'email' | 'tel' | 'textarea' | 'select' | 'multi-select' | 'checkboxes' | 'service-times' | 'address' | 'image';
+  type: 'text' | 'url' | 'email' | 'tel' | 'textarea' | 'select' | 'multi-select' | 'checkboxes' | 'service-times' | 'address' | 'image' | 'pastor';
   required?: boolean;
   options?: string[];
   validation?: {

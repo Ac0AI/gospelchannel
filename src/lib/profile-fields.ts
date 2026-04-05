@@ -5,6 +5,7 @@ export const PROFILE_FIELDS: ProfileFieldDefinition[] = [
   {
     name: 'service_times',
     label: 'Gudstjänsttider',
+    hint: 'Vilka dagar och tider har ni gudstjänst? Hjälper besökare planera sitt besök.',
     category: 'badge',
     points: 10,
     type: 'service-times',
@@ -13,6 +14,7 @@ export const PROFILE_FIELDS: ProfileFieldDefinition[] = [
   {
     name: 'address',
     label: 'Adress',
+    hint: 'Er fysiska adress så besökare hittar till er.',
     category: 'badge',
     points: 10,
     type: 'address',
@@ -20,6 +22,7 @@ export const PROFILE_FIELDS: ProfileFieldDefinition[] = [
   {
     name: 'phone',
     label: 'Telefon',
+    hint: 'Kontaktnummer med landskod, t.ex. +46701234567.',
     category: 'badge',
     points: 10,
     type: 'tel',
@@ -28,6 +31,7 @@ export const PROFILE_FIELDS: ProfileFieldDefinition[] = [
   {
     name: 'contact_email',
     label: 'Kontakt-epost',
+    hint: 'E-post dit besökare och intresserade kan höra av sig.',
     category: 'badge',
     points: 10,
     type: 'email',
@@ -37,14 +41,52 @@ export const PROFILE_FIELDS: ProfileFieldDefinition[] = [
   {
     name: 'description',
     label: 'Beskrivning',
+    hint: 'Det första besökare läser om er kyrka. Beskriv vad som gör er unika.',
     category: 'bonus',
     points: 10,
     type: 'textarea',
     validation: { minLength: 80, maxLength: 500 },
   },
   {
+    name: 'pastor',
+    label: 'Pastor / ledare',
+    hint: 'Vem leder er kyrka? Namn och titel (t.ex. Senior Pastor).',
+    category: 'bonus',
+    points: 0,
+    type: 'pastor',
+    validation: { minLength: 2, maxLength: 100 },
+  },
+  {
+    name: 'what_to_expect',
+    label: 'Vad kan jag förvänta mig?',
+    hint: 'Beskriv kort hur en gudstjänst ser ut - hjälper förstagångsbesökare våga komma.',
+    category: 'bonus',
+    points: 0,
+    type: 'textarea',
+    validation: { minLength: 30, maxLength: 500 },
+  },
+  {
+    name: 'livestream_url',
+    label: 'Livestream',
+    hint: 'Länk till er livestream så besökare kan titta online.',
+    category: 'bonus',
+    points: 0,
+    type: 'url',
+    validation: { maxLength: 500 },
+  },
+  {
+    name: 'giving_url',
+    label: 'Ge / Donera',
+    hint: 'Länk till er online-givande (t.ex. Swish-sida, kortbetalning).',
+    category: 'bonus',
+    points: 0,
+    type: 'url',
+    validation: { maxLength: 500 },
+  },
+  {
     name: 'instagram_url',
     label: 'Instagram',
+    hint: 'Er Instagram-profil eller @-handle.',
     category: 'bonus',
     points: 0,
     type: 'url',
@@ -53,6 +95,7 @@ export const PROFILE_FIELDS: ProfileFieldDefinition[] = [
   {
     name: 'facebook_url',
     label: 'Facebook',
+    hint: 'Länk till er Facebook-sida.',
     category: 'bonus',
     points: 0,
     type: 'url',
@@ -61,6 +104,7 @@ export const PROFILE_FIELDS: ProfileFieldDefinition[] = [
   {
     name: 'youtube_url',
     label: 'YouTube',
+    hint: 'Länk till er YouTube-kanal.',
     category: 'bonus',
     points: 0,
     type: 'url',
@@ -69,6 +113,7 @@ export const PROFILE_FIELDS: ProfileFieldDefinition[] = [
   {
     name: 'website_url',
     label: 'Hemsida',
+    hint: 'Er officiella hemsida.',
     category: 'bonus',
     points: 7,
     type: 'url',
@@ -77,6 +122,7 @@ export const PROFILE_FIELDS: ProfileFieldDefinition[] = [
   {
     name: 'rss_feed_url',
     label: 'RSS-flöde',
+    hint: 'RSS-länk för att visa era senaste nyheter/predikningar på sidan.',
     category: 'bonus',
     points: 0,
     type: 'url',
@@ -85,6 +131,7 @@ export const PROFILE_FIELDS: ProfileFieldDefinition[] = [
   {
     name: 'google_news_query',
     label: 'Google News-sökning',
+    hint: 'Sökord för att visa nyheter om er kyrka (t.ex. "Livets Ord Uppsala").',
     category: 'extra',
     points: 0,
     type: 'text',
@@ -93,6 +140,7 @@ export const PROFILE_FIELDS: ProfileFieldDefinition[] = [
   {
     name: 'denomination',
     label: 'Samfund',
+    hint: 'Vilket samfund eller nätverk tillhör ni?',
     category: 'bonus',
     points: 8,
     type: 'select',
@@ -102,6 +150,7 @@ export const PROFILE_FIELDS: ProfileFieldDefinition[] = [
   {
     name: 'theological_orientation',
     label: 'Teologisk inriktning',
+    hint: 'Hur skulle ni beskriva er teologiska profil?',
     category: 'bonus',
     points: 0,
     type: 'select',
@@ -110,6 +159,7 @@ export const PROFILE_FIELDS: ProfileFieldDefinition[] = [
   {
     name: 'languages',
     label: 'Språk',
+    hint: 'Vilka språk talas under era gudstjänster?',
     category: 'bonus',
     points: 7,
     type: 'multi-select',
@@ -120,6 +170,7 @@ export const PROFILE_FIELDS: ProfileFieldDefinition[] = [
   {
     name: 'logo_url',
     label: 'Logotyp',
+    hint: 'Er logotyp visas på kyrksidan och i sökresultat.',
     category: 'extra',
     points: 8,
     type: 'image',
@@ -127,6 +178,7 @@ export const PROFILE_FIELDS: ProfileFieldDefinition[] = [
   {
     name: 'ministries',
     label: 'Verksamheter',
+    hint: 'Vilka verksamheter erbjuder ni? Hjälper besökare hitta rätt.',
     category: 'extra',
     points: 7,
     type: 'checkboxes',
@@ -136,6 +188,7 @@ export const PROFILE_FIELDS: ProfileFieldDefinition[] = [
   {
     name: 'church_size',
     label: 'Kyrkstorlek',
+    hint: 'Ungefär hur många besöker en vanlig gudstjänst?',
     category: 'extra',
     points: 5,
     type: 'select',

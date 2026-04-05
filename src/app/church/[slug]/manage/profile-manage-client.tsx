@@ -60,7 +60,16 @@ export function ProfileManageClient({
       ministries: 'ministries',
       church_size: 'churchSize',
       logo_url: 'logoUrl',
+      livestream_url: 'livestreamUrl',
+      giving_url: 'givingUrl',
+      what_to_expect: 'whatToExpect',
     };
+    if (fieldName === 'pastor') {
+      const name = mergedProfile.pastorName;
+      const title = mergedProfile.pastorTitle;
+      if (name) return { name, title: title ?? '' };
+      return undefined;
+    }
     return mergedProfile[keyMap[fieldName] ?? fieldName];
   }
 
@@ -110,9 +119,9 @@ export function ProfileManageClient({
   };
 
   const categories = [
-    { key: 'badge', label: 'Krävs för verifiering', fields: fields.filter(f => f.category === 'badge') },
-    { key: 'bonus', label: 'Bonusinformation', fields: fields.filter(f => f.category === 'bonus') },
-    { key: 'extra', label: 'Extra', fields: fields.filter(f => f.category === 'extra') },
+    { key: 'badge', label: 'Krävs för verifiering', description: 'Fyll i dessa fält för att få en verifierad badge på er kyrksida.', fields: fields.filter(f => f.category === 'badge') },
+    { key: 'bonus', label: 'Berätta mer om er kyrka', description: 'Ju mer ni fyller i, desto lättare för besökare att hitta och lära känna er.', fields: fields.filter(f => f.category === 'bonus') },
+    { key: 'extra', label: 'Extra', description: 'Kompletterande information som gör er profil ännu starkare.', fields: fields.filter(f => f.category === 'extra') },
   ];
 
   return (
@@ -160,9 +169,10 @@ export function ProfileManageClient({
       {/* Field Groups */}
       {categories.map(cat => (
         <div key={cat.key} className="rounded-2xl border border-gray-200 bg-white">
-          <h2 className="border-b border-gray-100 px-6 py-4 font-serif text-lg font-semibold">
-            {cat.label}
-          </h2>
+          <div className="border-b border-gray-100 px-6 py-4">
+            <h2 className="font-serif text-lg font-semibold">{cat.label}</h2>
+            <p className="mt-0.5 text-xs text-gray-400">{cat.description}</p>
+          </div>
           <div className="divide-y divide-gray-50">
             {cat.fields.map(field => {
               const status = getFieldStatus(field.name);
@@ -171,13 +181,18 @@ export function ProfileManageClient({
               const isEditing = editingField === field.name;
 
               return (
-                <div key={field.name} className="px-6 py-4">
+                <div key={field.name} className={`px-6 py-4 ${field.name === 'description' ? 'bg-amber-50/50' : ''}`}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className={`text-sm ${statusColors[status]}`}>
                         {statusIcons[status]}
                       </span>
                       <span className="text-sm font-medium">{field.label}</span>
+                      {field.name === 'description' && (
+                        <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-amber-700">
+                          Viktig
+                        </span>
+                      )}
                     </div>
                     {!isEditing && (
                       <button
@@ -189,9 +204,20 @@ export function ProfileManageClient({
                     )}
                   </div>
 
+                  {field.hint && (
+                    <p className="mt-0.5 ml-6 text-xs text-gray-400">{field.hint}</p>
+                  )}
+
                   {!isEditing && value != null && value !== '' && (
-                    <p className="mt-1 text-sm text-gray-600">
-                      {typeof value === 'object' ? JSON.stringify(value) : String(value as string | number | boolean)}
+                    <p className="mt-1 ml-6 text-sm text-gray-600">
+                      {field.name === 'pastor' && typeof value === 'object' ? (
+                        <>
+                          {(value as { name: string; title?: string }).name}
+                          {(value as { name: string; title?: string }).title && (
+                            <span className="text-gray-400"> - {(value as { name: string; title?: string }).title}</span>
+                          )}
+                        </>
+                      ) : typeof value === 'object' ? JSON.stringify(value) : String(value as string | number | boolean)}
                     </p>
                   )}
 
@@ -256,6 +282,7 @@ function FieldEditor({
     switch (f.type) {
       case 'service-times': return [{ day: 'Söndag', time: '10:00', label: '' }];
       case 'address': return { street: '', city: '', postal_code: '', country: '' };
+      case 'pastor': return { name: '', title: '' };
       case 'multi-select':
       case 'checkboxes': return [];
       default: return '';
@@ -483,6 +510,29 @@ function FieldEditor({
           <EditButtons saving={saving} onSave={() => onSave(value)} onCancel={onCancel} />
         </div>
       );
+
+    case 'pastor': {
+      const pastor = (value ?? { name: '', title: '' }) as { name: string; title: string };
+      return (
+        <div className="mt-2 space-y-2">
+          <input
+            type="text"
+            value={pastor.name}
+            onChange={e => setValue({ ...pastor, name: e.target.value })}
+            placeholder="Namn (t.ex. Johan Eriksson)"
+            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+          />
+          <input
+            type="text"
+            value={pastor.title}
+            onChange={e => setValue({ ...pastor, title: e.target.value })}
+            placeholder="Titel (t.ex. Senior Pastor) - valfritt"
+            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+          />
+          <EditButtons saving={saving} onSave={() => onSave(value)} onCancel={onCancel} />
+        </div>
+      );
+    }
 
     default:
       return null;

@@ -234,6 +234,11 @@ export const churchEnrichments = pgTable(
     logoImageUrl: text("logo_image_url"),
     seoDescription: text("seo_description"),
     summary: text("summary"),
+    pastorName: text("pastor_name"),
+    pastorTitle: text("pastor_title"),
+    livestreamUrl: text("livestream_url"),
+    givingUrl: text("giving_url"),
+    whatToExpect: text("what_to_expect"),
     rawWebsiteMarkdown: text("raw_website_markdown"),
     rawGooglePlaces: jsonb("raw_google_places"),
     rawCrawledPages: jsonb("raw_crawled_pages"),
@@ -439,6 +444,12 @@ export const videoMovedEvents = pgTable(
     videoCreatedIndex: index("video_moved_events_video_created_idx").on(table.videoId, table.createdAt),
   }),
 );
+
+export const appKv = pgTable("app_kv", {
+  key: text("key").primaryKey(),
+  value: jsonb("value").notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
 
 export const appRateLimits = pgTable(
   "app_rate_limits",

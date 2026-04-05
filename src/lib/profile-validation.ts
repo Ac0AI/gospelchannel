@@ -31,7 +31,9 @@ export function validateField(fieldName: string, value: unknown): string | null 
     case 'website_url':
     case 'facebook_url':
     case 'youtube_url':
-    case 'rss_feed_url': {
+    case 'rss_feed_url':
+    case 'livestream_url':
+    case 'giving_url': {
       const v = String(value).trim();
       if (!v.startsWith('https://')) return 'URL måste börja med https://';
       return null;
@@ -77,6 +79,23 @@ export function validateField(fieldName: string, value: unknown): string | null 
     case 'theological_orientation':
     case 'church_size': {
       if (!value || String(value).trim().length === 0) return 'Välj ett alternativ';
+      return null;
+    }
+
+    case 'pastor': {
+      const obj = value as { name?: string; title?: string };
+      if (!obj || typeof obj !== 'object') return 'Ogiltigt format';
+      const name = obj.name?.trim() ?? '';
+      if (name.length < 2) return 'Namn måste vara minst 2 tecken';
+      if (name.length > 100) return 'Namn får vara max 100 tecken';
+      if (obj.title && obj.title.length > 100) return 'Titel får vara max 100 tecken';
+      return null;
+    }
+
+    case 'what_to_expect': {
+      const v = String(value);
+      if (v.length < 30) return 'Texten måste vara minst 30 tecken';
+      if (v.length > 500) return 'Texten får vara max 500 tecken';
       return null;
     }
 
