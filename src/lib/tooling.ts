@@ -160,6 +160,12 @@ export const TOOL_CARDS: ToolCard[] = [
     description: "Match your worship taste to church styles, browse routes, and real churches that already sound close to home.",
     eyebrow: "Music-first",
   },
+  {
+    href: "/tools/prayer-guide",
+    title: "How to Start Praying",
+    description: "A simple, honest guide for your first conversation with God. No special words needed.",
+    eyebrow: "Guide",
+  },
 ];
 
 export const COMPARE_CARDS: CompareCard[] = [
