@@ -18,6 +18,7 @@
 /out/
 /.open-next/
 .wrangler/
+tmp/
 
 # production
 /build

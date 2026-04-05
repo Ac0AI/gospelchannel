@@ -11,16 +11,12 @@
 import { execSync } from "node:child_process";
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 if (!GEMINI_API_KEY) {
   console.error("Set GEMINI_API_KEY (found in /Users/dpr/Desktop/Egna Appar/Projekt/.env.shared)");
   process.exit(1);
 }
-
-const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-const imageModel = genAI.getGenerativeModel({ model: "nano-banana-pro-preview" });
 
 const STYLE_PREFIX = `Detailed scene-based line art illustration. Uniform medium-gray outlines on warm off-white background (#fdf8f4). Subtle warm linen-toned fills for depth. Single accent color rose-gold (#b06a50) used sparingly on 1-2 key details. Clean vector style, slightly rounded corners. Characters have simple but expressive faces (dot eyes, curved smile), casual clothes with minimal detail. Warm friendly approachable mood. No text in image. Landscape format.`;
 
@@ -82,7 +78,7 @@ const guides = {
 const selectedGuide = process.argv[2];
 const outputBase = "tmp/guide-images";
 
-async function generateImage(guide, image) {
+function generateImage(guide, image) {
   const dir = path.join(outputBase, guide);
   fs.mkdirSync(dir, { recursive: true });
   const outputPath = path.join(dir, `${image.name}.png`);
@@ -93,22 +89,28 @@ async function generateImage(guide, image) {
   }
 
   console.log(`Generating: ${guide}/${image.name}...`);
+  const tmpDir = path.join(outputBase, guide, `_tmp_${image.name}`);
   try {
-    const result = await imageModel.generateContent(image.prompt);
-    const response = await result.response;
-    const candidate = response.candidates?.[0];
-    const imagePart = candidate?.content?.parts?.find(
-      (p) => p.inlineData && p.inlineData.mimeType?.startsWith("image/")
+    fs.mkdirSync(tmpDir, { recursive: true });
+    execSync(
+      `GEMINI_API_KEY="${GEMINI_API_KEY}" npx @giorgioliapakis/nanobanana generate "${image.prompt}" -o "${tmpDir}" --aspect 16:9`,
+      { stdio: "pipe", timeout: 120000 }
     );
-    if (!imagePart) {
-      console.log(`No image data: ${guide}/${image.name}`);
-      return false;
+    // Find the generated file (auto-named from prompt) and move it
+    const files = fs.readdirSync(tmpDir).filter(f => f.endsWith(".png"));
+    if (files.length > 0) {
+      fs.renameSync(path.join(tmpDir, files[0]), outputPath);
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+      if (fs.existsSync(outputPath) && fs.statSync(outputPath).size > 10000) {
+        console.log(`Saved: ${guide}/${image.name} (${Math.round(fs.statSync(outputPath).size / 1024)}KB)`);
+        return true;
+      }
     }
-    const buffer = Buffer.from(imagePart.inlineData.data, "base64");
-    fs.writeFileSync(outputPath, buffer);
-    console.log(`Saved: ${guide}/${image.name} (${Math.round(buffer.length / 1024)}KB)`);
-    return true;
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+    console.log(`No file: ${guide}/${image.name}`);
+    return false;
   } catch (err) {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
     console.error(`Error: ${guide}/${image.name}: ${err.message}`);
     return false;
   }
@@ -126,7 +128,7 @@ function uploadToR2(guide, image) {
   console.log(`Uploading: ${r2Path}...`);
   try {
     execSync(
-      `npx wrangler r2 object put church-assets/${r2Path} --file "${localPath}" --content-type image/png`,
+      `npx wrangler r2 object put church-assets/${r2Path} --file "${localPath}" --content-type image/png --remote`,
       { stdio: "pipe", timeout: 30000 }
     );
     console.log(`Uploaded: ${r2Path}`);
@@ -152,7 +154,7 @@ let failed = 0;
 for (const [guide, images] of Object.entries(guidesToProcess)) {
   console.log(`\n--- ${guide} (${images.length} images) ---\n`);
   for (const image of images) {
-    if (await generateImage(guide, image)) {
+    if (generateImage(guide, image)) {
       generated++;
       if (uploadToR2(guide, image)) uploaded++;
     } else {
