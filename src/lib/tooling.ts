@@ -1075,3 +1075,286 @@ export function getCompareGuideSlugs(): string[] {
 export function getCompareGuides(): CompareGuideDefinition[] {
   return COMPARE_GUIDE_DEFINITIONS;
 }
+
+/* ------------------------------------------------------------------ */
+/*  Compare guide illustrated content                                  */
+/* ------------------------------------------------------------------ */
+
+type CompareAspect = {
+  title: string;
+  illustration: string;
+  illustrationAlt: string;
+  sideA: string;
+  sideB: string;
+  body: string;
+};
+
+type CompareGuideContent = {
+  slug: string;
+  eyebrow: string;
+  title: string;
+  intro: string;
+  labelA: string;
+  labelB: string;
+  aspects: CompareAspect[];
+  quoteA?: { text: string };
+  quoteB?: { text: string };
+  nudge: string;
+  ctaA: { label: string; href: string };
+  ctaB: { label: string; href: string };
+  faq: Array<{ question: string; answer: string }>;
+};
+
+const COMPARE_GUIDE_CONTENT: CompareGuideContent[] = [
+  /* ---- Traditional vs Contemporary ---- */
+  {
+    slug: "traditional-vs-contemporary-worship",
+    eyebrow: "Compare Guide",
+    title: "Traditional vs Contemporary Worship",
+    intro: "Two different ways to spend a Sunday morning. Neither is better - they just feel different. Here is what you will actually notice when you walk in.",
+    labelA: "Traditional",
+    labelB: "Contemporary",
+    aspects: [
+      {
+        title: "The Sound",
+        illustration: "https://media.gospelchannel.com/guides/compare-traditional-vs-contemporary/01-sound.png",
+        illustrationAlt: "Split scene: organ and hymn books on one side, electric guitars and screens on the other",
+        sideA: "Organ, piano, choir. Hymns that are 100-400 years old. The congregation sings together from a hymnal or printed bulletin. The sound fills the room from the front.",
+        sideB: "Band with drums, electric guitar, keyboards. Songs written in the last 10-20 years. Lyrics on a big screen so nobody needs a book. Sounds closer to a concert.",
+        body: "This is the biggest difference most people notice on day one. If you grew up with hymns, contemporary can feel loud and unfamiliar. If you did not, traditional can feel formal. Both styles carry real weight for the people singing them.",
+      },
+      {
+        title: "The Room",
+        illustration: "https://media.gospelchannel.com/guides/compare-traditional-vs-contemporary/02-room.png",
+        illustrationAlt: "Split scene: stained glass and wooden pews on one side, modern stage lighting and chairs on the other",
+        sideA: "Pews, stained glass, hymnals in the seat rack, maybe a cross on the wall. The building often feels like it has been there a long time. Quieter before the service starts.",
+        sideB: "Chairs, screens, stage lighting, a welcome desk near the entrance. The room often feels newer or recently renovated. Coffee bar in the lobby is common.",
+        body: "The room sets a tone before anyone says a word. Traditional spaces feel steady and sacred. Contemporary spaces feel casual and approachable. Neither feeling is more real - it just depends on what helps you settle in.",
+      },
+      {
+        title: "The People",
+        illustration: "https://media.gospelchannel.com/guides/compare-traditional-vs-contemporary/03-people.png",
+        illustrationAlt: "Split scene: people in more formal dress on one side, casual jeans-and-sneakers crowd on the other",
+        sideA: "People tend to dress a bit more formally. Greeting might be a handshake or a nod. The room is often quieter between moments. Age range often skews older, though younger people are returning to traditional worship.",
+        sideB: "Jeans, sneakers, coffee cups. Greeters at the door are common. The room often feels social before the service. Age range can be wide, but the culture leans casual.",
+        body: "Dress and social energy vary a lot from church to church, but this gives you a rough idea of what to expect. The real warmth of a community shows up after a few visits, not in the first five minutes.",
+      },
+      {
+        title: "A Typical Sunday",
+        illustration: "https://media.gospelchannel.com/guides/compare-traditional-vs-contemporary/04-sunday.png",
+        illustrationAlt: "Split scene: order of service bulletin on one side, worship band on stage on the other",
+        sideA: "Opening hymn, Scripture reading, prayers, sermon, closing hymn, benediction. Communion on set weeks. The order is printed so you always know what comes next.",
+        sideB: "Worship set (3-5 songs), welcome and announcements, sermon, maybe a closing song or response moment. Less printed structure - the host guides you through.",
+        body: "Knowing what to expect matters more than most people admit. If predictability helps you relax, traditional flow is easier to follow on day one. If you prefer to just be guided through, contemporary services do that well.",
+      },
+      {
+        title: "The Feel",
+        illustration: "https://media.gospelchannel.com/guides/compare-traditional-vs-contemporary/05-feel.png",
+        illustrationAlt: "Split scene: quiet reverent moment on one side, hands raised in worship on the other",
+        sideA: "Reverent, steady, grounded. There is a sense of stepping into something ancient. Some people find it calming. Others find it stiff at first.",
+        sideB: "Energetic, accessible, current. There is a sense of being welcomed into something alive. Some people find it freeing. Others find it overwhelming at first.",
+        body: "This is the one that matters most. Trust your gut. The right feel is the one that makes you want to come back, not the one that impresses you most on the first visit.",
+      },
+    ],
+    quoteA: { text: "There is something about singing the same words Christians have sung for centuries. It connects you to something bigger than this room." },
+    quoteB: { text: "The music hits different when it sounds like something you would actually listen to in the car. It does not feel like church - it just feels like worship." },
+    nudge: "Most people have a gut feeling by now. Trust it. And remember - plenty of churches blend both styles, so you are not locked into one lane.",
+    ctaA: { label: "Browse traditional churches", href: "/church/style/traditional" },
+    ctaB: { label: "Browse contemporary churches", href: "/church/style/contemporary-worship" },
+    faq: [
+      { question: "Can a church be both traditional and contemporary?", answer: "Yes. Many churches run different services - a traditional one in the morning and a contemporary one later. Some blend both styles in a single service." },
+      { question: "Is traditional worship dying out?", answer: "No. There is actually a growing movement of younger people returning to traditional and liturgical worship. Both styles are alive and well." },
+      { question: "Which style is more biblical?", answer: "Neither. The Bible does not prescribe a worship style. Both traditions draw from Scripture and have deep theological roots." },
+    ],
+  },
+
+  /* ---- Baptist vs Pentecostal ---- */
+  {
+    slug: "baptist-vs-pentecostal",
+    eyebrow: "Compare Guide",
+    title: "Baptist vs Pentecostal",
+    intro: "Two traditions that both love Jesus but feel very different on a Sunday morning. This guide is about what you will actually notice in the room, not theology textbooks.",
+    labelA: "Baptist",
+    labelB: "Pentecostal",
+    aspects: [
+      {
+        title: "The Sound",
+        illustration: "https://media.gospelchannel.com/guides/compare-baptist-vs-pentecostal/01-sound.png",
+        illustrationAlt: "Split scene: choir and piano in a Baptist church on one side, full worship band with raised hands on the other",
+        sideA: "Can range from traditional hymns with a choir to a modern worship band, depending on the church. The music often serves the sermon - it sets the tone but does not dominate the service.",
+        sideB: "Usually a full worship band. The music set tends to be longer and builds in intensity. Songs often repeat sections to create space for response. Expect more volume and energy.",
+        body: "Baptist churches vary widely in music style, from old-school hymns to full contemporary bands. Pentecostal churches almost always lean toward louder, more expressive music. If the worship set matters a lot to you, listen to a church's playlist before visiting.",
+      },
+      {
+        title: "The Room",
+        illustration: "https://media.gospelchannel.com/guides/compare-baptist-vs-pentecostal/02-room.png",
+        illustrationAlt: "Split scene: traditional Baptist sanctuary with pews on one side, colorful Pentecostal auditorium on the other",
+        sideA: "Ranges from classic sanctuaries with wooden pews to modern auditoriums. The room often feels orderly and prepared. Bulletins or programs are common so you can follow along.",
+        sideB: "Often more colorful or dramatic stage setups. Screens, lighting, and audio tend to be prominent. The room can feel more like a concert venue, especially in larger churches.",
+        body: "Both traditions have churches that range from simple to polished. The room alone will not tell you everything - but it does hint at the overall energy you are walking into.",
+      },
+      {
+        title: "The Energy",
+        illustration: "https://media.gospelchannel.com/guides/compare-baptist-vs-pentecostal/03-people.png",
+        illustrationAlt: "Split scene: attentive seated congregation on one side, people standing with hands raised on the other",
+        sideA: "People tend to sit, listen, and participate in quieter ways. Responses are often internal. You might hear an occasional amen, but the room usually stays composed.",
+        sideB: "People often stand, raise hands, clap, and respond out loud. Prayer moments can include people moving to the front. The room's energy is visible and sometimes intense.",
+        body: "This is often the biggest surprise for first-timers. If you prefer to observe quietly, a Baptist room may feel more comfortable at first. If you want to feel the energy of a room full of people responding openly, Pentecostal churches deliver that.",
+      },
+      {
+        title: "A Typical Sunday",
+        illustration: "https://media.gospelchannel.com/guides/compare-baptist-vs-pentecostal/04-sunday.png",
+        illustrationAlt: "Split scene: pastor at a pulpit with open Bible on one side, pastor walking the stage with a microphone on the other",
+        sideA: "Worship (15-25 min), announcements, sermon (30-45 min), closing prayer or hymn. The sermon is the centerpiece. Teaching tends to be verse-by-verse or topical with clear biblical grounding.",
+        sideB: "Extended worship (20-40 min), sermon (25-40 min), altar call or prayer response. The worship and response often feel as important as the sermon. Teaching style varies but often includes personal testimony and spiritual boldness.",
+        body: "Baptist churches tend to anchor the service in the sermon. Pentecostal churches tend to give equal weight to worship and response. Neither approach is wrong - it comes down to what helps you engage.",
+      },
+      {
+        title: "The Approach to Faith",
+        illustration: "https://media.gospelchannel.com/guides/compare-baptist-vs-pentecostal/05-feel.png",
+        illustrationAlt: "Split scene: person studying Bible quietly on one side, person praying with hands outstretched on the other",
+        sideA: "Emphasis on Scripture, personal study, and growing through understanding. Faith is often expressed through learning, service, and steady community life. Less emphasis on visible supernatural experiences.",
+        sideB: "Emphasis on the Holy Spirit's active work, prayer, healing, and spiritual gifts. Faith is often expressed through visible response, expectancy, and openness to the supernatural in everyday life.",
+        body: "This is less about which approach is right and more about which one fits where you are right now. Some people need grounding first. Others need to feel something move. Both paths lead to real faith.",
+      },
+    ],
+    quoteA: { text: "I needed a place where I could ask hard questions and get real answers from the Bible. My Baptist church gave me that foundation." },
+    quoteB: { text: "I walked in skeptical and left in tears. Something in that room was real and I could feel it. That is what brought me back." },
+    nudge: "Both traditions are full of real, caring churches. If you are unsure, visit one of each. You will know in the first fifteen minutes which room feels more like home.",
+    ctaA: { label: "Browse Baptist churches", href: "/church/denomination/baptist" },
+    ctaB: { label: "Browse Pentecostal churches", href: "/church/denomination/pentecostal" },
+    faq: [
+      { question: "Do Baptist churches ever raise hands or get expressive?", answer: "Some do, especially more contemporary Baptist churches. The range is wide. But the overall culture tends to be more reserved than Pentecostal rooms." },
+      { question: "Are Pentecostal churches welcoming to newcomers?", answer: "Most are very welcoming. The energy can feel intense at first, but Pentecostal churches are often warm and quick to connect with visitors." },
+      { question: "Can I believe in the Holy Spirit and still go to a Baptist church?", answer: "Absolutely. Baptist churches believe in the Holy Spirit too. The difference is more about how openly spiritual gifts are practiced in the service, not whether the Spirit is valued." },
+    ],
+  },
+
+  /* ---- Liturgical vs Free Worship ---- */
+  {
+    slug: "liturgical-vs-free-worship",
+    eyebrow: "Compare Guide",
+    title: "Liturgical vs Free Worship",
+    intro: "Some churches follow a set order every week. Others leave room for the service to go wherever it goes. Here is what each actually feels like from the seat.",
+    labelA: "Liturgical",
+    labelB: "Free Worship",
+    aspects: [
+      {
+        title: "The Sound",
+        illustration: "https://media.gospelchannel.com/guides/compare-liturgical-vs-free/01-sound.png",
+        illustrationAlt: "Split scene: choir singing from a hymnal on one side, worship leader with eyes closed improvising on the other",
+        sideA: "Hymns, choral pieces, sometimes chanted psalms. The music follows the church calendar and has been chosen in advance. Congregational singing from a book or printed sheet is common.",
+        sideB: "Modern worship songs, often with extended instrumental sections. The worship leader may repeat a chorus or shift into a spontaneous moment. The set list might change mid-service.",
+        body: "Liturgical music feels curated and rooted. Free worship music feels responsive and alive. If you like knowing every song before you arrive, liturgical is easier to prepare for. If you like being surprised, free worship keeps things fresh.",
+      },
+      {
+        title: "The Room",
+        illustration: "https://media.gospelchannel.com/guides/compare-liturgical-vs-free/02-room.png",
+        illustrationAlt: "Split scene: ornate church interior with altar and candles on one side, simple stage with minimal decor on the other",
+        sideA: "Crosses, candles, an altar, maybe incense. The architecture often draws your eye upward. The room itself feels like part of the worship - deliberate, layered, and old.",
+        sideB: "Simpler stage setup focused on the band and screens. The room is more of a container than a participant. Decoration is minimal or modern. The focus is on the people, not the space.",
+        body: "Some people walk into a cathedral and feel God in the stone. Others walk into a plain room and feel God in the people. The room is not decoration - it is part of how the church communicates what matters to them.",
+      },
+      {
+        title: "The Flow",
+        illustration: "https://media.gospelchannel.com/guides/compare-liturgical-vs-free/03-people.png",
+        illustrationAlt: "Split scene: congregation standing and sitting in unison on one side, people moving freely around the room on the other",
+        sideA: "Stand, sit, kneel, respond - all at set times. The congregation moves together through a known order. You can follow along in a printed liturgy or prayer book. There are no surprises.",
+        sideB: "The service has a loose shape but no fixed script. The worship leader or pastor reads the room and adjusts. Some moments are planned, others happen in the moment. You follow the energy.",
+        body: "If unpredictability makes you anxious, liturgical flow is calming because you always know what is next. If predictability makes you restless, free worship keeps you present because you never quite know what is coming.",
+      },
+      {
+        title: "Communion",
+        illustration: "https://media.gospelchannel.com/guides/compare-liturgical-vs-free/04-sunday.png",
+        illustrationAlt: "Split scene: formal communion at an altar rail on one side, bread and cups passed casually through rows on the other",
+        sideA: "Usually every week, at a set point in the service. Often at an altar rail or station. The words spoken are ancient and the same each time. It feels like a sacred pause in the middle of everything.",
+        sideB: "Frequency varies - some churches do it weekly, others monthly. It might be bread and cups passed through the rows, or stations you walk to. The words are simpler and more conversational.",
+        body: "Communion is one of those things that hits different depending on what you need. The formality of liturgical communion makes some people feel connected to centuries of faith. The simplicity of free church communion makes others feel more personally present.",
+      },
+      {
+        title: "The Feel",
+        illustration: "https://media.gospelchannel.com/guides/compare-liturgical-vs-free/05-feel.png",
+        illustrationAlt: "Split scene: person kneeling in quiet prayer on one side, person with arms raised in spontaneous worship on the other",
+        sideA: "Reverent, rhythmic, anchored. The service carries you rather than asking you to generate energy. Some people find this deeply restful. Others find it distant at first.",
+        sideB: "Open, responsive, personal. The service asks more of you emotionally but gives more space to express what you feel. Some people find this freeing. Others find it overwhelming at first.",
+        body: "Neither feel is more genuine. Liturgical worship is not cold and free worship is not shallow. The question is which one lets you actually be present instead of performing comfort you do not feel.",
+      },
+    ],
+    quoteA: { text: "I do not have to bring energy. The liturgy holds me. On the weeks I can barely get through the door, the prayers carry me when I have no words of my own." },
+    quoteB: { text: "When the worship leader went off script and just started praying, I cried for the first time in years. I did not know I needed that until it happened." },
+    nudge: "If you are torn, try one of each. You will know quickly which one lets you breathe. And many churches sit somewhere in between these two poles.",
+    ctaA: { label: "Browse liturgical churches", href: "/church/denomination/anglican" },
+    ctaB: { label: "Browse free worship churches", href: "/church/style/charismatic" },
+    faq: [
+      { question: "Does liturgical mean boring?", answer: "No. Liturgical worship has rhythm, beauty, and depth. It can feel deeply moving once you learn the flow. Many people find it more engaging over time, not less." },
+      { question: "Does free worship mean anything goes?", answer: "No. Good free worship churches are still led with care and intention. The freedom is in the room to respond, not in a lack of direction." },
+      { question: "What if I like structure but also want some spontaneity?", answer: "Many churches blend elements of both. Anglican churches with contemporary music, or charismatic churches with communion liturgy. You do not have to pick one extreme." },
+    ],
+  },
+
+  /* ---- Big Church vs Small Church ---- */
+  {
+    slug: "big-church-vs-small-church",
+    eyebrow: "Compare Guide",
+    title: "Big Church vs Small Church",
+    intro: "This is not about which is better. It is about what you need right now - room to breathe, or a place where people know your name.",
+    labelA: "Big Church",
+    labelB: "Small Church",
+    aspects: [
+      {
+        title: "The Sound",
+        illustration: "https://media.gospelchannel.com/guides/compare-big-vs-small/01-sound.png",
+        illustrationAlt: "Split scene: large worship band on a big stage on one side, single guitarist leading a small room on the other",
+        sideA: "Full band, strong production, polished sound. Multiple vocalists, in-ear monitors, a sound team running the mix. The music often sounds close to a studio recording. You can sing without anyone hearing you.",
+        sideB: "Smaller band or just a single musician. The sound is more raw and the room is quieter. You can hear individual voices around you. Your own singing is more noticeable.",
+        body: "If you want to disappear into the music, a bigger room makes that easy. If you want to feel like your voice is part of the sound, a smaller room gives you that. Both are real worship - just different acoustics.",
+      },
+      {
+        title: "The Room",
+        illustration: "https://media.gospelchannel.com/guides/compare-big-vs-small/02-room.png",
+        illustrationAlt: "Split scene: large auditorium with hundreds of seats on one side, cozy room with a few dozen chairs on the other",
+        sideA: "Hundreds or thousands of seats. Professional lighting, big screens, a welcome team in matching shirts. Parking lots, kids check-in systems, maybe a cafe. It can feel like walking into an event.",
+        sideB: "A few dozen to a hundred people. Simpler setup - maybe a rented hall, a converted house, or a small chapel. You might shake the pastor's hand on the way in. It feels more like a gathering.",
+        body: "Big churches invest in making the first visit easy - clear signage, greeters, systems. Small churches invest in making you feel seen. Depending on where you are, one of those matters more right now.",
+      },
+      {
+        title: "The People",
+        illustration: "https://media.gospelchannel.com/guides/compare-big-vs-small/03-people.png",
+        illustrationAlt: "Split scene: person blending into a large crowd on one side, small group having coffee together on the other",
+        sideA: "You can be anonymous for as long as you want. Nobody will notice if you slip in late or leave early. Community happens through small groups, volunteer teams, or programs - not automatically.",
+        sideB: "People will notice you and probably introduce themselves. Anonymity is harder. Community happens faster, but so does social pressure. If you miss a week, someone might ask where you were.",
+        body: "Some people need weeks of anonymity before they are ready to connect. Others need someone to say their name on week one. Be honest about which one you are right now. You can always switch later.",
+      },
+      {
+        title: "A Typical Sunday",
+        illustration: "https://media.gospelchannel.com/guides/compare-big-vs-small/04-sunday.png",
+        illustrationAlt: "Split scene: large church lobby with check-in kiosks on one side, people chatting in a simple foyer on the other",
+        sideA: "Multiple services, kids programs by age group, a polished worship set, a well-rehearsed sermon, clear start and end times. Everything runs on a schedule. You can show up, experience it, and leave without any friction.",
+        sideB: "One service, maybe one kids option or all-ages together. The sermon might run long if the conversation gets good. After the service, people linger. Leaving quickly is harder without it feeling noticeable.",
+        body: "Big churches are designed for a smooth visitor experience. Small churches are designed for a deep community rhythm. The first is easier to try. The second is easier to belong to.",
+      },
+      {
+        title: "The Tradeoff",
+        illustration: "https://media.gospelchannel.com/guides/compare-big-vs-small/05-feel.png",
+        illustrationAlt: "Split scene: person sitting peacefully alone in a large room on one side, person being hugged by church members on the other",
+        sideA: "You get space, polish, and options - but you have to work harder to find real community. A big church will not chase you. You have to opt in to being known.",
+        sideB: "You get warmth, speed-to-belonging, and a more personal pastor relationship - but less programming, less anonymity, and sometimes less polish in the service.",
+        body: "Neither tradeoff is wrong. The question is what you need more right now: room to explore at your own pace, or a place that pulls you in before you are ready to ask.",
+      },
+    ],
+    quoteA: { text: "I needed a place where nobody knew my story yet. The big church let me just sit and listen for three months before I talked to anyone. That space saved me." },
+    quoteB: { text: "The pastor called me by name on my second visit. I had never had that before. It felt like someone was actually glad I showed up." },
+    nudge: "There is no universally better size. The right church is the one you will actually go back to. If you are not sure, try one of each and see where you exhale.",
+    ctaA: { label: "Browse larger churches", href: "/church/style/contemporary-worship" },
+    ctaB: { label: "Browse smaller churches", href: "/church/style/acoustic" },
+    faq: [
+      { question: "How big is a 'big church'?", answer: "There is no strict number. Generally, 500+ on a Sunday feels big. Over 2,000 is often called a megachurch. But the feel of a church matters more than the headcount." },
+      { question: "Can I find community at a big church?", answer: "Yes, but you usually have to join a small group, serve on a team, or attend a midweek gathering. Community at a big church is opt-in, not automatic." },
+      { question: "Are small churches less professional?", answer: "Sometimes the production is simpler, but that does not mean less quality. Many small churches have excellent teaching, warm worship, and strong pastoral care." },
+    ],
+  },
+];
+
+export function getCompareGuideContent(slug: string): CompareGuideContent | undefined {
+  return COMPARE_GUIDE_CONTENT.find((g) => g.slug === slug);
+}
