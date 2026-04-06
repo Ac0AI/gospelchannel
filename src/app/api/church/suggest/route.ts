@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { addChurchSuggestion } from "@/lib/church-community";
+import { sendSuggestionAdminNotification } from "@/lib/email";
 import { getClientIp, hasKvRateLimit, isBotTrapFilled, setKvRateLimit } from "@/lib/request-guards";
 import { getPostHogClient } from "@/lib/posthog-server";
 import { enrichFromWebsite, saveEnrichmentToSuggestion } from "@/lib/auto-enrich";
@@ -101,18 +102,23 @@ export async function POST(request: NextRequest) {
     properties: { church_name: name, country, language, suggestion_id: suggestion.id },
   });
 
-  // Auto-enrich in the background (don't block the response)
+  // Auto-enrich + admin notification in the background (don't block the response)
   try {
     const { ctx } = await getCloudflareContext({ async: true });
     ctx.waitUntil(
-      enrichFromWebsite({ name, website, country, city, denomination })
-        .then((result) => {
-          if (result) return saveEnrichmentToSuggestion(suggestion.id, result);
-        })
-        .catch((err) => console.error("[auto-enrich] Background error:", err))
+      Promise.all([
+        enrichFromWebsite({ name, website, country, city, denomination })
+          .then((result) => {
+            if (result) return saveEnrichmentToSuggestion(suggestion.id, result);
+          })
+          .catch((err) => console.error("[auto-enrich] Background error:", err)),
+        sendSuggestionAdminNotification({
+          churchName: name, contactEmail, country, website, playlistUrl, message,
+        }).catch((err) => console.error("[suggest] Failed to send admin notification:", err)),
+      ]),
     );
   } catch {
-    // Enrichment is best-effort; don't fail the suggestion
+    // Background tasks are best-effort; don't fail the suggestion
   }
 
   return NextResponse.json({

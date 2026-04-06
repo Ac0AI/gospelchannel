@@ -202,13 +202,76 @@ export async function sendClaimAdminNotification(params: {
     </div>
   `.trim();
 
+  await notifyAdmins(`New claim: ${params.churchName}`, html);
+}
+
+export async function sendSuggestionAdminNotification(params: {
+  churchName: string;
+  contactEmail: string;
+  country?: string;
+  website?: string;
+  playlistUrl?: string;
+  message?: string;
+}): Promise<void> {
+  const siteUrl = getConfiguredSiteUrl();
+  const html = `
+    <div style="font-family: Georgia, serif; max-width: 520px; margin: 0 auto; color: #3b2f2f;">
+      <h2 style="margin-bottom: 4px;">New suggestion: ${params.churchName}</h2>
+      <table style="font-size: 15px; margin: 16px 0; border-collapse: collapse;">
+        <tr><td style="padding: 4px 12px 4px 0; color: #7a6a5a;">Church</td><td>${params.churchName}</td></tr>
+        <tr><td style="padding: 4px 12px 4px 0; color: #7a6a5a;">Email</td><td><a href="mailto:${params.contactEmail}" style="color: #b06a50;">${params.contactEmail}</a></td></tr>
+        ${params.country ? `<tr><td style="padding: 4px 12px 4px 0; color: #7a6a5a;">Country</td><td>${params.country}</td></tr>` : ""}
+        ${params.website ? `<tr><td style="padding: 4px 12px 4px 0; color: #7a6a5a;">Website</td><td><a href="${params.website}" style="color: #b06a50;">${params.website}</a></td></tr>` : ""}
+        ${params.playlistUrl ? `<tr><td style="padding: 4px 12px 4px 0; color: #7a6a5a;">Playlist</td><td><a href="${params.playlistUrl}" style="color: #b06a50;">${params.playlistUrl}</a></td></tr>` : ""}
+        ${params.message ? `<tr><td style="padding: 4px 12px 4px 0; color: #7a6a5a;">Message</td><td>${params.message}</td></tr>` : ""}
+      </table>
+      <p style="margin: 24px 0;">
+        <a href="${siteUrl}/admin/suggestions" style="background: #c08888; color: #fff; padding: 12px 28px; border-radius: 999px; text-decoration: none; font-weight: 600;">
+          Review suggestions
+        </a>
+      </p>
+    </div>
+  `.trim();
+
+  await notifyAdmins(`New suggestion: ${params.churchName}`, html);
+}
+
+export async function sendFeedbackAdminNotification(params: {
+  churchName: string;
+  churchSlug: string;
+  kind: string;
+  message: string;
+}): Promise<void> {
+  const siteUrl = getConfiguredSiteUrl();
+  const kindLabel = params.kind === "playlist_addition" ? "Playlist addition" : params.kind === "data_issue" ? "Data issue" : "Profile addition";
+  const html = `
+    <div style="font-family: Georgia, serif; max-width: 520px; margin: 0 auto; color: #3b2f2f;">
+      <h2 style="margin-bottom: 4px;">New feedback: ${params.churchName}</h2>
+      <table style="font-size: 15px; margin: 16px 0; border-collapse: collapse;">
+        <tr><td style="padding: 4px 12px 4px 0; color: #7a6a5a;">Church</td><td><a href="${siteUrl}/church/${params.churchSlug}" style="color: #b06a50;">${params.churchName}</a></td></tr>
+        <tr><td style="padding: 4px 12px 4px 0; color: #7a6a5a;">Type</td><td>${kindLabel}</td></tr>
+        <tr><td style="padding: 4px 12px 4px 0; color: #7a6a5a;">Message</td><td>${params.message}</td></tr>
+      </table>
+      <p style="margin: 24px 0;">
+        <a href="${siteUrl}/admin/feedback" style="background: #c08888; color: #fff; padding: 12px 28px; border-radius: 999px; text-decoration: none; font-weight: 600;">
+          Review feedback
+        </a>
+      </p>
+    </div>
+  `.trim();
+
+  await notifyAdmins(`Feedback: ${params.churchName} (${kindLabel})`, html);
+}
+
+async function notifyAdmins(subject: string, html: string): Promise<void> {
+  const adminEmailsRaw = process.env.ADMIN_EMAILS;
+  if (!adminEmailsRaw) {
+    console.warn("[email] ADMIN_EMAILS not set, skipping admin notification");
+    return;
+  }
+  const { NOTIFY_FROM_EMAIL } = getEmailConfig();
   const adminEmails = adminEmailsRaw.split(",").map((e) => e.trim()).filter(Boolean);
   for (const adminEmail of adminEmails) {
-    await sendEmail({
-      to: adminEmail,
-      from: NOTIFY_FROM_EMAIL,
-      subject: `New claim: ${params.churchName}`,
-      html,
-    });
+    await sendEmail({ to: adminEmail, from: NOTIFY_FROM_EMAIL, subject, html });
   }
 }

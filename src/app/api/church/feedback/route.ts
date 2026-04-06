@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { addChurchFeedback } from "@/lib/church-community";
 import { getChurchBySlugAsync } from "@/lib/content";
+import { sendFeedbackAdminNotification } from "@/lib/email";
 
 type FeedbackPayload = {
   churchSlug?: string;
@@ -79,6 +81,21 @@ export async function POST(request: NextRequest) {
     field: kind === "profile_addition" ? sanitize(field, 200) : (kind === "data_issue" ? normalizedField : "playlist"),
     message,
   });
+
+  const church = await getChurchBySlugAsync(churchSlug);
+  try {
+    const { ctx } = await getCloudflareContext({ async: true });
+    ctx.waitUntil(
+      sendFeedbackAdminNotification({
+        churchName: church?.name || churchSlug,
+        churchSlug,
+        kind,
+        message,
+      }).catch((err) => console.error("[feedback] Failed to send admin notification:", err)),
+    );
+  } catch {
+    // Best-effort
+  }
 
   return NextResponse.json({
     success: true,
