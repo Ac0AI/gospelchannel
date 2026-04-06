@@ -21,6 +21,16 @@ const nextConfig: NextConfig = {
         destination: "/prayerwall",
         permanent: true,
       },
+      {
+        source: "/tools",
+        destination: "/guides",
+        permanent: true,
+      },
+      {
+        source: "/tools/:path*",
+        destination: "/guides/:path*",
+        permanent: true,
+      },
     ];
   },
   async rewrites() {
