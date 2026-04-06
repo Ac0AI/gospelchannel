@@ -133,6 +133,7 @@ export type ToolCard = {
   title: string;
   description: string;
   eyebrow: string;
+  icon?: string;
 };
 
 export type CompareCard = {
@@ -153,6 +154,7 @@ export const GUIDE_CARDS: ToolCard[] = [
     title: "First-Time Church Guide",
     description: "Know what usually happens on a Sunday, what to wear, what kids ministry means, and how traditions feel before you go.",
     eyebrow: "Visitor confidence",
+    icon: "church",
   },
   {
     href: "/guides/worship-style-match",
@@ -165,6 +167,7 @@ export const GUIDE_CARDS: ToolCard[] = [
     title: "How to Start Praying",
     description: "A simple, honest guide for your first conversation with God. No special words needed.",
     eyebrow: "Guide",
+    icon: "hands",
   },
 ];
 

@@ -3,6 +3,25 @@ import Link from "next/link";
 import { getChurchStatsAsync } from "@/lib/content";
 import { COMPARE_CARDS, GUIDE_CARDS } from "@/lib/tooling";
 
+const GUIDE_ICONS: Record<string, React.ReactNode> = {
+  church: (
+    <svg className="h-8 w-8 text-rose-gold/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 3v4M12 7l5 4v9H7V11l5-4Z" />
+      <path d="M10 20v-4h4v4" />
+      <path d="M3 20h18" />
+      <path d="M9 7V3h6v4" />
+    </svg>
+  ),
+  hands: (
+    <svg className="h-8 w-8 text-rose-gold/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M7 20c0-4 1-6 5-8m5 8c0-4-1-6-5-8" />
+      <path d="M12 12V4" />
+      <path d="M8 8c-2 0-3 1-3 3s1 3 3 3" />
+      <path d="M16 8c2 0 3 1 3 3s-1 3-3 3" />
+    </svg>
+  ),
+};
+
 export async function generateMetadata(): Promise<Metadata> {
   const { churchCountLabel, countryCount } = await getChurchStatsAsync();
   return {
@@ -53,6 +72,9 @@ export default async function GuidesPage() {
         <div className="grid gap-4 sm:grid-cols-2">
           {guides.map((guide) => (
             <article key={guide.href} className="rounded-2xl border border-rose-200/60 bg-white/80 p-5 shadow-sm">
+              {guide.icon && GUIDE_ICONS[guide.icon] && (
+                <div className="mb-3">{GUIDE_ICONS[guide.icon]}</div>
+              )}
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-mauve">{guide.eyebrow}</p>
               <h3 className="mt-2 font-serif text-2xl font-semibold text-espresso">{guide.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-warm-brown">{guide.description}</p>
