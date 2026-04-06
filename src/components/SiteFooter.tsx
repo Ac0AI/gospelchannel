@@ -34,8 +34,8 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
-              <Link href="/tools" prefetch={false} className="worship-link text-warm-brown transition-colors hover:text-espresso">
-                Free Tools
+              <Link href="/guides" prefetch={false} className="worship-link text-warm-brown transition-colors hover:text-espresso">
+                Guides
               </Link>
             </li>
             <li>

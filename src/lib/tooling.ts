@@ -141,27 +141,27 @@ export type CompareCard = {
   description: string;
 };
 
-export const TOOL_CARDS: ToolCard[] = [
+export const GUIDE_CARDS: ToolCard[] = [
   {
-    href: "/tools/church-fit-quiz",
+    href: "/guides/church-fit-quiz",
     title: "Church Fit Quiz",
     description: "Answer seven fast questions and get three church paths that fit your worship style, social comfort, and Sunday priorities.",
     eyebrow: "Main tool",
   },
   {
-    href: "/tools/first-visit-guide",
+    href: "/guides/first-visit-guide",
     title: "First-Time Church Guide",
     description: "Know what usually happens on a Sunday, what to wear, what kids ministry means, and how traditions feel before you go.",
     eyebrow: "Visitor confidence",
   },
   {
-    href: "/tools/worship-style-match",
+    href: "/guides/worship-style-match",
     title: "Church Sound Match",
     description: "Match your worship taste to church styles, browse routes, and real churches that already sound close to home.",
     eyebrow: "Music-first",
   },
   {
-    href: "/tools/prayer-guide",
+    href: "/guides/prayer-guide",
     title: "How to Start Praying",
     description: "A simple, honest guide for your first conversation with God. No special words needed.",
     eyebrow: "Guide",
@@ -546,7 +546,7 @@ const SOUND_PROFILE_DEFINITIONS: SoundProfileDefinition[] = [
     description: "Spanish-language or Latin-shaped church music with rhythmic lift and strong congregational warmth.",
     artistCue: "Think Spanish worship, Latin CCM, and churches where language and musical culture shape the room.",
     browse: { href: "/church/style/latin", label: "See Latin worship churches" },
-    secondary: { href: "/tools/church-fit-quiz", label: "Take the fit quiz" },
+    secondary: { href: "/guides/church-fit-quiz", label: "Take the fit quiz" },
     matchRules: [{ styleSlug: "latin" }],
   },
   {
@@ -556,7 +556,7 @@ const SOUND_PROFILE_DEFINITIONS: SoundProfileDefinition[] = [
     description: "High-response praise culture shaped by African gospel, diaspora worship, and joyful congregational participation.",
     artistCue: "Think Sinach, African praise teams, and churches with vibrant diaspora worship culture.",
     browse: { href: "/church/style/african", label: "See African & diaspora churches" },
-    secondary: { href: "/tools/church-fit-quiz", label: "Take the fit quiz" },
+    secondary: { href: "/guides/church-fit-quiz", label: "Take the fit quiz" },
     matchRules: [{ styleSlug: "african" }],
   },
 ];
@@ -748,7 +748,7 @@ const COMPARE_GUIDE_DEFINITIONS: CompareGuideDefinition[] = [
         description: "Best for people who want modern worship language and a lower-friction first visit.",
         bestFor: "You want a room that is easier to decode on your first Sunday.",
         browse: { href: "/church/style/contemporary-worship", label: "See contemporary churches" },
-        secondary: { href: "/tools/church-fit-quiz", label: "Take the fit quiz" },
+        secondary: { href: "/guides/church-fit-quiz", label: "Take the fit quiz" },
         matchRules: [{ styleSlug: "contemporary-worship" }],
       },
     ],

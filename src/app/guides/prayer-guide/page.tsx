@@ -18,11 +18,11 @@ export const metadata: Metadata = {
   title: "How to Start Praying - A Simple Guide",
   description:
     "There is no wrong way to pray. If you don't know what to say, start here. A practical, no-jargon guide to having your first conversation with God.",
-  alternates: { canonical: "https://gospelchannel.com/tools/prayer-guide" },
+  alternates: { canonical: "https://gospelchannel.com/guides/prayer-guide" },
   openGraph: {
     title: "How to Start Praying",
     description: "A simple, honest guide for people who want to pray but don't know where to begin.",
-    url: "https://gospelchannel.com/tools/prayer-guide",
+    url: "https://gospelchannel.com/guides/prayer-guide",
     siteName: "GospelChannel",
     type: "article",
   },
@@ -214,7 +214,7 @@ export default function PrayerGuidePage() {
 
       <GuideCTA
         links={[
-          { label: "Read the first-visit guide", href: "/tools/first-visit-guide" },
+          { label: "Read the first-visit guide", href: "/guides/first-visit-guide" },
           { label: "Browse churches", href: "/church" },
         ]}
       />

@@ -538,10 +538,10 @@ export function revalidatePublicChurchContent(): void {
   revalidatePath("/church/city/[slug]", "page");
   revalidatePath("/church/style/[slug]", "page");
   revalidatePath("/church/denomination/[slug]", "page");
-  revalidatePath("/tools");
-  revalidatePath("/tools/church-fit-quiz");
-  revalidatePath("/tools/first-visit-guide");
-  revalidatePath("/tools/worship-style-match");
+  revalidatePath("/guides");
+  revalidatePath("/guides/church-fit-quiz");
+  revalidatePath("/guides/first-visit-guide");
+  revalidatePath("/guides/worship-style-match");
   revalidatePath("/compare");
   revalidatePath("/compare/[slug]", "page");
   revalidatePath("/network/[slug]", "page");

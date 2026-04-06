@@ -19,11 +19,11 @@ export const metadata: Metadata = {
   title: "First-Time Church Visit Guide - What to Actually Expect",
   description:
     "Honest step-by-step guide for your first worship service. What the music is like, whether you need to raise your hands, what to do during an altar call, and everything else nobody tells you.",
-  alternates: { canonical: "https://gospelchannel.com/tools/first-visit-guide" },
+  alternates: { canonical: "https://gospelchannel.com/guides/first-visit-guide" },
   openGraph: {
     title: "Your First Church Visit, Step by Step",
     description: "Walk through every moment of a Sunday service so nothing catches you off guard.",
-    url: "https://gospelchannel.com/tools/first-visit-guide",
+    url: "https://gospelchannel.com/guides/first-visit-guide",
     siteName: "GospelChannel",
     type: "article",
   },
@@ -225,7 +225,7 @@ export default function FirstVisitGuidePage() {
 
       <GuideCTA
         links={[
-          { label: "Find your church", href: "/tools/church-fit-quiz" },
+          { label: "Find your church", href: "/guides/church-fit-quiz" },
           { label: "Browse churches", href: "/church" },
         ]}
       />

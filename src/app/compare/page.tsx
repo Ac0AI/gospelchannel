@@ -22,16 +22,16 @@ export default function CompareHubPage() {
         </p>
         <div className="mt-7 flex flex-wrap gap-3">
           <Link
-            href="/tools/church-fit-quiz"
+            href="/guides/church-fit-quiz"
             className="rounded-full bg-rose-gold px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-rose-gold-deep"
           >
             Take the fit quiz
           </Link>
           <Link
-            href="/tools"
+            href="/guides"
             className="rounded-full border border-rose-200/80 px-5 py-3 text-sm font-semibold text-warm-brown transition-colors hover:border-rose-300 hover:bg-blush-light"
           >
-            Browse all tools
+            Browse all guides
           </Link>
         </div>
       </section>

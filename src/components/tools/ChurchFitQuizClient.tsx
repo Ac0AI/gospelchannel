@@ -70,7 +70,7 @@ export function ChurchFitQuizClient({ lanes }: { lanes: DiscoveryLane[] }) {
       params.set("area", deferredAreaQuery);
     }
 
-    fetch(`/api/tools/church-fit?${params.toString()}`, { signal: controller.signal })
+    fetch(`/api/guides/church-fit?${params.toString()}`, { signal: controller.signal })
       .then(async (response) => {
         if (!response.ok) {
           throw new Error("Could not load matching churches");

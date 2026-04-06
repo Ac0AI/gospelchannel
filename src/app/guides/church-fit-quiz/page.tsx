@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "Church Fit Quiz",
   description:
     "Answer seven fast questions about worship style, tradition, and Sunday priorities to find where you'll fit before your first visit.",
-  alternates: { canonical: "https://gospelchannel.com/tools/church-fit-quiz" },
+  alternates: { canonical: "https://gospelchannel.com/guides/church-fit-quiz" },
 };
 
 export default async function ChurchFitQuizPage() {

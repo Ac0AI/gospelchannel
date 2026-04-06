@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "Church Sound Match",
   description:
     "Match your worship taste to church styles and open church pages that already sound closest to home.",
-  alternates: { canonical: "https://gospelchannel.com/tools/worship-style-match" },
+  alternates: { canonical: "https://gospelchannel.com/guides/worship-style-match" },
 };
 
 export default async function WorshipStyleMatchPage() {

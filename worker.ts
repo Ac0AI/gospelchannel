@@ -22,9 +22,9 @@ type WorkerHandler = {
 
 const openNextWorker = generatedOpenNextWorker as OpenNextWorkerModule;
 
-async function runScheduledSync(env: CloudflareEnv, ctx: WorkerExecutionContext) {
+async function runScheduledCron(env: CloudflareEnv, ctx: WorkerExecutionContext, path: string) {
   const origin = env.NEXT_PUBLIC_SITE_URL || "https://gospelchannel.com";
-  const url = new URL("/api/cron/sync", origin);
+  const url = new URL(path, origin);
   const headers = new Headers();
 
   if (env.CRON_SECRET) {
@@ -42,7 +42,7 @@ async function runScheduledSync(env: CloudflareEnv, ctx: WorkerExecutionContext)
 
   if (!response.ok) {
     const details = (await response.text().catch(() => response.statusText)).slice(0, 200);
-    throw new Error(`Scheduled sync failed with ${response.status}: ${details}`);
+    throw new Error(`Cron ${path} failed with ${response.status}: ${details}`);
   }
 }
 
@@ -50,8 +50,12 @@ export { BucketCachePurge, DOQueueHandler, DOShardedTagCache };
 
 const worker: WorkerHandler = {
   fetch: openNextWorker.fetch,
-  async scheduled(_controller: WorkerScheduledController, env: CloudflareEnv, ctx: WorkerExecutionContext) {
-    await runScheduledSync(env, ctx);
+  async scheduled(controller: WorkerScheduledController, env: CloudflareEnv, ctx: WorkerExecutionContext) {
+    if (controller.cron === "23 6 * * *") {
+      await runScheduledCron(env, ctx, "/api/cron/push-indexing");
+    } else {
+      await runScheduledCron(env, ctx, "/api/cron/sync");
+    }
   },
 };
 

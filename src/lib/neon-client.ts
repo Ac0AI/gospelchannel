@@ -48,6 +48,7 @@ const TABLE_NAMES = new Set([
   "church_vote_events",
   "video_moved_totals",
   "video_moved_events",
+  "app_kv",
   "app_rate_limits",
   "user",
   "session",
