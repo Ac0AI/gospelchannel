@@ -76,7 +76,7 @@ const guides = {
 };
 
 const selectedGuide = process.argv[2];
-const outputBase = "tmp/guide-images";
+const outputBase = "assets/guides";
 
 function generateImage(guide, image) {
   const dir = path.join(outputBase, guide);
