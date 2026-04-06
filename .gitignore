@@ -74,3 +74,11 @@ lighthouse-*.json
 .gsc-push-checkpoint.json
 .pnpm-store/
 posthog-setup-report.md
+
+# internal docs (local paths, strategies, plans)
+docs/superpowers/
+docs/lemlist-outreach-strategy.md
+docs/MIGRATION_STATUS.md
+
+# video project (separate build)
+video/

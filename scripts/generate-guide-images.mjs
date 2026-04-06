@@ -14,7 +14,7 @@ import * as path from "node:path";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 if (!GEMINI_API_KEY) {
-  console.error("Set GEMINI_API_KEY (found in /Users/dpr/Desktop/Egna Appar/Projekt/.env.shared)");
+  console.error("Set GEMINI_API_KEY environment variable");
   process.exit(1);
 }
 

@@ -47,3 +47,12 @@ Zonen `gospelchannel.com` kör Enterprise med $5000 credits.
 - `/admin/candidates` - Alla kyrkor (pending/approved/rejected) med edit-formulär inkl. hero image
 - `/admin/suggestions` - Inkomna förslag
 - Auto-enrichment körs i bakgrunden (waitUntil) när suggestions submittas
+
+## Open source
+
+Repot är publikt. Tänk på:
+- **Inga lokala sökvägar** (`/Users/...`) i kod eller docs som committas
+- **Inga email-adresser** i committat material (använd env vars)
+- **Inga API-nycklar** - allt via `.env.local` (gitignored) eller `wrangler secret`
+- **Interna planer/strategier** ligger i `docs/superpowers/` och `docs/lemlist-*` som är gitignored
+- Kör `git diff --cached` innan commit om du är osäker
