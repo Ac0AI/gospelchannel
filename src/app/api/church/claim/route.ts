@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { addChurchClaim } from "@/lib/church-community";
 import { getChurchBySlugAsync } from "@/lib/content";
 import { sendClaimReceivedEmail, sendClaimAdminNotification } from "@/lib/email";
@@ -80,21 +81,17 @@ export async function POST(request: NextRequest) {
 
     const churchName = church.name || churchSlug;
 
-    sendClaimReceivedEmail({
-      to: email,
-      name,
-      churchName,
-      churchSlug,
-    }).catch((err) => console.error("[claim] Failed to send confirmation email:", err));
-
-    sendClaimAdminNotification({
-      claimantName: name,
-      claimantEmail: email,
-      role: role || undefined,
-      churchName,
-      churchSlug,
-      message: message || undefined,
-    }).catch((err) => console.error("[claim] Failed to send admin notification:", err));
+    const { ctx } = await getCloudflareContext({ async: true });
+    ctx.waitUntil(
+      Promise.all([
+        sendClaimReceivedEmail({ to: email, name, churchName, churchSlug })
+          .catch((err) => console.error("[claim] Failed to send confirmation email:", err)),
+        sendClaimAdminNotification({
+          claimantName: name, claimantEmail: email, role: role || undefined,
+          churchName, churchSlug, message: message || undefined,
+        }).catch((err) => console.error("[claim] Failed to send admin notification:", err)),
+      ]),
+    );
 
     return NextResponse.json({
       success: true,

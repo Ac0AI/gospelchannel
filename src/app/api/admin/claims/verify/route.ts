@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { requireAdminRoute } from "@/lib/admin-route";
 import { verifyChurchClaim } from "@/lib/church-community";
 import { getChurchBySlugAsync } from "@/lib/content";
@@ -20,11 +21,14 @@ export async function POST(request: NextRequest) {
     const result = await verifyChurchClaim(payload.id);
 
     const church = await getChurchBySlugAsync(result.churchSlug);
-    sendClaimVerifiedEmail({
-      to: result.email,
-      churchName: church?.name || result.churchSlug,
-      churchSlug: result.churchSlug,
-    }).catch((err) => console.error("[verify] Failed to send notification email:", err));
+    const { ctx } = await getCloudflareContext({ async: true });
+    ctx.waitUntil(
+      sendClaimVerifiedEmail({
+        to: result.email,
+        churchName: church?.name || result.churchSlug,
+        churchSlug: result.churchSlug,
+      }).catch((err) => console.error("[verify] Failed to send notification email:", err)),
+    );
 
     return admin.json({ success: true });
   } catch (err) {
