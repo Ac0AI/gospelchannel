@@ -97,6 +97,13 @@ export default function FirstVisitGuidePage() {
           people sit there for ten. Take a breath. You can leave anytime -
           nobody is tracking license plates.
         </p>
+        <p>
+          And don't be surprised if the building doesn't look like a church.
+          Many churches meet in conference centers, old warehouses, or school
+          auditoriums. Some look like offices with a coffee bar. Others have
+          stained glass and a steeple. Both are real churches - they just
+          dress differently.
+        </p>
         <GuideQuote text="I sat in my car for ten minutes the first time. Turned the engine on twice. Then a woman knocked on my window and said 'First time? Me too. Let's go in together.'" />
       </GuideStep>
 
