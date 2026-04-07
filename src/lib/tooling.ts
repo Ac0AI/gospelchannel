@@ -169,6 +169,13 @@ export const GUIDE_CARDS: ToolCard[] = [
     eyebrow: "Guide",
     icon: "hands",
   },
+  {
+    href: "/guides/faith-faq",
+    title: "Common Questions About Faith",
+    description: "Honest answers to the big questions about salvation, baptism, the Holy Spirit, and church life.",
+    eyebrow: "Guide",
+    icon: "book",
+  },
 ];
 
 export const COMPARE_CARDS: CompareCard[] = [
