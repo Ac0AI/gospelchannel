@@ -82,3 +82,11 @@ docs/MIGRATION_STATUS.md
 
 # video project (separate build)
 video/
+
+# macOS iCloud duplicate files ("filename 2.ts", "folder 3") — never commit
+* 2
+* 2.*
+* 3
+* 3.*
+* 4
+* 4.*
