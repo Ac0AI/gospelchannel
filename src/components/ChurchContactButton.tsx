@@ -94,13 +94,13 @@ export function ChurchContactButton({ churchSlug, churchName }: { churchSlug: st
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-espresso/50 px-4 py-6 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-espresso/50 px-4 py-6 backdrop-blur-sm">
           <div
             ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby="church-contact-title"
-            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
+            className="relative z-[1001] max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl bg-white p-6 shadow-xl"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
