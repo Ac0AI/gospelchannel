@@ -62,7 +62,7 @@ export function SiteFooter() {
         <p className="mt-1">
           <Link href="/privacy" prefetch={false} className="transition-colors hover:text-espresso">Privacy Policy</Link>
           {" · "}
-          <a href="mailto:hello@gospelchannel.com" className="transition-colors hover:text-espresso">Contact</a>
+          <a href="mailto:hi@gospelchannel.com" className="transition-colors hover:text-espresso">Contact</a>
         </p>
       </div>
     </footer>

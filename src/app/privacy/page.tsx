@@ -55,8 +55,8 @@ export default function PrivacyPage() {
           <h2 className="font-serif text-xl font-semibold text-espresso">Contact</h2>
           <p className="mt-2">
             If you have questions about this privacy policy, reach us at{" "}
-            <a href="mailto:hello@gospelchannel.com" className="font-semibold text-rose-gold hover:text-rose-gold-deep">
-              hello@gospelchannel.com
+            <a href="mailto:hi@gospelchannel.com" className="font-semibold text-rose-gold hover:text-rose-gold-deep">
+              hi@gospelchannel.com
             </a>.
           </p>
         </section>
