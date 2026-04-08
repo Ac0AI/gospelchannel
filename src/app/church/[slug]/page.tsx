@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Suspense } from "react";
+import { ChurchContactButton } from "@/components/ChurchContactButton";
 import { ChurchLatestUpdatesSection } from "@/components/ChurchLatestUpdatesSection";
 import { ChurchNetworkSection } from "@/components/ChurchNetworkSection";
 import { FollowChurchButton } from "@/components/FollowChurchButton";
@@ -200,7 +201,12 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   const serviceTimeLabel = getFirstServiceTimeLabel(serviceTimes);
   const streetAddress = normalizeDisplayText(enrichment?.streetAddress);
   const city = extractCity(church.location);
-  const contactEmail = isValidPublicEmail(enrichment?.contactEmail || church.email) ? (enrichment?.contactEmail || church.email) : undefined;
+  const rawEmail = enrichment?.contactEmail || church.email;
+  const hasValidEmail = isValidPublicEmail(rawEmail);
+  // Email is only exposed publicly when the church is human-verified AND has explicitly opted in.
+  // Otherwise visitors use the contact form, which forwards to the email server-side.
+  const emailVisiblePublicly = Boolean(church.verifiedAt && church.showEmailPublicly);
+  const contactEmail = hasValidEmail && emailVisiblePublicly ? rawEmail : undefined;
   const phone = isValidPublicPhone(enrichment?.phone) ? enrichment?.phone : undefined;
 
   // Social stats for hero
@@ -261,7 +267,8 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   // Enrichment: about section data
   const hasServiceTimes = serviceTimes.length > 0;
   const hasAddress = Boolean(streetAddress);
-  const hasContact = Boolean(contactEmail || phone);
+  const canContactChurch = Boolean(hasValidEmail || phone);
+  const hasContact = Boolean(contactEmail || phone || hasValidEmail);
   const hasMinistries = !!(enrichment?.childrenMinistry || enrichment?.youthMinistry || (enrichment?.ministries?.length ?? 0) > 0);
   const hasAboutData = hasServiceTimes || hasAddress || hasContact || hasMinistries || socialLinks.length > 0 || Boolean(whatToExpect);
   const hasSocialMedia = socialLinks.length > 0;
@@ -274,7 +281,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   // Compute missing fields for HelpImproveCard
   const missingFields: MissingField[] = [];
   if (!hasServiceTimes) missingFields.push({ key: "service_times", label: "Service times", placeholder: "e.g. Sundays 10:00 AM" });
-  if (!hasContact) missingFields.push({ key: "contact", label: "Contact email", placeholder: "e.g. info@church.org" });
+  if (!hasValidEmail && !phone) missingFields.push({ key: "contact", label: "Contact email", placeholder: "e.g. info@church.org" });
   if (!hasAddress) missingFields.push({ key: "address", label: "Street address", placeholder: "e.g. 123 Main St, City" });
   if (!hasSocialMedia) missingFields.push({ key: "social_media", label: "Social media", placeholder: "e.g. instagram.com/church" });
   if (!hasPlaylist && videos.length === 0) missingFields.push({ key: "playlist", label: "Worship playlist", placeholder: "e.g. Spotify or YouTube link" });
@@ -605,6 +612,9 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                     )}
                     {phone && (
                       <a href={`tel:${phone}`} className="block text-espresso hover:text-rose-gold">{phone}</a>
+                    )}
+                    {!contactEmail && hasValidEmail && (
+                      <ChurchContactButton churchSlug={church.slug} churchName={church.name} />
                     )}
                   </dd>
                 </div>

@@ -1,0 +1,1 @@
+ALTER TABLE "churches" ADD COLUMN "show_email_publicly" boolean DEFAULT false NOT NULL;

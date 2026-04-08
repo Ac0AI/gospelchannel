@@ -46,6 +46,7 @@ export type ChurchConfig = {
   playlistCount?: number;
   qualityScore?: number;
   verifiedAt?: string;
+  showEmailPublicly?: boolean;
   dataFlags?: string[];
   promotionTier?: "promotable" | "catalog_only";
   displayReady?: boolean;

@@ -75,6 +75,7 @@ type ChurchDataRow = ChurchDirectorySeedRow & {
   header_image_attribution: string | null;
   last_researched: string | null;
   verified_at: string | null;
+  show_email_publicly: boolean | null;
   aliases: string[] | null;
   language: string | null;
   source_kind: ChurchConfig["sourceKind"] | null;
@@ -292,6 +293,7 @@ function mapRowToChurchConfig(row: ChurchDataRow, enrichment?: Record<string, un
     headerImageAttribution: row.header_image_attribution || undefined,
     lastResearched: row.last_researched || undefined,
     verifiedAt: row.verified_at || undefined,
+    showEmailPublicly: row.show_email_publicly ?? false,
     aliases: row.aliases || undefined,
     language: row.language || undefined,
     sourceKind: row.source_kind || undefined,

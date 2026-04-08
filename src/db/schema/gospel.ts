@@ -50,6 +50,7 @@ export const churches = pgTable(
     spotifyOwnerId: text("spotify_owner_id"),
     lastResearched: timestamp("last_researched", { withTimezone: true }),
     verifiedAt: timestamp("verified_at", { withTimezone: true }),
+    showEmailPublicly: boolean("show_email_publicly").notNull().default(false),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },

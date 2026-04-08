@@ -29,12 +29,14 @@ const CONTACT_PATHS = [
   "/get-in-touch", "/info", "/impressum",
 ];
 
-// Emails to ignore (generic, hosting, spam)
+// Emails to ignore (generic, hosting, spam, placeholder patterns)
 const IGNORED_EMAIL_PATTERNS = [
   /noreply/i, /no-reply/i, /support@wix/i, /support@squarespace/i,
   /support@churchwebworks/i, /admin@wordpress/i, /example\.com/i,
   /test@/i, /webmaster@/i, /postmaster@/i, /user@domain/i,
   /info@mysite/i, /email@example/i, /your-email@/i, /name@domain/i,
+  /^example@/i, /@mysite\./i, /@example\./i, /yourname@/i, /firstname.*lastname@/i,
+  /@domain\.com/i, /@yourdomain/i, /@yourchurch/i, /placeholder/i,
 ];
 
 function extractEmails(html) {

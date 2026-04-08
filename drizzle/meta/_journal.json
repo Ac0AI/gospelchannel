@@ -29,6 +29,13 @@
       "when": 1775667440298,
       "tag": "0003_add_archived_status",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1775667788738,
+      "tag": "0004_add_show_email_publicly",
+      "breakpoints": true
     }
   ]
 }
