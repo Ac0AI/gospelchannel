@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 
 /**
- * Backfill emails for pending churches by crawling contact pages.
- * Usage: node scripts/backfill-emails.mjs [--dry-run]
+ * Backfill emails for churches by crawling contact pages.
+ * Usage:
+ *   node scripts/backfill-emails.mjs [--dry-run]
+ *   node scripts/backfill-emails.mjs --status=approved --countries="United Kingdom,Germany,Sweden"
+ *   node scripts/backfill-emails.mjs --status=approved --limit=50
  */
 
 import { neon } from "@neondatabase/serverless";
@@ -116,18 +119,46 @@ async function findEmailForChurch(church) {
   return pickBestEmail([...allEmails], church.name);
 }
 
+function parseFlag(name, fallback = null) {
+  const arg = process.argv.find(a => a.startsWith(`--${name}=`));
+  return arg ? arg.split("=").slice(1).join("=") : fallback;
+}
+
 async function main() {
-  console.log(`Mode: ${DRY_RUN ? "DRY RUN" : "LIVE"}\n`);
+  const STATUS_LIST = (parseFlag("status", "pending") || "pending").split(",").map(s => s.trim()).filter(Boolean);
+  const COUNTRIES_RAW = parseFlag("countries");
+  const COUNTRIES = COUNTRIES_RAW ? COUNTRIES_RAW.split(",").map(c => c.trim()).filter(Boolean) : null;
+  const LIMIT = parseInt(parseFlag("limit", "0"), 10) || 0;
 
-  const churches = await sql`
-    SELECT slug, name, website, email
+  console.log(`Mode: ${DRY_RUN ? "DRY RUN" : "LIVE"}`);
+  console.log(`Status filter: ${STATUS_LIST.join(", ")}`);
+  console.log(`Country filter: ${COUNTRIES ? COUNTRIES.join(", ") : "all"}`);
+  console.log(`Limit: ${LIMIT || "none"}\n`);
+
+  let query = `
+    SELECT slug, name, website, email, country
     FROM churches
-    WHERE status = 'pending' AND (email IS NULL OR email = '')
-    AND website IS NOT NULL AND website != ''
-    ORDER BY name
+    WHERE status = ANY($1::text[])
+      AND (email IS NULL OR email = '')
+      AND website IS NOT NULL AND website != ''
   `;
+  const params = [STATUS_LIST];
 
-  console.log(`Found ${churches.length} pending churches without email\n`);
+  if (COUNTRIES) {
+    query += ` AND country = ANY($${params.length + 1}::text[])`;
+    params.push(COUNTRIES);
+  }
+
+  query += ` ORDER BY country, name`;
+
+  if (LIMIT > 0) {
+    query += ` LIMIT $${params.length + 1}`;
+    params.push(LIMIT);
+  }
+
+  const churches = await sql.query(query, params);
+
+  console.log(`Found ${churches.length} churches without email matching filters\n`);
 
   let found = 0;
   let missed = 0;

@@ -58,7 +58,7 @@ export const churches = pgTable(
     countryIndex: index("idx_churches_country").on(table.country),
     candidateUnique: uniqueIndex("idx_churches_candidate_id").on(table.candidateId),
     spotifyOwnerUnique: uniqueIndex("idx_churches_spotify_owner_id").on(table.spotifyOwnerId),
-    statusCheck: check("chk_churches_status", sql`${table.status} in ('pending', 'approved', 'rejected')`),
+    statusCheck: check("chk_churches_status", sql`${table.status} in ('pending', 'approved', 'rejected', 'archived')`),
     sourceKindCheck: check(
       "chk_churches_source_kind",
       sql`${table.sourceKind} in ('manual', 'suggested', 'discovered', 'claimed')`,
