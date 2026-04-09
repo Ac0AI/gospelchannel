@@ -21,26 +21,33 @@ import { GoogleAuth } from "google-auth-library";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
-const envFile = fs.readFileSync(path.join(root, ".env.local"), "utf8");
-for (const m of envFile.matchAll(/^([A-Z_]+)=(".*?"|.*?)$/gms)) {
-  const [, k, v] = m;
-  if (!process.env[k]) process.env[k] = v.startsWith('"') ? v.slice(1, -1) : v;
+
+// Load .env.local if it exists — skipped in CI where env vars come from secrets.
+try {
+  const envFile = fs.readFileSync(path.join(root, ".env.local"), "utf8");
+  for (const m of envFile.matchAll(/^([A-Z_]+)=(".*?"|.*?)$/gms)) {
+    const [, k, v] = m;
+    if (!process.env[k]) process.env[k] = v.startsWith('"') ? v.slice(1, -1) : v;
+  }
+} catch {
+  // No .env.local — expect env vars from the environment directly.
 }
 
-const SITE = "sc-domain:gospelchannel.com";
+export const SITE = "sc-domain:gospelchannel.com";
 const SITE_ENC = encodeURIComponent(SITE);
 const API = "https://searchconsole.googleapis.com/webmasters/v3";
 
-// CLI flags
+// Only run CLI main when invoked as a script (not when imported).
+const isMain = process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
 const args = process.argv.slice(2);
 const DAYS = parseInt(args.find(a => a.startsWith("--days="))?.split("=")[1] || "28", 10);
 const JSON_OUTPUT = args.includes("--json");
 
-function fmtDate(d) {
+export function fmtDate(d) {
   return d.toISOString().split("T")[0];
 }
 
-function getRanges(days) {
+export function getRanges(days) {
   // GSC has a ~3 day delay, but we keep it simple and end at today.
   const currentEnd = new Date();
   const currentStart = new Date();
@@ -57,7 +64,7 @@ function getRanges(days) {
   };
 }
 
-function getAuth() {
+export function getAuth() {
   const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
   const key = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY;
   if (!email || !key) {
@@ -69,7 +76,7 @@ function getAuth() {
   });
 }
 
-async function query(client, body) {
+export async function query(client, body) {
   const res = await client.request({
     url: `${API}/sites/${SITE_ENC}/searchAnalytics/query`,
     method: "POST",
@@ -78,7 +85,7 @@ async function query(client, body) {
   return res.data.rows || [];
 }
 
-async function getTotals(client, range) {
+export async function getTotals(client, range) {
   const rows = await query(client, {
     startDate: range.start,
     endDate: range.end,
@@ -88,7 +95,7 @@ async function getTotals(client, range) {
   return rows[0] || { clicks: 0, impressions: 0, ctr: 0, position: 0 };
 }
 
-async function getTop(client, range, dimension, limit = 10) {
+export async function getTop(client, range, dimension, limit = 10) {
   return query(client, {
     startDate: range.start,
     endDate: range.end,
@@ -97,7 +104,7 @@ async function getTop(client, range, dimension, limit = 10) {
   });
 }
 
-async function getSitemap(client) {
+export async function getSitemap(client) {
   try {
     const res = await client.request({
       url: `${API}/sites/${SITE_ENC}/sitemaps`,
@@ -108,7 +115,7 @@ async function getSitemap(client) {
   }
 }
 
-function delta(now, before) {
+export function delta(now, before) {
   if (!before || before < 5) {
     // Tiny or zero baseline → percentage is misleading. Show absolute change instead.
     if (now === before) return "no change";
@@ -202,8 +209,8 @@ function renderText(report) {
   return lines.join("\n");
 }
 
-async function main() {
-  const range = getRanges(DAYS);
+export async function generateReport(days = 28) {
+  const range = getRanges(days);
   const auth = getAuth();
   const client = await auth.getClient();
 
@@ -216,8 +223,11 @@ async function main() {
     getSitemap(client),
   ]);
 
-  const report = { range, totals, prevTotals, topCountries, topQueries, topPages, sitemap };
+  return { range, totals, prevTotals, topCountries, topQueries, topPages, sitemap };
+}
 
+async function main() {
+  const report = await generateReport(DAYS);
   if (JSON_OUTPUT) {
     console.log(JSON.stringify(report, null, 2));
   } else {
@@ -225,8 +235,12 @@ async function main() {
   }
 }
 
-main().catch(err => {
-  console.error("Error:", err.message);
-  if (err.response?.data) console.error(JSON.stringify(err.response.data, null, 2));
-  process.exit(1);
-});
+if (isMain) {
+  main().catch(err => {
+    console.error("Error:", err.message);
+    if (err.response?.data) console.error(JSON.stringify(err.response.data, null, 2));
+    process.exit(1);
+  });
+}
+
+export { renderText };

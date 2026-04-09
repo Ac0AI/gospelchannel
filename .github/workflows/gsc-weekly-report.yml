@@ -1,0 +1,42 @@
+name: GSC weekly report
+
+on:
+  schedule:
+    # Mondays at 07:00 UTC — that's 08:00 CET / 09:00 CEST for Spain.
+    # GitHub Actions cron can be delayed up to 15-30 min during peak load,
+    # so the email may arrive a little after the hour.
+    - cron: "0 7 * * 1"
+  workflow_dispatch: # allow manual runs from the Actions tab
+
+permissions:
+  contents: read
+
+jobs:
+  send-report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Send weekly GSC email
+        env:
+          GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+          GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY }}
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          ADMIN_EMAILS: ${{ secrets.ADMIN_EMAILS }}
+          NOTIFY_FROM_EMAIL: noreply@gospelchannel.com
+        run: node scripts/gsc-weekly-email.mjs
