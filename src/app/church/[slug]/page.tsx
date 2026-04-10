@@ -470,16 +470,18 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
 
       {/* ━━━ ABOUT & CTAs ━━━ */}
       <section className="rounded-2xl border border-rose-200/40 bg-white/80 p-6 backdrop-blur-sm sm:p-8">
-        <h2 className="font-serif text-xl font-semibold text-espresso sm:text-2xl">About</h2>
+        <div className="flex flex-wrap items-baseline justify-between gap-3">
+          <h2 className="font-serif text-xl font-semibold text-espresso sm:text-2xl">About</h2>
+          {pastorName && (
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-warm">
+              {pastorTitle || 'Pastor'}
+              <span className="ml-2 normal-case tracking-normal text-espresso">{pastorName}</span>
+            </p>
+          )}
+        </div>
         <p className="mt-4 max-w-3xl text-base leading-relaxed text-warm-brown sm:text-lg">
           {enrichment?.summary || church.description}
         </p>
-
-        {pastorName && (
-          <p className="mt-2 text-sm font-medium text-warm-brown/70">
-            Led av {pastorName}{pastorTitle ? `, ${pastorTitle}` : ''}
-          </p>
-        )}
 
         <div className="mt-5 flex flex-wrap items-center gap-3">
           {hasPlayableSpotify && (
