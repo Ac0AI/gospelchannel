@@ -134,25 +134,50 @@ export async function sendClaimReceivedEmail(params: {
   const siteUrl = getConfiguredSiteUrl();
   const churchUrl = `${siteUrl}/church/${params.churchSlug}`;
 
+  // Safety net: if the form submission came in lowercase, capitalize the first letter
+  // of the first name so the greeting never reads "Hi david".
+  const rawName = (params.name || "").trim();
+  const firstName = rawName.split(/\s+/)[0] || "friend";
+  const greeting = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+
   const html = `
-    <div style="font-family: Georgia, serif; max-width: 520px; margin: 0 auto; color: #3b2f2f;">
-      <h2 style="margin-bottom: 4px;">We received your claim</h2>
+    <div style="font-family: Georgia, serif; max-width: 560px; margin: 0 auto; color: #3b2f2f; line-height: 1.55;">
+      <p style="margin-top: 0;">Hi ${greeting},</p>
       <p>
-        Hi ${params.name}, thanks for submitting a claim for
+        Welcome to GospelChannel — and thanks for claiming
         <strong><a href="${churchUrl}" style="color: #b06a50; text-decoration: none;">${params.churchName}</a></strong>.
+        Your request just landed in my inbox.
       </p>
       <p>
-        We'll review your claim and get back to you within <strong>48 hours</strong>.
-        Once approved you'll be able to sign in and manage your church listing.
+        Every claim goes through a quick human review (usually within <strong>48 hours</strong>)
+        so we can make sure the listing ends up in the right hands. You'll get an email from me
+        the moment it's approved. After that you'll be able to:
+      </p>
+      <ul style="padding-left: 20px; margin: 12px 0;">
+        <li style="margin-bottom: 6px;">Update the hero image, description, and service times</li>
+        <li style="margin-bottom: 6px;">Link Spotify playlists and YouTube videos</li>
+        <li style="margin-bottom: 6px;">Receive messages from visitors through the contact form</li>
+        <li style="margin-bottom: 6px;">Get the Verified Church badge on your listing</li>
+      </ul>
+      <p>
+        Until then, your page is already live and indexed by search engines:
       </p>
       <p style="margin: 24px 0;">
-        <a href="${churchUrl}" style="background: #c08888; color: #fff; padding: 12px 28px; border-radius: 999px; text-decoration: none; font-weight: 600;">
-          View church page
+        <a href="${churchUrl}" style="background: #b06a50; color: #fff; padding: 12px 28px; border-radius: 999px; text-decoration: none; font-weight: 600; display: inline-block;">
+          See your page →
         </a>
       </p>
-      <hr style="border: none; border-top: 1px solid #e8d8d0; margin: 24px 0;" />
-      <p style="font-size: 13px; color: #9a8a7a;">
-        If you did not submit this claim, you can safely ignore this email.
+      <p>
+        Questions? Just hit reply — I read every one.
+      </p>
+      <p style="margin-bottom: 4px;">Talk soon,</p>
+      <p style="margin-top: 0;">
+        <strong>David</strong><br>
+        <a href="${siteUrl}" style="color: #9a8a7a; text-decoration: none;">GospelChannel.com</a>
+      </p>
+      <hr style="border: none; border-top: 1px solid #e8d8d0; margin: 28px 0 16px;" />
+      <p style="font-size: 13px; color: #9a8a7a; margin-bottom: 0;">
+        If you didn't submit this claim, no worries — you can safely ignore this email.
       </p>
     </div>
   `.trim();
@@ -160,7 +185,7 @@ export async function sendClaimReceivedEmail(params: {
   await sendEmail({
     to: params.to,
     from: NOTIFY_FROM_EMAIL,
-    subject: `Claim received for ${params.churchName}`,
+    subject: `Thanks for claiming ${params.churchName}`,
     html,
   });
 }
