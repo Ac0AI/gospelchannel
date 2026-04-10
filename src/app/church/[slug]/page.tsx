@@ -470,15 +470,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
 
       {/* ━━━ ABOUT & CTAs ━━━ */}
       <section className="rounded-2xl border border-rose-200/40 bg-white/80 p-6 backdrop-blur-sm sm:p-8">
-        <div className="flex flex-wrap items-baseline justify-between gap-3">
-          <h2 className="font-serif text-xl font-semibold text-espresso sm:text-2xl">About</h2>
-          {pastorName && (
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-warm">
-              {pastorTitle || 'Pastor'}
-              <span className="ml-2 normal-case tracking-normal text-espresso">{pastorName}</span>
-            </p>
-          )}
-        </div>
+        <h2 className="font-serif text-xl font-semibold text-espresso sm:text-2xl">About</h2>
         <p className="mt-4 max-w-3xl text-base leading-relaxed text-warm-brown sm:text-lg">
           {enrichment?.summary || church.description}
         </p>
@@ -629,6 +621,16 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                     What to expect
                   </dt>
                   <dd className="mt-1 text-sm leading-relaxed text-espresso">{whatToExpect}</dd>
+                </div>
+              )}
+
+              {pastorName && (
+                <div>
+                  <dt className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-warm">
+                    <svg className="h-3.5 w-3.5 text-rose-gold/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+                    {pastorTitle || 'Pastor'}
+                  </dt>
+                  <dd className="mt-1 text-sm text-espresso">{pastorName}</dd>
                 </div>
               )}
 
