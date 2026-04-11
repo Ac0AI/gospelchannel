@@ -358,6 +358,7 @@ export type ProfileFieldDefinition = {
   name: string;
   label: string;
   hint?: string;
+  placeholder?: string;
   category: 'badge' | 'bonus' | 'extra';
   points: number;
   type: 'text' | 'url' | 'email' | 'tel' | 'textarea' | 'select' | 'multi-select' | 'checkboxes' | 'service-times' | 'address' | 'image' | 'pastor';

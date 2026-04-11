@@ -94,8 +94,14 @@ Needed for specific integrations and production-like flows:
 - `APIFY_TOKEN`
 - `ANTHROPIC_API_KEY`
 - `BREVO_API_KEY`
-- `ADMIN_EMAILS`
 - `CRON_SECRET`
+
+Admin access is database-backed.
+Promote an account to admin with:
+
+```bash
+npm run db:seed -- --emails=you@example.com
+```
 
 Notes:
 

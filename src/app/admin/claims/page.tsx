@@ -2,8 +2,11 @@ import Link from "next/link";
 import { getChurchClaims } from "@/lib/church-community";
 import { AdminNav } from "@/components/admin/AdminNav";
 import { AdminClaimsPanel } from "@/components/admin/AdminReviewPanels";
+import { requireAdminPageAccess } from "@/lib/admin-page";
 
 export default async function AdminClaimsPage() {
+  await requireAdminPageAccess("/admin/claims");
+
   const claims = await getChurchClaims();
 
   return (

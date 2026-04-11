@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "church_memberships_church_slug_user_unique" ON "church_memberships" USING btree ("church_slug","user_id") WHERE "church_memberships"."user_id" is not null;

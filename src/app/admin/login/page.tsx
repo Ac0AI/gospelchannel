@@ -1,10 +1,13 @@
 import { AdminLoginForm } from "@/components/admin/AdminLoginForm";
+import { redirectAdminIfSignedIn } from "@/lib/admin-page";
 
 type AdminLoginPageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
 export default async function AdminLoginPage({ searchParams }: AdminLoginPageProps) {
+  await redirectAdminIfSignedIn();
+
   const params = (await searchParams) ?? {};
   const redirectParam = params.redirect;
   const redirectTo =

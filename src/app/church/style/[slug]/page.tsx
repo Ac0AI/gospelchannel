@@ -2,14 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ChurchCollectionPage } from "@/components/ChurchCollectionPage";
 import {
-  STYLE_FILTERS,
   filterChurchDirectory,
   getCountryLinks,
   getStyleFilterBySlug,
   paginateChurches,
 } from "@/lib/church-directory";
 import { getChurchIndexData } from "@/lib/church";
-import { getChurchDirectorySeedAsync } from "@/lib/content";
 
 export const revalidate = 3600;
 
@@ -24,13 +22,6 @@ function readPositivePage(value: string | string[] | undefined): number {
   const raw = Array.isArray(value) ? value[0] : value;
   const parsed = Number.parseInt(raw ?? "", 10);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
-}
-
-export async function generateStaticParams() {
-  const churches = await getChurchDirectorySeedAsync();
-  return STYLE_FILTERS
-    .filter((style) => churches.some((church) => church.musicStyle?.some((value) => style.match.some((candidate) => value.toLowerCase().includes(candidate)))))
-    .map((style) => ({ slug: style.slug }));
 }
 
 export async function generateMetadata({ params, searchParams }: StylePageProps): Promise<Metadata> {

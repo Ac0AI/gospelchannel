@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import Link from "next/link";
 import { createAdminClient, hasServiceConfig } from "@/lib/neon-client";
 import { AdminNav } from "@/components/admin/AdminNav";
+import { requireAdminPageAccess } from "@/lib/admin-page";
 import {
   AdminCandidatesPanel,
   type AdminCandidateRecord,
@@ -273,6 +274,8 @@ function buildCandidateRecords(
 }
 
 export default async function AdminCandidatesPage() {
+  await requireAdminPageAccess("/admin/candidates");
+
   const [candidates, screeningBySlug, playlistReviewsBySlug] = await Promise.all([
     getCandidates(),
     getScreeningMap(),

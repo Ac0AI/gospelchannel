@@ -78,6 +78,11 @@ describe('autoVerifyField', () => {
     expect(result).toBe('no_data');
   });
 
+  it('returns no_data for hero image edits', () => {
+    const result = autoVerifyField('cover_image_url', 'https://storage.example.com/hero.jpg', baseEnrichment as ChurchEnrichment);
+    expect(result).toBe('no_data');
+  });
+
   it('returns no_data for fields without enrichment mapping', () => {
     const result = autoVerifyField('languages', ['Svenska'], baseEnrichment as ChurchEnrichment);
     expect(result).toBe('no_data');

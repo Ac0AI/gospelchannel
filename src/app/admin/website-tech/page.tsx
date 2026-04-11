@@ -6,6 +6,7 @@ import {
   type ChurchWebsiteTechRecord,
 } from "@/lib/church-website-tech";
 import { AdminNav } from "@/components/admin/AdminNav";
+import { requireAdminPageAccess } from "@/lib/admin-page";
 
 type WebsiteTechPageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
@@ -37,7 +38,7 @@ function formatDate(value: string): string {
 
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "Unknown";
-  return date.toLocaleDateString("sv-SE");
+  return date.toLocaleDateString("en-GB");
 }
 
 function formatTechnologies(record: ChurchWebsiteTechRecord): string[] {
@@ -50,6 +51,8 @@ function buildPageHref(filters: ChurchWebsiteTechFilters, page: number): string 
 }
 
 export default async function AdminWebsiteTechPage({ searchParams }: WebsiteTechPageProps) {
+  await requireAdminPageAccess("/admin/website-tech");
+
   const resolvedSearchParams = (await searchParams) ?? {};
   const data = await getChurchWebsiteTechPageData(resolvedSearchParams);
   const exportQuery = buildChurchWebsiteTechQueryString({

@@ -6,6 +6,7 @@ import {
   timestamp,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
+import type { UserRole } from "@/lib/auth-roles";
 
 export const user = pgTable(
   "user",
@@ -13,6 +14,7 @@ export const user = pgTable(
     id: text("id").primaryKey(),
     name: text("name").notNull(),
     email: text("email").notNull(),
+    role: text("role").$type<UserRole>().notNull().default("user"),
     emailVerified: boolean("emailVerified").notNull().default(false),
     image: text("image"),
     createdAt: timestamp("createdAt", { withTimezone: true }).notNull().defaultNow(),

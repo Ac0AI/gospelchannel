@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 // src/app/tools/prayer-guide/page.tsx
 import type { Metadata } from "next";
 import {
@@ -5,7 +6,6 @@ import {
   GuideIllustration,
   GuideStep,
   GuideQuote,
-  GuideTip,
   GuideCTA,
 } from "@/components/guides";
 import { ToolPageTracker } from "@/components/tools/ToolPageTracker";

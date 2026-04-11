@@ -204,6 +204,7 @@ export function buildMergedProfile(
     if (baseChurch.facebookUrl) merged.facebookUrl = baseChurch.facebookUrl;
     if (baseChurch.youtubeUrl) merged.youtubeUrl = baseChurch.youtubeUrl;
     if (baseChurch.logo) merged.logoUrl = baseChurch.logo;
+    if (baseChurch.headerImage) merged.coverImageUrl = baseChurch.headerImage;
     if (baseChurch.description) merged.description = baseChurch.description;
     if (baseChurch.country) merged.country = baseChurch.country;
     if (baseChurch.denomination) merged.denomination = baseChurch.denomination;
@@ -224,6 +225,7 @@ export function buildMergedProfile(
     if (enrichment.instagramUrl) merged.instagramUrl = enrichment.instagramUrl;
     if (enrichment.facebookUrl) merged.facebookUrl = enrichment.facebookUrl;
     if (enrichment.youtubeUrl) merged.youtubeUrl = enrichment.youtubeUrl;
+    if (enrichment.coverImageUrl) merged.coverImageUrl = enrichment.coverImageUrl;
     if (enrichment.denominationNetwork) merged.denomination = enrichment.denominationNetwork;
     if (enrichment.languages) merged.languages = enrichment.languages;
     if (enrichment.ministries) merged.ministries = enrichment.ministries;
@@ -271,6 +273,7 @@ export function buildMergedProfile(
       case 'ministries': merged.ministries = edit.fieldValue; break;
       case 'church_size': merged.churchSize = edit.fieldValue; break;
       case 'logo_url': merged.logoUrl = edit.fieldValue; break;
+      case 'cover_image_url': merged.coverImageUrl = edit.fieldValue; break;
       case 'pastor': {
         const p = edit.fieldValue as { name: string; title?: string };
         merged.pastorName = p.name;

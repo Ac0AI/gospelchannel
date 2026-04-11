@@ -16,6 +16,7 @@ import {
   getChurchSlugLookupCandidates,
   resolveCanonicalChurchSlug,
 } from "@/lib/church-slugs";
+import { filterExplicitNonChurchRows } from "@/lib/non-church-slugs";
 import {
   deriveDisplayAssessment,
   getFirstServiceTimeLabel,
@@ -1119,13 +1120,14 @@ async function getEnrichmentMeta(): Promise<Map<string, IndexEnrichmentHint>> {
 
 async function getChurchIndexRows(): Promise<ChurchIndexRow[]> {
   if (isOfflinePublicBuild() || !hasServiceConfig()) return [];
-  return fetchAllRows((sb, from, to) =>
+  const rows = await fetchAllRows((sb, from, to) =>
     sb.from<ChurchIndexRow[]>("churches")
       .select("slug, name, description, spotify_playlist_ids, additional_playlists, logo, website, spotify_url, country, denomination, location, music_style, email, header_image, verified_at, last_researched, aliases, language, source_kind")
       .eq("status", "approved")
       .order("name")
       .range(from, to)
   );
+  return filterExplicitNonChurchRows(rows);
 }
 
 function mapChurchToIndexRecord(church: ChurchConfig, enrichmentHint?: IndexEnrichmentHint) {

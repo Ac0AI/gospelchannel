@@ -2,16 +2,13 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ChurchCollectionPage } from "@/components/ChurchCollectionPage";
 import {
-  DENOMINATION_FILTERS,
   filterChurchDirectory,
   getCountryLinks,
   getDenominationFilterBySlug,
   getStyleLinks,
-  matchesDenomination,
   paginateChurches,
 } from "@/lib/church-directory";
 import { getChurchIndexData } from "@/lib/church";
-import { getChurchDirectorySeedAsync } from "@/lib/content";
 
 export const revalidate = 3600;
 
@@ -26,13 +23,6 @@ function readPositivePage(value: string | string[] | undefined): number {
   const raw = Array.isArray(value) ? value[0] : value;
   const parsed = Number.parseInt(raw ?? "", 10);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
-}
-
-export async function generateStaticParams() {
-  const churches = await getChurchDirectorySeedAsync();
-  return DENOMINATION_FILTERS
-    .filter((denomination) => churches.some((church) => matchesDenomination(church.denomination, denomination.slug)))
-    .map((denomination) => ({ slug: denomination.slug }));
 }
 
 export async function generateMetadata({ params, searchParams }: DenominationPageProps): Promise<Metadata> {

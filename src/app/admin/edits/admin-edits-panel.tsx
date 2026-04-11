@@ -65,7 +65,7 @@ export function AdminEditsPanel({ edits: initialEdits, enrichments }: Props) {
                 <span className="text-sm text-gray-500">{edit.fieldName}</span>
               </div>
               <span className="text-xs text-gray-400">
-                {new Date(edit.submittedAt).toLocaleDateString('sv-SE')}
+                {new Date(edit.submittedAt).toLocaleDateString('en-GB')}
               </span>
             </div>
 
@@ -77,7 +77,7 @@ export function AdminEditsPanel({ edits: initialEdits, enrichments }: Props) {
                 </div>
               )}
               <div className="rounded-lg bg-blue-50 p-3">
-                <p className="mb-1 text-xs font-medium text-blue-600">Inskickat</p>
+                <p className="mb-1 text-xs font-medium text-blue-600">Submitted</p>
                 <p className="text-sm">
                   {typeof edit.fieldValue === 'object'
                     ? JSON.stringify(edit.fieldValue, null, 2)
@@ -101,13 +101,13 @@ export function AdminEditsPanel({ edits: initialEdits, enrichments }: Props) {
                 disabled={isProcessing}
                 className="rounded-lg bg-green-500 px-4 py-1.5 text-sm font-medium text-white hover:bg-green-600 disabled:opacity-50"
               >
-                Godkänn
+                Approve
               </button>
               <input
                 type="text"
                 value={rejectReason[edit.id] ?? ''}
                 onChange={e => setRejectReason(prev => ({ ...prev, [edit.id]: e.target.value }))}
-                placeholder="Anledning (valfritt)"
+                placeholder="Reason (optional)"
                 className="flex-1 rounded-lg border border-gray-200 px-3 py-1.5 text-sm"
               />
               <button
@@ -115,7 +115,7 @@ export function AdminEditsPanel({ edits: initialEdits, enrichments }: Props) {
                 disabled={isProcessing}
                 className="rounded-lg bg-red-500 px-4 py-1.5 text-sm font-medium text-white hover:bg-red-600 disabled:opacity-50"
               >
-                Avslå
+                Reject
               </button>
             </div>
           </div>

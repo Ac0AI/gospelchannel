@@ -1,0 +1,39 @@
+name: Feature request
+description: Suggest an improvement, idea, or new feature
+title: "[Idea]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      description: Start with the pain point, not the solution.
+      placeholder: It is hard to discover smaller church playlists because...
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would you like to see?
+      placeholder: Add a way to filter churches by country and worship style.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Optional, but useful if you already thought through different approaches.
+  - type: textarea
+    id: visuals
+    attributes:
+      label: Mockups, screenshots, or references
+      description: Optional.
+  - type: dropdown
+    id: pr
+    attributes:
+      label: Interested in opening a PR?
+      options:
+        - No
+        - Maybe
+        - Yes

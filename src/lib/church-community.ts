@@ -1,4 +1,4 @@
-import { desc, eq, gte, inArray, sql } from "drizzle-orm";
+import { desc, gte, inArray, sql } from "drizzle-orm";
 import { getDb, hasDatabaseConfig, schema } from "@/db";
 import { createAdminClient, hasServiceConfig } from "@/lib/neon-client";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
@@ -87,23 +87,6 @@ function dateKey(offsetDays = 0): string {
   const date = new Date(Date.UTC(year, (month ?? 1) - 1, day ?? 1));
   date.setUTCDate(date.getUTCDate() - offsetDays);
   return date.toISOString().slice(0, 10);
-}
-
-function parseZrangeWithScores(raw: unknown): Array<{ member: string; score: number }> {
-  if (!Array.isArray(raw)) return [];
-  if (raw.length > 0 && typeof raw[0] === "object" && raw[0] !== null && "member" in raw[0]) {
-    return (raw as Array<{ member: string; score: number }>).map((r) => ({
-      member: String(r.member),
-      score: Number(r.score),
-    }));
-  }
-  const output: Array<{ member: string; score: number }> = [];
-  for (let i = 0; i < raw.length; i += 2) {
-    const member = raw[i];
-    const score = raw[i + 1];
-    if (typeof member === "string") output.push({ member, score: Number(score ?? 0) });
-  }
-  return output;
 }
 
 function incrementMemoryVote(slug: string): number {
@@ -360,7 +343,7 @@ export async function addChurchClaim(
       church_slug: claim.churchSlug,
       name: claim.name,
       role: claim.role || null,
-      email: claim.email,
+      email: normalizeEmail(claim.email),
       message: claim.message || null,
     })
     .select()
@@ -390,54 +373,43 @@ export async function getChurchMembershipsForUser(userId: string): Promise<Churc
   return ((data as MembershipRow[] | null) ?? []).map(mapMembership);
 }
 
-export async function getActiveChurchMembershipByEmail(email: string): Promise<ChurchMembership | null> {
-  if (!isAdminEnabled()) return null;
+export async function getActiveChurchMembershipsByEmail(email: string): Promise<ChurchMembership[]> {
+  if (!isAdminEnabled()) return [];
 
   const client = createAdminClient();
   const { data, error } = await client
     .from<MembershipRow>("church_memberships")
     .select()
-    .ilike("email", email)
+    .ilike("email", normalizeEmail(email))
     .eq("status", "active")
-    .limit(1)
-    .maybeSingle();
+    .order("created_at", { ascending: true });
 
   if (error) {
     throw new Error(error.message);
   }
 
-  return data ? mapMembership(data) : null;
+  return ((data as MembershipRow[] | null) ?? []).map(mapMembership);
 }
 
-export async function ensureChurchAccessForEmail(email: string): Promise<ChurchMembership | null> {
-  const normalizedEmail = email.trim().toLowerCase();
-  const existingMembership = await getActiveChurchMembershipByEmail(normalizedEmail);
-  if (existingMembership) {
-    return existingMembership;
+export async function ensureChurchAccessForEmail(email: string): Promise<ChurchMembership[]> {
+  const normalizedEmail = normalizeEmail(email);
+  const existingMemberships = await getActiveChurchMembershipsByEmail(normalizedEmail);
+  if (existingMemberships.length > 0) {
+    return existingMemberships;
   }
 
-  if (!isAdminEnabled()) return null;
+  if (!isAdminEnabled()) return [];
 
-  const client = createAdminClient();
-  const { data: claim, error } = await client
-    .from<Pick<ClaimRow, "id">>("church_claims")
-    .select("id")
-    .ilike("email", normalizedEmail)
-    .eq("status", "verified")
-    .order("submitted_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  if (error) {
-    throw new Error(error.message);
+  const verifiedClaimIds = await getVerifiedClaimIdsByEmail(normalizedEmail);
+  if (verifiedClaimIds.length === 0) {
+    return [];
   }
 
-  if (!claim?.id) {
-    return null;
+  for (const claimId of verifiedClaimIds) {
+    await verifyChurchClaim(claimId);
   }
 
-  await verifyChurchClaim(claim.id);
-  return await getActiveChurchMembershipByEmail(normalizedEmail);
+  return await getActiveChurchMembershipsByEmail(normalizedEmail);
 }
 
 export async function getChurchMembershipForUserAndSlug(
@@ -489,64 +461,15 @@ export async function verifyChurchClaim(id: string): Promise<{ email: string; ch
     throw new Error("Claim email is missing");
   }
 
-  let userId: string | null = null;
-  let page = 1;
-
-  while (!userId) {
-    const { data: usersPage, error: usersError } = await client.auth.admin.listUsers({
-      page,
-      perPage: 200,
-    });
-
-    if (usersError) {
-      throw new Error((usersError as { message?: string }).message ?? "Failed to list auth users");
-    }
-
-    const match = usersPage.users.find((user) => String(user.email || "").trim().toLowerCase() === email);
-    if (match) {
-      userId = match.id;
-      break;
-    }
-
-    if (usersPage.users.length < 200) {
-      break;
-    }
-
-    page += 1;
-  }
-
-  if (!userId) {
-    const { data: newUser, error: createError } = await client.auth.admin.createUser({
-      email,
-      email_confirm: true,
-      user_metadata: {
-        full_name: claim.name || "",
-      },
-    });
-
-    if (createError) {
-      throw new Error((createError as { message?: string }).message ?? "Failed to create auth user");
-    }
-
-    userId = newUser.user.id;
-  }
-
-  const { error: membershipError } = await client
-    .from<MembershipRow>("church_memberships")
-    .upsert(
-      {
-        church_slug: claim.church_slug,
-        email,
-        user_id: userId,
-        full_name: claim.name || null,
-        role: "owner",
-        status: "active",
-        claim_id: claim.id,
-      },
-      {
-        onConflict: "church_slug,email",
-      }
-    );
+  const userId = await ensureAuthUserIdForClaimEmail(client, email, claim.name || "");
+  const { error: membershipError } = await upsertChurchMembership(client, {
+    churchSlug: claim.church_slug,
+    email,
+    userId,
+    fullName: claim.name || null,
+    role: "owner",
+    claimId: claim.id,
+  });
 
   if (membershipError) {
     throw new Error(membershipError.message);
@@ -562,6 +485,150 @@ export async function verifyChurchClaim(id: string): Promise<{ email: string; ch
   }
 
   return { email, churchSlug: claim.church_slug, name: claim.name || "" };
+}
+
+async function getVerifiedClaimIdsByEmail(email: string): Promise<string[]> {
+  if (!isAdminEnabled()) return [];
+
+  const client = createAdminClient();
+  const { data, error } = await client
+    .from<Pick<ClaimRow, "id">>("church_claims")
+    .select("id")
+    .ilike("email", normalizeEmail(email))
+    .eq("status", "verified")
+    .order("submitted_at", { ascending: true });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return ((data as Array<Pick<ClaimRow, "id">> | null) ?? []).map((claim) => claim.id);
+}
+
+async function ensureAuthUserIdForClaimEmail(
+  client: ReturnType<typeof createAdminClient>,
+  email: string,
+  fullName: string,
+): Promise<string> {
+  let userId: string | null = null;
+  let page = 1;
+
+  while (!userId) {
+    const { data: usersPage, error: usersError } = await client.auth.admin.listUsers({
+      page,
+      perPage: 200,
+    });
+
+    if (usersError) {
+      throw new Error((usersError as { message?: string }).message ?? "Failed to list auth users");
+    }
+
+    const match = usersPage.users.find((user) => normalizeEmail(user.email) === email);
+    if (match) {
+      userId = match.id;
+      break;
+    }
+
+    if (usersPage.users.length < 200) {
+      break;
+    }
+
+    page += 1;
+  }
+
+  if (userId) {
+    return userId;
+  }
+
+  const { data: newUser, error: createError } = await client.auth.admin.createUser({
+    email,
+    email_confirm: true,
+    user_metadata: {
+      full_name: fullName,
+    },
+  });
+
+  if (createError) {
+    throw new Error((createError as { message?: string }).message ?? "Failed to create auth user");
+  }
+
+  return newUser.user.id;
+}
+
+async function upsertChurchMembership(
+  client: ReturnType<typeof createAdminClient>,
+  membership: {
+    churchSlug: string;
+    email: string;
+    userId: string;
+    fullName: string | null;
+    role: ChurchMembership["role"];
+    claimId: string;
+  },
+): Promise<{ error: { message: string } | null }> {
+  const normalizedEmail = normalizeEmail(membership.email);
+  const commonValues = {
+    email: normalizedEmail,
+    user_id: membership.userId,
+    full_name: membership.fullName,
+    role: membership.role,
+    status: "active" as const,
+    claim_id: membership.claimId,
+    updated_at: new Date().toISOString(),
+  };
+
+  const { data: existingByUser, error: existingByUserError } = await client
+    .from<MembershipRow>("church_memberships")
+    .select()
+    .eq("church_slug", membership.churchSlug)
+    .eq("user_id", membership.userId)
+    .limit(1)
+    .maybeSingle();
+
+  if (existingByUserError) {
+    return { error: existingByUserError };
+  }
+
+  if (existingByUser) {
+    const { error } = await client
+      .from<MembershipRow>("church_memberships")
+      .update(commonValues)
+      .eq("id", existingByUser.id);
+    return { error };
+  }
+
+  const { data: existingByEmail, error: existingByEmailError } = await client
+    .from<MembershipRow>("church_memberships")
+    .select()
+    .eq("church_slug", membership.churchSlug)
+    .ilike("email", normalizedEmail)
+    .limit(1)
+    .maybeSingle();
+
+  if (existingByEmailError) {
+    return { error: existingByEmailError };
+  }
+
+  if (existingByEmail) {
+    const { error } = await client
+      .from<MembershipRow>("church_memberships")
+      .update(commonValues)
+      .eq("id", existingByEmail.id);
+    return { error };
+  }
+
+  const { error } = await client
+    .from<MembershipRow>("church_memberships")
+    .insert({
+      church_slug: membership.churchSlug,
+      ...commonValues,
+    });
+
+  return { error };
+}
+
+function normalizeEmail(value: string | null | undefined): string {
+  return String(value || "").trim().toLowerCase();
 }
 
 /* ── Generic status update (admin) ── */

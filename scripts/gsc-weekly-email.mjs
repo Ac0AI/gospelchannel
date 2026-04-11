@@ -6,22 +6,34 @@
  * Called by the GitHub Actions workflow every Monday morning. Can
  * also be run locally with `node scripts/gsc-weekly-email.mjs` for
  * ad-hoc sends — requires the same env vars as gsc-report.mjs plus
- * BREVO_API_KEY and ADMIN_EMAILS.
+ * BREVO_API_KEY and DATABASE_URL.
  */
 
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { neon } from "@neondatabase/serverless";
 import { generateReport, delta } from "./gsc-report.mjs";
+import { loadLocalEnv } from "./lib/local-env.mjs";
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+loadLocalEnv(join(__dirname, ".."));
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
-const ADMIN_EMAILS = process.env.ADMIN_EMAILS;
 const FROM_EMAIL = process.env.NOTIFY_FROM_EMAIL || "noreply@gospelchannel.com";
 
 if (!BREVO_API_KEY) {
   console.error("Missing BREVO_API_KEY");
   process.exit(1);
 }
-if (!ADMIN_EMAILS) {
-  console.error("Missing ADMIN_EMAILS");
+if (!process.env.DATABASE_URL && !process.env.DATABASE_URL_UNPOOLED) {
+  console.error("Missing DATABASE_URL or DATABASE_URL_UNPOOLED");
   process.exit(1);
+}
+
+async function getAdminEmails() {
+  const databaseUrl = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
+  const sql = neon(databaseUrl);
+  const rows = await sql`select email from "user" where role = 'admin' order by email asc`;
+  return rows.map((row) => row.email).filter(Boolean);
 }
 
 function escapeHtml(value) {
@@ -195,7 +207,10 @@ async function main() {
   const subject = `GospelChannel weekly report — ${dateLabel}`;
   const html = renderEmailHtml(report, days);
 
-  const recipients = ADMIN_EMAILS.split(",").map(e => e.trim()).filter(Boolean);
+  const recipients = await getAdminEmails();
+  if (recipients.length === 0) {
+    throw new Error("No admin users found in database");
+  }
   console.log(`Sending to ${recipients.length} recipient(s): ${recipients.join(", ")}`);
 
   for (const to of recipients) {

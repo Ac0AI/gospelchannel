@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { AuthUser } from "@/lib/auth/server";
 import { getServerUser } from "@/lib/auth/server";
-import { isAdminEmail } from "@/lib/auth";
+import { isAdminUser } from "@/lib/admin-users";
 
 type AdminRouteSuccess = {
   ok: true;
@@ -34,7 +34,7 @@ export async function requireAdminRoute(request: NextRequest): Promise<AdminRout
     };
   }
 
-  if (!isAdminEmail(user.email)) {
+  if (!(await isAdminUser(user.id))) {
     return {
       ok: false,
       response: json({ error: "Forbidden" }, { status: 403 }),

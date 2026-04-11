@@ -4,9 +4,11 @@ import { hashPassword } from "better-auth/crypto";
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { nextCookies, toNextJsHandler } from "better-auth/next-js";
 import { emailOTP } from "better-auth/plugins/email-otp";
+import { magicLink } from "better-auth/plugins/magic-link";
 import { and, eq } from "drizzle-orm";
 import { getDb, hasDatabaseConfig, schema } from "@/db";
-import { sendAuthOtpEmail } from "@/lib/email";
+import { USER_ROLE, type UserRole } from "@/lib/auth-roles";
+import { sendAuthOtpEmail, sendChurchAdminMagicLinkEmail } from "@/lib/email";
 
 function getTrustedOrigins(): string[] {
   const origins = (process.env.BETTER_AUTH_TRUSTED_ORIGINS || "")
@@ -89,6 +91,12 @@ function getAuth(): ReturnType<typeof betterAuth> {
               return;
             }
             await sendAuthOtpEmail({ email, otp });
+          },
+        }),
+        magicLink({
+          disableSignUp: true,
+          async sendMagicLink({ email, url }) {
+            await sendChurchAdminMagicLinkEmail({ email, url });
           },
         }),
       ],
@@ -182,6 +190,7 @@ export async function createAuthUser(params: {
   name: string;
   emailVerified?: boolean;
   password?: string;
+  role?: UserRole;
 }): Promise<AuthUser> {
   ensureAuthConfig();
   const db = getDb();
@@ -194,6 +203,7 @@ export async function createAuthUser(params: {
       id: userId,
       email: params.email.trim().toLowerCase(),
       name: params.name.trim() || params.email.trim().toLowerCase(),
+      role: params.role ?? USER_ROLE.USER,
       emailVerified: params.emailVerified ?? true,
       createdAt: now,
       updatedAt: now,
@@ -225,16 +235,31 @@ export async function ensureAuthUser(params: {
   name: string;
   emailVerified?: boolean;
   password?: string;
+  role?: UserRole;
 }): Promise<AuthUser> {
   const existing = await findAuthUserByEmail(params.email);
   if (existing) {
     if (params.password) {
       await ensurePasswordAccount(existing.id, params.password);
     }
+    if (params.role) {
+      await ensureUserRole(existing.id, params.role);
+    }
     return existing;
   }
 
   return createAuthUser(params);
+}
+
+export async function ensureUserRole(userId: string, role: UserRole): Promise<void> {
+  ensureAuthConfig();
+  await getDb()
+    .update(schema.user)
+    .set({
+      role,
+      updatedAt: new Date(),
+    })
+    .where(eq(schema.user.id, userId));
 }
 
 export async function ensurePasswordAccount(userId: string, password: string): Promise<void> {

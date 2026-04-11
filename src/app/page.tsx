@@ -87,7 +87,7 @@ export default async function HomePage() {
 
       {/* Hero */}
       <section className="text-center">
-        <p className="text-sm italic text-warm-brown/80">
+        <p className="text-base italic text-warm-brown/80 sm:text-lg">
           People find God in different ways.
         </p>
         <h1 className="mt-2 font-serif text-3xl font-semibold text-espresso sm:text-4xl lg:text-5xl">

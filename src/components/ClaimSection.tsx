@@ -1,21 +1,69 @@
 import Link from "next/link";
-import { checkChurchClaimed } from "@/lib/church";
 import { ScrollReveal } from "@/components/ScrollReveal";
 
-export async function ClaimInterstitial({
+export type ChurchPageClaimCtaMode = "unclaimed" | "claimed" | "owner" | "church" | "admin";
+
+function getClaimCta(mode: ChurchPageClaimCtaMode, slug: string, displayName: string) {
+  switch (mode) {
+    case "owner":
+      return {
+        href: `/church/${slug}/manage`,
+        eyebrow: "Church admin",
+        title: `You manage ${displayName}`,
+        body: "Open your church admin and update your worship, hero image, service times, and profile details.",
+        action: "Manage this page →",
+      };
+    case "church":
+      return {
+        href: "/church-admin",
+        eyebrow: "Church admin",
+        title: "You are already signed in",
+        body: "Open Church Admin to manage your claimed pages or switch to another church you already have access to.",
+        action: "Open Church Admin →",
+      };
+    case "admin":
+      return {
+        href: "/admin",
+        eyebrow: "Admin",
+        title: "You are signed in as admin",
+        body: "Open the admin area to review claims, edits, and church data for this page.",
+        action: "Open Admin →",
+      };
+    case "claimed":
+      return {
+        href: `/church-admin/login?redirect=/church/${slug}/manage`,
+        eyebrow: "For church leaders",
+        title: "This page is already claimed",
+        body: "If you are part of this church, sign in with the verified claim email to manage the page instead of submitting a new claim.",
+        action: "Church Admin login →",
+      };
+    case "unclaimed":
+    default:
+      return {
+        href: `/church/${slug}/claim`,
+        eyebrow: "For church leaders",
+        title: "Is this your church?",
+        body: "People find this page when they search for churches nearby. Claim it to keep your worship, sermons, and details up to date.",
+        action: "Claim this page →",
+      };
+  }
+}
+
+export function ClaimInterstitial({
   slug,
   displayName,
+  mode,
 }: {
   slug: string;
   displayName: string;
+  mode: ChurchPageClaimCtaMode;
 }) {
-  const isClaimed = await checkChurchClaimed(slug);
-  if (isClaimed) return null;
+  const cta = getClaimCta(mode, slug, displayName);
 
   return (
     <ScrollReveal>
       <Link
-        href={`/church/${slug}/claim`}
+        href={cta.href}
         className="group relative block overflow-hidden rounded-2xl border border-rose-200/60 bg-gradient-to-r from-linen-deep via-blush-light/40 to-white p-6 shadow-sm transition-all hover:border-rose-gold/30 hover:shadow-md sm:p-8"
       >
         <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
@@ -26,13 +74,13 @@ export async function ClaimInterstitial({
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
                 </svg>
               </div>
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-mauve">For church leaders</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-mauve">{cta.eyebrow}</p>
             </div>
             <h2 className="mt-3 font-serif text-xl font-semibold text-espresso sm:text-2xl">
-              Is this your church?
+              {cta.title}
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-warm-brown">
-              People find this page when they search for churches nearby. Claim it to keep your worship, sermons, and details up to date.
+              {cta.body}
             </p>
             <div className="mt-4 flex flex-wrap gap-3 text-xs">
               <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2.5 py-1 font-semibold text-blue-600">
@@ -51,7 +99,7 @@ export async function ClaimInterstitial({
           </div>
           <div className="shrink-0">
             <span className="inline-flex items-center gap-2 rounded-full bg-rose-gold px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all group-hover:bg-rose-gold-deep group-hover:shadow-md">
-              Claim this page →
+              {cta.action}
             </span>
           </div>
         </div>
@@ -60,19 +108,20 @@ export async function ClaimInterstitial({
   );
 }
 
-export async function ClaimFooterLink({
+export function ClaimFooterLink({
   slug,
   displayName,
+  mode,
 }: {
   slug: string;
   displayName: string;
+  mode: ChurchPageClaimCtaMode;
 }) {
-  const isClaimed = await checkChurchClaimed(slug);
-  if (isClaimed) return null;
+  const cta = getClaimCta(mode, slug, displayName);
 
   return (
     <Link
-      href={`/church/${slug}/claim`}
+      href={cta.href}
       className="group flex items-center gap-4 rounded-2xl border border-rose-200/60 bg-gradient-to-r from-white to-blush-light/30 p-5 shadow-sm transition-all hover:border-rose-gold/40 hover:shadow-md sm:p-6"
     >
       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-rose-gold/10 text-rose-gold transition-colors group-hover:bg-rose-gold/20">
@@ -81,11 +130,11 @@ export async function ClaimFooterLink({
         </svg>
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-semibold text-espresso">Are you part of {displayName}?</p>
-        <p className="mt-0.5 text-xs text-warm-brown">Claim this page so you can manage your church&apos;s details, worship, and how visitors find you.</p>
+        <p className="text-sm font-semibold text-espresso">{cta.title}</p>
+        <p className="mt-0.5 text-xs text-warm-brown">{cta.body}</p>
       </div>
       <span className="shrink-0 text-sm font-semibold text-rose-gold transition-colors group-hover:text-rose-gold-deep">
-        Claim →
+        {cta.action}
       </span>
     </Link>
   );

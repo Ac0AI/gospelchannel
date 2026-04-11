@@ -60,7 +60,7 @@ export default async function ClaimChurchPage({ params }: ClaimPageProps) {
         </div>
         <h1 className="mt-5 font-serif text-2xl font-bold text-espresso">Claim Under Review</h1>
         <p className="mt-3 text-sm leading-relaxed text-warm-brown">
-          A claim for this church is already under review. We'll get back within 48 hours.
+          A claim for this church is already under review. We&rsquo;ll get back within 48 hours.
         </p>
         <Link
           href={`/church/${church.slug}`}

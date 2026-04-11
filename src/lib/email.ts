@@ -1,3 +1,4 @@
+import { listAdminEmails } from "@/lib/admin-users";
 import { getConfiguredSiteUrl } from "@/lib/site-url";
 
 function getEmailConfig() {
@@ -84,6 +85,34 @@ export async function sendAuthOtpEmail(params: {
   });
 }
 
+export async function sendChurchAdminMagicLinkEmail(params: {
+  email: string;
+  url: string;
+}): Promise<void> {
+  const { AUTH_FROM_EMAIL } = getEmailConfig();
+
+  const html = `
+    <div style="font-family: Georgia, serif; max-width: 520px; margin: 0 auto; color: #3b2f2f;">
+      <h2 style="margin-bottom: 4px;">Your sign-in link</h2>
+      <p>Click the button below to sign in to Gospel Channel church admin.</p>
+      <p style="margin: 24px 0;">
+        <a href="${params.url}" style="background: #b06a50; color: #fff; padding: 12px 28px; border-radius: 999px; text-decoration: none; font-weight: 600; display: inline-block;">
+          Sign in to Church Admin
+        </a>
+      </p>
+      <p style="font-size: 14px; color: #7a6a5a;">This link expires soon and can only be used once. If you did not request it, you can ignore this email.</p>
+      <p style="font-size: 12px; color: #9a8a7a; word-break: break-all;">If the button does not work, open this link: ${params.url}</p>
+    </div>
+  `.trim();
+
+  await sendEmail({
+    to: params.email,
+    from: AUTH_FROM_EMAIL,
+    subject: "Your Gospel Channel sign-in link",
+    html,
+  });
+}
+
 export async function sendClaimVerifiedEmail(params: {
   to: string;
   churchName: string;
@@ -107,7 +136,7 @@ export async function sendClaimVerifiedEmail(params: {
         </a>
       </p>
       <p style="font-size: 14px; color: #7a6a5a;">
-        Use the same email address you submitted with your claim. You'll receive a one-time code to verify your identity.
+        Use the same email address you submitted with your claim. We'll email you a secure sign-in link.
       </p>
       <hr style="border: none; border-top: 1px solid #e8d8d0; margin: 24px 0;" />
       <p style="font-size: 13px; color: #9a8a7a;">
@@ -198,13 +227,12 @@ export async function sendClaimAdminNotification(params: {
   churchSlug: string;
   message?: string;
 }): Promise<void> {
-  const adminEmailsRaw = process.env.ADMIN_EMAILS;
-  if (!adminEmailsRaw) {
-    console.warn("[email] ADMIN_EMAILS not set, skipping admin notification");
+  const adminEmails = await listAdminEmails();
+  if (adminEmails.length === 0) {
+    console.warn("[email] No admin users found, skipping admin notification");
     return;
   }
 
-  const { NOTIFY_FROM_EMAIL } = getEmailConfig();
   const siteUrl = getConfiguredSiteUrl();
   const adminUrl = `${siteUrl}/admin/claims`;
   const churchUrl = `${siteUrl}/church/${params.churchSlug}`;
@@ -351,8 +379,8 @@ export async function sendChurchContactInquiry(params: {
   });
 
   // Also notify admins quietly so we can monitor abuse / volume
-  const adminEmailsRaw = process.env.ADMIN_EMAILS;
-  if (adminEmailsRaw) {
+  const adminEmails = await listAdminEmails();
+  if (adminEmails.length > 0) {
     const adminHtml = `
       <div style="font-family: Georgia, serif; max-width: 560px; margin: 0 auto; color: #3b2f2f;">
         <h3 style="margin: 0 0 8px 0;">Contact form submission</h3>
@@ -413,13 +441,12 @@ async function sendBrevoEmailWithReplyTo(params: {
 }
 
 async function notifyAdmins(subject: string, html: string): Promise<void> {
-  const adminEmailsRaw = process.env.ADMIN_EMAILS;
-  if (!adminEmailsRaw) {
-    console.warn("[email] ADMIN_EMAILS not set, skipping admin notification");
+  const adminEmails = await listAdminEmails();
+  if (adminEmails.length === 0) {
+    console.warn("[email] No admin users found, skipping admin notification");
     return;
   }
   const { NOTIFY_FROM_EMAIL } = getEmailConfig();
-  const adminEmails = adminEmailsRaw.split(",").map((e) => e.trim()).filter(Boolean);
   for (const adminEmail of adminEmails) {
     await sendEmail({ to: adminEmail, from: NOTIFY_FROM_EMAIL, subject, html });
   }

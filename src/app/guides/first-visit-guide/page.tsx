@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 // src/app/tools/first-visit-guide/page.tsx
 import type { Metadata } from "next";
 import {

@@ -18,6 +18,7 @@ import {
   getChurchSlugLookupCandidates,
   resolveCanonicalChurchSlug,
 } from "@/lib/church-slugs";
+import { filterExplicitNonChurchRows, isExplicitNonChurchSlug } from "@/lib/non-church-slugs";
 import { uniqueSpotifyPlaylistIds } from "@/lib/spotify-playlist";
 
 const CHURCH_CONTENT_TAG = "church-content";
@@ -91,7 +92,9 @@ function tryLoadLocalChurchSnapshot(): ChurchConfig[] {
     return localChurchSnapshotCache;
   }
 
-  localChurchSnapshotCache = filterCanonicalChurchSlugRecords(churchesJson as ChurchConfig[]);
+  localChurchSnapshotCache = filterExplicitNonChurchRows(
+    filterCanonicalChurchSlugRecords(churchesJson as ChurchConfig[]),
+  );
   return localChurchSnapshotCache;
 }
 
@@ -332,10 +335,16 @@ async function fetchApprovedChurchesFromDb(): Promise<ChurchConfig[]> {
 
   const churchRows = rows as ChurchDataRow[];
   const enrichmentMap = await fetchApprovedEnrichmentMap(sb, churchRows.map((row) => String(row.slug || "")));
-  return churchRows.map((row) => mapRowToChurchConfig(row, enrichmentMap.get(String(row.slug || ""))));
+  return filterExplicitNonChurchRows(
+    churchRows.map((row) => mapRowToChurchConfig(row, enrichmentMap.get(String(row.slug || "")))),
+  );
 }
 
 async function fetchSingleChurchBySlug(slug: string): Promise<ChurchConfig | undefined> {
+  if (isExplicitNonChurchSlug(slug)) {
+    return undefined;
+  }
+
   const sb = createAdminClient();
 
   const { data: churchRow, error: churchError } = await sb
@@ -362,7 +371,8 @@ async function fetchSingleChurchBySlug(slug: string): Promise<ChurchConfig | und
   const enrichmentCandidates = (enrichmentRows as Array<Record<string, unknown> & { church_slug?: string }> | null) ?? [];
   const enrichment = enrichmentCandidates.find((row) => row.church_slug === slug) ?? enrichmentCandidates[0];
 
-  return mapRowToChurchConfig(churchRow as ChurchDataRow, enrichment);
+  const church = mapRowToChurchConfig(churchRow as ChurchDataRow, enrichment);
+  return isExplicitNonChurchSlug(church.slug) ? undefined : church;
 }
 
 async function fetchApprovedChurchDirectorySeedFromDb(): Promise<ChurchDirectorySeed[]> {
@@ -393,7 +403,7 @@ async function fetchApprovedChurchDirectorySeedFromDb(): Promise<ChurchDirectory
     from += PAGE_SIZE;
   }
 
-  return filterCanonicalChurchSlugRecords(rows);
+  return filterExplicitNonChurchRows(filterCanonicalChurchSlugRecords(rows));
 }
 
 function formatChurchCountLabel(count: number): string {

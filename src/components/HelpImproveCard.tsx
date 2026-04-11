@@ -13,9 +13,51 @@ type HelpImproveCardProps = {
   churchSlug: string;
   churchName: string;
   missingFields: MissingField[];
+  claimMode?: "unclaimed" | "claimed" | "owner" | "church" | "admin";
 };
 
-export function HelpImproveCard({ churchSlug, churchName, missingFields }: HelpImproveCardProps) {
+function getFooterCta(mode: NonNullable<HelpImproveCardProps["claimMode"]>, churchSlug: string) {
+  switch (mode) {
+    case "owner":
+      return {
+        href: `/church/${churchSlug}/manage`,
+        label: "Manage this page →",
+        body: "You already manage this page in Church Admin.",
+      };
+    case "church":
+      return {
+        href: "/church-admin",
+        label: "Open Church Admin →",
+        body: "You are already signed in as a church owner.",
+      };
+    case "admin":
+      return {
+        href: "/admin",
+        label: "Open admin →",
+        body: "You are signed in as admin.",
+      };
+    case "claimed":
+      return {
+        href: `/church-admin/login?redirect=/church/${churchSlug}/manage`,
+        label: "Church Admin login →",
+        body: "This page is already claimed. Church leaders should sign in instead.",
+      };
+    case "unclaimed":
+    default:
+      return {
+        href: `/church/${churchSlug}/claim`,
+        label: "Claim this page →",
+        body: "Part of this church?",
+      };
+  }
+}
+
+export function HelpImproveCard({
+  churchSlug,
+  churchName,
+  missingFields,
+  claimMode = "unclaimed",
+}: HelpImproveCardProps) {
   const [open, setOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
@@ -25,6 +67,7 @@ export function HelpImproveCard({ churchSlug, churchName, missingFields }: HelpI
   if (missingFields.length < 2) return null;
 
   const filledCount = Object.values(values).filter((v) => v.trim().length > 0).length;
+  const footerCta = getFooterCta(claimMode, churchSlug);
 
   async function submitInfo(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -93,9 +136,9 @@ export function HelpImproveCard({ churchSlug, churchName, missingFields }: HelpI
           Share what you know →
         </button>
         <p className="mt-3 text-xs text-muted-warm">
-          Part of this church?{" "}
-          <Link href={`/church/${churchSlug}/claim`} className="font-semibold text-rose-gold transition-colors hover:text-rose-gold-deep">
-            Claim this page →
+          {footerCta.body}{" "}
+          <Link href={footerCta.href} className="font-semibold text-rose-gold transition-colors hover:text-rose-gold-deep">
+            {footerCta.label}
           </Link>
         </p>
       </section>

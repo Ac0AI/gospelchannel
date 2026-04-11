@@ -1,21 +1,40 @@
 "use client";
 
 import { useState } from "react";
-import { requestEmailOtp, signInWithEmailOtp } from "@/lib/auth/client";
+import { requestMagicLink } from "@/lib/auth/client";
 
-type Step = "email" | "code";
+function getMagicLinkErrorMessage(errorCode: string): string {
+  switch (errorCode) {
+    case "EXPIRED_TOKEN":
+      return "That sign-in link has expired. Request a new one below.";
+    case "INVALID_TOKEN":
+      return "That sign-in link is invalid. Request a new one below.";
+    case "ATTEMPTS_EXCEEDED":
+      return "That sign-in link has already been used. Request a new one below.";
+    case "new_user_signup_disabled":
+      return "Your account could not be found. Please contact support or ask the admin to re-verify your claim.";
+    default:
+      return "That sign-in link could not be used. Request a new one below.";
+  }
+}
 
-export function ChurchAdminLoginForm({ redirectTo = "/church-admin" }: { redirectTo?: string }) {
+export function ChurchAdminLoginForm({
+  redirectTo = "/church-admin",
+  initialError = "",
+}: {
+  redirectTo?: string;
+  initialError?: string;
+}) {
   const [email, setEmail] = useState("");
-  const [token, setToken] = useState("");
-  const [step, setStep] = useState<Step>("email");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(initialError ? getMagicLinkErrorMessage(initialError) : "");
   const [loading, setLoading] = useState(false);
+  const [sent, setSent] = useState(false);
 
-  const requestCode = async (event: React.FormEvent<HTMLFormElement>) => {
+  const requestLink = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
     setError("");
+    setSent(false);
 
     const accessResponse = await fetch("/api/church-admin/access-code", {
       method: "POST",
@@ -30,10 +49,21 @@ export function ChurchAdminLoginForm({ redirectTo = "/church-admin" }: { redirec
       return;
     }
 
-    const { error: authError } = await requestEmailOtp({ email });
+    const params = new URLSearchParams();
+    if (redirectTo && redirectTo !== "/church-admin") {
+      params.set("redirect", redirectTo);
+    }
+
+    const errorCallbackURL = `/church-admin/login${params.size > 0 ? `?${params.toString()}` : ""}`;
+
+    const { error: authError } = await requestMagicLink({
+      email,
+      callbackURL: redirectTo,
+      errorCallbackURL,
+    });
 
     if (authError) {
-      const message = authError.message || "Unable to send sign-in code";
+      const message = authError.message || "Unable to send sign-in link";
       const msg = message.toLowerCase();
       setError(
         msg.includes("signup") || msg.includes("not allowed")
@@ -44,27 +74,8 @@ export function ChurchAdminLoginForm({ redirectTo = "/church-admin" }: { redirec
       return;
     }
 
-    setStep("code");
+    setSent(true);
     setLoading(false);
-  };
-
-  const verifyCode = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoading(true);
-    setError("");
-
-    const { error: authError } = await signInWithEmailOtp({
-      email,
-      otp: token,
-    });
-
-    if (authError) {
-      setError(authError.message || "Invalid sign-in code");
-      setLoading(false);
-      return;
-    }
-
-    window.location.assign(redirectTo);
   };
 
   const inputClass =
@@ -75,82 +86,41 @@ export function ChurchAdminLoginForm({ redirectTo = "/church-admin" }: { redirec
       <div className="text-center">
         <h1 className="font-serif text-2xl font-bold text-espresso">Church Admin</h1>
         <p className="mt-1 text-sm text-warm-brown">
-          Sign in with the same email that was verified on your church claim.
+          Sign in with the same email that was verified on your church claim. We will email you a secure sign-in link.
         </p>
       </div>
 
-      {step === "email" ? (
-        <form onSubmit={requestCode} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="mb-1 block text-sm font-semibold text-espresso">
-              Verified email
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              className={inputClass}
-            />
-          </div>
+      <form onSubmit={requestLink} className="space-y-4">
+        <div>
+          <label htmlFor="email" className="mb-1 block text-sm font-semibold text-espresso">
+            Verified email
+          </label>
+          <input
+            id="email"
+            type="email"
+            required
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            className={inputClass}
+          />
+        </div>
 
-          {error && <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>}
+        {error && <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-full bg-rose-gold px-6 py-3 text-sm font-semibold text-white transition hover:bg-rose-gold-deep disabled:opacity-60"
-          >
-            {loading ? "Sending code..." : "Email me a code"}
-          </button>
-        </form>
-      ) : (
-        <form onSubmit={verifyCode} className="space-y-4">
+        {sent && (
           <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900">
-            A sign-in code was sent to <span className="font-semibold">{email}</span>.
+            A sign-in link was sent to <span className="font-semibold">{email}</span>. Open the email and click the link to sign in.
           </div>
+        )}
 
-          <div>
-            <label htmlFor="token" className="mb-1 block text-sm font-semibold text-espresso">
-              6-digit code
-            </label>
-            <input
-              id="token"
-              type="text"
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              required
-              value={token}
-              onChange={(event) => setToken(event.target.value)}
-              className={inputClass}
-            />
-          </div>
-
-          {error && <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>}
-
-          <div className="flex gap-3">
-            <button
-              type="button"
-              onClick={() => {
-                setStep("email");
-                setToken("");
-                setError("");
-              }}
-              className="flex-1 rounded-full border border-rose-200 px-6 py-3 text-sm font-semibold text-warm-brown transition hover:bg-blush-light"
-            >
-              Back
-            </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="flex-1 rounded-full bg-rose-gold px-6 py-3 text-sm font-semibold text-white transition hover:bg-rose-gold-deep disabled:opacity-60"
-            >
-              {loading ? "Signing in..." : "Sign in"}
-            </button>
-          </div>
-        </form>
-      )}
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full rounded-full bg-rose-gold px-6 py-3 text-sm font-semibold text-white transition hover:bg-rose-gold-deep disabled:opacity-60"
+        >
+          {loading ? "Sending link..." : sent ? "Send another sign-in link" : "Email me a sign-in link"}
+        </button>
+      </form>
     </div>
   );
 }

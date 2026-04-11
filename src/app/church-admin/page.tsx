@@ -23,6 +23,10 @@ export default async function ChurchAdminPage() {
   }
 
   const memberships = await getChurchMembershipsForUser(user.id);
+  if (memberships.length === 1) {
+    redirect(`/church/${memberships[0].churchSlug}/manage`);
+  }
+
   const churchesBySlug = new Map(
     await Promise.all(
       memberships.map(async (membership) => [membership.churchSlug, await getChurchBySlugAsync(membership.churchSlug)] as const)
@@ -35,7 +39,7 @@ export default async function ChurchAdminPage() {
         <div>
           <h1 className="font-serif text-3xl font-bold text-espresso">Church Admin</h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-warm-brown">
-            Submit official website, contact email, and playlist changes for your church. Updates go into review before they are applied to the public catalog.
+            Submit quick official fixes here, or open the full profile editor to update pastor, service times, socials, description, and other church details. Updates go into review before they are applied to the public catalog.
           </p>
         </div>
         <ChurchAdminLogoutButton />
@@ -70,6 +74,12 @@ export default async function ChurchAdminPage() {
                   </div>
 
                   <div className="flex flex-wrap gap-2">
+                    <Link
+                      href={`/church/${membership.churchSlug}/manage`}
+                      className="rounded-full bg-espresso px-3 py-2 text-xs font-semibold text-white transition hover:bg-espresso/90"
+                    >
+                      Manage full profile
+                    </Link>
                     <Link
                       href={`/church/${membership.churchSlug}`}
                       className="rounded-full bg-blush-light px-3 py-2 text-xs font-semibold text-espresso transition hover:bg-rose-100"
@@ -115,8 +125,16 @@ export default async function ChurchAdminPage() {
                   <div className="rounded-2xl bg-linen p-4">
                     <div className="text-xs font-semibold uppercase tracking-wide text-warm-brown">Submit update</div>
                     <p className="mt-2 text-sm leading-6 text-warm-brown">
-                      Use this form for official fixes and playlist additions. Each submission is routed into the review queue with your claimed-owner identity attached.
+                      Use this form for quick official fixes and playlist additions. For pastor, service times, social links, logo, description, and more, use the full profile editor.
                     </p>
+                    <div className="mt-3">
+                      <Link
+                        href={`/church/${membership.churchSlug}/manage`}
+                        className="inline-flex rounded-full bg-white px-3 py-2 text-xs font-semibold text-espresso ring-1 ring-rose-200/70 transition hover:bg-rose-50"
+                      >
+                        Open full profile editor
+                      </Link>
+                    </div>
                     <div className="mt-4">
                       <ChurchAdminUpdateForm
                         churchSlug={membership.churchSlug}

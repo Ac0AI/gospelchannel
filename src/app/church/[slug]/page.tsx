@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Suspense } from "react";
+import { AdminLogout } from "@/components/AdminLogout";
 import { ChurchContactButton } from "@/components/ChurchContactButton";
 import { ChurchLatestUpdatesSection } from "@/components/ChurchLatestUpdatesSection";
 import { ChurchNetworkSection } from "@/components/ChurchNetworkSection";
@@ -12,9 +14,10 @@ import { ServiceTimesDisplay } from "@/components/ServiceTimesDisplay";
 import { SpotifyEmbedCard } from "@/components/SpotifyEmbedCard";
 import { SpotifyPlaylistShelf } from "@/components/SpotifyPlaylistShelf";
 import { ChurchPagePrayerSection } from "@/components/ChurchPagePrayerSection";
+import { ChurchAdminLogoutButton } from "@/components/church-admin/ChurchAdminLogoutButton";
 import { getPrayers } from "@/lib/prayer";
 import { HelpImproveCard, type MissingField } from "@/components/HelpImproveCard";
-import { ClaimInterstitial, ClaimFooterLink } from "@/components/ClaimSection";
+import { ClaimInterstitial, ClaimFooterLink, type ChurchPageClaimCtaMode } from "@/components/ClaimSection";
 import { VerifiedChurchBadge } from "@/components/VerifiedChurchBadge";
 import { VideoGrid } from "@/components/VideoGrid";
 import {
@@ -22,7 +25,8 @@ import {
   getPrimaryDenominationFilter,
   getPrimaryStyleFilter,
 } from "@/lib/church-directory";
-import { buildChurchAliases, getChurchPublicPageData, resolveChurchPrimaryImage } from "@/lib/church";
+import { buildChurchAliases, checkChurchClaimed, getChurchPublicPageData, resolveChurchPrimaryImage } from "@/lib/church";
+import { getChurchMembershipForUserAndSlug, getChurchMembershipsForUser } from "@/lib/church-community";
 import {
   getFirstServiceTimeLabel,
   getPublicHostLabel,
@@ -39,7 +43,10 @@ import { slugify } from "@/lib/prayer-filters";
 import { uniqueSpotifyPlaylistIds } from "@/lib/spotify-playlist";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { HeroImage } from "@/components/HeroImage";
+import { isAdminUser } from "@/lib/admin-users";
+import { getServerUser } from "@/lib/auth/server";
 import { resolveCanonicalChurchSlug } from "@/lib/church-slugs";
+import { CHURCH_SIZE_LABELS, getProfileOptionLabel } from "@/lib/profile-fields";
 
 type ChurchPageProps = {
   params: Promise<{ slug: string }>;
@@ -157,6 +164,24 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   const network = "network" in pageData ? pageData.network as import("@/types/gospel").ChurchNetwork | undefined : undefined;
   const isCampus = "isCampus" in pageData ? (pageData.isCampus as boolean) : false;
   const parentChurchName = "parentChurchName" in pageData ? (pageData.parentChurchName as string | undefined) : undefined;
+  const requestHeaders = await headers();
+  const user = await getServerUser(requestHeaders);
+  const [isClaimed, activeMemberships, ownsCurrentChurch, viewerIsAdmin] = await Promise.all([
+    checkChurchClaimed(church.slug),
+    user ? getChurchMembershipsForUser(user.id) : Promise.resolve([]),
+    user ? getChurchMembershipForUserAndSlug(user.id, church.slug) : Promise.resolve(null),
+    user ? isAdminUser(user.id) : Promise.resolve(false),
+  ]);
+  const isChurchViewer = activeMemberships.length > 0;
+  const claimCtaMode: ChurchPageClaimCtaMode = ownsCurrentChurch
+    ? "owner"
+    : isChurchViewer
+      ? "church"
+      : viewerIsAdmin
+        ? "admin"
+        : isClaimed
+          ? "claimed"
+          : "unclaimed";
 
   const spotifyPlaylistIds = uniqueSpotifyPlaylistIds([
     ...church.spotifyPlaylistIds,
@@ -185,29 +210,46 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   const styles = church.musicStyle?.slice(0, 5) ?? [];
   const topArtists = church.notableArtists?.slice(0, 6) ?? [];
   const primaryStyleFilter = getPrimaryStyleFilter(church);
-  const primaryDenominationFilter = getPrimaryDenominationFilter(church);
   const heroImage = resolveChurchPrimaryImage({
     headerImage: church.headerImage,
     videos,
-    coverImageUrl: enrichment?.coverImageUrl,
+    coverImageUrl: (mergedProfile.coverImageUrl as string | undefined) || enrichment?.coverImageUrl,
   }) || "";
-  const churchLogo = isValidPublicUrl(enrichment?.logoImageUrl) ? enrichment!.logoImageUrl : null;
+  const churchLogo = isValidPublicUrl((mergedProfile.logoUrl as string | undefined) || enrichment?.logoImageUrl || church.logo)
+    ? ((mergedProfile.logoUrl as string | undefined) || enrichment?.logoImageUrl || church.logo)!
+    : null;
   const websiteUrl = isValidOfficialWebsiteUrl((mergedProfile.websiteUrl as string | undefined) || enrichment?.websiteUrl || church.website)
     ? ((mergedProfile.websiteUrl as string | undefined) || enrichment?.websiteUrl || church.website)
     : undefined;
   const websiteHostLabel = getPublicHostLabel(websiteUrl);
   const displayName = pickDisplayChurchName(church.name, enrichment?.officialChurchName);
-  const serviceTimes = sanitizeServiceTimes(enrichment?.serviceTimes);
+  const serviceTimes = sanitizeServiceTimes(
+    (mergedProfile.serviceTimes as import("@/types/gospel").ServiceTime[] | undefined) || enrichment?.serviceTimes
+  );
   const serviceTimeLabel = getFirstServiceTimeLabel(serviceTimes);
-  const streetAddress = normalizeDisplayText(enrichment?.streetAddress);
-  const city = extractCity(church.location);
-  const rawEmail = enrichment?.contactEmail || church.email;
+  const streetAddress = normalizeDisplayText((mergedProfile.streetAddress as string | undefined) || enrichment?.streetAddress);
+  const city = normalizeDisplayText(mergedProfile.city as string | undefined) || extractCity(church.location);
+  const rawEmail = (mergedProfile.contactEmail as string | undefined) || enrichment?.contactEmail || church.email;
   const hasValidEmail = isValidPublicEmail(rawEmail);
   // Email is only exposed publicly when the church is human-verified AND has explicitly opted in.
   // Otherwise visitors use the contact form, which forwards to the email server-side.
   const emailVisiblePublicly = Boolean(church.verifiedAt && church.showEmailPublicly);
   const contactEmail = hasValidEmail && emailVisiblePublicly ? rawEmail : undefined;
-  const phone = isValidPublicPhone(enrichment?.phone) ? enrichment?.phone : undefined;
+  const phone = isValidPublicPhone((mergedProfile.phone as string | undefined) || enrichment?.phone)
+    ? ((mergedProfile.phone as string | undefined) || enrichment?.phone)
+    : undefined;
+  const communityDenomination = normalizeDisplayText((mergedProfile.denomination as string | undefined) || enrichment?.denominationNetwork || church.denomination);
+  const communitySize = normalizeDisplayText((mergedProfile.churchSize as string | undefined) || enrichment?.churchSize);
+  const communityLanguages = Array.isArray(mergedProfile.languages)
+    ? (mergedProfile.languages as string[])
+    : (enrichment?.languages ?? []);
+  const communityMinistries = Array.isArray(mergedProfile.ministries)
+    ? (mergedProfile.ministries as string[])
+    : (enrichment?.ministries ?? []);
+  const aboutDescription =
+    normalizeDisplayText((mergedProfile.description as string | undefined) || enrichment?.summary || church.description)
+    || church.description;
+  const primaryDenominationFilter = getPrimaryDenominationFilter({ denomination: communityDenomination });
 
   // Social stats for hero
   const socialStats: { platform: string; count: number; url?: string }[] = [];
@@ -244,13 +286,14 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   } else if (church.location) {
     quickFacts.push(church.location);
   }
-  if (church.denomination) quickFacts.push(church.denomination);
+  if (communityDenomination) quickFacts.push(getProfileOptionLabel(communityDenomination));
   if (serviceTimeLabel) quickFacts.push(serviceTimeLabel);
-  if (enrichment?.churchSize) {
-    const sizeLabels: Record<string, string> = { small: "Small church", medium: "Mid-size church", large: "Large church", mega: "Mega church" };
-    quickFacts.push(sizeLabels[enrichment.churchSize] ?? enrichment.churchSize);
+  if (communitySize) {
+    quickFacts.push(CHURCH_SIZE_LABELS[communitySize] ?? getProfileOptionLabel(communitySize));
   }
-  if (enrichment?.languages?.length) quickFacts.push(enrichment.languages.join(", "));
+  if (communityLanguages.length > 0) {
+    quickFacts.push(communityLanguages.map((language) => getProfileOptionLabel(language)).join(", "));
+  }
   if (church.founded) quickFacts.push(`Since ${church.founded}`);
 
   // New profile fields
@@ -267,9 +310,8 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   // Enrichment: about section data
   const hasServiceTimes = serviceTimes.length > 0;
   const hasAddress = Boolean(streetAddress);
-  const canContactChurch = Boolean(hasValidEmail || phone);
   const hasContact = Boolean(contactEmail || phone || hasValidEmail);
-  const hasMinistries = !!(enrichment?.childrenMinistry || enrichment?.youthMinistry || (enrichment?.ministries?.length ?? 0) > 0);
+  const hasMinistries = !!(enrichment?.childrenMinistry || enrichment?.youthMinistry || communityMinistries.length > 0);
   const hasAboutData = hasServiceTimes || hasAddress || hasContact || hasMinistries || socialLinks.length > 0 || Boolean(whatToExpect);
   const hasSocialMedia = socialLinks.length > 0;
   const hasPlaylist = allPlaylists.length > 0;
@@ -287,7 +329,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   if (!hasPlaylist && videos.length === 0) missingFields.push({ key: "playlist", label: "Worship playlist", placeholder: "e.g. Spotify or YouTube link" });
   if (!hasMinistries) missingFields.push({ key: "ministries", label: "Ministries", placeholder: "e.g. Youth, Children, Small Groups" });
   if (!pastorName) missingFields.push({ key: "pastor", label: "Pastor / Leader", placeholder: "e.g. Pastor John Smith" });
-  if (!whatToExpect) missingFields.push({ key: "what_to_expect", label: "What to expect", placeholder: "e.g. Casual dress, 75 min service" });
+  if (!whatToExpect) missingFields.push({ key: "what_to_expect", label: "What a first visit feels like", placeholder: "e.g. Casual dress, 75-minute service, coffee after" });
 
   const pageUrl = `https://gospelchannel.com/church/${church.slug}`;
   const relatedBrowseLinks = [
@@ -330,26 +372,32 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
         address: {
           "@type": "PostalAddress",
           streetAddress,
-          ...(church.location && { addressLocality: church.location }),
-          ...(church.country && { addressCountry: church.country }),
+          ...(city && { addressLocality: city }),
+          ...(((mergedProfile.country as string | undefined) || church.country) && {
+            addressCountry: (mergedProfile.country as string | undefined) || church.country,
+          }),
         },
       }),
-      ...(!streetAddress && church.location && church.country && {
-        address: { "@type": "PostalAddress", addressLocality: church.location, addressCountry: church.country },
+      ...(!streetAddress && city && ((mergedProfile.country as string | undefined) || church.country) && {
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: city,
+          addressCountry: (mergedProfile.country as string | undefined) || church.country,
+        },
       }),
       ...(enrichment?.latitude && enrichment?.longitude && {
         geo: { "@type": "GeoCoordinates", latitude: enrichment.latitude, longitude: enrichment.longitude },
       }),
       ...(phone && { telephone: phone }),
       ...(contactEmail && { email: contactEmail }),
-      ...(church.denomination && { additionalType: church.denomination }),
+      ...(communityDenomination && { additionalType: getProfileOptionLabel(communityDenomination) }),
       ...(church.founded && { foundingDate: `${church.founded}` }),
     },
     ...(allPlaylists.length > 0 ? [{
       "@context": "https://schema.org",
       "@type": "MusicPlaylist",
       name: `${church.name} Worship Playlist 2026`,
-      description: church.description,
+      description: aboutDescription,
       url: pageUrl,
       numTracks: videos.length,
       track: videos.slice(0, 20).map((v) => ({
@@ -429,10 +477,43 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
 
         {/* Nav inside hero */}
         <nav className="relative z-10 px-4 pt-6 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-7xl">
+          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3">
             <Link href="/church" className="inline-flex items-center gap-1 text-sm font-medium text-white/60 transition-colors hover:text-white/90">
               ← Churches
             </Link>
+            {(claimCtaMode === "owner" || claimCtaMode === "church" || claimCtaMode === "admin") && (
+              <div className="flex flex-wrap items-center gap-2">
+                {claimCtaMode === "owner" && (
+                  <Link
+                    href={`/church/${church.slug}/manage`}
+                    className="inline-flex items-center rounded-full bg-white/12 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+                  >
+                    Manage page
+                  </Link>
+                )}
+                {claimCtaMode === "church" && (
+                  <Link
+                    href="/church-admin"
+                    className="inline-flex items-center rounded-full bg-white/12 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+                  >
+                    Church Admin
+                  </Link>
+                )}
+                {claimCtaMode === "admin" && (
+                  <Link
+                    href="/admin"
+                    className="inline-flex items-center rounded-full bg-white/12 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+                  >
+                    Open admin
+                  </Link>
+                )}
+                {claimCtaMode === "admin" ? (
+                  <AdminLogout className="border-white/25 bg-white/8 text-white hover:bg-white/16" />
+                ) : (
+                  <ChurchAdminLogoutButton className="border-white/25 bg-white/8 text-white hover:bg-white/16" />
+                )}
+              </div>
+            )}
           </div>
         </nav>
 
@@ -472,7 +553,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
       <section className="rounded-2xl border border-rose-200/40 bg-white/80 p-6 backdrop-blur-sm sm:p-8">
         <h2 className="font-serif text-xl font-semibold text-espresso sm:text-2xl">About</h2>
         <p className="mt-4 max-w-3xl text-base leading-relaxed text-warm-brown sm:text-lg">
-          {enrichment?.summary || church.description}
+          {aboutDescription}
         </p>
 
         <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -618,7 +699,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                 <div>
                   <dt className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-warm">
                     <svg className="h-3.5 w-3.5 text-rose-gold/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
-                    What to expect
+                    What a first visit feels like
                   </dt>
                   <dd className="mt-1 text-sm leading-relaxed text-espresso">{whatToExpect}</dd>
                 </div>
@@ -634,21 +715,21 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                 </div>
               )}
 
-              {(enrichment?.theologicalOrientation || enrichment?.languages || church.denomination || enrichment?.denominationNetwork) && (
+              {(enrichment?.theologicalOrientation || communityLanguages.length > 0 || communityDenomination) && (
                 <div>
                   <dt className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-warm">
                     <svg className="h-3.5 w-3.5 text-rose-gold/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" /></svg>
                     Community
                   </dt>
                   <dd className="mt-1 space-y-1 text-sm text-espresso">
-                    {(enrichment?.denominationNetwork || church.denomination) && (
-                      <p><span className="text-muted-warm">Denomination:</span> {enrichment?.denominationNetwork || church.denomination}</p>
+                    {communityDenomination && (
+                      <p><span className="text-muted-warm">Denomination:</span> {getProfileOptionLabel(communityDenomination)}</p>
                     )}
                     {enrichment?.theologicalOrientation && (
                       <p><span className="text-muted-warm">Tradition:</span> {enrichment.theologicalOrientation.charAt(0).toUpperCase() + enrichment.theologicalOrientation.slice(1)}</p>
                     )}
-                    {enrichment?.languages && enrichment.languages.length > 0 && (
-                      <p><span className="text-muted-warm">Languages:</span> {enrichment.languages.map(l => l.charAt(0).toUpperCase() + l.slice(1)).join(", ")}</p>
+                    {communityLanguages.length > 0 && (
+                      <p><span className="text-muted-warm">Languages:</span> {communityLanguages.map((language) => getProfileOptionLabel(language)).join(", ")}</p>
                     )}
                   </dd>
                 </div>
@@ -661,11 +742,11 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                     Ministries
                   </dt>
                   <dd className="mt-1 text-sm text-espresso">
-                    {[
+                    {Array.from(new Set([
                       enrichment!.childrenMinistry && "Children",
                       enrichment!.youthMinistry && "Youth",
-                      ...(enrichment!.ministries ?? []).map(m => m.charAt(0).toUpperCase() + m.slice(1)),
-                    ].filter(Boolean).join(", ")}
+                      ...communityMinistries.map((ministry) => getProfileOptionLabel(ministry)),
+                    ].filter(Boolean))).join(", ")}
                   </dd>
                 </div>
               )}
@@ -701,6 +782,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
         churchSlug={church.slug}
         churchName={displayName}
         missingFields={missingFields}
+        claimMode={claimCtaMode}
       />
       </ScrollReveal>
 
@@ -809,7 +891,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
 
       {/* ━━━ CLAIM INTERSTITIAL ━━━ */}
       <Suspense fallback={null}>
-        <ClaimInterstitial slug={church.slug} displayName={displayName} />
+        <ClaimInterstitial slug={church.slug} displayName={displayName} mode={claimCtaMode} />
       </Suspense>
 
       {/* ━━━ 3. WATCH ━━━ */}
@@ -864,7 +946,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
 
         {/* Claim this page */}
         <Suspense fallback={null}>
-          <ClaimFooterLink slug={church.slug} displayName={displayName} />
+          <ClaimFooterLink slug={church.slug} displayName={displayName} mode={claimCtaMode} />
         </Suspense>
 
         {/* Prayer */}

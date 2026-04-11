@@ -41,14 +41,14 @@ export default async function EmbedPage({ params }: { params: Promise<{ slug: st
         href={`/church/${slug}/manage`}
         className="mb-6 inline-flex items-center gap-1 text-sm text-warm-brown hover:text-espresso"
       >
-        &larr; Tillbaka till profilen
+        &larr; Back to profile
       </a>
 
       <h1 className="font-serif text-3xl font-bold text-espresso">
-        Din Verified Badge
+        Your Verified Badge
       </h1>
       <p className="mt-2 text-warm-brown">
-        Lägg till din GospelChannel Verified-badge på er hemsida.
+        Add your GospelChannel Verified badge to your church website.
       </p>
 
       {isVerified ? (
@@ -62,17 +62,17 @@ export default async function EmbedPage({ params }: { params: Promise<{ slug: st
             <span className="text-2xl">🔒</span>
           </div>
           <h2 className="font-serif text-xl font-bold text-espresso">
-            Nästan där
+            Almost there
           </h2>
           <p className="mt-2 text-sm text-warm-brown">
-            Fyll i de sista uppgifterna för att låsa upp din badge.
+            Fill in the remaining details to unlock your badge.
           </p>
           <div className="mt-4 space-y-1">
             {pageData.profileScore.missingForBadge.map(field => (
               <p key={field} className="text-sm text-yellow-700">
-                {field === 'service_times' && '- Gudstjänsttider'}
-                {field === 'address' && '- Adress (gata, stad, land)'}
-                {field === 'contact' && '- Kontaktinfo (telefon eller e-post)'}
+                {field === 'service_times' && '- Service times'}
+                {field === 'address' && '- Address (street, city, country)'}
+                {field === 'contact' && '- Contact info (phone or email)'}
               </p>
             ))}
           </div>
@@ -80,7 +80,7 @@ export default async function EmbedPage({ params }: { params: Promise<{ slug: st
             href={`/church/${slug}/manage`}
             className="mt-6 inline-block rounded-xl bg-rose-gold px-6 py-2.5 text-sm font-semibold text-white hover:bg-rose-gold-deep"
           >
-            Komplettera profilen
+            Complete profile
           </a>
         </div>
       )}

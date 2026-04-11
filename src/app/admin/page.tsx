@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createAdminClient, hasServiceConfig } from "@/lib/neon-client";
 import { AdminLogout } from "@/components/AdminLogout";
 import { AdminNav } from "@/components/admin/AdminNav";
+import { requireAdminPageAccess } from "@/lib/admin-page";
 import { getPendingEdits } from "@/lib/church-profile";
 
 async function getPendingCounts() {
@@ -43,6 +44,8 @@ const sections = [
 ];
 
 export default async function AdminDashboard() {
+  await requireAdminPageAccess("/admin");
+
   const counts = await getPendingCounts();
   const queue = [...sections]
     .map((section) => ({

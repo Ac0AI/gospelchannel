@@ -55,7 +55,7 @@ export function EmbedBadgeClient({ churchName, churchUrl }: Props) {
         {/* Variant + size toggles */}
         <div className="mb-6 flex flex-wrap gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wide text-muted-warm">Bakgrund</span>
+            <span className="text-xs font-semibold uppercase tracking-wide text-muted-warm">Background</span>
             <div className="flex overflow-hidden rounded-lg border border-gray-200">
               <button
                 onClick={() => setVariant('light')}
@@ -65,7 +65,7 @@ export function EmbedBadgeClient({ churchName, churchUrl }: Props) {
                     : 'bg-white text-warm-brown hover:bg-linen-deep'
                 }`}
               >
-                Ljus
+                Light
               </button>
               <button
                 onClick={() => setVariant('dark')}
@@ -75,13 +75,13 @@ export function EmbedBadgeClient({ churchName, churchUrl }: Props) {
                     : 'bg-white text-warm-brown hover:bg-linen-deep'
                 }`}
               >
-                Mork
+                Dark
               </button>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wide text-muted-warm">Storlek</span>
+            <span className="text-xs font-semibold uppercase tracking-wide text-muted-warm">Size</span>
             <div className="flex overflow-hidden rounded-lg border border-gray-200">
               <button
                 onClick={() => setSize('default')}
@@ -101,7 +101,7 @@ export function EmbedBadgeClient({ churchName, churchUrl }: Props) {
                     : 'bg-white text-warm-brown hover:bg-linen-deep'
                 }`}
               >
-                Kompakt
+                Compact
               </button>
             </div>
           </div>
@@ -128,9 +128,9 @@ export function EmbedBadgeClient({ churchName, churchUrl }: Props) {
 
       {/* Embed code */}
       <div className="rounded-2xl border border-rose-200/60 bg-white p-8">
-        <h2 className="mb-2 font-serif text-lg font-semibold text-espresso">Embed-kod</h2>
+        <h2 className="mb-2 font-serif text-lg font-semibold text-espresso">Embed code</h2>
         <p className="mb-4 text-sm text-warm-brown">
-          Kopiera koden och klistra in den pa er hemsida.
+          Copy this code and paste it into your church website.
         </p>
 
         <div className="relative">
@@ -145,14 +145,14 @@ export function EmbedBadgeClient({ churchName, churchUrl }: Props) {
                 : 'bg-white/10 text-white hover:bg-white/20'
             }`}
           >
-            {copied ? 'Kopierad!' : 'Kopiera'}
+            {copied ? 'Copied!' : 'Copy'}
           </button>
         </div>
       </div>
 
       {/* Mockup */}
       <div className="rounded-2xl border border-rose-200/60 bg-white p-8">
-        <h2 className="mb-4 font-serif text-lg font-semibold text-espresso">Sa har kan det se ut</h2>
+        <h2 className="mb-4 font-serif text-lg font-semibold text-espresso">How it can look</h2>
         <div className="rounded-xl border border-gray-200 bg-gray-50 p-6">
           <div className="mb-1 font-serif text-lg font-bold text-gray-800">{churchName}</div>
           <p className="mb-4 text-sm leading-relaxed text-gray-500">
@@ -177,9 +177,9 @@ export function EmbedBadgeClient({ churchName, churchUrl }: Props) {
       <div className="rounded-2xl border border-blue-100 bg-blue-50/50 p-6">
         <h3 className="mb-2 font-serif text-base font-semibold text-espresso">Tips</h3>
         <ul className="space-y-1.5 text-sm text-warm-brown">
-          <li>Placera badgen i footern eller pa kontaktsidan for bast synlighet</li>
-          <li>Anvand den morka varianten om er sida har ljus bakgrund, och tvartom</li>
-          <li>Badgen lankar direkt till er GospelChannel-profil</li>
+          <li>Place the badge in your footer or on your contact page for best visibility.</li>
+          <li>Use the dark badge on a light page, and the light badge on a dark page.</li>
+          <li>The badge links directly to your GospelChannel profile.</li>
         </ul>
       </div>
     </div>

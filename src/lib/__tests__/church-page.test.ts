@@ -48,6 +48,34 @@ describe("church page quality", () => {
     expect(merged.websiteUrl).toBe("https://soschurch.se");
   });
 
+  it("uses a claimed hero image edit before enrichment or manual header image", () => {
+    const merged = buildMergedProfile(
+      {
+        id: "2",
+        enrichmentStatus: "complete",
+        confidence: 1,
+        schemaVersion: 1,
+        createdAt: "",
+        updatedAt: "",
+        coverImageUrl: "https://images.example.com/enrichment-cover.jpg",
+      },
+      [
+        {
+          fieldName: "cover_image_url",
+          fieldValue: "https://images.example.com/owner-cover.jpg",
+          reviewStatus: "approved",
+          submittedAt: "2026-04-10T00:00:00.000Z",
+        },
+      ],
+      {
+        ...church,
+        headerImage: "https://images.example.com/manual-header.jpg",
+      },
+    );
+
+    expect(merged.coverImageUrl).toBe("https://images.example.com/owner-cover.jpg");
+  });
+
   it("classifies official and unrelated church videos", () => {
     const official = assessChurchVideoRelevance(
       {

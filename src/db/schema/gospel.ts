@@ -155,6 +155,9 @@ export const churchMemberships = pgTable(
   },
   (table) => ({
     uniqueMembership: uniqueIndex("church_memberships_church_slug_email_unique").on(table.churchSlug, table.email),
+    uniqueMembershipPerUser: uniqueIndex("church_memberships_church_slug_user_unique")
+      .on(table.churchSlug, table.userId)
+      .where(sql`${table.userId} is not null`),
     churchIndex: index("church_memberships_church_slug_idx").on(table.churchSlug),
     userIndex: index("church_memberships_user_id_idx").on(table.userId),
   }),

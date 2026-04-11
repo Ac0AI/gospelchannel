@@ -11,41 +11,12 @@ import { PrayerWallChurchSection } from "@/components/PrayerWallChurchSection";
 import {
   countrySlugToDisplay,
   citySlugToDisplay,
-  extractPrayerCity,
   getAvailableCountries,
   getAvailableCities,
   getAvailableChurches,
   getNormalizedCountrySlug,
-  slugify,
 } from "@/lib/prayer-filters";
-
 export const dynamicParams = true;
-
-export async function generateStaticParams() {
-  const churches = await getChurchDirectorySeedAsync();
-  const knownCountrySlugs = new Set(
-    churches
-      .map((church) => getNormalizedCountrySlug(church.country))
-      .filter((slug): slug is string => Boolean(slug))
-  );
-
-  const countrySlugs = new Set<string>();
-  const citySlugs = new Set<string>();
-
-  for (const c of churches) {
-    const countrySlug = getNormalizedCountrySlug(c.country);
-    if (countrySlug) countrySlugs.add(countrySlug);
-
-    const city = extractPrayerCity(c.location, c.country, knownCountrySlugs);
-    if (city) citySlugs.add(slugify(city));
-  }
-
-  return [
-    ...[...countrySlugs].map((s) => ({ segments: ["country", s] })),
-    ...[...citySlugs].map((s) => ({ segments: ["city", s] })),
-    ...churches.map((c) => ({ segments: ["church", c.slug] })),
-  ];
-}
 
 type FilterState = {
   type: "country" | "city" | "church";

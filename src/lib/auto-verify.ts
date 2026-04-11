@@ -28,7 +28,7 @@ export function autoVerifyField(
   enrichment: ChurchEnrichment | Partial<ChurchEnrichment> | null,
 ): EnrichmentMatch {
   // Logo always goes to admin
-  if (fieldName === 'logo_url') return 'no_data';
+  if (fieldName === 'logo_url' || fieldName === 'cover_image_url') return 'no_data';
 
   if (!enrichment) return 'no_data';
 

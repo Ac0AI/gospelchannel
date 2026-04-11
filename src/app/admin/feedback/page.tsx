@@ -2,8 +2,11 @@ import Link from "next/link";
 import { getChurchFeedback } from "@/lib/church-community";
 import { AdminNav } from "@/components/admin/AdminNav";
 import { AdminFeedbackPanel } from "@/components/admin/AdminReviewPanels";
+import { requireAdminPageAccess } from "@/lib/admin-page";
 
 export default async function AdminFeedbackPage() {
+  await requireAdminPageAccess("/admin/feedback");
+
   const feedback = await getChurchFeedback();
 
   return (

@@ -2,11 +2,14 @@ import Link from 'next/link';
 import { getPendingEdits } from '@/lib/church-profile';
 import { getChurchEnrichment } from '@/lib/church';
 import { AdminNav } from '@/components/admin/AdminNav';
+import { requireAdminPageAccess } from '@/lib/admin-page';
 import { AdminEditsPanel } from './admin-edits-panel';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminEditsPage() {
+  await requireAdminPageAccess('/admin/edits');
+
   const edits = await getPendingEdits();
 
   const slugs = [...new Set(edits.map(e => e.churchSlug))];

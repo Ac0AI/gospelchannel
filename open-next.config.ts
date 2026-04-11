@@ -2,7 +2,9 @@ import { defineCloudflareConfig } from "@opennextjs/cloudflare";
 
 const cloudflareConfig = defineCloudflareConfig();
 
-export default {
+const config = {
   ...cloudflareConfig,
   buildCommand: "next build --webpack",
 };
+
+export default config;

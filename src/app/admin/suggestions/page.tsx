@@ -2,8 +2,11 @@ import Link from "next/link";
 import { getChurchSuggestions } from "@/lib/church-community";
 import { AdminNav } from "@/components/admin/AdminNav";
 import { AdminSuggestionsPanel } from "@/components/admin/AdminReviewPanels";
+import { requireAdminPageAccess } from "@/lib/admin-page";
 
 export default async function AdminSuggestionsPage() {
+  await requireAdminPageAccess("/admin/suggestions");
+
   const suggestions = await getChurchSuggestions();
 
   return (

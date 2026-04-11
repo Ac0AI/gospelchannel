@@ -20,8 +20,8 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const membership = await ensureChurchAccessForEmail(email);
-    if (!membership) {
+    const memberships = await ensureChurchAccessForEmail(email);
+    if (memberships.length === 0) {
       return NextResponse.json({ error: "No verified church access was found for this email" }, { status: 404 });
     }
 

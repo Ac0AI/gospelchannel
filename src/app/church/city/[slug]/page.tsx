@@ -4,13 +4,11 @@ import { ChurchCollectionPage } from "@/components/ChurchCollectionPage";
 import {
   filterChurchDirectory,
   getCityLabelFromSlug,
-  getCityLinks,
   getCountryLinks,
   getStyleLinks,
   paginateChurches,
 } from "@/lib/church-directory";
 import { getChurchIndexData } from "@/lib/church";
-import { getChurchDirectorySeedAsync } from "@/lib/content";
 
 export const revalidate = 3600;
 
@@ -25,10 +23,6 @@ function readPositivePage(value: string | string[] | undefined): number {
   const raw = Array.isArray(value) ? value[0] : value;
   const parsed = Number.parseInt(raw ?? "", 10);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
-}
-
-export async function generateStaticParams() {
-  return getCityLinks(await getChurchDirectorySeedAsync()).map((city) => ({ slug: city.slug }));
 }
 
 export async function generateMetadata({ params, searchParams }: CityPageProps): Promise<Metadata> {
