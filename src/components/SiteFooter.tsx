@@ -53,6 +53,11 @@ export function SiteFooter() {
                 Privacy
               </Link>
             </li>
+            <li>
+              <Link href="/church-admin/login" prefetch={false} className="worship-link text-warm-brown transition-colors hover:text-espresso">
+                Church Admin
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
