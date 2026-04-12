@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
+import { HeaderUserMenu, HeaderUserMenuMobile } from "@/components/HeaderUserMenu";
 
 const navItems = [
   { href: "/", label: "Home" },
@@ -105,6 +106,7 @@ export function SiteHeader() {
           >
             Add Your Church
           </Link>
+          <HeaderUserMenu />
         </div>
 
         {/* Mobile: My Church shortcut + hamburger */}
@@ -217,6 +219,8 @@ export function SiteHeader() {
                 Add Your Church
               </Link>
             </div>
+
+            <HeaderUserMenuMobile onNavigate={closeMenu} />
 
             <div className="border-t border-rose-200/60 px-6 py-4">
               <Link
