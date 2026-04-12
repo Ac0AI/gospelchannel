@@ -58,6 +58,11 @@ const SAMPLE = {
   ],
 };
 
+// Skeleton bar used to indicate empty slots in the "current" column
+function Skel({ w, h = "h-2" }: { w: string; h?: string }) {
+  return <div className={`${w} ${h} rounded bg-muted-warm/15`} />;
+}
+
 function MockCurrentProfile({
   church,
   data,
@@ -70,44 +75,170 @@ function MockCurrentProfile({
   const city = data.city as string | undefined;
   const streetAddress = data.streetAddress as string | undefined;
   const pastorName = data.pastorName as string | undefined;
+  const pastorTitle = data.pastorTitle as string | undefined;
   const serviceDurationMinutes = data.serviceDurationMinutes as number | undefined;
-  const hasAny = description || pastorName || serviceDurationMinutes;
+  const parkingInfo = data.parkingInfo as string | undefined;
+  const whatToExpect = data.whatToExpect as string | undefined;
+  const languages = data.languages as string[] | undefined;
+  const goodFitTags = data.goodFitTags as string[] | undefined;
+  const visitorFaq = data.visitorFaq as { question: string; answer: string }[] | undefined;
+  const coverImageUrl = data.coverImageUrl as string | undefined;
 
   return (
-    <div className="space-y-2.5 opacity-90">
-      {/* Plain hero (no image, just name) */}
-      <div className="rounded-xl border border-rose-200/30 bg-linen-deep/60 p-4">
-        <p className="font-serif text-base font-bold text-warm-brown">{church.name}</p>
-        {(denomination || city || streetAddress) && (
-          <p className="mt-0.5 text-[11px] text-muted-warm">
-            {denomination && getProfileOptionLabel(denomination)}
-            {denomination && (city || church.country) && " · "}
-            {city || church.country}
-          </p>
+    <div className="space-y-3">
+      {/* Hero slot */}
+      <div className="overflow-hidden rounded-xl border border-rose-200/30">
+        {coverImageUrl ? (
+          <div className="relative flex h-36 items-end p-3 sm:h-40">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={coverImageUrl} alt="" className="absolute inset-0 h-full w-full object-cover grayscale" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#1a0e09] via-[#1a0e09]/60 to-transparent" />
+            <div className="relative">
+              <p className="font-serif text-base font-bold text-white/90">{church.name}</p>
+              {(denomination || city) && (
+                <p className="text-[11px] text-white/70">
+                  {denomination && getProfileOptionLabel(denomination)}
+                  {denomination && (city || church.country) && " · "}
+                  {city || church.country}
+                </p>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="flex h-36 flex-col justify-end bg-muted-warm/10 p-3 sm:h-40">
+            <p className="font-serif text-base font-bold text-warm-brown/60">{church.name}</p>
+            {(denomination || city || streetAddress) && (
+              <p className="mt-0.5 text-[11px] text-muted-warm/70">
+                {denomination && getProfileOptionLabel(denomination)}
+                {denomination && (city || church.country) && " · "}
+                {city || church.country}
+              </p>
+            )}
+            <p className="absolute right-3 top-3 rounded-full bg-white/60 px-2 py-0.5 text-[9px] font-semibold uppercase text-muted-warm">No hero image</p>
+          </div>
         )}
       </div>
 
-      {description && (
-        <div className="rounded-xl border border-rose-200/30 bg-white/60 p-3">
-          <p className="line-clamp-3 text-[11px] leading-relaxed text-warm-brown">{description}</p>
-        </div>
-      )}
+      {/* About slot */}
+      <div className="rounded-xl border border-rose-200/30 bg-white/60 p-3">
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-warm/70">About</p>
+        {description ? (
+          <p className="mt-1 line-clamp-3 text-[11px] leading-relaxed text-warm-brown">{description}</p>
+        ) : (
+          <div className="mt-2 space-y-1.5">
+            <Skel w="w-full" />
+            <Skel w="w-11/12" />
+            <Skel w="w-3/4" />
+          </div>
+        )}
+      </div>
 
-      {pastorName && (
-        <div className="rounded-xl border border-rose-200/30 bg-white/60 p-3">
-          <p className="text-[9px] font-semibold uppercase tracking-wider text-muted-warm">Pastor</p>
-          <p className="text-xs text-warm-brown">{pastorName}</p>
+      {/* Word from the team slot */}
+      <div className="rounded-xl border border-rose-200/30 bg-white/60 p-3">
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-warm/70">Word from the team</p>
+        <div className="mt-2 flex items-start gap-2.5">
+          <div className="h-11 w-11 shrink-0 rounded-full bg-muted-warm/15" />
+          <div className="min-w-0 flex-1 space-y-1.5 pt-1">
+            {pastorName ? (
+              <>
+                <p className="text-[11px] font-semibold text-warm-brown">{pastorName}</p>
+                {pastorTitle && <p className="text-[9px] text-muted-warm">{pastorTitle}</p>}
+                <Skel w="w-full" />
+                <Skel w="w-4/5" />
+              </>
+            ) : (
+              <>
+                <Skel w="w-24" />
+                <Skel w="w-16" h="h-1.5" />
+                <div className="pt-1">
+                  <Skel w="w-full" />
+                  <div className="mt-1"><Skel w="w-4/5" /></div>
+                </div>
+              </>
+            )}
+          </div>
         </div>
-      )}
+      </div>
 
-      {!hasAny && (
-        <div className="rounded-xl border-2 border-dashed border-rose-gold/20 bg-linen-deep/30 p-4 text-center">
-          <p className="text-xs italic text-muted-warm">That&apos;s pretty much all visitors see right now.</p>
+      {/* Visit cards slot */}
+      <div className="rounded-xl border border-rose-200/30 bg-white/60 p-3">
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-warm/70">Your visit at a glance</p>
+        <div className="mt-2 grid grid-cols-2 gap-1.5">
+          {[
+            { label: "What to expect", value: whatToExpect ? whatToExpect.slice(0, 40) + "..." : null },
+            { label: "Service length", value: serviceDurationMinutes ? `${serviceDurationMinutes} min` : null },
+            { label: "Parking", value: parkingInfo ? parkingInfo.slice(0, 30) + "..." : null },
+            { label: "Languages", value: languages && languages.length > 0 ? languages.map(l => getProfileOptionLabel(l)).join(", ") : null },
+          ].map(card => (
+            <div key={card.label} className="rounded-lg bg-linen-deep/40 px-2 py-1.5">
+              <p className="text-[9px] font-semibold uppercase tracking-wider text-muted-warm/70">{card.label}</p>
+              {card.value ? (
+                <p className="mt-0.5 text-[11px] text-warm-brown leading-tight">{card.value}</p>
+              ) : (
+                <div className="mt-1"><Skel w="w-4/5" /></div>
+              )}
+            </div>
+          ))}
         </div>
-      )}
+      </div>
 
-      <div className="rounded-xl border border-rose-200/30 bg-white/40 p-3 text-center">
-        <p className="text-[10px] italic text-muted-warm/70">No hero image · No music player · No visitor info</p>
+      {/* Music player slot */}
+      <div className="overflow-hidden rounded-xl border-2 border-dashed border-rose-200/40 bg-linen-deep/20 p-3">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-muted-warm/15">
+            <svg className="h-5 w-5 text-muted-warm/40" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
+          </div>
+          <div className="min-w-0 flex-1 space-y-1.5">
+            <Skel w="w-20" h="h-1.5" />
+            <Skel w="w-3/4" />
+            <Skel w="w-1/2" h="h-1.5" />
+          </div>
+        </div>
+      </div>
+
+      {/* Good fit slot */}
+      <div className="rounded-xl border border-rose-200/30 bg-white/60 p-3">
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-warm/70">Good fit for</p>
+        <div className="mt-2 flex flex-wrap gap-1">
+          {goodFitTags && goodFitTags.length > 0 ? (
+            goodFitTags.slice(0, 5).map(tag => (
+              <span key={tag} className="inline-flex items-center rounded-full bg-muted-warm/15 px-2 py-0.5 text-[10px] font-medium text-warm-brown">{tag}</span>
+            ))
+          ) : (
+            <>
+              <div className="h-4 w-14 rounded-full bg-muted-warm/15" />
+              <div className="h-4 w-20 rounded-full bg-muted-warm/15" />
+              <div className="h-4 w-16 rounded-full bg-muted-warm/15" />
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* FAQ slot */}
+      <div className="rounded-xl border border-rose-200/30 bg-white/60 p-3">
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-warm/70">Common questions</p>
+        <div className="mt-2 space-y-2">
+          {visitorFaq && visitorFaq.length > 0 ? (
+            visitorFaq.slice(0, 3).map((item, i) => (
+              <p key={i} className="text-[11px] font-medium text-warm-brown">{item.question}</p>
+            ))
+          ) : (
+            <>
+              <div className="flex items-center justify-between border-b border-rose-200/20 pb-2">
+                <Skel w="w-32" />
+                <Skel w="w-3" h="h-3" />
+              </div>
+              <div className="flex items-center justify-between border-b border-rose-200/20 pb-2">
+                <Skel w="w-40" />
+                <Skel w="w-3" h="h-3" />
+              </div>
+              <div className="flex items-center justify-between">
+                <Skel w="w-28" />
+                <Skel w="w-3" h="h-3" />
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
