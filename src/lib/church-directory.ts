@@ -262,15 +262,28 @@ export function filterChurchDirectory(
   }
 
   if (query) {
-    filtered = filtered.filter((church) => getTextMatchScore(church, query) > 0);
+    return filtered
+      .map((church) => ({
+        church,
+        textScore: getTextMatchScore(church, query),
+      }))
+      .filter((item) => item.textScore > 0)
+      .sort((a, b) => {
+        const scoreDiff = b.textScore - a.textScore;
+        if (scoreDiff !== 0) return scoreDiff;
+
+        const directoryDiff = getDirectoryScore(b.church) - getDirectoryScore(a.church);
+        if (directoryDiff !== 0) return directoryDiff;
+
+        const playlistDiff = getPlaylistCount(b.church) - getPlaylistCount(a.church);
+        if (playlistDiff !== 0) return playlistDiff;
+
+        return a.church.name.localeCompare(b.church.name);
+      })
+      .map((item) => item.church);
   }
 
   return [...filtered].sort((a, b) => {
-    if (query) {
-      const scoreDiff = getTextMatchScore(b, query) - getTextMatchScore(a, query);
-      if (scoreDiff !== 0) return scoreDiff;
-    }
-
     const directoryDiff = getDirectoryScore(b) - getDirectoryScore(a);
     if (directoryDiff !== 0) return directoryDiff;
 

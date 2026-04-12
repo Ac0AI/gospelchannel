@@ -4,6 +4,7 @@ import { requireAdminRoute } from "@/lib/admin-route";
 import { verifyChurchClaim } from "@/lib/church-community";
 import { getChurchBySlugAsync } from "@/lib/content";
 import { sendClaimVerifiedEmail } from "@/lib/email";
+import { revalidateChurchClaimStatus } from "@/lib/church";
 
 export async function POST(request: NextRequest) {
   const admin = await requireAdminRoute(request);
@@ -19,6 +20,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const result = await verifyChurchClaim(payload.id);
+    revalidateChurchClaimStatus();
 
     const church = await getChurchBySlugAsync(result.churchSlug);
     const { ctx } = await getCloudflareContext({ async: true });

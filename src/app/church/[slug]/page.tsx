@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Suspense } from "react";
-import { AdminLogout } from "@/components/AdminLogout";
 import { ChurchContactButton } from "@/components/ChurchContactButton";
 import { ChurchLatestUpdatesSection } from "@/components/ChurchLatestUpdatesSection";
 import { ChurchNetworkSection } from "@/components/ChurchNetworkSection";
@@ -14,11 +12,10 @@ import { ServiceTimesDisplay } from "@/components/ServiceTimesDisplay";
 import { SpotifyEmbedCard } from "@/components/SpotifyEmbedCard";
 import { SpotifyPlaylistShelf } from "@/components/SpotifyPlaylistShelf";
 import { ChurchPagePrayerSection } from "@/components/ChurchPagePrayerSection";
-import { ChurchAdminLogoutButton } from "@/components/church-admin/ChurchAdminLogoutButton";
+import { ChurchViewerActions } from "@/components/ChurchViewerActions";
 import { getPrayers } from "@/lib/prayer";
 import { HelpImproveCard, type MissingField } from "@/components/HelpImproveCard";
 import { ClaimInterstitial, ClaimFooterLink, type ChurchPageClaimCtaMode } from "@/components/ClaimSection";
-import { VerifiedChurchBadge } from "@/components/VerifiedChurchBadge";
 import { VideoGrid } from "@/components/VideoGrid";
 import {
   extractCity,
@@ -26,7 +23,6 @@ import {
   getPrimaryStyleFilter,
 } from "@/lib/church-directory";
 import { buildChurchAliases, checkChurchClaimed, getChurchPublicPageData, resolveChurchPrimaryImage } from "@/lib/church";
-import { getChurchMembershipForUserAndSlug, getChurchMembershipsForUser } from "@/lib/church-community";
 import {
   getFirstServiceTimeLabel,
   getPublicHostLabel,
@@ -43,8 +39,6 @@ import { slugify } from "@/lib/prayer-filters";
 import { uniqueSpotifyPlaylistIds } from "@/lib/spotify-playlist";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { HeroImage } from "@/components/HeroImage";
-import { isAdminUser } from "@/lib/admin-users";
-import { getServerUser } from "@/lib/auth/server";
 import { resolveCanonicalChurchSlug } from "@/lib/church-slugs";
 import { CHURCH_SIZE_LABELS, getProfileOptionLabel } from "@/lib/profile-fields";
 
@@ -53,6 +47,7 @@ type ChurchPageProps = {
 };
 
 export const revalidate = 300;
+export const dynamic = "force-static";
 
 async function ChurchPrayerSection({ churchSlug, churchName }: { churchSlug: string; churchName: string }) {
   const prayers = await getPrayers({ churchSlug, limit: 5 });
@@ -164,24 +159,8 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   const network = "network" in pageData ? pageData.network as import("@/types/gospel").ChurchNetwork | undefined : undefined;
   const isCampus = "isCampus" in pageData ? (pageData.isCampus as boolean) : false;
   const parentChurchName = "parentChurchName" in pageData ? (pageData.parentChurchName as string | undefined) : undefined;
-  const requestHeaders = await headers();
-  const user = await getServerUser(requestHeaders);
-  const [isClaimed, activeMemberships, ownsCurrentChurch, viewerIsAdmin] = await Promise.all([
-    checkChurchClaimed(church.slug),
-    user ? getChurchMembershipsForUser(user.id) : Promise.resolve([]),
-    user ? getChurchMembershipForUserAndSlug(user.id, church.slug) : Promise.resolve(null),
-    user ? isAdminUser(user.id) : Promise.resolve(false),
-  ]);
-  const isChurchViewer = activeMemberships.length > 0;
-  const claimCtaMode: ChurchPageClaimCtaMode = ownsCurrentChurch
-    ? "owner"
-    : isChurchViewer
-      ? "church"
-      : viewerIsAdmin
-        ? "admin"
-        : isClaimed
-          ? "claimed"
-          : "unclaimed";
+  const isClaimed = await checkChurchClaimed(church.slug);
+  const claimCtaMode: ChurchPageClaimCtaMode = isClaimed ? "claimed" : "unclaimed";
 
   const spotifyPlaylistIds = uniqueSpotifyPlaylistIds([
     ...church.spotifyPlaylistIds,
@@ -481,39 +460,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
             <Link href="/church" className="inline-flex items-center gap-1 text-sm font-medium text-white/60 transition-colors hover:text-white/90">
               ← Churches
             </Link>
-            {(claimCtaMode === "owner" || claimCtaMode === "church" || claimCtaMode === "admin") && (
-              <div className="flex flex-wrap items-center gap-2">
-                {claimCtaMode === "owner" && (
-                  <Link
-                    href={`/church/${church.slug}/manage`}
-                    className="inline-flex items-center rounded-full bg-white/12 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
-                  >
-                    Manage page
-                  </Link>
-                )}
-                {claimCtaMode === "church" && (
-                  <Link
-                    href="/church-admin"
-                    className="inline-flex items-center rounded-full bg-white/12 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
-                  >
-                    Church Admin
-                  </Link>
-                )}
-                {claimCtaMode === "admin" && (
-                  <Link
-                    href="/admin"
-                    className="inline-flex items-center rounded-full bg-white/12 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
-                  >
-                    Open admin
-                  </Link>
-                )}
-                {claimCtaMode === "admin" ? (
-                  <AdminLogout className="border-white/25 bg-white/8 text-white hover:bg-white/16" />
-                ) : (
-                  <ChurchAdminLogoutButton className="border-white/25 bg-white/8 text-white hover:bg-white/16" />
-                )}
-              </div>
-            )}
+            <ChurchViewerActions churchSlug={church.slug} />
           </div>
         </nav>
 
@@ -529,9 +476,17 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                   <h1 className="text-3xl font-black leading-tight text-white sm:text-4xl lg:text-5xl">
                     {displayName}
                   </h1>
-                  <Suspense fallback={null}>
-                    <VerifiedChurchBadge churchSlug={church.slug} />
-                  </Suspense>
+                  {isClaimed && (
+                    <span
+                      className="inline-flex items-center gap-1 rounded-full bg-blue-500/20 px-2.5 py-0.5 text-xs font-semibold text-blue-100"
+                      title="Verified church"
+                    >
+                      <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M16.403 12.652a3 3 0 010-5.304 3 3 0 00-3.75-3.751 3 3 0 00-5.305 0 3 3 0 00-3.751 3.75 3 3 0 000 5.305 3 3 0 003.75 3.751 3 3 0 005.305 0 3 3 0 003.751-3.75zm-2.546-4.46a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
+                      </svg>
+                      Verified
+                    </span>
+                  )}
                   {isCampus && network && (
                     <Link href={`/network/${network.slug}`} className="inline-flex items-center rounded-full bg-white/15 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/25">
                       Part of {network.name}

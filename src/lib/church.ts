@@ -1,4 +1,4 @@
-import { unstable_cache } from "next/cache";
+import { revalidateTag, unstable_cache } from "next/cache";
 import { getChurchLatestUpdates } from "@/lib/church-updates";
 import { uniqueSpotifyPlaylistIds } from "@/lib/spotify-playlist";
 import type { ChurchProfileEdit, YouTubeVideo, ChurchEnrichment, ChurchProfileScore } from "@/types/gospel";
@@ -63,6 +63,8 @@ type ChurchIndexSummary = {
 };
 
 const CHURCH_INDEX_CACHE_SECONDS = 60 * 60;
+export const CHURCH_CLAIM_STATUS_TAG = "church-claim-status";
+const CHURCH_CLAIM_STATUS_SECONDS = 300;
 let churchIndexDataCache: CacheEntry<Awaited<ReturnType<typeof _getChurchIndexData>>> | null = null;
 let churchIndexDataPromise: Promise<Awaited<ReturnType<typeof _getChurchIndexData>>> | null = null;
 let churchIndexSummaryCache: CacheEntry<Map<string, ChurchIndexSummary>> | null = null;
@@ -1304,26 +1306,36 @@ export async function getChurchIndexSummaryLookup(): Promise<Map<string, ChurchI
   return churchIndexSummaryPromise;
 }
 
+const getClaimedChurchSlugList = unstable_cache(
+  async (): Promise<string[]> => {
+    if (!hasServiceConfig()) return [];
+    try {
+      const client = createAdminClient();
+      const { data } = await client
+        .from<{ church_slug: string }>('church_memberships')
+        .select('church_slug')
+        .eq('status', 'active');
+      return ((data as Array<{ church_slug: string }> | null) ?? []).map((row) => row.church_slug);
+    } catch {
+      return [];
+    }
+  },
+  ["claimed-church-slugs-v1"],
+  { revalidate: CHURCH_CLAIM_STATUS_SECONDS, tags: [CHURCH_CLAIM_STATUS_TAG] },
+);
+
+export function revalidateChurchClaimStatus(): void {
+  revalidateTag(CHURCH_CLAIM_STATUS_TAG, "max");
+}
+
 export async function checkChurchClaimed(slug: string): Promise<boolean> {
   if (!hasServiceConfig()) return false;
-  const client = createAdminClient();
-  const { data } = await client
-    .from<{ id: string }>('church_memberships')
-    .select('id')
-    .eq('church_slug', slug)
-    .eq('status', 'active')
-    .limit(1);
-  return (((data as Array<{ id: string }> | null) ?? []).length) > 0;
+  const claimedSlugs = await getClaimedChurchSlugList();
+  return claimedSlugs.includes(slug);
 }
 
 export async function getClaimedChurchSlugs(): Promise<Set<string>> {
-  if (!hasServiceConfig()) return new Set();
-  const client = createAdminClient();
-  const { data } = await client
-    .from<{ church_slug: string }>('church_memberships')
-    .select('church_slug')
-    .eq('status', 'active');
-  return new Set(((data as Array<{ church_slug: string }> | null) ?? []).map((r) => r.church_slug));
+  return new Set(await getClaimedChurchSlugList());
 }
 
 export async function getChurchProfileScore(slug: string) {
