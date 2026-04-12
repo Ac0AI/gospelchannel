@@ -21,6 +21,11 @@ function UserInitials({ name, email }: { name: string; email: string }) {
   return <>{initials}</>;
 }
 
+function setMyChurchCookie(slug: string) {
+  const expires = new Date(Date.now() + 365 * 864e5).toUTCString();
+  document.cookie = `my_church=${encodeURIComponent(slug)};expires=${expires};path=/;SameSite=Lax`;
+}
+
 export function HeaderUserMenu() {
   const { data: session, isPending } = authClient.useSession();
   const [open, setOpen] = useState(false);
@@ -29,6 +34,21 @@ export function HeaderUserMenu() {
   const router = useRouter();
 
   const close = useCallback(() => setOpen(false), []);
+
+  // Auto-set my_church cookie for logged-in users with a claimed church
+  useEffect(() => {
+    if (!session?.user) return;
+    if (getMyChurchSlug()) return; // already set
+    fetch("/api/church/my-membership")
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => {
+        if (data?.churchSlug) {
+          setMyChurchCookie(data.churchSlug);
+          router.refresh();
+        }
+      })
+      .catch(() => {});
+  }, [session?.user, router]);
 
   useEffect(() => {
     if (!open) return;

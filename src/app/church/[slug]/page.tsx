@@ -612,10 +612,11 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
         </div>
       )}
 
-      {/* ━━━ PASTOR WELCOME ━━━ */}
+      {/* ━━━ WORD FROM THE TEAM ━━━ */}
       {pastorName && (
         <ScrollReveal>
           <section className="rounded-2xl border border-rose-200/40 bg-white/80 p-6 backdrop-blur-sm sm:p-8">
+            <h2 className="mb-4 font-serif text-xl font-semibold text-espresso sm:text-2xl">Word from the team</h2>
             <div className="flex items-start gap-4">
               {pastorPhotoUrl ? (
                 <img
@@ -627,9 +628,8 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                 <svg className="h-16 w-16 shrink-0 text-muted-warm/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}><path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
               )}
               <div>
-                <h2 className="font-serif text-lg font-semibold text-espresso">{pastorName}</h2>
+                <p className="font-serif text-lg font-semibold text-espresso">{pastorName}</p>
                 {pastorTitle && <p className="text-sm text-muted-warm">{pastorTitle}</p>}
-                {whatToExpect && <p className="mt-2 text-sm italic leading-relaxed text-espresso/80">{whatToExpect}</p>}
               </div>
             </div>
           </section>
@@ -640,7 +640,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
       {hasAboutData && (
         <ScrollReveal>
           <section className="rounded-2xl border border-rose-200/40 bg-white/80 p-6 backdrop-blur-sm sm:p-8">
-            <h2 className="font-serif text-xl font-semibold text-espresso sm:text-2xl">What Sunday feels like</h2>
+            <h2 className="font-serif text-xl font-semibold text-espresso sm:text-2xl">Your visit at a glance</h2>
 
             <dl className="mt-6 grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
               {hasAddress && (
@@ -685,6 +685,16 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                       <ChurchContactButton churchSlug={church.slug} churchName={church.name} />
                     )}
                   </dd>
+                </div>
+              )}
+
+              {whatToExpect && (
+                <div>
+                  <dt className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-warm">
+                    <svg className="h-3.5 w-3.5 text-rose-gold/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
+                    What to expect
+                  </dt>
+                  <dd className="mt-1 text-sm leading-relaxed text-espresso">{whatToExpect}</dd>
                 </div>
               )}
 
