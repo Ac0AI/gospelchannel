@@ -3,6 +3,9 @@
   "main": "worker.ts",
   "compatibility_date": "2026-03-28",
   "compatibility_flags": ["nodejs_compat"],
+  "limits": {
+    "cpu_ms": 300000
+  },
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1
