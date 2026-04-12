@@ -6,9 +6,10 @@ import { getChurchMembershipForUserAndSlug } from '@/lib/church-community';
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
 const MAX_SIZE = 2 * 1024 * 1024;
 
-const IMAGE_TARGETS: Record<string, { folder: string; prefix: string }> = {
-  logo_url: { folder: 'church-logos', prefix: 'logo' },
+const IMAGE_TARGETS: Record<string, { folder: string; prefix: string; allowSvg?: boolean }> = {
+  logo_url: { folder: 'church-logos', prefix: 'logo', allowSvg: true },
   cover_image_url: { folder: 'church-heroes', prefix: 'hero' },
+  pastor_photo_url: { folder: 'church-pastors', prefix: 'pastor' },
 };
 
 export async function POST(request: NextRequest) {
@@ -29,8 +30,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unsupported image field' }, { status: 400 });
   }
 
-  if (!ALLOWED_TYPES.includes(file.type)) {
-    return NextResponse.json({ error: 'Invalid file type' }, { status: 400 });
+  const allowedTypes = target.allowSvg ? ALLOWED_TYPES : ALLOWED_TYPES.filter(t => t !== 'image/svg+xml');
+  if (!allowedTypes.includes(file.type)) {
+    return NextResponse.json({ error: `Invalid file type. Accepted: ${allowedTypes.join(', ')}` }, { status: 400 });
   }
 
   if (file.size > MAX_SIZE) {

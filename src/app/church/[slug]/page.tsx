@@ -285,6 +285,11 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
     ? ((mergedProfile.givingUrl as string | undefined) || enrichment?.givingUrl)
     : undefined;
   const whatToExpect = (mergedProfile.whatToExpect as string | undefined) || enrichment?.whatToExpect || undefined;
+  const pastorPhotoUrl = (mergedProfile.pastorPhotoUrl as string | undefined) || enrichment?.pastorPhotoUrl || undefined;
+  const serviceDurationMinutes = (mergedProfile.serviceDurationMinutes as number | undefined) || enrichment?.serviceDurationMinutes || undefined;
+  const parkingInfo = (mergedProfile.parkingInfo as string | undefined) || enrichment?.parkingInfo || undefined;
+  const goodFitTags = (mergedProfile.goodFitTags as string[] | undefined) || enrichment?.goodFitTags || undefined;
+  const visitorFaq = (mergedProfile.visitorFaq as { question: string; answer: string }[] | undefined) || enrichment?.visitorFaq || undefined;
 
   // Enrichment: about section data
   const hasServiceTimes = serviceTimes.length > 0;
@@ -371,6 +376,10 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
       ...(contactEmail && { email: contactEmail }),
       ...(communityDenomination && { additionalType: getProfileOptionLabel(communityDenomination) }),
       ...(church.founded && { foundingDate: `${church.founded}` }),
+      ...(communityLanguages.length > 0 && { knowsLanguage: communityLanguages.map(l => getProfileOptionLabel(l)) }),
+      ...(serviceDurationMinutes && { eventSchedule: { "@type": "Schedule", duration: `PT${serviceDurationMinutes}M` } }),
+      ...(parkingInfo && { amenityFeature: { "@type": "LocationFeatureSpecification", name: "Parking", value: parkingInfo } }),
+      ...(goodFitTags && goodFitTags.length > 0 && { keywords: goodFitTags.join(", ") }),
     },
     ...(allPlaylists.length > 0 ? [{
       "@context": "https://schema.org",
@@ -434,6 +443,11 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
             text: `${church.name} has ${allPlaylists.length} curated Spotify ${allPlaylists.length === 1 ? "playlist" : "playlists"} available on GospelChannel. You can listen directly on the page or open the playlist in Spotify. Visit gospelchannel.com/church/${church.slug} to start streaming.`,
           },
         },
+        ...(visitorFaq ?? []).map((faqItem) => ({
+          "@type": "Question" as const,
+          name: faqItem.question,
+          acceptedAnswer: { "@type": "Answer" as const, text: faqItem.answer },
+        })),
       ],
     },
   ];
@@ -598,13 +612,37 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
         </div>
       )}
 
-      {/* ━━━ 2. AT A GLANCE ━━━ */}
+      {/* ━━━ PASTOR WELCOME ━━━ */}
+      {pastorName && (
+        <ScrollReveal>
+          <section className="rounded-2xl border border-rose-200/40 bg-white/80 p-6 backdrop-blur-sm sm:p-8">
+            <div className="flex items-start gap-4">
+              {pastorPhotoUrl ? (
+                <img
+                  src={pastorPhotoUrl}
+                  alt={`${pastorName}${pastorTitle ? `, ${pastorTitle}` : ''} at ${church.name}`}
+                  className="h-16 w-16 shrink-0 rounded-full object-cover"
+                />
+              ) : (
+                <svg className="h-16 w-16 shrink-0 text-muted-warm/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}><path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+              )}
+              <div>
+                <h2 className="font-serif text-lg font-semibold text-espresso">{pastorName}</h2>
+                {pastorTitle && <p className="text-sm text-muted-warm">{pastorTitle}</p>}
+                {whatToExpect && <p className="mt-2 text-sm italic leading-relaxed text-espresso/80">{whatToExpect}</p>}
+              </div>
+            </div>
+          </section>
+        </ScrollReveal>
+      )}
+
+      {/* ━━━ 2. WHAT SUNDAY FEELS LIKE ━━━ */}
       {hasAboutData && (
         <ScrollReveal>
           <section className="rounded-2xl border border-rose-200/40 bg-white/80 p-6 backdrop-blur-sm sm:p-8">
-            <h2 className="font-serif text-xl font-semibold text-espresso sm:text-2xl">Know before you go</h2>
+            <h2 className="font-serif text-xl font-semibold text-espresso sm:text-2xl">What Sunday feels like</h2>
 
-            <dl className="mt-6 grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2">
+            <dl className="mt-6 grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
               {hasAddress && (
                 <div>
                   <dt className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-warm">
@@ -650,23 +688,23 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                 </div>
               )}
 
-              {whatToExpect && (
+              {serviceDurationMinutes && (
                 <div>
                   <dt className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-warm">
-                    <svg className="h-3.5 w-3.5 text-rose-gold/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
-                    What a first visit feels like
+                    <svg className="h-3.5 w-3.5 text-rose-gold/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    Service length
                   </dt>
-                  <dd className="mt-1 text-sm leading-relaxed text-espresso">{whatToExpect}</dd>
+                  <dd className="mt-1 text-sm text-espresso">{serviceDurationMinutes} min</dd>
                 </div>
               )}
 
-              {pastorName && (
+              {parkingInfo && (
                 <div>
                   <dt className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-warm">
-                    <svg className="h-3.5 w-3.5 text-rose-gold/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
-                    {pastorTitle || 'Pastor'}
+                    <svg className="h-3.5 w-3.5 text-rose-gold/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0H21M3.375 14.25h17.25m0 0V6.169a1.125 1.125 0 00-.923-1.107l-9.138-1.598a1.125 1.125 0 00-.392 0l-9.138 1.598A1.125 1.125 0 001.125 6.17v8.08" /></svg>
+                    Parking & accessibility
                   </dt>
-                  <dd className="mt-1 text-sm text-espresso">{pastorName}</dd>
+                  <dd className="mt-1 text-sm leading-relaxed text-espresso">{parkingInfo}</dd>
                 </div>
               )}
 
@@ -723,6 +761,42 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                 </div>
               )}
             </dl>
+          </section>
+        </ScrollReveal>
+      )}
+
+      {/* ━━━ GOOD FIT FOR ━━━ */}
+      {goodFitTags && goodFitTags.length > 0 && (
+        <ScrollReveal>
+          <section className="rounded-2xl border border-rose-200/40 bg-white/80 p-6 backdrop-blur-sm sm:p-8">
+            <h2 className="font-serif text-xl font-semibold text-espresso sm:text-2xl">Good fit for</h2>
+            <div className="mt-4 flex flex-wrap gap-2" role="list" aria-label="Good fit for">
+              {goodFitTags.map((tag) => (
+                <span key={tag} role="listitem" className="inline-flex items-center rounded-full bg-blush-light/60 px-3 py-1.5 text-sm font-medium text-warm-brown">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </section>
+        </ScrollReveal>
+      )}
+
+      {/* ━━━ VISITOR FAQ ━━━ */}
+      {visitorFaq && visitorFaq.length > 0 && (
+        <ScrollReveal>
+          <section className="rounded-2xl border border-rose-200/40 bg-white/80 p-6 backdrop-blur-sm sm:p-8">
+            <h2 className="font-serif text-xl font-semibold text-espresso sm:text-2xl">Common questions</h2>
+            <div className="mt-4 divide-y divide-rose-200/30">
+              {visitorFaq.slice(0, 10).map((item, i) => (
+                <details key={i} className="group" {...(i === 0 ? { open: true } : {})}>
+                  <summary className="flex cursor-pointer items-center justify-between px-1 py-3 text-sm font-medium text-espresso hover:text-rose-gold">
+                    {item.question}
+                    <svg className="h-4 w-4 shrink-0 text-muted-warm transition-transform duration-200 group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+                  </summary>
+                  <p className="px-1 pb-3 text-sm leading-relaxed text-espresso/80">{item.answer}</p>
+                </details>
+              ))}
+            </div>
           </section>
         </ScrollReveal>
       )}

@@ -267,9 +267,14 @@ export type ChurchEnrichment = {
   // Profile fields
   pastorName?: string;
   pastorTitle?: string;
+  pastorPhotoUrl?: string;
   livestreamUrl?: string;
   givingUrl?: string;
   whatToExpect?: string;
+  serviceDurationMinutes?: number;
+  parkingInfo?: string;
+  goodFitTags?: string[];
+  visitorFaq?: { question: string; answer: string }[];
 
   // Level 3
   seoDescription?: string;
@@ -361,7 +366,7 @@ export type ProfileFieldDefinition = {
   placeholder?: string;
   category: 'badge' | 'bonus' | 'extra';
   points: number;
-  type: 'text' | 'url' | 'email' | 'tel' | 'textarea' | 'select' | 'multi-select' | 'checkboxes' | 'service-times' | 'address' | 'image' | 'pastor';
+  type: 'text' | 'url' | 'email' | 'tel' | 'textarea' | 'select' | 'multi-select' | 'checkboxes' | 'service-times' | 'address' | 'image' | 'pastor' | 'faq';
   required?: boolean;
   options?: string[];
   validation?: {

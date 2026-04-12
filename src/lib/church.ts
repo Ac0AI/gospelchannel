@@ -517,9 +517,14 @@ export async function getChurchEnrichment(slug: string): Promise<ChurchEnrichmen
     summary: string | null;
     pastor_name: string | null;
     pastor_title: string | null;
+    pastor_photo_url: string | null;
     livestream_url: string | null;
     giving_url: string | null;
     what_to_expect: string | null;
+    service_duration_minutes: number | null;
+    parking_info: string | null;
+    good_fit_tags: string[] | null;
+    visitor_faq: ChurchEnrichment["visitorFaq"] | null;
     sources: ChurchEnrichment["sources"] | null;
     enrichment_status: ChurchEnrichment["enrichmentStatus"];
     confidence: number;
@@ -569,9 +574,14 @@ export async function getChurchEnrichment(slug: string): Promise<ChurchEnrichmen
     summary: row.summary ?? undefined,
     pastorName: row.pastor_name ?? undefined,
     pastorTitle: row.pastor_title ?? undefined,
+    pastorPhotoUrl: row.pastor_photo_url ?? undefined,
     livestreamUrl: row.livestream_url ?? undefined,
     givingUrl: row.giving_url ?? undefined,
     whatToExpect: row.what_to_expect ?? undefined,
+    serviceDurationMinutes: row.service_duration_minutes ?? undefined,
+    parkingInfo: row.parking_info ?? undefined,
+    goodFitTags: row.good_fit_tags ?? undefined,
+    visitorFaq: row.visitor_faq ?? undefined,
     sources: row.sources ?? undefined,
     enrichmentStatus: row.enrichment_status,
     confidence: row.confidence,

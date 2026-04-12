@@ -233,9 +233,14 @@ export function buildMergedProfile(
     if (enrichment.seoDescription) merged.description = enrichment.seoDescription;
     if (enrichment.pastorName) merged.pastorName = enrichment.pastorName;
     if (enrichment.pastorTitle) merged.pastorTitle = enrichment.pastorTitle;
+    if (enrichment.pastorPhotoUrl) merged.pastorPhotoUrl = enrichment.pastorPhotoUrl;
     if (enrichment.livestreamUrl) merged.livestreamUrl = enrichment.livestreamUrl;
     if (enrichment.givingUrl) merged.givingUrl = enrichment.givingUrl;
     if (enrichment.whatToExpect) merged.whatToExpect = enrichment.whatToExpect;
+    if (enrichment.serviceDurationMinutes) merged.serviceDurationMinutes = enrichment.serviceDurationMinutes;
+    if (enrichment.parkingInfo) merged.parkingInfo = enrichment.parkingInfo;
+    if (enrichment.goodFitTags && enrichment.goodFitTags.length > 0) merged.goodFitTags = enrichment.goodFitTags;
+    if (enrichment.visitorFaq && enrichment.visitorFaq.length > 0) merged.visitorFaq = enrichment.visitorFaq;
   }
 
   // Override layer: approved edits (newest first, so first match wins)
@@ -283,6 +288,11 @@ export function buildMergedProfile(
       case 'livestream_url': merged.livestreamUrl = edit.fieldValue; break;
       case 'giving_url': merged.givingUrl = edit.fieldValue; break;
       case 'what_to_expect': merged.whatToExpect = edit.fieldValue; break;
+      case 'pastor_photo_url': merged.pastorPhotoUrl = edit.fieldValue; break;
+      case 'service_duration': merged.serviceDurationMinutes = edit.fieldValue; break;
+      case 'parking_info': merged.parkingInfo = edit.fieldValue; break;
+      case 'good_fit_tags': merged.goodFitTags = edit.fieldValue; break;
+      case 'visitor_faq': merged.visitorFaq = edit.fieldValue; break;
     }
   }
 

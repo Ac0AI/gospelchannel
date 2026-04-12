@@ -86,6 +86,26 @@ export function calculateProfileScore({ isClaimed, mergedData }: ProfileScoreInp
   score += sizePts;
   fieldScores['church_size'] = { filled: hasSize, points: sizePts, maxPoints: 5 };
 
+  // Pastor photo (5 pts)
+  const hasPastorPhoto = !!mergedData.pastorPhotoUrl;
+  const pastorPhotoPts = hasPastorPhoto ? 5 : 0;
+  score += pastorPhotoPts;
+  fieldScores['pastor_photo_url'] = { filled: hasPastorPhoto, points: pastorPhotoPts, maxPoints: 5 };
+
+  // Good fit tags (5 pts)
+  const fitTags = mergedData.goodFitTags as unknown[] | undefined;
+  const hasFitTags = Array.isArray(fitTags) && fitTags.length > 0;
+  const fitPts = hasFitTags ? 5 : 0;
+  score += fitPts;
+  fieldScores['good_fit_tags'] = { filled: hasFitTags, points: fitPts, maxPoints: 5 };
+
+  // Visitor FAQ (5 pts)
+  const faq = mergedData.visitorFaq as unknown[] | undefined;
+  const hasFaq = Array.isArray(faq) && faq.length > 0;
+  const faqPts = hasFaq ? 5 : 0;
+  score += faqPts;
+  fieldScores['visitor_faq'] = { filled: hasFaq, points: faqPts, maxPoints: 5 };
+
   // Badge status
   const missingForBadge: string[] = [];
   if (!hasServiceTimes) missingForBadge.push('service_times');
