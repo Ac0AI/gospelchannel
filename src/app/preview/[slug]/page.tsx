@@ -41,10 +41,12 @@ function CardItem({ icon, label, value }: { icon: React.ReactNode; label: string
 type MergedProfile = Record<string, unknown>;
 
 // Realistic sample data used for mock fields on the "enriched" side
+const SAMPLE_HERO = "https://media.gospelchannel.com/heroes/south-hill-evangelical-church.jpg";
+
 const SAMPLE = {
   pastorName: "Pastor Example",
   pastorTitle: "Senior Pastor",
-  pastorWelcome: "We'd love to meet you on Sunday. Come as you are — there's a seat for everyone.",
+  pastorWelcome: "Whether it's your first visit or your fiftieth, we're so glad you're here. Our church is a place where real people figuring life out come together to worship, learn, and belong. No dress code, no pressure. Just come as you are.",
   whatToExpect: "About 90 minutes of worship and teaching. Dress is casual. Kids welcome, with a staffed kids area during service.",
   serviceDuration: 90,
   parking: "Free street parking nearby. Wheelchair accessible.",
@@ -124,6 +126,8 @@ function MockEnrichedProfile({
   const streetAddress = data.streetAddress as string | undefined;
   const pastorName = (data.pastorName as string | undefined) || SAMPLE.pastorName;
   const pastorTitle = (data.pastorTitle as string | undefined) || SAMPLE.pastorTitle;
+  const pastorWelcome = SAMPLE.pastorWelcome; // Always use the warm sample welcome text
+  const coverImageUrl = (data.coverImageUrl as string | undefined) || SAMPLE_HERO;
   const whatToExpect = (data.whatToExpect as string | undefined) || SAMPLE.whatToExpect;
   const serviceDuration = (data.serviceDurationMinutes as number | undefined) || SAMPLE.serviceDuration;
   const parking = (data.parkingInfo as string | undefined) || SAMPLE.parking;
@@ -137,14 +141,22 @@ function MockEnrichedProfile({
 
   return (
     <div className="space-y-3">
-      {/* Hero with mock image */}
-      <div className="overflow-hidden rounded-xl border border-rose-200/40 bg-white/80 shadow-sm backdrop-blur-sm">
-        <div className="relative flex h-32 items-end bg-gradient-to-br from-[#3b2016] via-[#7b4a34] to-[#b06a50] p-3 sm:h-36">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(252,233,229,0.3),transparent)]" />
+      {/* Hero with real mock image */}
+      <div className="overflow-hidden rounded-xl border border-rose-200/40 shadow-sm">
+        <div className="relative flex h-36 items-end p-3 sm:h-40">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={coverImageUrl}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          {/* Dark gradient overlay for text legibility */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1a0e09] via-[#1a0e09]/60 to-transparent" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_0%_50%,rgba(26,14,9,0.7)_0%,transparent_70%)]" />
           <div className="relative">
-            <p className="font-serif text-base font-bold text-white drop-shadow-sm">{church.name}</p>
+            <p className="font-serif text-lg font-bold text-white drop-shadow-sm">{church.name}</p>
             {(denomination || city || streetAddress) && (
-              <p className="mt-0.5 text-[11px] text-white/90">
+              <p className="mt-0.5 text-[11px] text-white/95">
                 {denomination && getProfileOptionLabel(denomination)}
                 {denomination && (city || church.country) && " · "}
                 {city || church.country}
@@ -163,13 +175,16 @@ function MockEnrichedProfile({
       {/* Word from the team */}
       <div className="rounded-xl border border-rose-200/40 bg-white/80 p-3 backdrop-blur-sm">
         <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-warm">Word from the team</p>
-        <div className="mt-2 flex items-start gap-2">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blush to-rose-gold/40 text-sm font-bold text-white">
+        <div className="mt-2 flex items-start gap-2.5">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blush via-rose-gold/60 to-rose-gold-deep text-sm font-bold text-white shadow-sm">
             {pastorName.split(" ").map(p => p[0]).join("").slice(0, 2)}
           </div>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <p className="text-[11px] font-semibold text-espresso">{pastorName}</p>
             <p className="text-[9px] text-muted-warm">{pastorTitle}</p>
+            <p className="mt-1.5 text-[11px] italic leading-relaxed text-espresso/80 line-clamp-3">
+              &ldquo;{pastorWelcome}&rdquo;
+            </p>
           </div>
         </div>
       </div>
