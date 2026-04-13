@@ -6,11 +6,18 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      // Canonical: redirect www → apex
+      // Canonical: redirect www → apex (root path)
       {
-        source: "/:path*",
+        source: "/",
         has: [{ type: "host", value: "www.gospelchannel.com" }],
-        destination: "https://gospelchannel.com/:path*",
+        destination: "https://gospelchannel.com/",
+        permanent: true,
+      },
+      // Canonical: redirect www → apex (all other paths)
+      {
+        source: "/:path+",
+        has: [{ type: "host", value: "www.gospelchannel.com" }],
+        destination: "https://gospelchannel.com/:path+",
         permanent: true,
       },
       {
