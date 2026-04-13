@@ -65,6 +65,7 @@ async function main() {
   const slug = args.slug || null;
   const status = args.status || null;
   const region = args.region || null;
+  const country = args.country || null;
   const force = !!args.force;
   const dryRun = !!args["dry-run"];
   const reExtract = !!args["re-extract"];
@@ -126,6 +127,13 @@ async function main() {
     if (currentStatus === "pending" || currentStatus === "failed" || currentStatus === "stale") return true;
     return false;
   });
+
+  // Country filter (applied post-load since loadChurchesForEnrichment doesn't
+  // expose a country parameter).
+  if (country) {
+    toProcess = toProcess.filter((c) => c.country === country);
+    console.log(`After country=${country} filter: ${toProcess.length} churches`);
+  }
 
   // Apply limit
   if (toProcess.length > limit) {
