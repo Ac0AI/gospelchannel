@@ -72,7 +72,9 @@ export default async function HomePage() {
   const churchCountLabel = stats.churchCountLabel;
   const countryCount = stats.countryCount;
   const homeFaqSchema = buildHomeFaqSchema(churchCountLabel, countryCount);
-  const featured = showcaseChurches.slice(0, 24);
+  // Pool of 48 — the client component shuffles post-hydration so each
+  // visit shows a different 8 featured churches without breaking ISR.
+  const featured = showcaseChurches.slice(0, 48);
   const surpriseSlugs = showcaseChurches.slice(0, 48).map((church) => church.slug);
   const visiblePrayerSlugs = new Set(recentPrayers.map((prayer) => prayer.churchSlug));
   const churchNames = Object.fromEntries(

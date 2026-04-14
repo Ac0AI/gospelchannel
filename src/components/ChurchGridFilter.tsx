@@ -1,8 +1,20 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { ChurchCard } from "@/components/ChurchCard";
+
+// Fisher-Yates shuffle — used client-side after hydration so every visit
+// shows a different slice of the featured pool without triggering ISR
+// revalidation on the server.
+function shuffleArray<T>(source: T[]): T[] {
+  const arr = [...source];
+  for (let i = arr.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
 
 type ChurchItem = {
   slug: string;
@@ -73,18 +85,24 @@ type ChurchGridFilterProps = {
 
 export function ChurchGridFilter({ churches, totalCount }: ChurchGridFilterProps) {
   const [activeTab, setActiveTab] = useState("all");
+  // Start with the server-rendered order so SSR and initial hydration match;
+  // reshuffle once on mount so returning visitors see a fresh selection.
+  const [pool, setPool] = useState<ChurchItem[]>(churches);
+  useEffect(() => {
+    setPool(shuffleArray(churches));
+  }, [churches]);
 
   const filtered = useMemo(() => {
-    if (activeTab === "all") return churches;
+    if (activeTab === "all") return pool;
     if (activeTab === "newly-added") {
-      return [...churches].sort((a, b) => {
+      return [...pool].sort((a, b) => {
         const aDate = a.updatedAt ?? "";
         const bDate = b.updatedAt ?? "";
         return bDate.localeCompare(aDate);
       });
     }
-    return churches.filter((c) => matchesRegion(c.country, activeTab));
-  }, [churches, activeTab]);
+    return pool.filter((c) => matchesRegion(c.country, activeTab));
+  }, [pool, activeTab]);
 
   const displayed = filtered.slice(0, activeTab === "all" ? 8 : 12);
 
