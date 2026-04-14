@@ -3,12 +3,12 @@ import { requireAdminRoute } from "@/lib/admin-route";
 import { revalidatePublicChurchContent } from "@/lib/content";
 import { updateStatus } from "@/lib/church-community";
 
-const VALID_TABLES = new Set([
-  "church_suggestions",
-  "church_feedback",
-  "church_claims",
-  "churches",
-]);
+const VALID_STATUSES_BY_TABLE = {
+  church_suggestions: new Set(["pending", "reviewed", "approved", "rejected"]),
+  church_feedback: new Set(["pending", "reviewed", "applied", "rejected"]),
+  church_claims: new Set(["pending", "verified", "rejected"]),
+  churches: new Set(["pending", "approved", "rejected", "archived"]),
+};
 
 export async function POST(request: NextRequest) {
   const admin = await requireAdminRoute(request);
@@ -24,8 +24,14 @@ export async function POST(request: NextRequest) {
     return admin.json({ error: "Missing table, id, or status" }, { status: 400 });
   }
 
-  if (!VALID_TABLES.has(payload.table)) {
+  const validStatuses = VALID_STATUSES_BY_TABLE[payload.table as keyof typeof VALID_STATUSES_BY_TABLE];
+
+  if (!validStatuses) {
     return admin.json({ error: "Invalid table" }, { status: 400 });
+  }
+
+  if (!validStatuses.has(payload.status)) {
+    return admin.json({ error: "Invalid status for table" }, { status: 400 });
   }
 
   try {

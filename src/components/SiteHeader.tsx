@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { HeaderUserMenu, HeaderUserMenuMobile } from "@/components/HeaderUserMenu";
+import { authClient } from "@/lib/auth/client";
+import { useMyChurchAccess } from "@/components/useMyChurchAccess";
 
 const navItems = [
   { href: "/", label: "Home" },
@@ -13,20 +15,13 @@ const navItems = [
   { href: "/about", label: "About" },
 ];
 
-const COOKIE_NAME = "my_church";
-
-function getMyChurchSlug(): string {
-  if (typeof document === "undefined") return "";
-  const match = document.cookie.match(new RegExp(`(?:^|; )${COOKIE_NAME}=([^;]*)`));
-  return match ? decodeURIComponent(match[1]) : "";
-}
-
-const subscribe = () => () => {};
-
 export function SiteHeader() {
   const pathname = usePathname();
+  const { data: session } = authClient.useSession();
   const [open, setOpen] = useState(false);
-  const myChurchSlug = useSyncExternalStore(subscribe, getMyChurchSlug, () => "");
+  const { churchSlug, churchCount } = useMyChurchAccess(session?.user?.id);
+  const myChurchHref = churchSlug ? (churchCount > 1 ? "/church-admin" : `/church/${churchSlug}`) : "";
+  const myChurchLabel = churchCount > 1 ? "My Churches" : "My Church";
 
   const closeMenu = useCallback(() => setOpen(false), []);
 
@@ -89,14 +84,14 @@ export function SiteHeader() {
               </Link>
             ))}
           </nav>
-          {myChurchSlug && (
+          {myChurchHref && (
             <Link
-              href={`/church/${myChurchSlug}`}
+              href={myChurchHref}
               prefetch={false}
               className="rounded-full border border-rose-200/60 bg-white px-3 py-2 text-sm font-medium text-rose-gold transition-colors hover:bg-blush-light"
-              title="Your saved church"
+              title={churchCount > 1 ? "Your church admin" : "Your church"}
             >
-              My Church
+              {myChurchLabel}
             </Link>
           )}
           <Link
@@ -106,18 +101,18 @@ export function SiteHeader() {
           >
             Add Your Church
           </Link>
-          <HeaderUserMenu />
+          <HeaderUserMenu churchSlug={churchSlug} churchCount={churchCount} />
         </div>
 
         {/* Mobile: My Church shortcut + hamburger */}
         <div className="flex items-center gap-2 md:hidden">
-          {myChurchSlug && (
+          {myChurchHref && (
             <Link
-              href={`/church/${myChurchSlug}`}
+              href={myChurchHref}
               prefetch={false}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-rose-200/60 bg-white text-rose-gold transition-colors hover:bg-blush-light"
-              title="Your saved church"
-              aria-label="Go to your saved church"
+              title={churchCount > 1 ? "Your church admin" : "Your church"}
+              aria-label={churchCount > 1 ? "Open church admin" : "Go to your church"}
             >
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -197,9 +192,9 @@ export function SiteHeader() {
                   {item.label}
                 </Link>
               ))}
-              {myChurchSlug && (
+              {myChurchHref && (
                 <Link
-                  href={`/church/${myChurchSlug}`}
+                  href={myChurchHref}
                   prefetch={false}
                   onClick={closeMenu}
                   className="flex items-center gap-2 rounded-xl px-4 py-3.5 text-base font-medium text-rose-gold transition-all duration-200 hover:bg-blush-light/60"
@@ -207,7 +202,7 @@ export function SiteHeader() {
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
-                  My Church
+                  {myChurchLabel}
                 </Link>
               )}
               <Link
@@ -220,7 +215,7 @@ export function SiteHeader() {
               </Link>
             </div>
 
-            <HeaderUserMenuMobile onNavigate={closeMenu} />
+            <HeaderUserMenuMobile onNavigate={closeMenu} churchSlug={churchSlug} churchCount={churchCount} />
 
             <div className="border-t border-rose-200/60 px-6 py-4">
               <Link

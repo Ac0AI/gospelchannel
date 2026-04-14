@@ -14,16 +14,38 @@ type ChurchAdminLoginPageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
+function getSafeChurchAdminRedirect(value: string | string[] | undefined): string {
+  if (typeof value !== "string" || !value.startsWith("/") || value.startsWith("//")) {
+    return "/church-admin";
+  }
+
+  try {
+    const parsed = new URL(value, "https://gospelchannel.local");
+    if (parsed.origin !== "https://gospelchannel.local") {
+      return "/church-admin";
+    }
+
+    const isAllowedPath =
+      parsed.pathname === "/church-admin" ||
+      /^\/church\/[a-z0-9-]+\/(?:manage|embed)$/.test(parsed.pathname);
+
+    if (!isAllowedPath) {
+      return "/church-admin";
+    }
+
+    return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+  } catch {
+    return "/church-admin";
+  }
+}
+
 export default async function ChurchAdminLoginPage({ searchParams }: ChurchAdminLoginPageProps) {
   const requestHeaders = await headers();
   const user = await getServerUser(requestHeaders);
   const params = (await searchParams) ?? {};
   const redirectParam = params.redirect;
   const errorParam = params.error;
-  const redirectTo =
-    typeof redirectParam === "string" && redirectParam.startsWith("/")
-      ? redirectParam
-      : "/church-admin";
+  const redirectTo = getSafeChurchAdminRedirect(redirectParam);
   const initialError = typeof errorParam === "string" ? errorParam : "";
 
   if (user) {

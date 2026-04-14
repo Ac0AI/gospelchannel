@@ -5,11 +5,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth/client";
 
-function getMyChurchSlug(): string {
-  if (typeof document === "undefined") return "";
-  const match = document.cookie.match(/(?:^|; )my_church=([^;]*)/);
-  return match ? decodeURIComponent(match[1]) : "";
-}
+type HeaderChurchAccess = {
+  churchSlug: string | null;
+  churchCount: number;
+};
 
 function UserInitials({ name, email }: { name: string; email: string }) {
   const display = name || email;
@@ -21,12 +20,7 @@ function UserInitials({ name, email }: { name: string; email: string }) {
   return <>{initials}</>;
 }
 
-function setMyChurchCookie(slug: string) {
-  const expires = new Date(Date.now() + 365 * 864e5).toUTCString();
-  document.cookie = `my_church=${encodeURIComponent(slug)};expires=${expires};path=/;SameSite=Lax`;
-}
-
-export function HeaderUserMenu() {
+export function HeaderUserMenu({ churchSlug, churchCount }: HeaderChurchAccess) {
   const { data: session, isPending } = authClient.useSession();
   const [open, setOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
@@ -34,21 +28,6 @@ export function HeaderUserMenu() {
   const router = useRouter();
 
   const close = useCallback(() => setOpen(false), []);
-
-  // Auto-set my_church cookie for logged-in users with a claimed church
-  useEffect(() => {
-    if (!session?.user) return;
-    if (getMyChurchSlug()) return; // already set
-    fetch("/api/church/my-membership")
-      .then((r) => r.ok ? r.json() : null)
-      .then((data) => {
-        if (data?.churchSlug) {
-          setMyChurchCookie(data.churchSlug);
-          router.refresh();
-        }
-      })
-      .catch(() => {});
-  }, [session?.user, router]);
 
   useEffect(() => {
     if (!open) return;
@@ -71,7 +50,7 @@ export function HeaderUserMenu() {
   if (isPending || !session?.user) return null;
 
   const user = session.user;
-  const churchSlug = getMyChurchSlug();
+  const hasMultipleChurches = churchCount > 1;
 
   const handleSignOut = async () => {
     setSigningOut(true);
@@ -112,7 +91,19 @@ export function HeaderUserMenu() {
           </div>
 
           <div className="p-1.5">
-            {churchSlug && (
+            {hasMultipleChurches ? (
+              <Link
+                href="/church-admin"
+                onClick={close}
+                className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-warm-brown transition-colors hover:bg-blush-light hover:text-espresso"
+                role="menuitem"
+              >
+                <svg className="h-4 w-4 shrink-0 text-rose-gold/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 21h16.5M4.5 21V7.5L12 3l7.5 4.5V21M9 21v-6h6v6" />
+                </svg>
+                Manage Churches
+              </Link>
+            ) : churchSlug ? (
               <Link
                 href={`/church/${churchSlug}/manage`}
                 onClick={close}
@@ -124,9 +115,9 @@ export function HeaderUserMenu() {
                 </svg>
                 Manage Church
               </Link>
-            )}
+            ) : null}
 
-            {churchSlug && (
+            {!hasMultipleChurches && churchSlug && (
               <Link
                 href={`/church/${churchSlug}`}
                 onClick={close}
@@ -159,7 +150,11 @@ export function HeaderUserMenu() {
   );
 }
 
-export function HeaderUserMenuMobile({ onNavigate }: { onNavigate?: () => void }) {
+export function HeaderUserMenuMobile({
+  onNavigate,
+  churchSlug,
+  churchCount,
+}: HeaderChurchAccess & { onNavigate?: () => void }) {
   const { data: session, isPending } = authClient.useSession();
   const [signingOut, setSigningOut] = useState(false);
   const router = useRouter();
@@ -167,7 +162,7 @@ export function HeaderUserMenuMobile({ onNavigate }: { onNavigate?: () => void }
   if (isPending || !session?.user) return null;
 
   const user = session.user;
-  const churchSlug = getMyChurchSlug();
+  const hasMultipleChurches = churchCount > 1;
 
   const handleSignOut = async () => {
     setSigningOut(true);
@@ -193,7 +188,15 @@ export function HeaderUserMenuMobile({ onNavigate }: { onNavigate?: () => void }
         </div>
       </div>
 
-      {churchSlug && (
+      {hasMultipleChurches ? (
+        <Link
+          href="/church-admin"
+          onClick={onNavigate}
+          className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-warm-brown transition-colors hover:bg-blush-light/60 hover:text-espresso"
+        >
+          Manage Churches
+        </Link>
+      ) : churchSlug ? (
         <Link
           href={`/church/${churchSlug}/manage`}
           onClick={onNavigate}
@@ -201,9 +204,9 @@ export function HeaderUserMenuMobile({ onNavigate }: { onNavigate?: () => void }
         >
           Manage Church
         </Link>
-      )}
+      ) : null}
 
-      {churchSlug && (
+      {!hasMultipleChurches && churchSlug && (
         <Link
           href={`/church/${churchSlug}`}
           onClick={onNavigate}

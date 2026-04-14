@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { requireAdminRoute } from '@/lib/admin-route';
+import { revalidatePublicChurchContent } from '@/lib/content';
 import { getPendingEdits, reviewProfileEdit } from '@/lib/church-profile';
 
 export async function GET(request: NextRequest) {
@@ -37,6 +38,7 @@ export async function POST(request: NextRequest) {
       admin.user.id,
       rejectionReason,
     );
+    revalidatePublicChurchContent();
     return admin.json({ success: true });
   } catch (err) {
     return admin.json({ error: (err as Error).message }, { status: 500 });
