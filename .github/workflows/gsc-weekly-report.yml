@@ -36,5 +36,6 @@ jobs:
           GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY }}
           BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
           ADMIN_EMAILS: ${{ secrets.ADMIN_EMAILS }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
           NOTIFY_FROM_EMAIL: noreply@gospelchannel.com
         run: node scripts/gsc-weekly-email.mjs
