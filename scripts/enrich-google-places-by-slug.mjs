@@ -155,7 +155,18 @@ async function startApifyRun(searchStrings, country, token) {
     searchStringsArray: searchStrings,
     locationQuery: country,
     maxCrawledPlacesPerSearch: 1,
-    language: country === "Spain" ? "es" : country === "Germany" ? "de" : country === "France" ? "fr" : "en",
+    language: ({
+      Spain: "es",
+      Germany: "de",
+      France: "fr",
+      Italy: "it",
+      Sweden: "sv",
+      Switzerland: "de",
+      Austria: "de",
+      Netherlands: "nl",
+      Portugal: "pt",
+      Belgium: "fr",
+    })[country] || "en",
     // We deliberately include closed places so we can auto-archive churches
     // that Google marks permanently closed.
     skipClosedPlaces: false,
@@ -382,13 +393,44 @@ function categoryTags(place) {
   return [...tags];
 }
 
+// Flatten Google Maps "additionalInfo" (nested arrays of single-key objects)
+// into a clean { Parking: ["On-site parking"], Accessibility: [...] } map.
+function flattenAdditionalInfo(additional) {
+  if (!additional || typeof additional !== "object") return null;
+  const out = {};
+  for (const [section, items] of Object.entries(additional)) {
+    if (!Array.isArray(items)) continue;
+    const trueLabels = [];
+    for (const item of items) {
+      if (item && typeof item === "object") {
+        for (const [label, value] of Object.entries(item)) {
+          if (value === true) trueLabels.push(label);
+        }
+      }
+    }
+    if (trueLabels.length > 0) out[section] = trueLabels;
+  }
+  return Object.keys(out).length > 0 ? out : null;
+}
+
+function buildParkingInfo(amenities) {
+  if (!amenities) return "";
+  const parts = [];
+  if (amenities.Parking) parts.push(amenities.Parking.join(", "));
+  return parts.join("; ");
+}
+
 async function upsertEnrichment(sql, slug, updates) {
   const columns = Object.keys(updates).filter((k) => updates[k] !== undefined);
   if (columns.length === 0) return;
   const existing = await sql`SELECT id FROM church_enrichments WHERE church_slug = ${slug}`;
   const values = columns.map((c) => {
     const v = updates[c];
-    if (["service_times", "sources"].includes(c) && v !== null && typeof v === "object") {
+    if (
+      ["service_times", "sources", "raw_google_places", "amenities"].includes(c)
+      && v !== null
+      && typeof v === "object"
+    ) {
       return JSON.stringify(v);
     }
     return v;
@@ -488,11 +530,18 @@ async function main() {
     const serviceTimes = serviceTimesFromOpeningHours(place.openingHours);
     const heroImage = pickHeroImage(place);
     const categories = categoryTags(place);
+    const rating = place.totalScore != null ? Number(place.totalScore) : null;
+    const reviewsCount = place.reviewsCount != null ? Number(place.reviewsCount) : null;
+    const placeId = place.placeId || null;
+    const amenities = flattenAdditionalInfo(place.additionalInfo);
+    const parking = buildParkingInfo(amenities);
 
     if (website) summary.websiteAdded += 1;
     if (phone) summary.phoneAdded += 1;
     if (lat != null && lng != null) summary.coordsAdded += 1;
     if (heroImage) summary.heroImageAdded += 1;
+    if (rating != null) summary.ratingAdded = (summary.ratingAdded || 0) + 1;
+    if (amenities) summary.amenitiesAdded = (summary.amenitiesAdded || 0) + 1;
 
     preview.push({
       slug: church.slug,
@@ -546,6 +595,11 @@ async function main() {
       ...(place.placeId ? { google_maps_url: `https://www.google.com/maps/place/?q=place_id:${place.placeId}` } : {}),
       ...(heroImage ? { cover_image_url: heroImage } : {}),
       ...(categories.length > 0 ? { good_fit_tags: categories } : {}),
+      ...(rating != null ? { google_rating: rating } : {}),
+      ...(reviewsCount != null ? { google_reviews_count: reviewsCount } : {}),
+      ...(placeId ? { google_place_id: placeId } : {}),
+      ...(amenities ? { amenities } : {}),
+      ...(parking ? { parking_info: parking } : {}),
       raw_google_places: place,
       sources: { google_places: { scraped_at: new Date().toISOString(), place_id: place.placeId || null, score } },
       last_enriched_at: new Date().toISOString(),
