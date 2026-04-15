@@ -38,6 +38,10 @@ const DELETE_SLUGS = [
   "new-wine-worship",          // Brand/network
   "bethel-music-kids",         // Artist brand
   "worship-music",             // Unclear entry (Nigeria)
+  "oslo-gospel-choir",         // Norwegian touring choir, not a congregation
+  "soweto-gospel-choir",       // South African touring choir
+  "oslo-church-music-festival",// Music festival, not a church
+  "worship-and-music",         // Department page from Birmingham Cathedral
 ];
 
 // ── 2. Merge worship team → parent church (move Spotify, delete team) ────────
@@ -112,6 +116,16 @@ const RENAMES = [
     newDenomination: "Charismatic",
     newWebsite: "https://bethany.com/",
     label: "Bethany Music → Bethany Church",
+  },
+  {
+    oldSlug: "welcome-church-music",
+    newSlug: "welcome-church-woking",
+    newName: "Welcome Church",
+    newDescription: "Non-denominational church in Woking, United Kingdom. An active congregation gathering for Sunday worship, small groups, and community outreach.",
+    newLocation: "Woking, United Kingdom",
+    newDenomination: "Non-denominational",
+    newWebsite: "https://welcomechurch.co.uk/",
+    label: "Welcome Church Music → Welcome Church (Woking)",
   },
 ];
 
