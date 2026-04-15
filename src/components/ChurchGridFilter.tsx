@@ -130,7 +130,7 @@ export function ChurchGridFilter({ churches, totalCount }: ChurchGridFilterProps
       </div>
 
       {/* Church grid */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+      <div className="grid auto-rows-fr grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {displayed.map((church) => (
           <ChurchCard
             key={church.slug}

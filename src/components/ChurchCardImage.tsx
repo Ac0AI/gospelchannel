@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { cfImage } from "@/lib/media";
 
 type ChurchCardImageProps = {
   initials: string;
@@ -8,6 +9,11 @@ type ChurchCardImageProps = {
   thumbnailUrl?: string;
   logoUrl?: string;
 };
+
+// Card image is h-28 (112px) × variable width up to ~348px in the widest layout.
+// We request a 2x raster (700×224) so both mobile and desktop get crisp delivery.
+const CARD_IMG_WIDTH = 700;
+const CARD_IMG_HEIGHT = 224;
 
 export function ChurchCardImage({ initials, gradient, thumbnailUrl, logoUrl }: ChurchCardImageProps) {
   const [imageUrl, setImageUrl] = useState<string | undefined>(thumbnailUrl || logoUrl);
@@ -22,13 +28,21 @@ export function ChurchCardImage({ initials, gradient, thumbnailUrl, logoUrl }: C
     setImageUrl(undefined);
   }
 
+  const optimizedSrc = showImage && imageUrl
+    ? (isThumbnail
+        ? cfImage(imageUrl, { width: CARD_IMG_WIDTH, height: CARD_IMG_HEIGHT, fit: "cover", format: "auto", quality: 78 })
+        : cfImage(imageUrl, { width: CARD_IMG_WIDTH, fit: "contain", format: "auto", quality: 80 }))
+    : undefined;
+
   return (
     <div className={`relative h-28 overflow-hidden rounded-xl ${showImage ? "" : `flex items-center justify-center bg-gradient-to-br ${gradient}`}`}>
-      {showImage ? (
+      {showImage && optimizedSrc ? (
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={imageUrl}
+            src={optimizedSrc}
+            width={CARD_IMG_WIDTH}
+            height={CARD_IMG_HEIGHT}
             alt=""
             aria-hidden="true"
             loading="lazy"

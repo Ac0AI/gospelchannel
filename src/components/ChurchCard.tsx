@@ -98,7 +98,7 @@ export function ChurchCard({
         />
 
         <div className="flex flex-1 flex-col pt-3">
-          <div className="mb-2 flex flex-wrap items-center gap-1.5">
+          <div className="mb-2 flex min-h-[24px] flex-wrap items-center gap-1.5 overflow-hidden">
             <span className="inline-flex items-center rounded-full bg-blush-light px-2 py-0.5 text-xs font-semibold text-rose-gold-deep">
               {country}
             </span>
@@ -114,7 +114,7 @@ export function ChurchCard({
               </span>
             )}
           </div>
-          <h3 className="line-clamp-2 font-serif text-base font-semibold text-espresso transition-colors group-hover:text-rose-gold sm:min-h-[3rem]">
+          <h3 className="line-clamp-2 min-h-[3rem] font-serif text-base font-semibold text-espresso transition-colors group-hover:text-rose-gold">
             {name}
             {verified && (
               <svg className="ml-1 inline-block h-3.5 w-3.5 align-baseline text-blue-500" viewBox="0 0 20 20" fill="currentColor" aria-label="Verified">
@@ -122,7 +122,7 @@ export function ChurchCard({
               </svg>
             )}
           </h3>
-          <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-muted-warm sm:min-h-[3.5rem]">{compactDescription}</p>
+          <p className="mt-1 line-clamp-2 min-h-[3.5rem] text-sm leading-relaxed text-muted-warm">{compactDescription}</p>
         </div>
       </Link>
 
