@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Suspense } from "react";
+import { ChurchActionCard } from "@/components/ChurchActionCard";
 import { ChurchContactButton } from "@/components/ChurchContactButton";
 import { ChurchLatestUpdatesSection } from "@/components/ChurchLatestUpdatesSection";
 import { ChurchNetworkSection } from "@/components/ChurchNetworkSection";
@@ -516,7 +517,29 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
         </div>
       </section>
 
-      <div className="mx-auto w-full max-w-7xl space-y-10 px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <div className="lg:grid lg:grid-cols-[1fr_320px] lg:gap-10">
+      <div className="space-y-10 lg:min-w-0">
+
+      {/* ━━━ MOBILE ACTION CARD ━━━ */}
+      <div className="lg:hidden">
+        <ChurchActionCard
+          churchSlug={church.slug}
+          displayName={displayName}
+          streetAddress={streetAddress}
+          city={city}
+          country={(mergedProfile.country as string | undefined) || church.country || undefined}
+          googleMapsUrl={isValidPublicUrl(enrichment?.googleMapsUrl) ? enrichment!.googleMapsUrl : undefined}
+          phone={phone}
+          contactEmail={contactEmail}
+          hasContactForm={hasValidEmail && !emailVisiblePublicly}
+          websiteUrl={websiteUrl}
+          websiteHostLabel={websiteHostLabel}
+          livestreamUrl={livestreamUrl}
+          givingUrl={givingUrl}
+          isClaimed={isClaimed}
+        />
+      </div>
 
       {/* ━━━ ABOUT & CTAs ━━━ */}
       <section className="rounded-2xl border border-rose-200/40 bg-white/80 p-6 backdrop-blur-sm sm:p-8">
@@ -538,38 +561,6 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
             </a>
           )}
           <FollowChurchButton churchSlug={church.slug} churchName={displayName} variant="hero" />
-          {websiteUrl && websiteHostLabel && (
-            <a
-              href={websiteUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-espresso/15 px-4 py-2.5 text-sm font-semibold text-espresso transition-all duration-200 hover:border-espresso/30 hover:bg-linen-deep/50"
-            >
-              {websiteHostLabel} ↗
-            </a>
-          )}
-          {livestreamUrl && (
-            <a
-              href={livestreamUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-espresso/15 px-4 py-2.5 text-sm font-semibold text-espresso transition-all duration-200 hover:border-espresso/30 hover:bg-linen-deep/50"
-            >
-              <svg className="h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" /></svg>
-              Watch live ↗
-            </a>
-          )}
-          {givingUrl && (
-            <a
-              href={givingUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-espresso/15 px-4 py-2.5 text-sm font-semibold text-espresso transition-all duration-200 hover:border-espresso/30 hover:bg-linen-deep/50"
-            >
-              <svg className="h-4 w-4 text-rose-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" /></svg>
-              Give ↗
-            </a>
-          )}
         </div>
 
         {/* Social pills */}
@@ -650,11 +641,6 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                     Location
                   </dt>
                   <dd className="mt-1 text-sm text-espresso">{streetAddress}</dd>
-                  {isValidPublicUrl(enrichment?.googleMapsUrl) && (
-                    <a href={enrichment!.googleMapsUrl} target="_blank" rel="noreferrer" className="mt-0.5 inline-block text-xs font-semibold text-rose-gold hover:text-rose-gold-deep">
-                      Open in Google Maps →
-                    </a>
-                  )}
                 </div>
               )}
 
@@ -1004,6 +990,32 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
 
       </footer>
       </ScrollReveal>
+
+      </div>
+
+      {/* ━━━ DESKTOP STICKY SIDEBAR ━━━ */}
+      <aside className="hidden lg:block">
+        <div className="sticky top-24">
+          <ChurchActionCard
+            churchSlug={church.slug}
+            displayName={displayName}
+            streetAddress={streetAddress}
+            city={city}
+            country={(mergedProfile.country as string | undefined) || church.country || undefined}
+            googleMapsUrl={isValidPublicUrl(enrichment?.googleMapsUrl) ? enrichment!.googleMapsUrl : undefined}
+            phone={phone}
+            contactEmail={contactEmail}
+            hasContactForm={hasValidEmail && !emailVisiblePublicly}
+            websiteUrl={websiteUrl}
+            websiteHostLabel={websiteHostLabel}
+            livestreamUrl={livestreamUrl}
+            givingUrl={givingUrl}
+            isClaimed={isClaimed}
+          />
+        </div>
+      </aside>
+
+      </div>
     </div>
     </>
   );
