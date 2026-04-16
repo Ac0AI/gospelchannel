@@ -13,51 +13,38 @@ import { getClaimedChurchSlugs } from "@/lib/church";
 export const revalidate = 3600;
 
 function buildHomeFaqSchema(churchCountLabel: string, countryCount: number) {
+  const questions: Array<{ q: string; a: string }> = [
+    {
+      q: "What is GospelChannel?",
+      a: "GospelChannel helps you find the right church before your first visit. You can compare worship style, tradition, language, service details, and community signals, then tune in to each church's page for a clearer feel before Sunday.",
+    },
+    {
+      q: "What are the best gospel songs for worship in 2026?",
+      a: "The top gospel worship songs in 2026 include 'Jireh' by Elevation Worship & Maverick City, 'Goodness of God' by Bethel Music, 'Way Maker' by Sinach, 'What A Beautiful Name' by Hillsong Worship, 'Oceans' by Hillsong UNITED, 'Reckless Love' by Cory Asbury, '10,000 Reasons' by Matt Redman, and 'Graves Into Gardens' by Elevation Worship. These songs are among the most played worship songs in churches worldwide.",
+    },
+    {
+      q: "Can churches list themselves on GospelChannel?",
+      a: "Yes. Churches can suggest a missing page or claim an existing one. Claimed pages help first-time visitors feel more confident by showing official service details, contact information, and stronger church signals before they arrive.",
+    },
+    {
+      q: "What churches are featured on GospelChannel?",
+      a: `GospelChannel features ${churchCountLabel} churches across ${countryCount} countries. Each church page helps you compare worship style, tradition, service details, and community signals before your first visit. Anyone can suggest their church to be added.`,
+    },
+    {
+      q: "Is GospelChannel free to browse?",
+      a: "Yes. GospelChannel is completely free. It helps you compare churches before your first visit, then tune in to each church's page through music, videos, service details, and community context.",
+    },
+  ];
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "What is GospelChannel?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "GospelChannel helps you find the right church before your first visit. You can compare worship style, tradition, language, service details, and community signals, then tune in to each church's page for a clearer feel before Sunday.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "What are the best gospel songs for worship in 2026?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "The top gospel worship songs in 2026 include 'Jireh' by Elevation Worship & Maverick City, 'Goodness of God' by Bethel Music, 'Way Maker' by Sinach, 'What A Beautiful Name' by Hillsong Worship, 'Oceans' by Hillsong UNITED, 'Reckless Love' by Cory Asbury, '10,000 Reasons' by Matt Redman, and 'Graves Into Gardens' by Elevation Worship. These songs are among the most played worship songs in churches worldwide.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Can churches list themselves on GospelChannel?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Yes. Churches can suggest a missing page or claim an existing one. Claimed pages help first-time visitors feel more confident by showing official service details, contact information, and stronger church signals before they arrive.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "What churches are featured on GospelChannel?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `GospelChannel features ${churchCountLabel} churches across ${countryCount} countries. Each church page helps you compare worship style, tradition, service details, and community signals before your first visit. Anyone can suggest their church to be added.`,
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Is GospelChannel free to browse?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Yes. GospelChannel is completely free. It helps you compare churches before your first visit, then tune in to each church's page through music, videos, service details, and community context.",
-        },
-      },
-    ],
+    description: `Answers to common questions about GospelChannel — a free directory of ${churchCountLabel} churches across ${countryCount} countries, helping people compare fit before their first visit.`,
+    mainEntity: questions.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      text: q,
+      acceptedAnswer: { "@type": "Answer", text: a },
+    })),
   };
 }
 
@@ -109,6 +96,7 @@ export default async function HomePage() {
       </p>
 
       {/* Church grid with filter tabs */}
+      <h2 className="sr-only">Browse churches</h2>
       <ChurchGridFilter
         churches={featured.map((church) => ({
           slug: church.slug,

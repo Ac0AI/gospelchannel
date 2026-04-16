@@ -24,6 +24,11 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link href="/contact" prefetch={false} className="worship-link text-warm-brown transition-colors hover:text-espresso">
+                Contact
+              </Link>
+            </li>
+            <li>
               <Link href="/church" prefetch={false} className="worship-link text-warm-brown transition-colors hover:text-espresso">
                 Churches
               </Link>
@@ -67,7 +72,7 @@ export function SiteFooter() {
         <p className="mt-1">
           <Link href="/privacy" prefetch={false} className="transition-colors hover:text-espresso">Privacy Policy</Link>
           {" · "}
-          <a href="mailto:hi@gospelchannel.com" className="transition-colors hover:text-espresso">Contact</a>
+          <Link href="/contact" prefetch={false} className="transition-colors hover:text-espresso">Contact</Link>
         </p>
       </div>
     </footer>
