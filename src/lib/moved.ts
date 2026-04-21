@@ -1,4 +1,4 @@
-import { desc, eq, gte, inArray, sql } from "drizzle-orm";
+import { desc, gte, inArray, sql } from "drizzle-orm";
 import { getCatalogVideosByIds } from "@/lib/catalog";
 import { getDb, hasDatabaseConfig, schema } from "@/db";
 import { CONTENT_BASE_DATE } from "@/lib/utils";
@@ -17,29 +17,6 @@ function dateKey(offsetDays = 0): string {
   const date = new Date(Date.UTC(year, (month ?? 1) - 1, day ?? 1));
   date.setUTCDate(date.getUTCDate() - offsetDays);
   return date.toISOString().slice(0, 10);
-}
-
-function parseZrangeWithScores(raw: unknown): Array<{ member: string; score: number }> {
-  if (!Array.isArray(raw)) {
-    return [];
-  }
-
-  if (raw.length > 0 && typeof raw[0] === "object" && raw[0] !== null && "member" in raw[0]) {
-    return (raw as Array<{ member: string; score: number }>).map((row) => ({
-      member: String(row.member),
-      score: Number(row.score),
-    }));
-  }
-
-  const output: Array<{ member: string; score: number }> = [];
-  for (let i = 0; i < raw.length; i += 2) {
-    const member = raw[i];
-    const score = raw[i + 1];
-    if (typeof member === "string") {
-      output.push({ member, score: Number(score ?? 0) });
-    }
-  }
-  return output;
 }
 
 export async function incrementMoved(videoId: string): Promise<number> {
