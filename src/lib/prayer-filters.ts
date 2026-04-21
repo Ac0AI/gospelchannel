@@ -1,4 +1,5 @@
-import { getChurchDirectorySeedAsync, type ChurchDirectorySeed } from "@/lib/content";
+import { unstable_cache } from "next/cache";
+import { CHURCH_INDEX_TAG, getChurchDirectorySeedAsync, type ChurchDirectorySeed } from "@/lib/content";
 import {
   getAllPublishedCampuses,
   getNetworkForWorshipChurch,
@@ -15,6 +16,7 @@ const COUNTRY_ALIASES: Record<string, string> = {
 
 const MAX_CITY_LENGTH = 60;
 const PRAYER_FILTER_CACHE_SECONDS = 60 * 60;
+const PRAYER_FILTER_CACHE_TAG = "prayer-filter-index";
 const COUNTRY_CITY_DELIMITER = "::";
 
 const INVALID_CITY_PATTERNS = [
@@ -58,10 +60,6 @@ function normalizeCountrySlugInput(countrySlug?: string): string | undefined {
 }
 
 type CampusSeed = Pick<ChurchCampus, "slug" | "name" | "city" | "country">;
-type CacheEntry<T> = {
-  value: T;
-  expiresAt: number;
-};
 
 export function extractPrayerCity(
   location?: string,
@@ -266,41 +264,15 @@ async function expandChurchSlugsForNetwork(churchSlug: string): Promise<string[]
   return [...slugs].sort();
 }
 
-let prayerFilterIndexCache: CacheEntry<PrayerFilterIndex> | null = null;
-let prayerFilterIndexPromise: Promise<PrayerFilterIndex> | null = null;
-const networkChurchSlugsCache = new Map<string, CacheEntry<string[]>>();
-const networkChurchSlugsPromises = new Map<string, Promise<string[]>>();
-
-function getCachedValue<T>(entry: CacheEntry<T> | null): T | undefined {
-  if (!entry) return undefined;
-  if (entry.expiresAt <= Date.now()) return undefined;
-  return entry.value;
-}
-
-export async function getPrayerFilterIndex(): Promise<PrayerFilterIndex> {
-  const cached = getCachedValue(prayerFilterIndexCache);
-  if (cached) {
-    return cached;
-  }
-
-  if (prayerFilterIndexPromise) {
-    return prayerFilterIndexPromise;
-  }
-
-  prayerFilterIndexPromise = buildPrayerFilterIndexFromSource()
-    .then((value) => {
-      prayerFilterIndexCache = {
-        value,
-        expiresAt: Date.now() + PRAYER_FILTER_CACHE_SECONDS * 1000,
-      };
-      return value;
-    })
-    .finally(() => {
-      prayerFilterIndexPromise = null;
-    });
-
-  return prayerFilterIndexPromise;
-}
+// Use Next's data cache so revalidateTag(CHURCH_INDEX_TAG) and
+// revalidateTag(PRAYER_FILTER_CACHE_TAG) actually clear this on warm
+// isolates. The previous module-level cache was invisible to Next and
+// kept admin edits / campus publishes stale for up to an hour.
+export const getPrayerFilterIndex = unstable_cache(
+  buildPrayerFilterIndexFromSource,
+  ["prayer-filter-index-v1"],
+  { revalidate: PRAYER_FILTER_CACHE_SECONDS, tags: [CHURCH_INDEX_TAG, PRAYER_FILTER_CACHE_TAG] },
+);
 
 export async function getChurchNamesBySlugs(
   churchSlugs: Iterable<string>,
@@ -342,32 +314,14 @@ export async function getChurchSlugsByCity(citySlug: string): Promise<string[]> 
   return index.churchSlugsByCity[citySlug] ?? [];
 }
 
-export async function getChurchSlugsForNetwork(churchSlug: string): Promise<string[]> {
-  const cached = networkChurchSlugsCache.get(churchSlug);
-  if (cached && cached.expiresAt > Date.now()) {
-    return cached.value;
-  }
-
-  const inFlight = networkChurchSlugsPromises.get(churchSlug);
-  if (inFlight) {
-    return inFlight;
-  }
-
-  const promise = expandChurchSlugsForNetwork(churchSlug)
-    .then((value) => {
-      networkChurchSlugsCache.set(churchSlug, {
-        value,
-        expiresAt: Date.now() + PRAYER_FILTER_CACHE_SECONDS * 1000,
-      });
-      return value;
-    })
-    .finally(() => {
-      networkChurchSlugsPromises.delete(churchSlug);
-    });
-
-  networkChurchSlugsPromises.set(churchSlug, promise);
-  return promise;
-}
+// unstable_cache uses the function arguments as part of the cache key,
+// so different church slugs get separate entries. Tagged with CHURCH_INDEX_TAG
+// so admin actions that invalidate church content also clear network expansions.
+export const getChurchSlugsForNetwork = unstable_cache(
+  expandChurchSlugsForNetwork,
+  ["church-slugs-for-network-v1"],
+  { revalidate: PRAYER_FILTER_CACHE_SECONDS, tags: [CHURCH_INDEX_TAG, PRAYER_FILTER_CACHE_TAG] },
+);
 
 export async function getAvailableCountries(): Promise<FilterOption[]> {
   const index = await getPrayerFilterIndex();

@@ -22,7 +22,9 @@ export async function GET(
   return new Response(xml, {
     headers: {
       "Content-Type": "application/xml; charset=utf-8",
-      "Cache-Control": "public, max-age=3600, s-maxage=3600",
+      // See sitemap.xml/route.ts: bound the worker edge cache to 5 min so
+      // there is no >1 h staleness window when admin actions revalidate.
+      "Cache-Control": "public, max-age=300, s-maxage=300",
     },
   });
 }
