@@ -214,10 +214,33 @@ export function buildMergedProfile(
   if (enrichment) {
     if (enrichment.serviceTimes) merged.serviceTimes = enrichment.serviceTimes;
     if (enrichment.streetAddress) merged.streetAddress = enrichment.streetAddress;
-    // Try to extract city from streetAddress (format: "Street, City" or "Street, City, Country")
+    // Extract city from streetAddress. Format varies by locale:
+    //   US/CA: "Street, City, ST 12345"         → parts[1] is city
+    //   Swedish: "Street, 12345 CITY"           → parts[1] has postcode prefix
+    //   German: "Street, 12345 City"            → same pattern
+    //   UK: "Street, City, POSTCODE"            → parts[1] is city, parts[2] is postcode
+    // Strategy: take parts[1], strip leading postal-code prefix, title-case if
+    // entirely uppercase. Drop any purely-numeric segments (standalone
+    // postcodes).
     if (enrichment.streetAddress) {
-      const parts = enrichment.streetAddress.split(',').map(p => p.trim());
-      if (parts.length >= 2) merged.city = parts[1];
+      const parts = enrichment.streetAddress.split(',').map(p => p.trim()).filter(Boolean);
+      if (parts.length >= 2) {
+        let candidate = parts[1];
+        // Strip leading postcode patterns: digits[+letters+space?] at start
+        candidate = candidate.replace(/^\d{3,6}(?:-\d{0,4})?\s+/, '').trim();
+        // Strip trailing postcode (e.g. "Austin, TX 78701" → parts[1]="TX 78701", but
+        // for "London, SW1A 1AA" parts[1]="London" and we're fine)
+        // Skip candidate if it's still just a postcode or empty
+        if (candidate && !/^\d+$/.test(candidate)) {
+          // Title-case if entirely uppercase (common in Swedish directory addresses)
+          if (candidate === candidate.toUpperCase() && /[A-Z]{3,}/.test(candidate)) {
+            candidate = candidate
+              .toLowerCase()
+              .replace(/\b\w/g, (c) => c.toUpperCase());
+          }
+          merged.city = candidate;
+        }
+      }
     }
     if (enrichment.phone) merged.phone = enrichment.phone;
     if (enrichment.contactEmail) merged.contactEmail = enrichment.contactEmail;
