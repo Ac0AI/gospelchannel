@@ -1,14 +1,11 @@
 "use client";
 
-import { useState } from "react";
-
 type SpotifyEmbedCardProps = {
   playlistId?: string;
   artistId?: string;
   title: string;
   height: number;
   theme?: "light" | "dark";
-  compact?: boolean;
 };
 
 export function SpotifyEmbedCard({
@@ -17,7 +14,6 @@ export function SpotifyEmbedCard({
   title,
   height,
   theme = "light",
-  compact = false,
 }: SpotifyEmbedCardProps) {
   const type = artistId ? "artist" : "playlist";
   const id = artistId || playlistId;

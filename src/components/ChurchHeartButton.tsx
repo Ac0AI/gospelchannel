@@ -4,10 +4,9 @@ import { useCallback, useEffect, useState } from "react";
 
 type ChurchHeartButtonProps = {
   slug: string;
-  name: string;
 };
 
-export function ChurchHeartButton({ slug, name }: ChurchHeartButtonProps) {
+export function ChurchHeartButton({ slug }: ChurchHeartButtonProps) {
   const [hearted, setHearted] = useState(() => {
     if (typeof document !== "undefined") {
       return document.cookie.includes(`church_${slug}=1`);

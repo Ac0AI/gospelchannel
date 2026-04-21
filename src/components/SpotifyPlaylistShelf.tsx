@@ -70,7 +70,6 @@ export function SpotifyPlaylistShelf({
               playlistId={item.playlistId}
               title={item.title}
               height={compact ? 152 : 352}
-              compact={compact}
             />
           </article>
         ))}

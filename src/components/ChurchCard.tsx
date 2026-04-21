@@ -23,6 +23,7 @@ type ChurchCardProps = {
   serviceTimes?: string;
   enrichmentSummary?: string;
   verified?: boolean;
+  prefetch?: boolean;
 };
 
 const GRADIENTS = [
@@ -70,6 +71,7 @@ export function ChurchCard({
   serviceTimes,
   enrichmentSummary,
   verified,
+  prefetch = false,
 }: ChurchCardProps) {
   const initials = getInitials(name);
   const gradient = getGradient(name);
@@ -89,7 +91,7 @@ export function ChurchCard({
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-rose-200/70 bg-white/80 p-3 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-rose-300 hover:shadow-md active:scale-[0.97] sm:hover:-translate-y-1">
-      <Link href={`/church/${slug}`} prefetch={false} className="group flex flex-1 flex-col">
+      <Link href={`/church/${slug}`} prefetch={prefetch} className="group flex flex-1 flex-col">
         <ChurchCardImage
           initials={initials}
           gradient={gradient}
@@ -139,7 +141,7 @@ export function ChurchCard({
           </div>
           <Link
             href={`/church/${slug}`}
-            prefetch={false}
+            prefetch={prefetch}
             className="inline-flex shrink-0 items-center justify-center rounded-full bg-rose-gold px-3.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-rose-gold-deep"
           >
             {actionLabel}

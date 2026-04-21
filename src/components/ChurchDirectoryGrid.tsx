@@ -29,7 +29,7 @@ export function ChurchDirectoryGrid({ churches }: { churches: ChurchDirectoryGri
 
   return (
     <div className="grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {churches.map((church) => (
+      {churches.map((church, index) => (
         <ChurchCard
           key={church.slug}
           slug={church.slug}
@@ -45,6 +45,7 @@ export function ChurchDirectoryGrid({ churches }: { churches: ChurchDirectoryGri
           enrichmentLocation={church.enrichmentHint?.location || church.location}
           serviceTimes={church.enrichmentHint?.serviceTimes}
           enrichmentSummary={church.enrichmentHint?.summary}
+          prefetch={index < 8}
         />
       ))}
     </div>

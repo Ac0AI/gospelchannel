@@ -460,7 +460,7 @@ export function ChurchGrid({ churches }: { churches: ChurchItem[] }) {
 
           return (
             <>
-              {visible.map((church) => (
+              {visible.map((church, index) => (
                 <ChurchCard
                   key={church.slug}
                   slug={church.slug}
@@ -475,6 +475,7 @@ export function ChurchGrid({ churches }: { churches: ChurchItem[] }) {
                   enrichmentLocation={church.location}
                   serviceTimes={church.enrichmentHint?.serviceTimes}
                   enrichmentSummary={church.enrichmentHint?.summary}
+                  prefetch={index < 8}
                 />
               ))}
               {hasMore ? (

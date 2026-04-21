@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import posthog from "posthog-js";
 import {
   SOUND_QUESTIONS,
@@ -17,8 +17,14 @@ export function WorshipStyleMatchClient({ profiles }: { profiles: SoundProfile[]
   const answeredCount = Object.keys(answers).length;
   const currentQuestion = SOUND_QUESTIONS.find((question) => !answers[question.id]) ?? null;
   const isComplete = currentQuestion === null;
-  const results = isComplete ? scoreSoundProfiles(answers, profiles) : [];
-  const sampleChurches = isComplete ? collectTopChurchMatches(results) : [];
+  const results = useMemo(
+    () => (isComplete ? scoreSoundProfiles(answers, profiles) : []),
+    [answers, isComplete, profiles],
+  );
+  const sampleChurches = useMemo(
+    () => (isComplete ? collectTopChurchMatches(results) : []),
+    [isComplete, results],
+  );
 
   useEffect(() => {
     if (!isComplete || completionTrackedRef.current) return;

@@ -131,7 +131,7 @@ export function ChurchGridFilter({ churches, totalCount }: ChurchGridFilterProps
 
       {/* Church grid */}
       <div className="grid auto-rows-fr grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-        {displayed.map((church) => (
+        {displayed.map((church, index) => (
           <ChurchCard
             key={church.slug}
             slug={church.slug}
@@ -148,6 +148,7 @@ export function ChurchGridFilter({ churches, totalCount }: ChurchGridFilterProps
             serviceTimes={church.serviceTimes}
             enrichmentSummary={church.enrichmentSummary}
             verified={church.verified}
+            prefetch={index < 8}
           />
         ))}
       </div>
