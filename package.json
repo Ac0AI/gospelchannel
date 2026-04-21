@@ -11,7 +11,7 @@
     "build": "GOSPEL_BUILD_OFFLINE=1 node -e \"const fs=require('fs'); fs.rmSync('.next',{recursive:true,force:true,maxRetries:5,retryDelay:200});\" && GOSPEL_BUILD_OFFLINE=1 next build",
     "cf:build": "GOSPEL_BUILD_OFFLINE=1 node -e \"const fs=require('fs'); for (const path of ['.next','.open-next']) fs.rmSync(path,{recursive:true,force:true,maxRetries:5,retryDelay:200});\" && GOSPEL_BUILD_OFFLINE=1 opennextjs-cloudflare build",
     "preview": "npm run cf:build && opennextjs-cloudflare preview",
-    "deploy": "npm run cf:build && opennextjs-cloudflare deploy",
+    "deploy": "node scripts/deploy-cloudflare.mjs",
     "start": "next start",
     "lint": "eslint .",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
