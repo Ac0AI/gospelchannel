@@ -42,6 +42,7 @@ import { ScrollReveal } from "@/components/ScrollReveal";
 import { HeroImage } from "@/components/HeroImage";
 import { resolveCanonicalChurchSlug } from "@/lib/church-slugs";
 import { CHURCH_SIZE_LABELS, getProfileOptionLabel } from "@/lib/profile-fields";
+import { buildChurchDescription, buildChurchTitle } from "@/lib/church-metadata";
 
 type ChurchPageProps = {
   params: Promise<{ slug: string }>;
@@ -108,15 +109,14 @@ export async function generateMetadata({ params }: ChurchPageProps): Promise<Met
     return { title: "Church Not Found" };
   }
 
-  const { church, enrichment } = pageData;
+  const { church, enrichment, mergedProfile } = pageData;
   const displayName = pickDisplayChurchName(church.name, enrichment?.officialChurchName);
   const hasPlaylists = (church.spotifyPlaylistIds?.length ?? 0) > 0
     || (church.additionalPlaylists?.length ?? 0) > 0;
 
-  const seoDesc = enrichment?.seoDescription
-    || (hasPlaylists
-      ? `Stream ${church.name} worship playlist on Spotify. Curated worship songs, best gospel music, and live videos from ${church.name}. ${church.description.slice(0, 80)}`
-      : `Discover ${church.name} — ${church.description.slice(0, 120)}`);
+  const metadataInput = { church, enrichment, mergedProfile, displayName };
+  const title = buildChurchTitle(metadataInput);
+  const seoDesc = buildChurchDescription(metadataInput);
 
   const aliases = buildChurchAliases(church);
   const keywordSet = new Set<string>([
@@ -130,9 +130,6 @@ export async function generateMetadata({ params }: ChurchPageProps): Promise<Met
   }
 
   const pageUrl = `https://gospelchannel.com/church/${church.slug}`;
-  const title = hasPlaylists
-    ? `${displayName} — Worship Playlists & Church`
-    : `${displayName} — Church & Community`;
 
   return {
     title,
