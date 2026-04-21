@@ -160,7 +160,10 @@ export function buildChurchDescription(input: ChurchMetadataInput): string {
   }
 
   if (denominationLabel) {
-    sentences.push(`${denominationLabel} church.`);
+    // Skip the " church" suffix when the label already contains the word
+    // (e.g. denomination = "Hillsong Church" produced "Hillsong Church church.").
+    const alreadyMentionsChurch = /\bchurch\b/i.test(denominationLabel);
+    sentences.push(alreadyMentionsChurch ? `${denominationLabel}.` : `${denominationLabel} church.`);
   }
 
   // Music is the moat — for music tier, it goes ahead of services/languages
