@@ -92,3 +92,12 @@ video/
 * 3.*
 * 4
 * 4.*
+
+# Lemlist outreach tools — contain API keys + outreach strategy
+# (see also docs/lemlist-* which is also gitignored)
+scripts/lemlist-*.mjs
+scripts/*lemlist*.mjs
+docs/lemlist-tools/
+
+# Firecrawl scraping cache — competitor research, not source code
+.firecrawl/
