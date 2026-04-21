@@ -14,7 +14,7 @@
 
 - `src/data/churches.json` is a generated snapshot of approved rows from `public.churches`.
 - It is a build/export artifact and local fallback, not the write source.
-- Generate it from Supabase with:
+- Generate it from Neon with:
   - `npm run churches:reconcile`
   - or `node scripts/generate-churches-json.mjs`
 
@@ -35,7 +35,7 @@
 
 ## Operational rules
 
-- Write approved church data to Supabase first.
+- Write approved church data to Neon first.
 - Regenerate `src/data/churches.json` after approved church updates.
 - Do not count `src/data/churches.json` alone when the question is about public pages; campuses live outside that snapshot.
 - For Google indexing, use `sitemap.xml` as the canonical public URL list. `scripts/push-to-google.mjs` preserves the old queue order first, then appends any extra sitemap URLs so existing checkpoints remain valid.
@@ -51,7 +51,7 @@
 
 ## Verification
 
-- Run `npm run churches:check` to verify approved church slug parity between Supabase and `src/data/churches.json`.
+- Run `npm run churches:check` to verify approved church slug parity between Neon and `src/data/churches.json`.
 - Run `npm run churches:audit` to verify:
   - slug parity
   - playlist field parity
