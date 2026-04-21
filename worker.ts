@@ -22,6 +22,49 @@ type WorkerHandler = {
 };
 
 const openNextWorker = generatedOpenNextWorker as OpenNextWorkerModule;
+const SITEMAP_EDGE_CACHE_NAME = "gospelchannel-sitemaps";
+
+function isSitemapRequest(request: Request): boolean {
+  if (request.method !== "GET") {
+    return false;
+  }
+
+  const { pathname } = new URL(request.url);
+  return pathname === "/sitemap.xml" || pathname.startsWith("/sitemap-chunk/");
+}
+
+function shouldEdgeCache(response: Response): boolean {
+  if (!response.ok) {
+    return false;
+  }
+
+  const cacheControl = response.headers.get("cache-control")?.toLowerCase() ?? "";
+  return cacheControl.includes("public") && !cacheControl.includes("no-store");
+}
+
+async function fetchWithSitemapEdgeCache(
+  request: Request,
+  env: CloudflareEnv,
+  ctx: WorkerExecutionContext,
+): Promise<Response> {
+  if (!isSitemapRequest(request)) {
+    return openNextWorker.fetch(request, env, ctx);
+  }
+
+  const edgeCache = await caches.open(SITEMAP_EDGE_CACHE_NAME);
+  const cacheKey = new Request(request.url, { method: "GET" });
+  const cached = await edgeCache.match(cacheKey);
+  if (cached) {
+    return cached;
+  }
+
+  const response = await openNextWorker.fetch(request, env, ctx);
+  if (shouldEdgeCache(response)) {
+    ctx.waitUntil(edgeCache.put(cacheKey, response.clone()));
+  }
+
+  return response;
+}
 
 async function runScheduledCron(env: CloudflareEnv, ctx: WorkerExecutionContext, path: string) {
   const origin = env.NEXT_PUBLIC_SITE_URL || "https://gospelchannel.com";
@@ -50,7 +93,7 @@ async function runScheduledCron(env: CloudflareEnv, ctx: WorkerExecutionContext,
 export { BucketCachePurge, DOQueueHandler, DOShardedTagCache };
 
 const worker: WorkerHandler = {
-  fetch: openNextWorker.fetch,
+  fetch: fetchWithSitemapEdgeCache,
   async scheduled(controller: WorkerScheduledController, env: CloudflareEnv, ctx: WorkerExecutionContext) {
     if (controller.cron === "23 6 * * *") {
       await runScheduledCron(env, ctx, "/api/cron/push-indexing");

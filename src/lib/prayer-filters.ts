@@ -1,9 +1,10 @@
-import { getChurchDirectorySeedAsync } from "@/lib/content";
+import { getChurchDirectorySeedAsync, type ChurchDirectorySeed } from "@/lib/content";
 import {
   getAllPublishedCampuses,
   getNetworkForWorshipChurch,
   getNetworkCampuses,
 } from "@/lib/church-networks";
+import type { ChurchCampus } from "@/types/gospel";
 
 const COUNTRY_ALIASES: Record<string, string> = {
   usa: "United States",
@@ -13,6 +14,8 @@ const COUNTRY_ALIASES: Record<string, string> = {
 };
 
 const MAX_CITY_LENGTH = 60;
+const PRAYER_FILTER_CACHE_SECONDS = 60 * 60;
+const COUNTRY_CITY_DELIMITER = "::";
 
 const INVALID_CITY_PATTERNS = [
   /^\d[\d\s-]*$/,
@@ -38,13 +41,27 @@ export function getNormalizedCountrySlug(country?: string): string | undefined {
   return label ? slugify(label) : undefined;
 }
 
-function buildKnownCountrySlugs(churches: Array<{ country?: string }>): Set<string> {
+function buildKnownCountrySlugs(sources: Array<{ country?: string }>): Set<string> {
   return new Set(
-    churches
-      .map((church) => getNormalizedCountrySlug(church.country))
+    sources
+      .map((source) => getNormalizedCountrySlug(source.country))
       .filter((slug): slug is string => Boolean(slug))
   );
 }
+
+function getCountryCityKey(countrySlug?: string, citySlug?: string): string {
+  return `${countrySlug ?? ""}${COUNTRY_CITY_DELIMITER}${citySlug ?? ""}`;
+}
+
+function normalizeCountrySlugInput(countrySlug?: string): string | undefined {
+  return countrySlug ? getNormalizedCountrySlug(countrySlug) : undefined;
+}
+
+type CampusSeed = Pick<ChurchCampus, "slug" | "name" | "city" | "country">;
+type CacheEntry<T> = {
+  value: T;
+  expiresAt: number;
+};
 
 export function extractPrayerCity(
   location?: string,
@@ -65,144 +82,323 @@ export function extractPrayerCity(
   return city;
 }
 
-export async function countrySlugToDisplay(slug: string): Promise<string | undefined> {
-  const aliased = COUNTRY_ALIASES[slug];
-  if (aliased) return aliased;
-  const churches = await getChurchDirectorySeedAsync();
-  const match = churches.find((c) => getNormalizedCountrySlug(c.country) === slug);
-  return getNormalizedCountryLabel(match?.country) || undefined;
+export type FilterOption = { slug: string; label: string; count?: number };
+
+export type PrayerFilterIndex = {
+  countryOptions: FilterOption[];
+  allCityOptions: FilterOption[];
+  allChurchOptions: FilterOption[];
+  countryLabelBySlug: Record<string, string>;
+  cityLabelBySlug: Record<string, string>;
+  churchNameBySlug: Record<string, string>;
+  countrySlugByChurchSlug: Record<string, string>;
+  churchSlugsByCountry: Record<string, string[]>;
+  churchSlugsByCity: Record<string, string[]>;
+  citiesByCountry: Record<string, FilterOption[]>;
+  churchOptionsByCountry: Record<string, FilterOption[]>;
+  churchOptionsByCountryAndCity: Record<string, FilterOption[]>;
+};
+
+function setLabel(map: Map<string, string>, slug: string | undefined, label: string | undefined) {
+  if (!slug || !label || map.has(slug)) return;
+  map.set(slug, label);
 }
 
-export async function citySlugToDisplay(slug: string): Promise<string | undefined> {
-  const churches = await getChurchDirectorySeedAsync();
-  const knownCountrySlugs = buildKnownCountrySlugs(churches);
-  for (const c of churches) {
-    const city = extractPrayerCity(c.location, c.country, knownCountrySlugs);
-    if (city && slugify(city) === slug) return city;
+function addOption(
+  store: Map<string, Map<string, FilterOption>>,
+  key: string,
+  option: FilterOption,
+) {
+  const options = store.get(key) ?? new Map<string, FilterOption>();
+  if (!options.has(option.slug)) {
+    options.set(option.slug, option);
   }
-  return undefined;
+  store.set(key, options);
 }
 
-export async function getChurchSlugsByCountry(countrySlug: string): Promise<string[]> {
-  const displayName = await countrySlugToDisplay(countrySlug);
-  if (!displayName) return [];
-  const normalizedTarget = slugify(displayName);
+function addSlug(store: Map<string, Set<string>>, key: string, slug: string) {
+  const values = store.get(key) ?? new Set<string>();
+  values.add(slug);
+  store.set(key, values);
+}
 
-  const churches = await getChurchDirectorySeedAsync();
-  const slugs = new Set<string>();
+function sortOptions(options: Iterable<FilterOption>): FilterOption[] {
+  return [...options].sort((a, b) => a.label.localeCompare(b.label));
+}
 
-  for (const c of churches) {
-    if (getNormalizedCountrySlug(c.country) === normalizedTarget) {
-      slugs.add(c.slug);
+function mapToSortedOptionRecord(store: Map<string, Map<string, FilterOption>>): Record<string, FilterOption[]> {
+  return Object.fromEntries(
+    [...store.entries()].map(([key, values]) => [key, sortOptions(values.values())]),
+  );
+}
+
+function mapToSortedSlugRecord(store: Map<string, Set<string>>): Record<string, string[]> {
+  return Object.fromEntries(
+    [...store.entries()].map(([key, values]) => [key, [...values].sort()]),
+  );
+}
+
+export function buildPrayerFilterIndex(
+  churches: ChurchDirectorySeed[],
+  campuses: CampusSeed[],
+): PrayerFilterIndex {
+  const knownCountrySlugs = buildKnownCountrySlugs([...churches, ...campuses]);
+  const countryLabelBySlug = new Map<string, string>();
+  const cityLabelBySlug = new Map<string, string>();
+  const churchNameBySlug = new Map<string, string>();
+  const countrySlugByChurchSlug = new Map<string, string>();
+  const churchSlugsByCountry = new Map<string, Set<string>>();
+  const churchSlugsByCity = new Map<string, Set<string>>();
+  const citiesByCountry = new Map<string, Map<string, FilterOption>>();
+  const churchOptionsByCountry = new Map<string, Map<string, FilterOption>>();
+  const churchOptionsByCountryAndCity = new Map<string, Map<string, FilterOption>>();
+  const allCityOptions = new Map<string, FilterOption>();
+  const allChurchOptions = new Map<string, FilterOption>();
+
+  function registerEntity(input: {
+    slug: string;
+    name: string;
+    country?: string;
+    city?: string;
+  }) {
+    churchNameBySlug.set(input.slug, input.name);
+    allChurchOptions.set(input.slug, { slug: input.slug, label: input.name });
+
+    const countrySlug = getNormalizedCountrySlug(input.country);
+    const countryLabel = getNormalizedCountryLabel(input.country);
+
+    setLabel(countryLabelBySlug, countrySlug, countryLabel);
+
+    if (countrySlug) {
+      countrySlugByChurchSlug.set(input.slug, countrySlug);
+      addSlug(churchSlugsByCountry, countrySlug, input.slug);
+      addOption(churchOptionsByCountry, countrySlug, { slug: input.slug, label: input.name });
     }
+
+    if (!input.city) {
+      return;
+    }
+
+    const citySlug = slugify(input.city);
+    if (!citySlug) {
+      return;
+    }
+
+    setLabel(cityLabelBySlug, citySlug, input.city);
+    allCityOptions.set(citySlug, { slug: citySlug, label: input.city });
+    addSlug(churchSlugsByCity, citySlug, input.slug);
+    addOption(churchOptionsByCountryAndCity, getCountryCityKey(undefined, citySlug), {
+      slug: input.slug,
+      label: input.name,
+    });
+
+    if (!countrySlug) {
+      return;
+    }
+
+    addOption(citiesByCountry, countrySlug, { slug: citySlug, label: input.city });
+    addOption(churchOptionsByCountryAndCity, getCountryCityKey(countrySlug, citySlug), {
+      slug: input.slug,
+      label: input.name,
+    });
   }
 
-  try {
-    const campuses = await getAllPublishedCampuses();
-    for (const campus of campuses) {
-      if (getNormalizedCountrySlug(campus.country) === normalizedTarget) {
-        slugs.add(campus.slug);
-      }
-    }
-  } catch {}
-
-  return [...slugs];
-}
-
-export async function getChurchSlugsByCity(citySlug: string): Promise<string[]> {
-  const churches = await getChurchDirectorySeedAsync();
-  const knownCountrySlugs = buildKnownCountrySlugs(churches);
-  const slugs = new Set<string>();
-
-  for (const c of churches) {
-    const city = extractPrayerCity(c.location, c.country, knownCountrySlugs);
-    if (city && slugify(city) === citySlug) {
-      slugs.add(c.slug);
-    }
+  for (const church of churches) {
+    registerEntity({
+      slug: church.slug,
+      name: church.name,
+      country: church.country,
+      city: extractPrayerCity(church.location, church.country, knownCountrySlugs),
+    });
   }
 
-  try {
-    const campuses = await getAllPublishedCampuses();
-    for (const campus of campuses) {
-      if (campus.city && slugify(campus.city) === citySlug) {
-        slugs.add(campus.slug);
-      }
-    }
-  } catch {}
+  for (const campus of campuses) {
+    registerEntity({
+      slug: campus.slug,
+      name: campus.name,
+      country: campus.country,
+      city: extractPrayerCity(campus.city, campus.country, knownCountrySlugs),
+    });
+  }
 
-  return [...slugs];
+  return {
+    countryOptions: sortOptions(
+      [...countryLabelBySlug.entries()].map(([slug, label]) => ({ slug, label })),
+    ),
+    allCityOptions: sortOptions(allCityOptions.values()),
+    allChurchOptions: sortOptions(allChurchOptions.values()),
+    countryLabelBySlug: Object.fromEntries(countryLabelBySlug),
+    cityLabelBySlug: Object.fromEntries(cityLabelBySlug),
+    churchNameBySlug: Object.fromEntries(churchNameBySlug),
+    countrySlugByChurchSlug: Object.fromEntries(countrySlugByChurchSlug),
+    churchSlugsByCountry: mapToSortedSlugRecord(churchSlugsByCountry),
+    churchSlugsByCity: mapToSortedSlugRecord(churchSlugsByCity),
+    citiesByCountry: mapToSortedOptionRecord(citiesByCountry),
+    churchOptionsByCountry: mapToSortedOptionRecord(churchOptionsByCountry),
+    churchOptionsByCountryAndCity: mapToSortedOptionRecord(churchOptionsByCountryAndCity),
+  };
 }
 
-export async function getChurchSlugsForNetwork(churchSlug: string): Promise<string[]> {
-  const slugs = [churchSlug];
+async function buildPrayerFilterIndexFromSource(): Promise<PrayerFilterIndex> {
+  const [churches, campuses] = await Promise.all([
+    getChurchDirectorySeedAsync(),
+    getAllPublishedCampuses().catch(() => []),
+  ]);
+
+  return buildPrayerFilterIndex(churches, campuses);
+}
+
+async function expandChurchSlugsForNetwork(churchSlug: string): Promise<string[]> {
+  const slugs = new Set([churchSlug]);
 
   try {
     const network = await getNetworkForWorshipChurch(churchSlug);
-    if (network) {
-      const campuses = await getNetworkCampuses(network.id);
-      for (const campus of campuses) {
-        slugs.push(campus.slug);
-      }
+    if (!network) {
+      return [churchSlug];
+    }
+
+    const campuses = await getNetworkCampuses(network.id);
+    for (const campus of campuses) {
+      slugs.add(campus.slug);
     }
   } catch {}
 
-  return slugs;
+  return [...slugs].sort();
 }
 
-export type FilterOption = { slug: string; label: string; count?: number };
+let prayerFilterIndexCache: CacheEntry<PrayerFilterIndex> | null = null;
+let prayerFilterIndexPromise: Promise<PrayerFilterIndex> | null = null;
+const networkChurchSlugsCache = new Map<string, CacheEntry<string[]>>();
+const networkChurchSlugsPromises = new Map<string, Promise<string[]>>();
 
-export async function getAvailableCountries(): Promise<FilterOption[]> {
-  const churches = await getChurchDirectorySeedAsync();
-  const seen = new Map<string, string>();
+function getCachedValue<T>(entry: CacheEntry<T> | null): T | undefined {
+  if (!entry) return undefined;
+  if (entry.expiresAt <= Date.now()) return undefined;
+  return entry.value;
+}
 
-  for (const c of churches) {
-    if (!c.country) continue;
-    const slug = getNormalizedCountrySlug(c.country);
-    const display = getNormalizedCountryLabel(c.country);
-    if (!slug || !display) continue;
-    if (!seen.has(slug)) {
-      seen.set(slug, display);
+export async function getPrayerFilterIndex(): Promise<PrayerFilterIndex> {
+  const cached = getCachedValue(prayerFilterIndexCache);
+  if (cached) {
+    return cached;
+  }
+
+  if (prayerFilterIndexPromise) {
+    return prayerFilterIndexPromise;
+  }
+
+  prayerFilterIndexPromise = buildPrayerFilterIndexFromSource()
+    .then((value) => {
+      prayerFilterIndexCache = {
+        value,
+        expiresAt: Date.now() + PRAYER_FILTER_CACHE_SECONDS * 1000,
+      };
+      return value;
+    })
+    .finally(() => {
+      prayerFilterIndexPromise = null;
+    });
+
+  return prayerFilterIndexPromise;
+}
+
+export async function getChurchNamesBySlugs(
+  churchSlugs: Iterable<string>,
+): Promise<Record<string, string>> {
+  const index = await getPrayerFilterIndex();
+  const names: Record<string, string> = {};
+
+  for (const slug of churchSlugs) {
+    const name = index.churchNameBySlug[slug];
+    if (name) {
+      names[slug] = name;
     }
   }
 
-  return [...seen.entries()]
-    .map(([slug, label]) => ({ slug, label }))
-    .sort((a, b) => a.label.localeCompare(b.label));
+  return names;
+}
+
+export async function countrySlugToDisplay(slug: string): Promise<string | undefined> {
+  const index = await getPrayerFilterIndex();
+  const normalizedSlug = normalizeCountrySlugInput(slug);
+  if (!normalizedSlug) return undefined;
+  return index.countryLabelBySlug[normalizedSlug];
+}
+
+export async function citySlugToDisplay(slug: string): Promise<string | undefined> {
+  const index = await getPrayerFilterIndex();
+  return index.cityLabelBySlug[slug];
+}
+
+export async function getChurchSlugsByCountry(countrySlug: string): Promise<string[]> {
+  const index = await getPrayerFilterIndex();
+  const normalizedSlug = normalizeCountrySlugInput(countrySlug);
+  if (!normalizedSlug) return [];
+  return index.churchSlugsByCountry[normalizedSlug] ?? [];
+}
+
+export async function getChurchSlugsByCity(citySlug: string): Promise<string[]> {
+  const index = await getPrayerFilterIndex();
+  return index.churchSlugsByCity[citySlug] ?? [];
+}
+
+export async function getChurchSlugsForNetwork(churchSlug: string): Promise<string[]> {
+  const cached = networkChurchSlugsCache.get(churchSlug);
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.value;
+  }
+
+  const inFlight = networkChurchSlugsPromises.get(churchSlug);
+  if (inFlight) {
+    return inFlight;
+  }
+
+  const promise = expandChurchSlugsForNetwork(churchSlug)
+    .then((value) => {
+      networkChurchSlugsCache.set(churchSlug, {
+        value,
+        expiresAt: Date.now() + PRAYER_FILTER_CACHE_SECONDS * 1000,
+      });
+      return value;
+    })
+    .finally(() => {
+      networkChurchSlugsPromises.delete(churchSlug);
+    });
+
+  networkChurchSlugsPromises.set(churchSlug, promise);
+  return promise;
+}
+
+export async function getAvailableCountries(): Promise<FilterOption[]> {
+  const index = await getPrayerFilterIndex();
+  return index.countryOptions;
 }
 
 export async function getAvailableCities(countrySlug?: string): Promise<FilterOption[]> {
-  const churches = await getChurchDirectorySeedAsync();
-  const knownCountrySlugs = buildKnownCountrySlugs(churches);
-  const seen = new Map<string, string>();
+  const index = await getPrayerFilterIndex();
+  const normalizedCountrySlug = normalizeCountrySlugInput(countrySlug);
 
-  for (const c of churches) {
-    if (countrySlug && getNormalizedCountrySlug(c.country) !== countrySlug) continue;
-    const city = extractPrayerCity(c.location, c.country, knownCountrySlugs);
-    if (!city) continue;
-    const slug = slugify(city);
-    if (!seen.has(slug)) {
-      seen.set(slug, city);
-    }
+  if (!normalizedCountrySlug) {
+    return index.allCityOptions;
   }
 
-  return [...seen.entries()]
-    .map(([slug, label]) => ({ slug, label }))
-    .sort((a, b) => a.label.localeCompare(b.label));
+  return index.citiesByCountry[normalizedCountrySlug] ?? [];
 }
 
 export async function getAvailableChurches(countrySlug?: string, citySlug?: string): Promise<FilterOption[]> {
-  const churches = await getChurchDirectorySeedAsync();
-  const knownCountrySlugs = buildKnownCountrySlugs(churches);
-  const results: FilterOption[] = [];
+  const index = await getPrayerFilterIndex();
+  const normalizedCountrySlug = normalizeCountrySlugInput(countrySlug);
 
-  for (const c of churches) {
-    if (countrySlug && getNormalizedCountrySlug(c.country) !== countrySlug) continue;
-    if (citySlug) {
-      const city = extractPrayerCity(c.location, c.country, knownCountrySlugs);
-      if (!city || slugify(city) !== citySlug) continue;
-    }
-    results.push({ slug: c.slug, label: c.name });
+  if (citySlug) {
+    return (
+      index.churchOptionsByCountryAndCity[getCountryCityKey(normalizedCountrySlug, citySlug)]
+      ?? []
+    );
   }
 
-  return results.sort((a, b) => a.label.localeCompare(b.label));
+  if (normalizedCountrySlug) {
+    return index.churchOptionsByCountry[normalizedCountrySlug] ?? [];
+  }
+
+  return index.allChurchOptions;
 }
