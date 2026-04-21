@@ -51,7 +51,12 @@ export default async function ChurchOgImage({ params }: ImageProps) {
     videos,
     coverImageUrl: (mergedProfile.coverImageUrl as string | undefined) || enrichment?.coverImageUrl,
   });
-  const heroImage = heroImageRaw ? cfImage(heroImageRaw, { width: 1200, height: 630, fit: "cover", quality: 75 }) : undefined;
+  const heroRawIsVideoThumb = heroImageRaw ? /(?:^|\.)(ytimg|youtube)\.com/i.test(heroImageRaw) : false;
+  // Skip YouTube thumbs in OG — they often carry text overlays ("ROYAL RANGERS" etc)
+  // that compete with the church name. Fall back to gradient-only look.
+  const heroImage = heroImageRaw && !heroRawIsVideoThumb
+    ? cfImage(heroImageRaw, { width: 1200, height: 630, fit: "cover", quality: 75 })
+    : undefined;
   const logoUrlRaw = (mergedProfile.logoUrl as string | undefined) || enrichment?.logoImageUrl || church.logo;
   const logoUrl = isValidPublicUrl(logoUrlRaw) ? cfImage(logoUrlRaw!, { width: 160, height: 160, fit: "cover", quality: 80 }) : undefined;
   const city = normalizeDisplayText(mergedProfile.city as string | undefined) || extractCity(church.location);
@@ -78,7 +83,14 @@ export default async function ChurchOgImage({ params }: ImageProps) {
             alt=""
             width={1200}
             height={630}
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 30%" }}
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "center 30%",
+            }}
           />
         )}
         <div

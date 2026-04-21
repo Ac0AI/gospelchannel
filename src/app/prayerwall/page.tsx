@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import { getPrayers } from "@/lib/prayer";
-import { getChurchDirectorySeedAsync } from "@/lib/content";
 import { PrayerFeed } from "@/components/PrayerFeed";
 import { PrayerWallHero } from "@/components/PrayerWallHero";
 import { PrayerWallFilters } from "@/components/PrayerWallFilters";
 import {
-  getAvailableCountries,
-  getAvailableCities,
+  getChurchNamesBySlugs,
+  getPrayerFilterIndex,
 } from "@/lib/prayer-filters";
 import Link from "next/link";
 
@@ -30,18 +29,11 @@ export const metadata: Metadata = {
 };
 
 export default async function PrayerWallPage() {
-  const [prayers, countries, cities, churchSeed] = await Promise.all([
+  const [prayers, filterIndex] = await Promise.all([
     getPrayers({ limit: 20 }),
-    getAvailableCountries(),
-    getAvailableCities(),
-    getChurchDirectorySeedAsync(),
+    getPrayerFilterIndex(),
   ]);
-  const visiblePrayerSlugs = new Set(prayers.map((prayer) => prayer.churchSlug));
-  const churchNames = Object.fromEntries(
-    churchSeed
-      .filter((church) => visiblePrayerSlugs.has(church.slug))
-      .map((church) => [church.slug, church.name]),
-  );
+  const churchNames = await getChurchNamesBySlugs(prayers.map((prayer) => prayer.churchSlug));
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -77,8 +69,8 @@ export default async function PrayerWallPage() {
       </div>
 
       <PrayerWallFilters
-        countries={countries}
-        cities={cities}
+        countries={filterIndex.countryOptions}
+        cities={filterIndex.allCityOptions}
         churches={[]}
       />
 

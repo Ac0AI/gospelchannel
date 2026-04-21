@@ -2,18 +2,17 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getPrayersFiltered } from "@/lib/prayer";
-import { getChurchDirectorySeedAsync, getChurchBySlugAsync } from "@/lib/content";
 import { PrayerFeed } from "@/components/PrayerFeed";
 import { PrayerWallHero } from "@/components/PrayerWallHero";
 import { PrayerWallFilters } from "@/components/PrayerWallFilters";
 import { PrayerWallBreadcrumbs } from "@/components/PrayerWallBreadcrumbs";
 import { PrayerWallChurchSection } from "@/components/PrayerWallChurchSection";
 import {
-  countrySlugToDisplay,
-  citySlugToDisplay,
-  getAvailableCountries,
+  getChurchNamesBySlugs,
   getAvailableCities,
   getAvailableChurches,
+  getPrayerFilterIndex,
+  type PrayerFilterIndex,
   getNormalizedCountrySlug,
 } from "@/lib/prayer-filters";
 export const dynamicParams = true;
@@ -23,32 +22,37 @@ type FilterState = {
   slug: string;
   displayName: string;
   countrySlug?: string;
+  requestedSlug?: string;
 };
 
-async function parseSegments(segments: string[]): Promise<FilterState | null> {
+function parseSegments(
+  segments: string[],
+  index: PrayerFilterIndex,
+): FilterState | null {
   if (segments.length !== 2) return null;
   const [prefix, slug] = segments;
 
   if (prefix === "country") {
-    const display = await countrySlugToDisplay(slug);
+    const normalizedSlug = getNormalizedCountrySlug(slug);
+    const display = normalizedSlug ? index.countryLabelBySlug[normalizedSlug] : undefined;
     if (!display) return null;
-    return { type: "country", slug, displayName: display };
+    return { type: "country", slug: normalizedSlug!, requestedSlug: slug, displayName: display };
   }
 
   if (prefix === "city") {
-    const display = await citySlugToDisplay(slug);
+    const display = index.cityLabelBySlug[slug];
     if (!display) return null;
     return { type: "city", slug, displayName: display };
   }
 
   if (prefix === "church") {
-    const church = await getChurchBySlugAsync(slug);
-    if (!church) return null;
+    const displayName = index.churchNameBySlug[slug];
+    if (!displayName) return null;
     return {
       type: "church",
       slug,
-      displayName: church.name,
-      countrySlug: getNormalizedCountrySlug(church.country),
+      displayName,
+      countrySlug: index.countrySlugByChurchSlug[slug],
     };
   }
 
@@ -61,7 +65,8 @@ export async function generateMetadata({
   params: Promise<{ segments: string[] }>;
 }): Promise<Metadata> {
   const { segments } = await params;
-  const filter = await parseSegments(segments);
+  const filterIndex = await getPrayerFilterIndex();
+  const filter = parseSegments(segments, filterIndex);
   if (!filter) return { title: "Not Found" };
 
   const titles: Record<string, string> = {
@@ -97,44 +102,42 @@ export default async function FilteredPrayerWallPage({
   params: Promise<{ segments: string[] }>;
 }) {
   const { segments } = await params;
-  const filter = await parseSegments(segments);
+  const filterIndex = await getPrayerFilterIndex();
+  const filter = parseSegments(segments, filterIndex);
   if (!filter) notFound();
+  const shouldLoadChurchOptions = filter.type === "city";
 
-  const [prayers, countries, cities, churchOptions, churchSeed] = await Promise.all([
+  const [prayers, cities, churchOptions] = await Promise.all([
     getPrayersFiltered({
       country: filter.type === "country" ? filter.slug : undefined,
       city: filter.type === "city" ? filter.slug : undefined,
       churchSlug: filter.type === "church" ? filter.slug : undefined,
       limit: 20,
     }),
-    getAvailableCountries(),
     getAvailableCities(
-      filter.type === "country" ? filter.slug : filter.countrySlug
-    ),
-    getAvailableChurches(
       filter.type === "country" ? filter.slug : filter.countrySlug,
-      filter.type === "city" ? filter.slug : undefined
     ),
-    getChurchDirectorySeedAsync(),
+    shouldLoadChurchOptions
+      ? getAvailableChurches(
+          filter.type === "country" ? filter.slug : filter.countrySlug,
+          filter.type === "city" ? filter.slug : undefined,
+        )
+      : Promise.resolve([]),
   ]);
-  const visiblePrayerSlugs = new Set(prayers.map((prayer) => prayer.churchSlug));
-  if (filter.type === "church") {
-    visiblePrayerSlugs.add(filter.slug);
-  }
-  const churchNames = Object.fromEntries(
-    churchSeed
-      .filter((church) => visiblePrayerSlugs.has(church.slug))
-      .map((church) => [church.slug, church.name]),
-  );
+  const visiblePrayerSlugs = prayers.map((prayer) => prayer.churchSlug);
+  if (filter.type === "church") visiblePrayerSlugs.push(filter.slug);
+  const visibleChurchNames = await getChurchNamesBySlugs(visiblePrayerSlugs);
+
+  const countries = filterIndex.countryOptions;
 
   const crumbs = [{ label: "Prayer Wall", href: "/prayerwall" }];
   if (filter.type === "country") {
-    crumbs.push({ label: filter.displayName, href: `/prayerwall/country/${filter.slug}` });
+    crumbs.push({ label: filter.displayName, href: `/prayerwall/country/${filter.requestedSlug ?? filter.slug}` });
   } else if (filter.type === "city") {
     crumbs.push({ label: filter.displayName, href: `/prayerwall/city/${filter.slug}` });
   } else if (filter.type === "church") {
     if (filter.countrySlug) {
-      const countryDisplay = await countrySlugToDisplay(filter.countrySlug);
+      const countryDisplay = filterIndex.countryLabelBySlug[filter.countrySlug];
       if (countryDisplay) {
         crumbs.push({ label: countryDisplay, href: `/prayerwall/country/${filter.countrySlug}` });
       }
@@ -195,14 +198,14 @@ export default async function FilteredPrayerWallPage({
           churchSlug={filter.slug}
           churchName={filter.displayName}
           initialPrayers={prayers}
-          churchNames={churchNames}
+          churchNames={visibleChurchNames}
         />
       ) : (
         <>
           {prayers.length > 0 ? (
             <PrayerFeed
               initialPrayers={prayers}
-              churchNames={churchNames}
+              churchNames={visibleChurchNames}
               limit={20}
               showChurch
               country={filter.type === "country" ? filter.slug : undefined}

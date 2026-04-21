@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Suspense } from "react";
 import { ChurchActionCard } from "@/components/ChurchActionCard";
@@ -192,6 +193,9 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
     videos,
     coverImageUrl: (mergedProfile.coverImageUrl as string | undefined) || enrichment?.coverImageUrl,
   }) || "";
+  // YouTube thumbs often carry hard-coded text overlays ("ROYAL RANGERS" etc).
+  // Treat them as ambient texture, not content — heavy blur kills the text.
+  const heroIsVideoThumb = /(?:^|\.)(ytimg|youtube)\.com/i.test(heroImage);
   const churchLogo = isValidPublicUrl((mergedProfile.logoUrl as string | undefined) || enrichment?.logoImageUrl || church.logo)
     ? ((mergedProfile.logoUrl as string | undefined) || enrichment?.logoImageUrl || church.logo)!
     : null;
@@ -223,8 +227,12 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   const communityMinistries = Array.isArray(mergedProfile.ministries)
     ? (mergedProfile.ministries as string[])
     : (enrichment?.ministries ?? []);
+  // Prefer the long `summary` for the visible About paragraph. `seo_description`
+  // is the 150-char meta-tag version — fine for <meta> but looks thin in the body.
   const aboutDescription =
-    normalizeDisplayText((mergedProfile.description as string | undefined) || enrichment?.summary || church.description)
+    normalizeDisplayText(enrichment?.summary)
+    || normalizeDisplayText(mergedProfile.description as string | undefined)
+    || normalizeDisplayText(church.description)
     || church.description;
   const primaryDenominationFilter = getPrimaryDenominationFilter({ denomination: communityDenomination });
 
@@ -458,11 +466,21 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
       <section className="relative flex min-h-[35vh] flex-col overflow-hidden bg-gradient-to-br from-[#1d0f0b] via-[#3b2016] to-[#7b4a34] sm:min-h-[40vh]">
         {heroImage && (
           <>
-            <HeroImage src={heroImage} className="absolute inset-0 h-full w-full object-cover object-[center_20%]" />
+            <HeroImage
+              src={heroImage}
+              className={
+                heroIsVideoThumb
+                  ? "absolute inset-0 h-full w-full scale-125 object-cover object-[center_20%] blur-2xl saturate-125"
+                  : "absolute inset-0 h-full w-full object-cover object-[center_20%]"
+              }
+            />
             {/* Layered cinematic overlays */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#1a0e09] via-[#1a0e09]/60 to-transparent" />
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_0%_50%,rgba(26,14,9,0.7)_0%,transparent_70%)]" />
             <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#1a0e09]/40 to-transparent" />
+            {heroIsVideoThumb && (
+              <div className="absolute inset-0 bg-[#1a0e09]/30" />
+            )}
           </>
         )}
 
@@ -607,9 +625,12 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
             <h2 className="mb-4 font-serif text-xl font-semibold text-espresso sm:text-2xl">Word from the team</h2>
             <div className="flex items-start gap-4">
               {pastorPhotoUrl ? (
-                <img
+                <Image
+                  unoptimized
                   src={pastorPhotoUrl}
                   alt={`${pastorName}${pastorTitle ? `, ${pastorTitle}` : ''} at ${church.name}`}
+                  width={64}
+                  height={64}
                   className="h-16 w-16 shrink-0 rounded-full object-cover"
                 />
               ) : (
