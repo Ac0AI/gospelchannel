@@ -22,6 +22,10 @@ export function getChurchSlugLookupCandidates(slug: string): string[] {
   return [canonicalSlug, ...(CANONICAL_CHURCH_SLUG_ALIASES[canonicalSlug] ?? [])];
 }
 
+export function getChurchSlugRedirectAliases(): string[] {
+  return Object.keys(CHURCH_SLUG_REDIRECTS);
+}
+
 export function isCanonicalChurchSlug(slug: string): boolean {
   return resolveCanonicalChurchSlug(slug) === slug;
 }

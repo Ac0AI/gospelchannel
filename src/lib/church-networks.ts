@@ -9,6 +9,8 @@ type CacheEntry<T> = { value: T; expiresAt: number };
 const networkBySlugCache = new Map<string, CacheEntry<ChurchNetwork | null>>();
 const networkByParentSlugCache = new Map<string, CacheEntry<ChurchNetwork | null>>();
 const networkCampusCountCache = new Map<string, CacheEntry<number>>();
+const networkCountCache = new Map<string, CacheEntry<number>>();
+const publishedCampusCountCache = new Map<string, CacheEntry<number>>();
 const networkCampusesCache = new Map<string, CacheEntry<Array<ChurchCampus & { enrichment?: ChurchEnrichment }>>>();
 const campusBySlugCache = new Map<string, CacheEntry<ChurchCampusWithDetails | null>>();
 const loggedNetworkFallbacks = new Set<string>();
@@ -251,6 +253,46 @@ export async function getAllNetworks(): Promise<ChurchNetwork[]> {
   }
 }
 
+export async function getNetworkCount(): Promise<number> {
+  const cached = getCachedValue(networkCountCache, "all");
+  if (cached !== undefined) return cached;
+  if (isOfflinePublicBuild() || !hasDatabaseConfig() || networkReadsUnavailable) return 0;
+
+  try {
+    const db = getDb();
+    const rows = await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(schema.churchNetworks);
+
+    return setCachedValue(networkCountCache, "all", Number(rows[0]?.count ?? 0));
+  } catch (error) {
+    networkReadsUnavailable = true;
+    logNetworkFallback("network-count", error);
+    return setCachedValue(networkCountCache, "all", 0);
+  }
+}
+
+export async function getNetworksSlice(offset: number, limit: number): Promise<ChurchNetwork[]> {
+  if (limit <= 0) return [];
+  if (isOfflinePublicBuild() || !hasDatabaseConfig() || networkReadsUnavailable) return [];
+
+  try {
+    const db = getDb();
+    const rows = await db
+      .select()
+      .from(schema.churchNetworks)
+      .orderBy(asc(schema.churchNetworks.name))
+      .limit(limit)
+      .offset(offset);
+
+    return rows.map(mapNetwork);
+  } catch (error) {
+    networkReadsUnavailable = true;
+    logNetworkFallback("network-slice", error);
+    return [];
+  }
+}
+
 export async function getAllPublishedCampuses(): Promise<ChurchCampus[]> {
   if (isOfflinePublicBuild() || !hasDatabaseConfig() || networkReadsUnavailable) return [];
   try {
@@ -265,6 +307,48 @@ export async function getAllPublishedCampuses(): Promise<ChurchCampus[]> {
   } catch (error) {
     networkReadsUnavailable = true;
     logNetworkFallback("all-published-campuses", error);
+    return [];
+  }
+}
+
+export async function getPublishedCampusCount(): Promise<number> {
+  const cached = getCachedValue(publishedCampusCountCache, "all");
+  if (cached !== undefined) return cached;
+  if (isOfflinePublicBuild() || !hasDatabaseConfig() || networkReadsUnavailable) return 0;
+
+  try {
+    const db = getDb();
+    const rows = await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(schema.churchCampuses)
+      .where(eq(schema.churchCampuses.status, "published"));
+
+    return setCachedValue(publishedCampusCountCache, "all", Number(rows[0]?.count ?? 0));
+  } catch (error) {
+    networkReadsUnavailable = true;
+    logNetworkFallback("published-campus-count", error);
+    return setCachedValue(publishedCampusCountCache, "all", 0);
+  }
+}
+
+export async function getPublishedCampusesSlice(offset: number, limit: number): Promise<ChurchCampus[]> {
+  if (limit <= 0) return [];
+  if (isOfflinePublicBuild() || !hasDatabaseConfig() || networkReadsUnavailable) return [];
+
+  try {
+    const db = getDb();
+    const rows = await db
+      .select()
+      .from(schema.churchCampuses)
+      .where(eq(schema.churchCampuses.status, "published"))
+      .orderBy(asc(schema.churchCampuses.country), asc(schema.churchCampuses.name))
+      .limit(limit)
+      .offset(offset);
+
+    return rows.map(mapCampus);
+  } catch (error) {
+    networkReadsUnavailable = true;
+    logNetworkFallback("published-campus-slice", error);
     return [];
   }
 }

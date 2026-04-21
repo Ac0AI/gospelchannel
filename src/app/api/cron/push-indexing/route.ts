@@ -71,6 +71,26 @@ async function getAccessToken(): Promise<string> {
 type Church = { slug: string; priority: number };
 type KvRow = { key: string; value: { pushed: number; total?: number } };
 
+// /sitemap.xml is now a <sitemapindex> pointing at /sitemap-chunk/N.xml.
+// Walk the tree so we end up with page URLs, not chunk URLs. Depth cap is a
+// safety net against accidental recursion if the format changes again.
+async function fetchSitemapUrls(rootUrl: string, depth = 0): Promise<string[]> {
+  if (depth > 2) return [];
+  try {
+    const res = await fetch(rootUrl);
+    if (!res.ok) return [];
+    const xml = await res.text();
+    const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim());
+    if (xml.includes("<sitemapindex")) {
+      const nested = await Promise.all(locs.map((url) => fetchSitemapUrls(url, depth + 1)));
+      return nested.flat();
+    }
+    return locs;
+  } catch {
+    return [];
+  }
+}
+
 async function buildUrlList(db: ReturnType<typeof createAdminClient>): Promise<string[]> {
   const urls: string[] = [
     SITE_URL,
@@ -93,21 +113,13 @@ async function buildUrlList(db: ReturnType<typeof createAdminClient>): Promise<s
     }
   }
 
-  try {
-    const res = await fetch(`${SITE_URL}/sitemap.xml`);
-    if (res.ok) {
-      const xml = await res.text();
-      const sitemapUrls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim());
-      const seen = new Set(urls);
-      for (const url of sitemapUrls) {
-        if (!seen.has(url)) {
-          seen.add(url);
-          urls.push(url);
-        }
-      }
+  const sitemapUrls = await fetchSitemapUrls(`${SITE_URL}/sitemap.xml`);
+  const seen = new Set(urls);
+  for (const url of sitemapUrls) {
+    if (!seen.has(url)) {
+      seen.add(url);
+      urls.push(url);
     }
-  } catch {
-    // Sitemap fetch failed, continue with DB URLs
   }
 
   return urls;
