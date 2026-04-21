@@ -32,6 +32,11 @@
       "binding": "CHURCH_ASSETS",
       "bucket_name": "church-assets",
       "preview_bucket_name": "church-assets-preview"
+    },
+    {
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "gospelchannel-next-cache",
+      "preview_bucket_name": "gospelchannel-next-cache-preview"
     }
   ],
   "vars": {
