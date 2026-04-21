@@ -607,7 +607,7 @@ async function main() {
     }
   });
 
-  matches.sort((a, b) => b.best.score - a.best.score);
+  matches.sort((a, b) => (b.best?.score ?? -1) - (a.best?.score ?? -1));
 
   console.log("\n--- Summary ---");
   console.log(JSON.stringify(summary, null, 2));
@@ -623,7 +623,11 @@ async function main() {
 
   console.log(`\nRejected / below threshold (${rejected.length}):`);
   for (const m of rejected.slice(0, 15)) {
-    console.log(`  ${m.best.score.toFixed(2)} [${m.best.type}] ${m.name} → ${m.best.label}`);
+    if (m.best) {
+      console.log(`  ${m.best.score.toFixed(2)} [${m.best.type}] ${m.name} → ${m.best.label}`);
+    } else {
+      console.log(`  (no match)   ${m.name}`);
+    }
   }
   if (rejected.length > 15) console.log(`  ...and ${rejected.length - 15} more`);
 

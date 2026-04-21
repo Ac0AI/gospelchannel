@@ -1,318 +1,368 @@
 #!/usr/bin/env node
-
 /**
- * Seed the prayers table with a collection of genuine prayers
- * spread across various churches.
+ * Seed ~300 authentic prayers across random approved churches.
+ * Covers diverse topics (healing, family, nations, faith, thanks, etc.)
+ * with names from different cultures.
  *
- * Usage: source .env.local && node scripts/seed-prayers.mjs
+ * Usage: node scripts/seed-prayers.mjs [--dry-run]
  */
+import pkg from "@next/env";
+const { loadEnvConfig } = pkg;
+import { neon } from "@neondatabase/serverless";
+import { randomUUID } from "crypto";
 
-import { createClient } from "@supabase/supabase-js";
+loadEnvConfig(process.cwd());
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SECRET_KEY;
+const sql = neon(process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL);
+const dryRun = process.argv.includes("--dry-run");
 
-if (!supabaseUrl || !supabaseKey) {
-  console.error("Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SECRET_KEY");
-  process.exit(1);
-}
+const PRAYERS = {
+  healing: [
+    "Jesus, please heal my mother. She's been in pain for months and the doctors don't know what it is. I trust you.",
+    "Father, please restore my friend Anna. She's exhausted and losing hope. Give her rest.",
+    "Lord, touch my body. I've been sick for weeks and I need your strength to get through this.",
+    "God, I pray for everyone in this church fighting cancer right now. Comfort them and their families.",
+    "Please pray for my dad. Heart surgery next week. I'm scared.",
+    "Heavenly Father, I pray for healing from depression. I know you're with me even when I can't feel it.",
+    "Lord, my son has been struggling with anxiety. Please give him peace and courage.",
+    "God, heal the wounds no one sees. The ones I carry in my heart.",
+    "Pray for Sofia. She lost her baby last week. We don't have words.",
+    "Jesus, I ask for healing for my marriage. We're both so tired.",
+    "Please pray for my grandmother. She's in the hospital again.",
+    "Lord, you are the Great Physician. Please heal my brother.",
+    "God, comfort those in the children's hospital tonight. Give strength to their parents.",
+    "Please pray for our pastor who is recovering from surgery. May God give him strength.",
+    "Jesus, heal the broken hearts in our community. So many people are hurting.",
+  ],
+  family: [
+    "Lord, bless my children. Keep them close to you as they grow.",
+    "Please pray for my teenage daughter. She's distant and angry. I just want her to know she's loved.",
+    "God, protect my family. Keep us united in love and faith.",
+    "Heavenly Father, I pray for my husband. He lost his job and is really struggling.",
+    "Lord, thank you for my parents. Bless them in their old age.",
+    "Please pray for a young couple in our church expecting their first child.",
+    "God, help me forgive my father. I've carried this pain for too long.",
+    "Jesus, I lift up my little sister. She's walking away from you and it breaks my heart.",
+    "Pray for the families separated by war. Bring them back together.",
+    "Lord, restore broken marriages in our community. Your healing can do what we can't.",
+    "Please bless our new baby. Let him grow up knowing Jesus.",
+    "God, give me patience with my kids today. They're testing me.",
+    "Lord, I pray for adoptive parents waiting to meet their child. Sustain them.",
+    "Please pray for my mom. She's raising my three siblings alone and so tired.",
+    "Father, bring prodigals home. You know the families I'm thinking of.",
+  ],
+  nations: [
+    "Lord, bring peace to Ukraine. The suffering has gone on so long.",
+    "Please pray for the Middle East. For children growing up in fear.",
+    "God, we lift up Sudan and the forgotten wars. Let the world see.",
+    "Jesus, have mercy on the persecuted church worldwide.",
+    "Lord, bring revival to Europe. The soil is hard but you are the Lord of the harvest.",
+    "Pray for Sweden. So many people have forgotten who made them.",
+    "God, bless Israel and her neighbors with peace that only you can give.",
+    "Please pray for the refugees in our cities. Let the church rise up and welcome them.",
+    "Lord, we pray for China's underground believers. Sustain them.",
+    "Heavenly Father, bring justice to oppressed people everywhere.",
+    "God, I pray for my country. We need you more than we know.",
+    "Jesus, comfort the families of those lost in natural disasters this year.",
+    "Please pray for Iran. For the believers meeting in secret.",
+    "Lord, heal the wounds that still divide us.",
+    "God, bring peace to the borders. Let your kingdom come.",
+  ],
+  church: [
+    "Lord, unite your church. So much division when the world is watching.",
+    "Please bless our pastor and his family. They carry so much.",
+    "God, raise up young leaders in our congregation. Fire in their hearts.",
+    "Jesus, let our church be a home for people who've never belonged anywhere.",
+    "Pray for our worship team as they prepare for Sunday. Let them encounter God.",
+    "Lord, give us wisdom in our church leadership decisions this month.",
+    "God, help our small group to grow closer to you and each other.",
+    "Please pray for the new church plant in our city. May it bear fruit.",
+    "Lord, I pray for unity between denominations. We are one body.",
+    "Heavenly Father, bless the missionaries our church supports. Keep them safe.",
+    "Jesus, renew our passion for the gospel. We've grown comfortable.",
+    "God, fill our Sunday service with your presence. Meet us there.",
+    "Please pray for our Sunday school teachers. They shape the next generation.",
+    "Lord, help us love our neighbors, not just in words but in action.",
+    "Father, bring fresh revelation to our bible study tonight.",
+  ],
+  faith: [
+    "Lord, I'm struggling to believe. My prayers feel empty. Meet me anyway.",
+    "God, I'm new to faith and everything is new and confusing. Thank you for finding me.",
+    "Jesus, I don't understand why this is happening but I trust you.",
+    "Please pray for me. I've been a Christian for 20 years and I feel dry.",
+    "Lord, teach me to pray. I don't know where to start.",
+    "Father, I doubt sometimes. Don't let me go.",
+    "God, I met Jesus last month and my life is already different. Thank you.",
+    "Pray for my friend who's seeking. God is working on her heart.",
+    "Lord, I've been angry at you. I'm sorry. Please come back close.",
+    "Jesus, give me faith to move mountains. Or even small hills.",
+    "Heavenly Father, I don't feel worthy to come to you. But here I am.",
+    "God, thank you for never leaving me when I left you.",
+    "Lord, increase my faith. I believe, help my unbelief.",
+    "Please pray for my journey back to church after many years away.",
+    "Father, I'm afraid of being disappointed by God again. Heal that fear.",
+  ],
+  thanks: [
+    "Lord, thank you for this morning. I almost forgot to be grateful.",
+    "Thank you Jesus for my family, my health, my church. I don't deserve any of it.",
+    "God, thank you for answering a prayer I've been praying for years.",
+    "Father, thank you for the mountains outside my window. Your creation takes my breath away.",
+    "Thank you Lord for my sobriety. Day 457. Only by your grace.",
+    "God, thank you for my job. I know so many are looking and I want to be faithful with this gift.",
+    "Jesus, thank you for dying for me. I'll never understand it but I'll always be grateful.",
+    "Lord, thank you for second chances. And third and fourth.",
+    "Thank you Father for my wife. She's your gift and I don't deserve her.",
+    "God, thank you for a roof over my head tonight. Please remember those without one.",
+    "Lord, thank you for healing my son. The doctors called it a miracle.",
+    "Jesus, thank you for the friends you've given me in this church.",
+    "Thank you God for small mercies today. The coffee. The sunshine. The smile from a stranger.",
+    "Father, thank you for my grandchildren. What a joy they are.",
+    "Lord, thank you for loving me even when I can't love myself.",
+  ],
+  guidance: [
+    "Lord, I have a big decision to make this week. Please guide me.",
+    "God, show me what to do about my job. I'm torn between two paths.",
+    "Jesus, I don't know where you're leading me but I'll follow.",
+    "Please pray for me as I consider moving to a new country for ministry.",
+    "Father, give me wisdom in how to talk to my son about his life choices.",
+    "Lord, I'm choosing a university. Open the right doors and close the wrong ones.",
+    "God, help me know when to speak and when to be silent.",
+    "Please pray for me in my first year of marriage. So much to learn.",
+    "Lord, guide our church in hiring our next pastor.",
+    "Heavenly Father, should I go back to school? I keep wondering.",
+    "Jesus, I feel called to missions but I'm scared. Confirm it or redirect me.",
+    "God, give me peace about the decision I already made, or courage to change it.",
+    "Lord, I'm retiring next month and I don't know what comes next.",
+    "Please pray for me in my new role at work. It's more responsibility than I've ever had.",
+    "Father, direct my steps today. Keep me close to your will.",
+  ],
+  forgiveness: [
+    "Lord, help me forgive the one who hurt me the most. I can't do it alone.",
+    "Jesus, I need forgiveness for words I can't take back.",
+    "God, soften my heart toward my ex-husband. For our kids' sake.",
+    "Please pray for reconciliation in my family. Years of silence.",
+    "Father, I know you've forgiven me. Help me forgive myself.",
+    "Lord, bring restoration to the friendship I broke.",
+    "God, give me strength to apologize to my brother. It's overdue.",
+    "Jesus, forgive me for holding this grudge. It's poisoning me.",
+    "Heavenly Father, I forgive the church that hurt me. It's taken years.",
+    "Lord, thank you for the father who forgave me when I came home broke and broken.",
+    "God, let forgiveness flow through our family. Break the cycle.",
+    "Please pray for me as I try to make peace with my past.",
+    "Jesus, heal old wounds. The ones I thought I'd buried.",
+    "Lord, teach me to release what I can't change. And forgive what I can't forget.",
+    "Father, forgive me for judging other believers. Teach me grace.",
+  ],
+  provision: [
+    "Lord, we're behind on rent. Please provide a way.",
+    "God, thank you for the unexpected gift that came just when we needed it.",
+    "Jesus, my business is struggling. I need your wisdom and provision.",
+    "Please pray for our food bank. We're running low and people are hungry.",
+    "Father, provide for single mothers in our church who are stretched thin.",
+    "Lord, I'm looking for a job. Six months and counting. Please open a door.",
+    "God, thank you for this meal. Many have none.",
+    "Jesus, let our church be generous. Help us see the needs around us.",
+    "Heavenly Father, we need a new pastor. Please send the right person.",
+    "Lord, our building needs repairs we can't afford. Show us the way.",
+    "Please pray for my sister. Her husband left and she has three kids to feed.",
+    "God, you fed 5000. You can feed us too. I trust you.",
+    "Lord, thank you for a paid-off debt I've been carrying for 10 years.",
+    "Jesus, provide for those in our city sleeping rough tonight.",
+    "Father, give us daily bread. And the heart to share it.",
+  ],
+  salvation: [
+    "Lord, save my husband. I've prayed for 15 years. I won't stop.",
+    "Jesus, open my friend's heart. She's so close.",
+    "God, I pray for my coworkers who don't know you yet.",
+    "Please pray for my dad. He's 78 and still won't talk about faith. Please don't let him go without knowing you.",
+    "Father, save our generation. They're starving and don't know it.",
+    "Lord, I want my kids to love Jesus more than anything else in life.",
+    "God, I'm praying for the man at my gym. I don't know his name but you do.",
+    "Jesus, break through to my atheist brother. Only you can.",
+    "Heavenly Father, send workers into the harvest.",
+    "Lord, let the seeds we plant today bear fruit a generation from now.",
+    "Please pray for my mother-in-law. 40 years of prayers. Still waiting.",
+    "God, I had a dream that my neighbor came to Christ. Make it real.",
+    "Jesus, use me today. Let me be salt and light at my school.",
+    "Lord, touch my ex-girlfriend. I may never see her again but you can.",
+    "Father, awaken the dead bones of secular Europe. You did it before.",
+  ],
+  workplace: [
+    "Lord, give me integrity at work when no one is watching.",
+    "God, help me be patient with my difficult boss. Change my heart toward her.",
+    "Jesus, use me in my workplace. Let my coworkers see Jesus in me.",
+    "Please pray for me. I'm a nurse and the emotional weight is crushing me.",
+    "Father, bless my small business. Let it honor you.",
+    "Lord, I'm a teacher and the kids in my class break my heart. Help me show them love.",
+    "God, give me wisdom in a meeting this afternoon that could change my career.",
+    "Jesus, I pray for my colleagues struggling with addiction in silence.",
+    "Heavenly Father, may my work be worship today.",
+    "Lord, I'm a police officer and some days I don't know how to keep going. Sustain me.",
+    "Please pray for farmers in my region. The harvest has been bad.",
+    "God, give my doctor wisdom as she treats her patients.",
+    "Jesus, thank you for work that has meaning. Help me never take it for granted.",
+    "Lord, I feel stuck in my career. Show me what's next.",
+    "Father, protect those working night shifts tonight. Keep them safe and alert.",
+  ],
+  loss: [
+    "Lord, the grief comes in waves. I miss her so much.",
+    "God, please comfort families who lost loved ones this week.",
+    "Jesus, hold my friend whose husband just died. She can barely breathe.",
+    "Heavenly Father, my grandmother passed this morning. I can't believe she's gone.",
+    "Lord, I pray for children who've lost parents too soon.",
+    "God, thank you for 60 years with my wife. Now teach me how to live without her.",
+    "Please pray for my mom. A year since dad died and it's not getting easier.",
+    "Jesus, meet me in this grief. I don't know how else to pray.",
+    "Father, give hope to those who mourn. Your comfort is real even when we can't feel it.",
+    "Lord, I lost my baby before I got to meet him. Hold him close until I get there.",
+    "God, I'm angry at you. I know you can take it. But I'm so angry.",
+    "Jesus, let me feel my loved one's presence today. Just for a moment.",
+    "Lord, mourning with those who mourn is a calling. Give me strength for it.",
+    "Heavenly Father, your tears at Lazarus's tomb tell me grief is okay. Thank you.",
+    "God, we miss grandpa. Please tell him we love him.",
+  ],
+  revival: [
+    "Lord, send revival. Start it in my own heart first.",
+    "God, wake up the sleeping church in the west.",
+    "Jesus, do it again. What you did in Acts, do in our city.",
+    "Please pray for an outpouring of your Spirit in our generation.",
+    "Father, the fields are white for harvest. Send workers.",
+    "Lord, make our church uncomfortable. Stir us up.",
+    "God, revive the prayer movement. We've forgotten how.",
+    "Jesus, I pray for the universities. Future leaders desperate to know truth.",
+    "Heavenly Father, let our homes be houses of prayer.",
+    "Lord, raise up worship that tears down walls in the spiritual realm.",
+    "Please pray for a move of God in Scandinavia. Our history is long, our faith is short.",
+    "God, let the next generation hunger for you more than for anything else.",
+    "Jesus, break the spirit of apathy in your church.",
+    "Lord, send us prophets. Send us pastors. Send us revival.",
+    "Father, burn away what's not of you. Even if it hurts.",
+  ],
+  specific: [
+    "Lord, I pray for a young man named Lucas who wandered into our church Sunday. Something was off. Hold onto him.",
+    "God, bless the Korean believers who started a new church in our town last month.",
+    "Jesus, I pray for my Muslim neighbors. Send workers to their door.",
+    "Please pray for an addict who asked for prayer at our service last week. He didn't come back but Jesus, chase him.",
+    "Father, let the homeless shelter know Jesus feeds them too.",
+    "Lord, the Roma community in our city is forgotten. Remember them.",
+    "God, I pray for the seekers in our town who think church hates them. Show them who Jesus really is.",
+    "Jesus, use our children's ministry this week. Plant seeds.",
+    "Heavenly Father, our village has one church and one pub. The pub is full and the church is empty. Turn it.",
+    "Lord, I pray for Chinese believers in our city. Connect them with Chinese-speaking pastors.",
+    "God, bless the Ukrainian refugees finding a spiritual home here. Let our church love them well.",
+    "Please pray for the pastor in our town who left the faith last year. Bring him back.",
+    "Jesus, the single parents in my neighborhood are drowning. Let us be your hands to them.",
+    "Lord, the old members of our church are passing. Raise up new ones with the same fire.",
+    "Father, touch the prisoners in our region. Let a revival start behind bars.",
+  ],
+  swedish: [
+    "Herre, välsigna vår församling. Led oss i din kärlek.",
+    "Jesus, tack för att du alltid är nära. Även när jag inte känner det.",
+    "Gud, be för min familj. Vi behöver din frid just nu.",
+    "Herre, väck Sverige på nytt. Låt en ny generation möta dig.",
+    "Fader, jag ber för min väns hälsa. Rör vid honom.",
+    "Jesus, hjälp mig att älska som du älskar.",
+    "Gud, tack för det här året. För allt du har gjort.",
+    "Herre, led mig i mitt beslut. Jag litar på dig.",
+  ],
+  german: [
+    "Herr, segne unsere Gemeinde und unseren Pastor.",
+    "Jesus, ich bitte dich für meine Familie. Sei uns nahe.",
+    "Vater, wecke unsere Stadt auf. Wir brauchen dich.",
+    "Gott, danke für deine Treue durch alle Jahre.",
+  ],
+  spanish: [
+    "Señor, bendice a nuestra iglesia y pastor.",
+    "Padre, te pedimos por nuestra ciudad. Derrama tu Espíritu.",
+    "Jesús, gracias por tu amor. Nunca me dejas.",
+    "Dios, sana nuestros corazones. Sólo tú puedes hacerlo.",
+  ],
+};
 
-const sb = createClient(supabaseUrl, supabaseKey);
+const ALL_PRAYERS = Object.values(PRAYERS).flat();
 
-// Real prayers — a mix of classic Christian prayers, psalm-inspired prayers,
-// and heartfelt personal prayers, assigned to various churches.
-const prayers = [
-  // Hillsong Worship
-  {
-    church_slug: "hillsong-worship",
-    content: "Lord, let Your name be praised from the rising of the sun to its setting. May the worship that flows from this church reach the ends of the earth and draw every heart closer to You.",
-    author_name: "Grace",
-  },
-  {
-    church_slug: "hillsong-worship",
-    content: "Father, thank You for the gift of music that lifts our spirits and reminds us of Your faithfulness. Bless the musicians and singers who lead us into Your presence each week.",
-    author_name: null,
-  },
-  {
-    church_slug: "hillsong-worship",
-    content: "Spirit of the living God, fall afresh on us. Melt us, mold us, fill us, use us. We surrender every part of our lives to You.",
-    author_name: "Daniel",
-  },
-
-  // Elevation Worship
-  {
-    church_slug: "elevation-worship",
-    content: "God, You are the One who makes a way where there seems to be no way. I trust that You are working all things together for my good, even when I cannot see it.",
-    author_name: "Maria",
-  },
-  {
-    church_slug: "elevation-worship",
-    content: "Jesus, You are the same yesterday, today, and forever. In a world that is always changing, I find my peace in Your unchanging love.",
-    author_name: null,
-  },
-  {
-    church_slug: "elevation-worship",
-    content: "Heavenly Father, give me the faith to trust Your timing. Help me to be patient and to rest in Your promises, knowing that You are always faithful.",
-    author_name: "Samuel",
-  },
-  {
-    church_slug: "elevation-worship",
-    content: "Lord, I pray for everyone carrying a heavy burden tonight. Remind them that You said 'Come to me, all who are weary, and I will give you rest.' Let them feel Your arms around them.",
-    author_name: "Anna",
-  },
-
-  // Bethel Music
-  {
-    church_slug: "bethel-music",
-    content: "Father, I thank You that there is no pit so deep that Your love is not deeper still. You are the God who restores, redeems, and makes all things new.",
-    author_name: "Elijah",
-  },
-  {
-    church_slug: "bethel-music",
-    content: "Holy Spirit, come like a flood. Fill every dry and barren place in our hearts. We are desperate for more of You.",
-    author_name: null,
-  },
-  {
-    church_slug: "bethel-music",
-    content: "Lord, teach us to number our days, that we may gain a heart of wisdom. Let us live with eternity in view and love with reckless abandon.",
-    author_name: "Rachel",
-  },
-
-  // Maverick City Music
-  {
-    church_slug: "maverick-city",
-    content: "God of all nations, we thank You that worship knows no boundaries of race, language, or culture. Unite Your church in love and humility.",
-    author_name: "Isaiah",
-  },
-  {
-    church_slug: "maverick-city",
-    content: "Lord, break every chain that holds us captive. Where there is bondage, bring freedom. Where there is darkness, shine Your glorious light.",
-    author_name: null,
-  },
-  {
-    church_slug: "maverick-city",
-    content: "Jesus, thank You that Your grace is sufficient. In my weakness, You are strong. I choose to boast in my weakness so that Your power may rest upon me.",
-    author_name: "Naomi",
-  },
-
-  // UPPERROOM
-  {
-    church_slug: "upperroom",
-    content: "Father, create in me a clean heart and renew a right spirit within me. I long to dwell in Your presence, not just on Sundays, but every moment of every day.",
-    author_name: "David",
-  },
-  {
-    church_slug: "upperroom",
-    content: "Lord, we pray for a generation that will not grow weary of seeking Your face. Pour out a fresh hunger for prayer and worship across the earth.",
-    author_name: null,
-  },
-
-  // Passion
-  {
-    church_slug: "passion",
-    content: "God, raise up a generation that burns bright for You. Let the college campuses and young hearts of this world be set ablaze with passion for Your name.",
-    author_name: "Luke",
-  },
-  {
-    church_slug: "passion",
-    content: "Jesus, You are worthy of it all. Every breath, every moment, every talent — it all belongs to You. We hold nothing back.",
-    author_name: "Sofia",
-  },
-
-  // Jesus Culture
-  {
-    church_slug: "jesus-culture",
-    content: "Lord, let revival fire fall in our cities. Awaken hearts that have grown cold and remind us of our first love. We believe You are doing a new thing.",
-    author_name: null,
-  },
-  {
-    church_slug: "jesus-culture",
-    content: "Father, I pray the prayer of Jabez — enlarge my territory, let Your hand be with me, keep me from evil, and let me not cause pain. Bless me indeed, Lord.",
-    author_name: "Miriam",
-  },
-
-  // Gateway Worship
-  {
-    church_slug: "gateway-worship",
-    content: "God, You are our gateway to life, to hope, to eternity. Thank You for opening doors that no one can shut. Lead us through the gates of praise.",
-    author_name: "Joshua",
-  },
-  {
-    church_slug: "gateway-worship",
-    content: "Lord, bless the families in this community. Strengthen marriages, protect children, and let every home be filled with Your peace and presence.",
-    author_name: "Rebecca",
-  },
-
-  // CityAlight
-  {
-    church_slug: "cityalight",
-    content: "Yet not I, but through Christ in me — Lord, let this be the anthem of my life. Decrease me so that You may increase.",
-    author_name: null,
-  },
-  {
-    church_slug: "cityalight",
-    content: "Father, thank You for the rich heritage of hymns that carry deep truth. May the words we sing on Sunday sustain us through the trials of the week.",
-    author_name: "Jonathan",
-  },
-
-  // Housefires
-  {
-    church_slug: "housefires",
-    content: "Jesus, You are good, good Father. Even when life doesn't make sense, I choose to trust Your heart. Your goodness is running after me.",
-    author_name: "Sarah",
-  },
-  {
-    church_slug: "housefires",
-    content: "Lord, let every home become a house of prayer. May families gather around Your Word and find joy in worshipping You together.",
-    author_name: null,
-  },
-
-  // Vertical Worship
-  {
-    church_slug: "vertical-worship",
-    content: "God, You are the anchor for my soul. When the storms of life rage and the waves crash around me, I will not be shaken because my hope is built on You.",
-    author_name: "Caleb",
-  },
-
-  // VOUS Worship
-  {
-    church_slug: "vous-worship",
-    content: "Lord, thank You for placing us in cities and communities where we can be Your light. Use us to love our neighbors well and to be living testimonies of Your grace.",
-    author_name: "Valentina",
-  },
-
-  // Rend Collective
-  {
-    church_slug: "rend-collective",
-    content: "Father, we praise You with joyful hearts! You have turned our mourning into dancing, our sorrow into joy. We will celebrate Your goodness forever.",
-    author_name: null,
-  },
-  {
-    church_slug: "rend-collective",
-    content: "Lord, bless this little island and every community that gathers in Your name. From the smallest village church to the largest arena, You are equally present.",
-    author_name: "Patrick",
-  },
-
-  // Planetshakers
-  {
-    church_slug: "planetshakers",
-    content: "God, shake everything that can be shaken so that only what is unshakeable remains. Build Your kingdom in us and through us.",
-    author_name: "Emma",
-  },
-
-  // Life.Church Worship
-  {
-    church_slug: "life-church-worship",
-    content: "Lord, we pray for every person watching online right now who feels alone. Let them know they are seen, they are loved, and they belong to Your family.",
-    author_name: null,
-  },
-  {
-    church_slug: "life-church-worship",
-    content: "Father, thank You for the gift of technology that allows Your Word to go forth without limits. Use every screen and speaker to spread the gospel to the ends of the earth.",
-    author_name: "Craig",
-  },
-
-  // New Wine Worship
-  {
-    church_slug: "new-wine-worship",
-    content: "Lord, pour out new wine into new wineskins. We don't want to hold onto old patterns that limit what You want to do. Make us flexible and ready for Your Spirit.",
-    author_name: "Thomas",
-  },
-
-  // Influence Music
-  {
-    church_slug: "influence-music",
-    content: "God, use the influence You have given us not for our own glory but for Yours. Let every song, every word, every action point people toward Jesus.",
-    author_name: "Andrea",
-  },
-
-  // Joyous Celebration
-  {
-    church_slug: "joyous-celebration",
-    content: "Nkosi, siyabonga ngothando lwakho. Thank You, Lord, for Your unfailing love that reaches across every nation and tongue. Africa sings Your praise!",
-    author_name: "Thabo",
-  },
-  {
-    church_slug: "joyous-celebration",
-    content: "Father, bless South Africa and all who call upon Your name in this land. Heal divisions, restore hope, and let Your joy be our strength.",
-    author_name: null,
-  },
-
-  // Soweto Gospel Choir
-  {
-    church_slug: "soweto-gospel-choir",
-    content: "Lord, we lift up the community of Soweto and every township where Your name is praised with full hearts and clapping hands. Your faithfulness endures through generations.",
-    author_name: "Nomvula",
-  },
-
-  // Favor Church Seoul
-  {
-    church_slug: "favor-church-seoul",
-    content: "주님, 감사합니다. Lord, we thank You for Your favor over South Korea. Let the fire of the Korean prayer movement continue to burn and inspire the global church.",
-    author_name: "Minjun",
-  },
-
-  // Mosaic MSC
-  {
-    church_slug: "mosaic-msc",
-    content: "God of creativity, thank You for making us in Your image — creative, diverse, beautiful. May our art and worship reflect the mosaic of Your kingdom.",
-    author_name: "Luna",
-  },
-
-  // SOS Church
-  {
-    church_slug: "sos-church",
-    content: "Herre, vi ber för Sverige. Väck vårt land på nytt och låt en ny generation upptäcka din kärlek. Tack för att du aldrig ger upp om oss.",
-    author_name: "Erik",
-  },
-  {
-    church_slug: "sos-church",
-    content: "God, bless every young person in Stockholm searching for meaning. Draw them to Yourself and show them that true life is found in Jesus alone.",
-    author_name: null,
-  },
-
-  // CRC Church
-  {
-    church_slug: "crc-church",
-    content: "Father, we lift up every person walking through the doors of this church for the first time. Let them encounter Your love in a way that changes everything.",
-    author_name: "Olivia",
-  },
+const NAMES = [
+  // Nordic
+  "Anna", "Erik", "Linnea", "Johan", "Hanna", "Mattias", "Ingrid", "Gustav", "Elin", "Karl",
+  "Sofia", "Oskar", "Maja", "Anders", "Astrid", "Lars", "Kristin", "Nils",
+  "Kari", "Ole", "Mette", "Henrik", "Sigrid", "Per", "Sofie", "Jonas",
+  "Aino", "Mikko", "Antti", "Helena", "Juha",
+  // UK/Ireland
+  "Sarah", "James", "Emma", "Thomas", "Rachel", "Michael", "Jessica", "David", "Hannah", "Daniel",
+  "Rebecca", "Joshua", "Laura", "Benjamin", "Olivia", "Samuel", "Ruth", "Matthew", "Grace", "Paul",
+  "Siobhan", "Liam", "Niamh", "Eoin",
+  // Continental Europe
+  "Maria", "Javier", "Lucia", "Carlos", "Isabel", "Miguel", "Rafael", "Carmen", "Pablo", "Elena",
+  "Stefan", "Lisa", "Julia", "Klaus", "Sabine", "Andrea", "Martin", "Petra", "Frank",
+  "Marie", "Pierre", "Sophie", "Jean", "Claire", "Antoine", "Camille", "Lucie", "Léa",
+  "Marco", "Chiara", "Luca", "Giulia", "Paolo", "Francesca", "Martina",
+  "Jan", "Pieter", "Eva", "Tomasz", "Piotr",
+  "Ana", "João", "Teresa", "Pedro",
+  // Global
+  "Emmanuel", "Deborah", "Joseph", "Esther", "Isaac", "Mary",
+  "Farshid", "Nadia", "Miriam", "Rami", "Leila",
+  "Seung", "Jin", "Mei", "Ravi", "Priya",
 ];
 
-// Randomize prayed_count for realism (0-25)
-function randomPrayedCount() {
-  return Math.floor(Math.random() * 26);
-}
-
-// Spread created_at over the past 7 days
-function randomCreatedAt() {
-  const now = Date.now();
-  const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
-  const offset = Math.floor(Math.random() * sevenDaysMs);
-  return new Date(now - offset).toISOString();
-}
-
 async function main() {
-  console.log(`Seeding ${prayers.length} prayers...`);
+  const targetCount = 300;
 
-  const rows = prayers.map((p) => ({
-    church_slug: p.church_slug,
-    content: p.content,
-    original_content: null,
-    author_name: p.author_name,
-    prayed_count: randomPrayedCount(),
-    moderated: false,
-    created_at: randomCreatedAt(),
-  }));
+  console.log(`Loaded ${ALL_PRAYERS.length} unique prayer templates`);
 
-  const { data, error } = await sb.from("prayers").insert(rows).select("id");
+  // Get random approved churches (more than needed, some get duplicates)
+  const churches = await sql`
+    SELECT slug FROM churches
+    WHERE status = 'approved'
+    ORDER BY random()
+    LIMIT ${targetCount + 30}
+  `;
+  console.log(`Picked ${churches.length} random churches`);
 
-  if (error) {
-    console.error("Insert failed:", error.message);
-    process.exit(1);
+  // Shuffle prayers
+  const shuffledPrayers = [...ALL_PRAYERS].sort(() => Math.random() - 0.5);
+
+  const toInsert = [];
+  for (let i = 0; i < targetCount && i < churches.length; i++) {
+    const church = churches[i];
+    const prayer = shuffledPrayers[i % shuffledPrayers.length];
+    const name = NAMES[Math.floor(Math.random() * NAMES.length)];
+    toInsert.push({
+      id: randomUUID(),
+      church_slug: church.slug,
+      content: prayer,
+      author_name: name,
+      prayed_count: Math.floor(Math.random() * 12),
+    });
   }
 
-  console.log(`✓ Inserted ${data.length} prayers across ${new Set(prayers.map(p => p.church_slug)).size} churches`);
+  console.log(`\nWill insert ${toInsert.length} prayers across ${new Set(toInsert.map(p => p.church_slug)).size} unique churches`);
+
+  if (dryRun) {
+    console.log("\nDRY RUN - sample:");
+    toInsert.slice(0, 8).forEach(p => {
+      console.log(`  [${p.church_slug}] ${p.author_name} (${p.prayed_count}x): ${p.content.slice(0, 80)}...`);
+    });
+    return;
+  }
+
+  // Insert in batches
+  let inserted = 0;
+  for (let i = 0; i < toInsert.length; i += 50) {
+    const batch = toInsert.slice(i, i + 50);
+    await Promise.all(batch.map(p => sql`
+      INSERT INTO prayers (id, church_slug, content, original_content, author_name, prayed_count, moderated, created_at)
+      VALUES (${p.id}, ${p.church_slug}, ${p.content}, ${p.content}, ${p.author_name}, ${p.prayed_count}, true, NOW() - (random() * interval '90 days'))
+    `));
+    inserted += batch.length;
+    console.log(`Progress: ${inserted}/${toInsert.length}`);
+  }
+
+  const [totalV] = await sql`SELECT count(*) as n FROM prayers WHERE moderated = true`;
+  console.log(`\nDone! Inserted ${inserted} prayers.`);
+  console.log(`Total visible prayers now: ${totalV.n}`);
 }
 
-main();
+main().catch(e => {
+  console.error(e);
+  process.exit(1);
+});
