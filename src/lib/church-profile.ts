@@ -215,22 +215,25 @@ export function buildMergedProfile(
     if (enrichment.serviceTimes) merged.serviceTimes = enrichment.serviceTimes;
     if (enrichment.streetAddress) merged.streetAddress = enrichment.streetAddress;
     // Extract city from streetAddress. Format varies by locale:
-    //   US/CA: "Street, City, ST 12345"         → parts[1] is city
+    //   US/CA: "Street, City, ST 12345"         → parts[1] is city, postcode in parts[2]
     //   Swedish: "Street, 12345 CITY"           → parts[1] has postcode prefix
     //   German: "Street, 12345 City"            → same pattern
-    //   UK: "Street, City, POSTCODE"            → parts[1] is city, parts[2] is postcode
-    // Strategy: take parts[1], strip leading postal-code prefix, title-case if
-    // entirely uppercase. Drop any purely-numeric segments (standalone
-    // postcodes).
+    //   UK (typical): "Street, City POSTCODE, Country" → postcode appended to city
+    //   UK (split):   "Street, City, POSTCODE"        → postcode in own segment
+    // Strategy: take parts[1], strip leading numeric postcode prefix, strip
+    // trailing UK-style postcode, drop purely-numeric remainder, title-case
+    // if fully uppercase.
     if (enrichment.streetAddress) {
       const parts = enrichment.streetAddress.split(',').map(p => p.trim()).filter(Boolean);
       if (parts.length >= 2) {
         let candidate = parts[1];
-        // Strip leading postcode patterns: digits[+letters+space?] at start
+        // Strip leading numeric postcode (Swedish/German "12345 CITY")
         candidate = candidate.replace(/^\d{3,6}(?:-\d{0,4})?\s+/, '').trim();
-        // Strip trailing postcode (e.g. "Austin, TX 78701" → parts[1]="TX 78701", but
-        // for "London, SW1A 1AA" parts[1]="London" and we're fine)
-        // Skip candidate if it's still just a postcode or empty
+        // Strip trailing UK postcode ("London W1T 7AQ" → "London")
+        // Format: 1-2 letters, 1-2 digits, optional letter, space, 1 digit, 2 letters
+        candidate = candidate.replace(/\s+[A-Z]{1,2}\d[A-Z\d]?\s+\d[A-Z]{2}$/i, '').trim();
+        // Strip trailing numeric postcode ("Austin TX 78701" → "Austin TX")
+        candidate = candidate.replace(/\s+\d{4,6}(?:-\d{4})?$/, '').trim();
         if (candidate && !/^\d+$/.test(candidate)) {
           // Title-case if entirely uppercase (common in Swedish directory addresses)
           if (candidate === candidate.toUpperCase() && /[A-Z]{3,}/.test(candidate)) {
