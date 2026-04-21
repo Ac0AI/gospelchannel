@@ -5,6 +5,7 @@ import staffPicksJson from "@/data/staff-picks.json";
 import trendingJson from "@/data/cache/trending.json";
 import type { ChurchConfig, CatalogVideo } from "@/types/gospel";
 import { hasServiceConfig, createAdminClient } from "@/lib/neon-client";
+import { getSql } from "@/db";
 import { rewriteLegacyMediaUrl } from "@/lib/media";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
 import {
@@ -15,19 +16,30 @@ import {
 } from "@/lib/content-quality";
 import {
   filterCanonicalChurchSlugRecords,
+  getChurchSlugRedirectAliases,
   getChurchSlugLookupCandidates,
   resolveCanonicalChurchSlug,
 } from "@/lib/church-slugs";
-import { filterExplicitNonChurchRows, isExplicitNonChurchSlug } from "@/lib/non-church-slugs";
+import {
+  filterExplicitNonChurchRows,
+  getExplicitNonChurchSlugs,
+  isExplicitNonChurchSlug,
+} from "@/lib/non-church-slugs";
 import { uniqueSpotifyPlaylistIds } from "@/lib/spotify-playlist";
 
 const CHURCH_CONTENT_TAG = "church-content";
-const CHURCH_INDEX_TAG = "church-index";
+export const CHURCH_INDEX_TAG = "church-index";
 const CHURCH_STATS_TAG = "church-stats";
 const CHURCH_PAGE_TAG = "church-page";
 const CHURCH_PAGE_PUBLIC_TAG = "church-page-public";
 const HOME_TAG = "home";
 const EMPTY_CHURCH_DIRECTORY_ERROR = "No approved churches returned from database";
+const CHURCH_DIRECTORY_SEED_CHUNK_SIZE = 8_000;
+const CHURCH_DIRECTORY_SEED_FETCH_CONCURRENCY = 4;
+const CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS = Array.from(new Set([
+  ...getExplicitNonChurchSlugs(),
+  ...getChurchSlugRedirectAliases(),
+]));
 
 export type ChurchDirectorySeed = Pick<
   ChurchConfig,
@@ -85,6 +97,7 @@ type ChurchDataRow = ChurchDirectorySeedRow & {
 
 let localChurchSnapshotCache: ChurchConfig[] | null = null;
 let fallbackChurchMapCache: Map<string, ChurchConfig> | null = null;
+let fallbackChurchDirectorySeedCache: ChurchDirectorySeed[] | null = null;
 const loggedChurchFallbacks = new Set<string>();
 
 function tryLoadLocalChurchSnapshot(): ChurchConfig[] {
@@ -136,6 +149,23 @@ function toChurchDirectorySeed(church: ChurchConfig): ChurchDirectorySeed {
     musicStyle: church.musicStyle,
     denomination: church.denomination,
   };
+}
+
+function compareChurchDirectorySeed(a: ChurchDirectorySeed, b: ChurchDirectorySeed): number {
+  const nameDiff = a.name.localeCompare(b.name);
+  if (nameDiff !== 0) return nameDiff;
+  return a.slug.localeCompare(b.slug);
+}
+
+function getFallbackChurchDirectorySeed(): ChurchDirectorySeed[] {
+  if (fallbackChurchDirectorySeedCache) {
+    return fallbackChurchDirectorySeedCache;
+  }
+
+  fallbackChurchDirectorySeedCache = filterCanonicalChurchSlugRecords(
+    tryLoadLocalChurchSnapshot().map(toChurchDirectorySeed),
+  ).sort(compareChurchDirectorySeed);
+  return fallbackChurchDirectorySeedCache;
 }
 
 function getHomepageShowcaseDescription(church: ChurchConfig): string {
@@ -375,35 +405,38 @@ async function fetchSingleChurchBySlug(slug: string): Promise<ChurchConfig | und
   return isExplicitNonChurchSlug(church.slug) ? undefined : church;
 }
 
-async function fetchApprovedChurchDirectorySeedFromDb(): Promise<ChurchDirectorySeed[]> {
-  const sb = createAdminClient();
-  const PAGE_SIZE = 1000;
-  const rows: ChurchDirectorySeed[] = [];
-  let from = 0;
+async function fetchApprovedChurchDirectorySeedCountFromDb(): Promise<number> {
+  const sql = getSql();
+  const rawRows = (await sql.query(`
+    SELECT COUNT(*)::int AS count
+    FROM churches
+    WHERE status = 'approved'
+      AND NOT (slug = ANY($1::text[]))
+  `, [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS])) as Array<{ count: number | string }>;
 
-  while (true) {
-    const { data, error } = await sb
-      .from("churches")
-      .select("slug,name,country,location,music_style,denomination")
-      .eq("status", "approved")
-      .order("name")
-      .range(from, from + PAGE_SIZE - 1);
+  return Number(rawRows[0]?.count ?? 0);
+}
 
-    if (error) {
-      throw new Error(`Failed to load approved church directory seed: ${error.message}`);
-    }
+async function fetchApprovedChurchDirectorySeedChunkFromDb(
+  chunkIndex: number,
+): Promise<ChurchDirectorySeed[]> {
+  const sql = getSql();
+  const offset = chunkIndex * CHURCH_DIRECTORY_SEED_CHUNK_SIZE;
+  const rawRows = (await sql.query(`
+    SELECT slug, name, country, location, music_style, denomination
+    FROM churches
+    WHERE status = 'approved'
+      AND NOT (slug = ANY($1::text[]))
+    ORDER BY name, slug
+    LIMIT $2
+    OFFSET $3
+  `, [
+    CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS,
+    CHURCH_DIRECTORY_SEED_CHUNK_SIZE,
+    offset,
+  ])) as ChurchDirectorySeedRow[];
 
-    if (!data) {
-      break;
-    }
-
-    const pageRows = data as ChurchDirectorySeedRow[];
-    rows.push(...pageRows.map(mapRowToChurchDirectorySeed));
-    if (pageRows.length < PAGE_SIZE) break;
-    from += PAGE_SIZE;
-  }
-
-  return filterExplicitNonChurchRows(filterCanonicalChurchSlugRecords(rows));
+  return rawRows.map(mapRowToChurchDirectorySeed);
 }
 
 function formatChurchCountLabel(count: number): string {
@@ -411,28 +444,69 @@ function formatChurchCountLabel(count: number): string {
   return `${rounded.toLocaleString("en-US")}+`;
 }
 
-const getApprovedChurchDirectorySeedCached = unstable_cache(
-  async (): Promise<ChurchDirectorySeed[]> => {
+const getApprovedChurchDirectorySeedCountCached = unstable_cache(
+  async (): Promise<number> => {
     if (isOfflinePublicBuild() || !hasServiceConfig()) {
-      return tryLoadLocalChurchSnapshot().map(toChurchDirectorySeed);
+      return getFallbackChurchDirectorySeed().length;
     }
 
-    try {
-      const churches = await fetchApprovedChurchDirectorySeedFromDb();
-      if (churches.length === 0) {
-        return getFallbackChurchSnapshot(
-          "directory-seed",
-          createEmptyChurchDirectoryError(),
-        ).map(toChurchDirectorySeed);
-      }
-      return filterCanonicalChurchSlugRecords(churches);
-    } catch (error) {
-      return getFallbackChurchSnapshot("directory-seed", error).map(toChurchDirectorySeed);
-    }
+    return fetchApprovedChurchDirectorySeedCountFromDb();
   },
-  ["approved-church-directory-seed-v2"],
+  ["approved-church-directory-seed-count-v1"],
   { revalidate: 3600, tags: [CHURCH_CONTENT_TAG, CHURCH_INDEX_TAG] }
 );
+
+const getApprovedChurchDirectorySeedChunkCached = unstable_cache(
+  async (chunkIndex: number): Promise<ChurchDirectorySeed[]> => {
+    if (isOfflinePublicBuild() || !hasServiceConfig()) {
+      const snapshot = getFallbackChurchDirectorySeed();
+      const offset = chunkIndex * CHURCH_DIRECTORY_SEED_CHUNK_SIZE;
+      return snapshot.slice(offset, offset + CHURCH_DIRECTORY_SEED_CHUNK_SIZE);
+    }
+
+    return fetchApprovedChurchDirectorySeedChunkFromDb(chunkIndex);
+  },
+  ["approved-church-directory-seed-chunk-v1"],
+  { revalidate: 3600, tags: [CHURCH_CONTENT_TAG, CHURCH_INDEX_TAG] }
+);
+
+// The combined directory seed is too large for a single Next data-cache entry.
+// Cache smaller DB-backed chunks in unstable_cache and only memoize the merged
+// array within the current request/build.
+const getApprovedChurchDirectorySeedCached = cache(async (): Promise<ChurchDirectorySeed[]> => {
+  if (isOfflinePublicBuild() || !hasServiceConfig()) {
+    return getFallbackChurchDirectorySeed();
+  }
+
+  try {
+    const totalRows = await getApprovedChurchDirectorySeedCountCached();
+    if (totalRows <= 0) {
+      logChurchSnapshotFallback("directory-seed", createEmptyChurchDirectoryError());
+      return getFallbackChurchDirectorySeed();
+    }
+
+    const chunkCount = Math.ceil(totalRows / CHURCH_DIRECTORY_SEED_CHUNK_SIZE);
+    const churches: ChurchDirectorySeed[] = [];
+
+    for (let start = 0; start < chunkCount; start += CHURCH_DIRECTORY_SEED_FETCH_CONCURRENCY) {
+      const batch = Array.from(
+        { length: Math.min(CHURCH_DIRECTORY_SEED_FETCH_CONCURRENCY, chunkCount - start) },
+        (_, index) => start + index,
+      );
+      const rows = await Promise.all(batch.map((chunkIndex) => getApprovedChurchDirectorySeedChunkCached(chunkIndex)));
+      churches.push(...rows.flat());
+    }
+
+    const normalized = filterCanonicalChurchSlugRecords(churches).sort(compareChurchDirectorySeed);
+    if (normalized.length === 0) {
+      return getFallbackChurchDirectorySeed();
+    }
+    return normalized;
+  } catch (error) {
+    logChurchSnapshotFallback("directory-seed", error);
+    return getFallbackChurchDirectorySeed();
+  }
+});
 
 const getApprovedChurchStatsCached = unstable_cache(
   async () => {
@@ -475,6 +549,46 @@ export async function getChurchesAsync(): Promise<ChurchConfig[]> {
 
 export async function getChurchDirectorySeedAsync(): Promise<ChurchDirectorySeed[]> {
   return getApprovedChurchDirectorySeedCached();
+}
+
+const getApprovedChurchDirectorySeedSliceCached = cache(async (
+  offset: number,
+  limit: number,
+): Promise<ChurchDirectorySeed[]> => {
+  if (limit <= 0) {
+    return [];
+  }
+
+  if (isOfflinePublicBuild() || !hasServiceConfig()) {
+    return getFallbackChurchDirectorySeed().slice(offset, offset + limit);
+  }
+
+  const firstChunkIndex = Math.floor(offset / CHURCH_DIRECTORY_SEED_CHUNK_SIZE);
+  const lastChunkIndex = Math.floor((offset + limit - 1) / CHURCH_DIRECTORY_SEED_CHUNK_SIZE);
+  const chunkIndexes = Array.from(
+    { length: lastChunkIndex - firstChunkIndex + 1 },
+    (_, index) => firstChunkIndex + index,
+  );
+  const rows = await Promise.all(
+    chunkIndexes.map((chunkIndex) => getApprovedChurchDirectorySeedChunkCached(chunkIndex)),
+  );
+  const flattened = rows.flat();
+  const chunkStartOffset = firstChunkIndex * CHURCH_DIRECTORY_SEED_CHUNK_SIZE;
+  const localOffset = offset - chunkStartOffset;
+  return flattened.slice(localOffset, localOffset + limit);
+});
+
+export async function getChurchDirectorySeedSliceAsync(
+  offset: number,
+  limit: number,
+): Promise<ChurchDirectorySeed[]> {
+  const safeOffset = Number.isFinite(offset) ? Math.max(0, Math.floor(offset)) : 0;
+  const safeLimit = Number.isFinite(limit) ? Math.max(0, Math.floor(limit)) : 0;
+  return getApprovedChurchDirectorySeedSliceCached(safeOffset, safeLimit);
+}
+
+export async function getChurchDirectorySeedCountAsync(): Promise<number> {
+  return getApprovedChurchDirectorySeedCountCached();
 }
 
 /**
