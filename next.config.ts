@@ -67,7 +67,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https://media.gospelchannel.com https://i.ytimg.com https://i.scdn.co https://mosaic.scdn.co https://*.googleusercontent.com",
-              "frame-src 'self' https://open.spotify.com https://www.youtube.com https://embed.music.apple.com",
+              "frame-src 'self' https://open.spotify.com https://www.youtube.com https://www.youtube-nocookie.com https://embed.music.apple.com",
               "frame-ancestors 'self'",
               "connect-src 'self' https://eu.i.posthog.com https://eu-assets.i.posthog.com https://api.posthog.com",
               "media-src 'self' https://media.gospelchannel.com",
