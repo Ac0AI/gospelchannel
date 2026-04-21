@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ChurchDirectoryGrid } from "@/components/ChurchDirectoryGrid";
-import {
-  buildSearchSummary,
-  filterChurchDirectory,
-  paginateChurches,
-} from "@/lib/church-directory";
-import { getChurchIndexData } from "@/lib/church";
+import { buildSearchSummary } from "@/lib/church-directory";
+import { getChurchIndexPageData } from "@/lib/church";
 import { getChurchStatsAsync } from "@/lib/content";
 
 export const revalidate = 3600;
@@ -84,12 +80,12 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
   const query = readStringParam(params.q).trim().slice(0, 80);
   const requestedPage = readPositivePage(params.page);
 
-  const [{ countryCount }, churches] = await Promise.all([
+  const [{ churchCount, countryCount }, directoryPage] = await Promise.all([
     getChurchStatsAsync(),
-    getChurchIndexData(),
+    getChurchIndexPageData({ query, page: requestedPage, pageSize: PAGE_SIZE }),
   ]);
-  const filtered = filterChurchDirectory(churches, { query });
-  const { currentPage, totalCount, totalPages, pageItems } = paginateChurches(filtered, requestedPage, PAGE_SIZE);
+  const { currentPage, totalCount, totalPages, pageItems } = directoryPage;
+  const directoryCount = query ? totalCount : churchCount;
 
   const searchSummary = query ? buildSearchSummary(query) : null;
 
@@ -99,7 +95,7 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
         "@context": "https://schema.org",
         "@type": "ItemList",
         name: "Church Channels",
-        description: `Browse ${churches.length} church channels across ${countryCount} countries and compare fit by worship style, tradition, city, and service details.`,
+        description: `Browse ${directoryCount} church channels across ${countryCount} countries and compare fit by worship style, tradition, city, and service details.`,
         numberOfItems: pageItems.length,
         itemListElement: pageItems.map((church, index) => ({
           "@type": "ListItem",
@@ -131,7 +127,7 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
             type="search"
             name="q"
             defaultValue={query}
-            placeholder={`Search ${churches.length} churches by name, city, or country`}
+            placeholder={`Search ${directoryCount} churches by name, city, or country`}
             className="w-full rounded-full border border-rose-200/80 bg-white px-5 py-3 text-base text-espresso shadow-sm outline-none transition-colors placeholder:text-warm-brown/50 focus:border-rose-gold focus:ring-2 focus:ring-rose-gold/20"
           />
           <button
