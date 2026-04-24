@@ -410,7 +410,7 @@ async function main() {
           slug, name, description, country, location, denomination, website,
           language, music_style, spotify_url, spotify_playlist_ids,
           spotify_owner_id, source_kind, status, confidence, reason,
-          discovery_source, discovered_at, verified_at
+          discovery_source, discovered_at
         ) VALUES (
           ${church.slug},
           ${church.name},
@@ -429,7 +429,6 @@ async function main() {
           ${0.85},
           ${"Auto-discovered via Spotify search + Claude enrichment (2026-04-02)"},
           'spotify-search',
-          ${new Date().toISOString()},
           ${new Date().toISOString()}
         )
         ON CONFLICT (slug) DO NOTHING

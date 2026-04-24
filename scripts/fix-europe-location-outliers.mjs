@@ -106,7 +106,6 @@ async function updateChurches(supabase, rows) {
     const patch = {
       ...CHURCH_PATCHES[row.slug],
       last_researched: repairedAt,
-      verified_at: repairedAt,
     };
     const { error } = await supabase.from("churches").update(patch).eq("slug", row.slug);
     if (error) {
@@ -159,7 +158,6 @@ async function main() {
       const patch = {
         ...CHURCH_PATCHES[row.slug],
         last_researched: repairedAt,
-        verified_at: repairedAt,
       };
       return {
         slug: row.slug,

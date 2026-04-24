@@ -294,7 +294,6 @@ async function main() {
       location: row.church.location || row.merged.location || null,
       country: row.church.country || row.merged.country || null,
       website: row.merged.website || row.church.website || null,
-      verified_at: now,
       last_researched: now,
     },
   }));

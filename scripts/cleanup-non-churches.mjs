@@ -228,7 +228,7 @@ async function main() {
           website, language, music_style,
           spotify_url, spotify_artist_ids, spotify_playlist_ids,
           source_kind, status, confidence, reason,
-          discovery_source, discovered_at, verified_at, created_at, updated_at
+          discovery_source, discovered_at, created_at, updated_at
         )
         SELECT
           ${r.newSlug},
@@ -249,7 +249,6 @@ async function main() {
           ${"Renamed from " + r.oldSlug + ": brand → actual church (2026-04-02)"},
           discovery_source,
           discovered_at,
-          now(),
           created_at,
           now()
         FROM churches WHERE slug = ${r.oldSlug}

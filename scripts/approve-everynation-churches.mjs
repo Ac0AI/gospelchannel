@@ -142,7 +142,6 @@ async function main() {
          location = $3,
          country = $4,
          website = $5,
-         verified_at = $6,
          last_researched = $6,
          updated_at = now()
        where slug = $7`,

@@ -484,6 +484,15 @@ export async function verifyChurchClaim(id: string): Promise<{ email: string; ch
     throw new Error(statusError.message);
   }
 
+  const { error: verifiedError } = await client
+    .from("churches")
+    .update({ verified_at: new Date().toISOString() })
+    .eq("slug", claim.church_slug);
+
+  if (verifiedError) {
+    throw new Error(verifiedError.message);
+  }
+
   return { email, churchSlug: claim.church_slug, name: claim.name || "" };
 }
 
