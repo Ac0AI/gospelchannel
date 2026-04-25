@@ -65,6 +65,7 @@ export function ChurchCollectionPage({
   relatedSections?: RelatedSection[];
 }) {
   const currentUrl = buildPageHref(basePath, currentPage);
+  const canonicalUrl = `https://gospelchannel.com${basePath}`;
   const jsonLd = [
     {
       "@context": "https://schema.org",
@@ -72,6 +73,7 @@ export function ChurchCollectionPage({
       name: title,
       description,
       url: `https://gospelchannel.com${currentUrl}`,
+      mainEntity: { "@id": `${canonicalUrl}#itemlist` },
       isPartOf: {
         "@type": "WebSite",
         name: "GospelChannel",
@@ -80,14 +82,40 @@ export function ChurchCollectionPage({
     },
     {
       "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: breadcrumbs.map((crumb, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: crumb.label,
+        item: `https://gospelchannel.com${crumb.href}`,
+      })),
+    },
+    {
+      "@context": "https://schema.org",
       "@type": "ItemList",
+      "@id": `${canonicalUrl}#itemlist`,
       name: title,
-      numberOfItems: churches.length,
+      numberOfItems: totalCount,
       itemListElement: churches.map((church, index) => ({
         "@type": "ListItem",
         position: (currentPage - 1) * pageSize + index + 1,
-        name: church.name,
         url: `https://gospelchannel.com/church/${church.slug}`,
+        item: {
+          "@type": "Church",
+          "@id": `https://gospelchannel.com/church/${church.slug}`,
+          name: church.name,
+          url: `https://gospelchannel.com/church/${church.slug}`,
+          ...(church.logo ? { image: church.logo } : {}),
+          ...(church.location || church.country
+            ? {
+                address: {
+                  "@type": "PostalAddress",
+                  ...(church.location ? { addressLocality: church.location } : {}),
+                  ...(church.country ? { addressCountry: church.country } : {}),
+                },
+              }
+            : {}),
+        },
       })),
     },
   ];

@@ -23,7 +23,20 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "Diffbot", disallow: "/" },
 
       // Default: allow everything else, block private areas
-      { userAgent: "*", allow: "/", disallow: ["/api/", "/admin/"] },
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: [
+          "/api/",
+          "/admin/",
+          "/church-admin/",
+          "/preview/",
+          "/church/*/manage",
+          "/church/*/embed",
+          "/church/*/claim",
+          "/church?*q=",
+        ],
+      },
     ],
     sitemap: "https://gospelchannel.com/sitemap.xml",
   };

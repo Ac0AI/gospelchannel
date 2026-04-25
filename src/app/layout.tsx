@@ -65,7 +65,11 @@ export async function generateMetadata(): Promise<Metadata> {
       images: ["https://gospelchannel.com/hero-worship.jpg"],
     },
     alternates: {
-      canonical: "https://gospelchannel.com",
+      canonical: "/",
+      languages: {
+        en: "https://gospelchannel.com/",
+        "x-default": "https://gospelchannel.com/",
+      },
     },
   };
 }
@@ -97,17 +101,25 @@ export default function RootLayout({
               {
                 "@context": "https://schema.org",
                 "@type": "Organization",
+                "@id": "https://gospelchannel.com/#organization",
                 name: "GospelChannel",
                 url: "https://gospelchannel.com",
                 description: scriptChurchCopy,
-                sameAs: [],
+                logo: {
+                  "@type": "ImageObject",
+                  url: "https://gospelchannel.com/icon.svg",
+                  contentUrl: "https://gospelchannel.com/icon.svg",
+                },
               },
               {
                 "@context": "https://schema.org",
                 "@type": "WebSite",
+                "@id": "https://gospelchannel.com/#website",
                 name: "GospelChannel",
                 url: "https://gospelchannel.com",
                 description: scriptBrowseCopy,
+                inLanguage: "en",
+                publisher: { "@id": "https://gospelchannel.com/#organization" },
                 potentialAction: {
                   "@type": "SearchAction",
                   target: {
