@@ -1,5 +1,16 @@
 import type { MetadataRoute } from "next";
 
+const PRIVATE_DISALLOW = [
+  "/api/",
+  "/admin/",
+  "/church-admin/",
+  "/preview/",
+  "/church/*/manage",
+  "/church/*/embed",
+  "/church/*/claim",
+  "/church?*q=",
+];
+
 // Cloudflare Managed Content (prepended automatically) already disallows
 // the major training crawlers: GPTBot, ClaudeBot, CCBot, Bytespider,
 // Google-Extended, Applebot-Extended, Amazonbot, meta-externalagent.
@@ -8,15 +19,15 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       // Traditional search engines
-      { userAgent: "Googlebot", allow: "/" },
-      { userAgent: "Bingbot", allow: "/" },
+      { userAgent: "Googlebot", allow: "/", disallow: PRIVATE_DISALLOW },
+      { userAgent: "Bingbot", allow: "/", disallow: PRIVATE_DISALLOW },
 
       // AI search-citation bots (these cite us in AI answers)
-      { userAgent: "OAI-SearchBot", allow: "/" },
-      { userAgent: "ChatGPT-User", allow: "/" },
-      { userAgent: "PerplexityBot", allow: "/" },
-      { userAgent: "Claude-SearchBot", allow: "/" },
-      { userAgent: "Claude-User", allow: "/" },
+      { userAgent: "OAI-SearchBot", allow: "/", disallow: PRIVATE_DISALLOW },
+      { userAgent: "ChatGPT-User", allow: "/", disallow: PRIVATE_DISALLOW },
+      { userAgent: "PerplexityBot", allow: "/", disallow: PRIVATE_DISALLOW },
+      { userAgent: "Claude-SearchBot", allow: "/", disallow: PRIVATE_DISALLOW },
+      { userAgent: "Claude-User", allow: "/", disallow: PRIVATE_DISALLOW },
 
       // Training-only bots not covered by Cloudflare Managed Content
       { userAgent: "anthropic-ai", disallow: "/" },
@@ -26,16 +37,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: [
-          "/api/",
-          "/admin/",
-          "/church-admin/",
-          "/preview/",
-          "/church/*/manage",
-          "/church/*/embed",
-          "/church/*/claim",
-          "/church?*q=",
-        ],
+        disallow: PRIVATE_DISALLOW,
       },
     ],
     sitemap: "https://gospelchannel.com/sitemap.xml",

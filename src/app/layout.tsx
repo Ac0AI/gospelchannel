@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import Script from "next/script";
 import { Cormorant_Garamond, Nunito } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -93,7 +92,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         */}
-        <Script
+        <script
           id="site-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
