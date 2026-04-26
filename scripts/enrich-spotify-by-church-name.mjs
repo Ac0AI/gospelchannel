@@ -403,8 +403,20 @@ async function loadTargets(sql, options) {
   if (options.daily) {
     // Daily cron-friendly mode: process the next slice of churches that
     // haven't been searched recently, skipping ones that already have a
-    // Spotify URL. Randomized within the eligible set to avoid always
-    // re-hitting the same slugs if a run crashes early.
+    // Spotify URL. Country priority drains high-hit-rate markets first
+    // (DE/UK/Nordics/AU at 30-80% match) before chewing through the long
+    // US tail (~10% match). Within a tier, oldest-searched wins.
+    const HIGH_PRIORITY_COUNTRIES = [
+      "Germany",
+      "United Kingdom",
+      "Sweden",
+      "Denmark",
+      "Norway",
+      "Netherlands",
+      "France",
+      "Switzerland",
+      "Australia",
+    ];
     return sql`
       SELECT slug, name, location, country, website, spotify_url, spotify_searched_at
       FROM churches
@@ -412,7 +424,10 @@ async function loadTargets(sql, options) {
         AND spotify_url IS NULL
         AND (spotify_searched_at IS NULL
              OR spotify_searched_at < NOW() - ${recheckInterval}::interval)
-      ORDER BY spotify_searched_at NULLS FIRST, slug
+      ORDER BY
+        CASE WHEN country = ANY(${HIGH_PRIORITY_COUNTRIES}::text[]) THEN 0 ELSE 1 END,
+        spotify_searched_at NULLS FIRST,
+        slug
       LIMIT ${options.dailyLimit}
     `;
   }
