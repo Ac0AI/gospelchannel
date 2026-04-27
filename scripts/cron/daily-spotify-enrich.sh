@@ -12,7 +12,20 @@ cd "$PROJECT_DIR"
 export PATH="/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:$PATH"
 export NODE_OPTIONS="--no-warnings"
 
-echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] Starting daily Spotify enrichment"
+echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] Phase 1: revalidate-legacy (small batch)"
+# Re-runs the strict matcher on legacy unverified matches (spotify_url set
+# by the old discover flow but never validated). No-op once the legacy
+# pool is drained. Capped at 50/night to leave Spotify quota for Phase 2.
+node scripts/enrich-spotify-by-church-name.mjs \
+  --revalidate-legacy \
+  --limit=50 \
+  --throttle=400 \
+  --concurrency=2 || echo "[warn] phase 1 exited non-zero"
+
+# Brief pause between bursts to ease aggregate rate-limit pressure.
+sleep 60
+
+echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] Phase 2: daily enrichment"
 node scripts/enrich-spotify-by-church-name.mjs \
   --daily \
   --daily-limit=500 \
