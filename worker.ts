@@ -23,6 +23,10 @@ type WorkerHandler = {
 
 const openNextWorker = generatedOpenNextWorker as OpenNextWorkerModule;
 const SITEMAP_EDGE_CACHE_NAME = "gospelchannel-sitemaps";
+const HTML_EDGE_CACHE_NAME = "gospelchannel-html";
+const HTML_EDGE_CACHE_TTL_SECONDS = 3600;
+const HTML_EDGE_CACHE_SWR_SECONDS = 86400;
+const AUTH_COOKIE_PATTERN = /(?:^|;\s*)(?:better-auth|session|auth)/i;
 
 function isSitemapRequest(request: Request): boolean {
   if (request.method !== "GET") {
@@ -40,6 +44,126 @@ function shouldEdgeCache(response: Response): boolean {
 
   const cacheControl = response.headers.get("cache-control")?.toLowerCase() ?? "";
   return cacheControl.includes("public") && !cacheControl.includes("no-store");
+}
+
+function isHtmlCacheableRequest(request: Request): boolean {
+  if (request.method !== "GET") return false;
+
+  // Skip authenticated users (admin views, claim flows)
+  const cookieHeader = request.headers.get("cookie") ?? "";
+  if (AUTH_COOKIE_PATTERN.test(cookieHeader)) return false;
+
+  // Skip Next.js RSC client-side navigation payloads
+  if (request.headers.get("rsc")) return false;
+  if (request.headers.get("next-router-state-tree")) return false;
+  if (request.headers.get("next-router-prefetch")) return false;
+  if (request.headers.get("next-router-segment-prefetch")) return false;
+
+  const { pathname } = new URL(request.url);
+
+  // Sitemaps have their own edge cache
+  if (pathname === "/sitemap.xml" || pathname.startsWith("/sitemap-chunk/")) return false;
+
+  // Static content pages
+  if (
+    pathname === "/" ||
+    pathname === "/about" ||
+    pathname === "/for-churches" ||
+    pathname === "/contact" ||
+    pathname === "/privacy"
+  ) {
+    return true;
+  }
+  if (pathname.startsWith("/guides")) return true;
+
+  // Church directory + facet listings (read searchParams → otherwise force-dynamic)
+  if (pathname === "/church") return true;
+  if (
+    pathname.startsWith("/church/country/") ||
+    pathname.startsWith("/church/city/") ||
+    pathname.startsWith("/church/style/") ||
+    pathname.startsWith("/church/denomination/")
+  ) {
+    return true;
+  }
+
+  // Compare + network detail pages
+  if (pathname.startsWith("/compare/")) return true;
+  if (pathname.startsWith("/network/")) return true;
+
+  // Prayerwall (public)
+  if (pathname.startsWith("/prayerwall")) return true;
+
+  // Church detail page only (exclude /manage, /embed, /claim, /suggest)
+  const churchDetailMatch = pathname.match(/^\/church\/([^/]+)$/);
+  if (churchDetailMatch) {
+    const slug = churchDetailMatch[1];
+    if (slug === "suggest" || slug === "country" || slug === "city" || slug === "style" || slug === "denomination") {
+      return false;
+    }
+    return true;
+  }
+
+  return false;
+}
+
+async function fetchWithHtmlEdgeCache(
+  request: Request,
+  env: CloudflareEnv,
+  ctx: WorkerExecutionContext,
+): Promise<Response> {
+  const edgeCache = await caches.open(HTML_EDGE_CACHE_NAME);
+  const cacheKey = new Request(request.url, { method: "GET" });
+
+  const cached = await edgeCache.match(cacheKey);
+  if (cached) {
+    const hitHeaders = new Headers(cached.headers);
+    hitHeaders.set("x-edge-cache", "HIT");
+    return new Response(cached.body, {
+      status: cached.status,
+      statusText: cached.statusText,
+      headers: hitHeaders,
+    });
+  }
+
+  const response = await openNextWorker.fetch(request, env, ctx);
+  const contentType = response.headers.get("content-type") ?? "";
+  const isHtml = contentType.includes("text/html");
+  const setsCookie = response.headers.has("set-cookie");
+
+  if (response.ok && isHtml && !setsCookie) {
+    const overrideHeaders = new Headers(response.headers);
+    overrideHeaders.set(
+      "cache-control",
+      `public, max-age=0, s-maxage=${HTML_EDGE_CACHE_TTL_SECONDS}, stale-while-revalidate=${HTML_EDGE_CACHE_SWR_SECONDS}`,
+    );
+    overrideHeaders.set("x-edge-cache", "MISS");
+
+    const overridden = new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: overrideHeaders,
+    });
+
+    ctx.waitUntil(edgeCache.put(cacheKey, overridden.clone()));
+    return overridden;
+  }
+
+  return response;
+}
+
+async function fetchWithEdgeCache(
+  request: Request,
+  env: CloudflareEnv,
+  ctx: WorkerExecutionContext,
+): Promise<Response> {
+  if (isSitemapRequest(request)) {
+    return fetchWithSitemapEdgeCache(request, env, ctx);
+  }
+  if (isHtmlCacheableRequest(request)) {
+    return fetchWithHtmlEdgeCache(request, env, ctx);
+  }
+  return openNextWorker.fetch(request, env, ctx);
 }
 
 async function fetchWithSitemapEdgeCache(
@@ -93,7 +217,7 @@ async function runScheduledCron(env: CloudflareEnv, ctx: WorkerExecutionContext,
 export { BucketCachePurge, DOQueueHandler, DOShardedTagCache };
 
 const worker: WorkerHandler = {
-  fetch: fetchWithSitemapEdgeCache,
+  fetch: fetchWithEdgeCache,
   async scheduled(controller: WorkerScheduledController, env: CloudflareEnv, ctx: WorkerExecutionContext) {
     if (controller.cron === "23 6 * * *") {
       await runScheduledCron(env, ctx, "/api/cron/push-indexing");
