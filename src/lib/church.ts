@@ -3,7 +3,7 @@ import { getChurchLatestUpdates } from "@/lib/church-updates";
 import { uniqueSpotifyPlaylistIds } from "@/lib/spotify-playlist";
 import type { ChurchProfileEdit, YouTubeVideo, ChurchEnrichment, ChurchProfileScore } from "@/types/gospel";
 import type { ChurchConfig } from "@/types/gospel";
-import { getChurchBySlugAsync, getLocalChurchSnapshot } from "@/lib/content";
+import { CHURCH_INDEX_TAG, getChurchBySlugAsync, getLocalChurchSnapshot } from "@/lib/content";
 import { getSql } from "@/db";
 import { CONTENT_UPDATED_AT, normalizeText, tokenSimilarity } from "@/lib/utils";
 import { hasServiceConfig, createAdminClient } from "@/lib/neon-client";
@@ -1622,13 +1622,24 @@ function buildChurchIndexSummaryLookup(
   );
 }
 
+// R2-backed cross-isolate cache. Without this, every fresh Cloudflare Worker
+// isolate re-pulls all 79k churches + enrichments (~70 MB) since the
+// module-level cache below only lives in a single isolate's memory. Egress
+// blew up to 1.5 TB/month before this was added. Invalidated by
+// revalidateTag(CHURCH_INDEX_TAG) (cron sync + admin actions).
+const _getChurchIndexDataFromBackend = unstable_cache(
+  async () => _getChurchIndexData(),
+  ["church-index-data-v1"],
+  { revalidate: CHURCH_INDEX_CACHE_SECONDS, tags: [CHURCH_INDEX_TAG] },
+);
+
 export async function getChurchIndexData() {
   if (churchIndexDataCache && churchIndexDataCache.expiresAt > Date.now()) {
     return churchIndexDataCache.value;
   }
 
   if (!churchIndexDataPromise) {
-    churchIndexDataPromise = _getChurchIndexData()
+    churchIndexDataPromise = _getChurchIndexDataFromBackend()
       .then((value) => {
         const expiresAt = Date.now() + CHURCH_INDEX_CACHE_SECONDS * 1000;
         churchIndexDataCache = { value, expiresAt };
