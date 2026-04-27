@@ -24,7 +24,7 @@ import {
   getPrimaryDenominationFilter,
   getPrimaryStyleFilter,
 } from "@/lib/church-directory";
-import { buildChurchAliases, checkChurchClaimed, getChurchPublicPageData, resolveChurchPrimaryImage } from "@/lib/church";
+import { buildChurchAliases, checkChurchClaimed, getChurchPublicPageData, resolveChurchImageCandidates } from "@/lib/church";
 import {
   getFirstServiceTimeLabel,
   getPublicHostLabel,
@@ -97,6 +97,19 @@ function pickDisplayChurchName(churchName: string, officialChurchName?: string):
 
   const tokenSimilarity = (2 * overlap) / (baseTokens.size + officialTokens.size);
   return tokenSimilarity >= 0.6 ? official : churchName;
+}
+
+function isRenderableImageUrl(value: string | null | undefined): value is string {
+  if (!value) return false;
+  if (value.startsWith("/")) return true;
+  if (!isValidPublicUrl(value)) return false;
+
+  const hostname = new URL(value).hostname.toLowerCase();
+  return hostname === "media.gospelchannel.com"
+    || hostname === "i.ytimg.com"
+    || hostname === "i.scdn.co"
+    || hostname === "mosaic.scdn.co"
+    || hostname.endsWith(".googleusercontent.com");
 }
 
 /* ─── metadata (unchanged) ─── */
@@ -188,15 +201,16 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   const styles = church.musicStyle?.slice(0, 5) ?? [];
   const topArtists = church.notableArtists?.slice(0, 6) ?? [];
   const primaryStyleFilter = getPrimaryStyleFilter(church);
-  const heroImage = resolveChurchPrimaryImage({
+  const heroImageCandidates = resolveChurchImageCandidates({
     headerImage: church.headerImage,
     videos,
     coverImageUrl: (mergedProfile.coverImageUrl as string | undefined) || enrichment?.coverImageUrl,
-  }) || "";
-  // YouTube thumbs often carry hard-coded text overlays ("ROYAL RANGERS" etc).
-  // Treat them as ambient texture, not content — heavy blur kills the text.
+  }).filter(isRenderableImageUrl);
+  const heroImage = heroImageCandidates[0] || "";
+  // YouTube thumbs often carry hard-coded text overlays, but they should still
+  // read as a real fallback image when a curated hero is missing.
   const heroIsVideoThumb = /(?:^|\.)(ytimg|youtube)\.com/i.test(heroImage);
-  const churchLogo = isValidPublicUrl((mergedProfile.logoUrl as string | undefined) || enrichment?.logoImageUrl || church.logo)
+  const churchLogo = isRenderableImageUrl((mergedProfile.logoUrl as string | undefined) || enrichment?.logoImageUrl || church.logo)
     ? ((mergedProfile.logoUrl as string | undefined) || enrichment?.logoImageUrl || church.logo)!
     : null;
   const websiteUrl = isValidOfficialWebsiteUrl((mergedProfile.websiteUrl as string | undefined) || enrichment?.websiteUrl || church.website)
@@ -468,9 +482,10 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
           <>
             <HeroImage
               src={heroImage}
+              fallbackSrcs={heroImageCandidates.slice(1)}
               className={
                 heroIsVideoThumb
-                  ? "absolute inset-0 h-full w-full scale-125 object-cover object-[center_20%] blur-2xl saturate-125"
+                  ? "absolute inset-0 h-full w-full scale-105 object-cover object-[center_20%] opacity-80 saturate-110"
                   : "absolute inset-0 h-full w-full object-cover object-[center_20%]"
               }
             />
@@ -499,7 +514,15 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
           <div className="mx-auto max-w-7xl">
             <div className="flex items-center gap-4">
               {churchLogo && (
-                <HeroImage src={churchLogo} className="h-14 w-14 shrink-0 rounded-full border-2 border-white/30 object-cover shadow-lg sm:h-16 sm:w-16" />
+                <HeroImage
+                  src={churchLogo}
+                  fallbackSrcs={[
+                    (mergedProfile.logoUrl as string | undefined) || "",
+                    enrichment?.logoImageUrl || "",
+                    church.logo || "",
+                  ].filter(isRenderableImageUrl)}
+                  className="h-14 w-14 shrink-0 rounded-full border-2 border-white/30 object-cover shadow-lg sm:h-16 sm:w-16"
+                />
               )}
               <div>
                 <div className="flex flex-wrap items-center gap-2">

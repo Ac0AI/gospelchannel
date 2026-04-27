@@ -4,6 +4,7 @@ import { startTransition, useDeferredValue, useEffect, useRef, useState } from "
 import posthog from "posthog-js";
 import {
   QUIZ_QUESTIONS,
+  buildChurchDirectoryHrefForLane,
   collectTopChurchMatches,
   scoreQuizLanes,
   type ToolChurchPreview,
@@ -45,6 +46,9 @@ export function ChurchFitQuizClient({ lanes }: { lanes: DiscoveryLane[] }) {
     : matchedChurches.length > 0
       ? matchedChurches
       : fallbackChurches;
+  const directoryHref = results[0]
+    ? buildChurchDirectoryHrefForLane(results[0], { area: deferredAreaQuery, answers })
+    : "/church";
 
   useEffect(() => {
     if (!isComplete || completionTrackedRef.current) return;
@@ -215,8 +219,8 @@ export function ChurchFitQuizClient({ lanes }: { lanes: DiscoveryLane[] }) {
                   eyebrow="Best-fit lane"
                   title={lane.title}
                   description={`${lane.description} ${lane.whyItFits}`}
-                  href={lane.browse.href}
-                  label={lane.browse.label}
+                  href={buildChurchDirectoryHrefForLane(lane, { area: deferredAreaQuery, answers })}
+                  label="See matching churches"
                   toolName="church_fit_quiz"
                   resultType="browse_lane"
                   resultLabel={lane.id}
@@ -281,7 +285,24 @@ export function ChurchFitQuizClient({ lanes }: { lanes: DiscoveryLane[] }) {
                 ) : null}
               </div>
             </div>
-            <ToolChurchGrid churches={visibleChurches} toolName="church_fit_quiz" labelPrefix="quiz_match" />
+            <ToolActionCard
+              eyebrow="Personalized directory"
+              title={deferredAreaQuery ? `Browse your matches near ${deferredAreaQuery}` : "Browse your personalized church matches"}
+              description="Open a filterable church directory result built from your quiz answers. The URL is shareable and loads as a normal paginated directory page."
+              href={directoryHref}
+              label="Open all matching churches"
+              toolName="church_fit_quiz"
+              resultType="browse_directory"
+              resultLabel={topResultId ?? "unknown"}
+              markComplete
+            />
+            {isLoadingMatches ? (
+              <div className="rounded-2xl border border-rose-200/60 bg-white/75 px-5 py-10 text-center text-sm text-warm-brown shadow-sm">
+                Loading church matches...
+              </div>
+            ) : (
+              <ToolChurchGrid churches={visibleChurches} toolName="church_fit_quiz" labelPrefix="quiz_match" />
+            )}
           </section>
         </>
       ) : null}

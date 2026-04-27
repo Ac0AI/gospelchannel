@@ -24,6 +24,7 @@ type ChurchCardProps = {
   enrichmentSummary?: string;
   verified?: boolean;
   prefetch?: boolean;
+  matchReasons?: string[];
 };
 
 const GRADIENTS = [
@@ -72,6 +73,7 @@ export function ChurchCard({
   enrichmentSummary,
   verified,
   prefetch = false,
+  matchReasons = [],
 }: ChurchCardProps) {
   const initials = getInitials(name);
   const gradient = getGradient(name);
@@ -125,6 +127,18 @@ export function ChurchCard({
             )}
           </h3>
           <p className="mt-1 line-clamp-2 min-h-[3.5rem] text-sm leading-relaxed text-muted-warm">{compactDescription}</p>
+          {matchReasons.length > 0 ? (
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {matchReasons.map((reason) => (
+                <span
+                  key={reason}
+                  className="inline-flex rounded-full border border-rose-200/70 bg-blush-light/60 px-2 py-0.5 text-[10px] font-semibold text-rose-gold-deep"
+                >
+                  {reason}
+                </span>
+              ))}
+            </div>
+          ) : null}
         </div>
       </Link>
 

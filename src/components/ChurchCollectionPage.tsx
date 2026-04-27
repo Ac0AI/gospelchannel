@@ -17,6 +17,7 @@ type ChurchCollectionPageItem = {
     serviceTimes?: string;
     location?: string;
   };
+  matchReasons?: string[];
 };
 
 type Breadcrumb = {

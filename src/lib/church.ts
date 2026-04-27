@@ -26,7 +26,15 @@ import {
   isGeneratedChurchDescription,
   normalizeDisplayText,
 } from "@/lib/content-quality";
-import { filterChurchDirectory, paginateChurches, type ChurchDirectoryEntry } from "@/lib/church-directory";
+import {
+  buildChurchMatchReasons,
+  filterChurchDirectory,
+  getDenominationFilterBySlug,
+  getStyleFilterBySlug,
+  paginateChurches,
+  type ChurchDirectoryEntry,
+  type ChurchDirectoryFilters,
+} from "@/lib/church-directory";
 
 type CachedVideo = {
   videoId: string;
@@ -95,13 +103,31 @@ export function resolveChurchPrimaryImage({
   videos?: ImageCandidate[];
   coverImageUrl?: string | null;
 }): string | undefined {
-  const videoThumbnail = videos?.find((video) => typeof video?.thumbnailUrl === "string" && video.thumbnailUrl.trim().length > 0)
-    ?.thumbnailUrl
-    ?.trim();
+  return resolveChurchImageCandidates({ headerImage, videos, coverImageUrl })[0];
+}
 
-  return [headerImage, videoThumbnail, coverImageUrl]
-    .find((value): value is string => typeof value === "string" && value.trim().length > 0)
-    ?.trim();
+export function resolveChurchImageCandidates({
+  headerImage,
+  videos,
+  coverImageUrl,
+}: {
+  headerImage?: string | null;
+  videos?: ImageCandidate[];
+  coverImageUrl?: string | null;
+}): string[] {
+  const seen = new Set<string>();
+  return [
+    headerImage,
+    ...(videos ?? []).map((video) => video?.thumbnailUrl),
+    coverImageUrl,
+  ]
+    .filter((value): value is string => typeof value === "string" && value.trim().length > 0)
+    .map((value) => value.trim())
+    .filter((value) => {
+      if (seen.has(value)) return false;
+      seen.add(value);
+      return true;
+    });
 }
 
 function isDevRuntime(): boolean {
@@ -1303,12 +1329,21 @@ function mapChurchIndexRowToConfig(row: ChurchIndexRow, enrichmentHint?: IndexEn
   };
 }
 
-function getLocalChurchIndexPageData(query: string, requestedPage: number, pageSize: number): ChurchIndexPageData {
+function withDirectoryMatchReasons(church: ChurchDirectoryEntry, filters: ChurchDirectoryFilters): ChurchDirectoryEntry {
+  const matchReasons = buildChurchMatchReasons(church, filters);
+  return matchReasons.length > 0 ? { ...church, matchReasons } : church;
+}
+
+function getLocalChurchIndexPageData(filters: ChurchDirectoryFilters, requestedPage: number, pageSize: number): ChurchIndexPageData {
   const filtered = filterChurchDirectory(
     filterCanonicalChurchSlugRecords(getLocalChurchSnapshot()).map((church) => mapChurchToIndexRecord(church)),
-    { query },
+    filters,
   );
-  return paginateChurches(filtered, requestedPage, pageSize);
+  const page = paginateChurches(filtered, requestedPage, pageSize);
+  return {
+    ...page,
+    pageItems: page.pageItems.map((church) => withDirectoryMatchReasons(church, filters)),
+  };
 }
 
 function getChurchIndexExcludedSlugs(): string[] {
@@ -1329,25 +1364,22 @@ function normalizePage(page: number): number {
   return Number.isFinite(page) && page > 0 ? Math.floor(page) : 1;
 }
 
-async function fetchChurchIndexPageRows(query: string, currentPage: number, pageSize: number): Promise<ChurchIndexQueryRow[]> {
-  const sql = getSql();
-  const offset = (currentPage - 1) * pageSize;
-  const trimmedQuery = query.trim();
-  const excludedSlugs = getChurchIndexExcludedSlugs();
+function getSqlLikePatterns(values: string[]): string[] {
+  return values.map((value) => `%${value}%`);
+}
+
+function buildChurchIndexWhereClause(filters: ChurchDirectoryFilters) {
+  const params: unknown[] = [getChurchIndexExcludedSlugs()];
+  const clauses = [
+    "status = 'approved'",
+    "NOT (slug = ANY($1::text[]))",
+  ];
+  const trimmedQuery = filters.query?.trim() ?? "";
 
   if (trimmedQuery) {
     const pattern = `%${trimmedQuery}%`;
-    const prefixPattern = `${trimmedQuery}%`;
-    return (await sql.query(`
-      SELECT
-        slug, name, description, spotify_playlist_ids, additional_playlists, logo, website, spotify_url,
-        country, denomination, location, music_style, email, header_image, verified_at, last_researched,
-        aliases, language, source_kind,
-        count(*) OVER() AS total_count
-      FROM churches
-      WHERE status = 'approved'
-        AND NOT (slug = ANY($1::text[]))
-        AND (
+    params.push(pattern);
+    clauses.push(`(
           name ILIKE $2
           OR description ILIKE $2
           OR country ILIKE $2
@@ -1355,14 +1387,95 @@ async function fetchChurchIndexPageRows(query: string, currentPage: number, page
           OR denomination ILIKE $2
           OR array_to_string(music_style, ' ') ILIKE $2
           OR array_to_string(aliases, ' ') ILIKE $2
-        )
+        )`);
+  }
+
+  if (filters.styleSlug) {
+    const filter = getStyleFilterBySlug(filters.styleSlug);
+    if (filter) {
+      params.push(getSqlLikePatterns(filter.match));
+      clauses.push(`array_to_string(music_style, ' ') ILIKE ANY($${params.length}::text[])`);
+    }
+  }
+
+  if (filters.denominationSlug) {
+    const filter = getDenominationFilterBySlug(filters.denominationSlug);
+    if (filter) {
+      params.push(getSqlLikePatterns(filter.match));
+      clauses.push(`denomination ILIKE ANY($${params.length}::text[])`);
+    }
+  }
+
+  if (filters.language) {
+    params.push(`%${filters.language.trim()}%`);
+    const index = params.length;
+    clauses.push(`(
+      language ILIKE $${index}
+      OR EXISTS (
+        SELECT 1 FROM church_enrichments ce
+        WHERE ce.church_slug = churches.slug
+          AND ce.enrichment_status = 'complete'
+          AND array_to_string(ce.languages, ' ') ILIKE $${index}
+      )
+    )`);
+  }
+
+  if (filters.hasKids) {
+    clauses.push(`EXISTS (
+      SELECT 1 FROM church_enrichments ce
+      WHERE ce.church_slug = churches.slug
+        AND ce.enrichment_status = 'complete'
+        AND (ce.children_ministry = true OR ce.youth_ministry = true)
+    )`);
+  }
+
+  if (filters.hasServiceTimes) {
+    clauses.push(`EXISTS (
+      SELECT 1 FROM church_enrichments ce
+      WHERE ce.church_slug = churches.slug
+        AND ce.enrichment_status = 'complete'
+        AND ce.service_times IS NOT NULL
+        AND jsonb_typeof(ce.service_times) = 'array'
+        AND jsonb_array_length(ce.service_times) > 0
+    )`);
+  }
+
+  if (filters.hasMusic) {
+    clauses.push(`(
+      coalesce(cardinality(spotify_playlist_ids), 0) + coalesce(cardinality(additional_playlists), 0) > 0
+      OR coalesce(spotify_url, '') <> ''
+    )`);
+  }
+
+  return {
+    sql: clauses.join("\n        AND "),
+    params,
+  };
+}
+
+async function fetchChurchIndexPageRows(filters: ChurchDirectoryFilters, currentPage: number, pageSize: number): Promise<ChurchIndexQueryRow[]> {
+  const sql = getSql();
+  const offset = (currentPage - 1) * pageSize;
+  const trimmedQuery = filters.query?.trim() ?? "";
+  const where = buildChurchIndexWhereClause(filters);
+  const prefixPattern = `${trimmedQuery}%`;
+
+  if (trimmedQuery) {
+    return (await sql.query(`
+      SELECT
+        slug, name, description, spotify_playlist_ids, additional_playlists, logo, website, spotify_url,
+        country, denomination, location, music_style, email, header_image, verified_at, last_researched,
+        aliases, language, source_kind,
+        count(*) OVER() AS total_count
+      FROM churches
+      WHERE ${where.sql}
       ORDER BY
         CASE
-          WHEN name ILIKE $3 THEN 100
+          WHEN name ILIKE $${where.params.length + 1} THEN 100
           WHEN name ILIKE $2 THEN 70
-          WHEN location ILIKE $3 THEN 60
+          WHEN location ILIKE $${where.params.length + 1} THEN 60
           WHEN location ILIKE $2 THEN 45
-          WHEN country ILIKE $3 THEN 35
+          WHEN country ILIKE $${where.params.length + 1} THEN 35
           WHEN country ILIKE $2 THEN 30
           ELSE 10
         END DESC,
@@ -1372,9 +1485,9 @@ async function fetchChurchIndexPageRows(query: string, currentPage: number, page
           THEN 1 ELSE 0
         END DESC,
         name ASC
-      LIMIT $4
-      OFFSET $5
-    `, [excludedSlugs, pattern, prefixPattern, pageSize, offset])) as ChurchIndexQueryRow[];
+      LIMIT $${where.params.length + 2}
+      OFFSET $${where.params.length + 3}
+    `, [...where.params, prefixPattern, pageSize, offset])) as ChurchIndexQueryRow[];
   }
 
   return (await sql.query(`
@@ -1384,8 +1497,7 @@ async function fetchChurchIndexPageRows(query: string, currentPage: number, page
       aliases, language, source_kind,
       count(*) OVER() AS total_count
     FROM churches
-    WHERE status = 'approved'
-      AND NOT (slug = ANY($1::text[]))
+    WHERE ${where.sql}
     ORDER BY
       CASE
         WHEN coalesce(cardinality(spotify_playlist_ids), 0) + coalesce(cardinality(additional_playlists), 0) > 0
@@ -1396,70 +1508,55 @@ async function fetchChurchIndexPageRows(query: string, currentPage: number, page
       CASE WHEN coalesce(cardinality(music_style), 0) > 0 THEN 1 ELSE 0 END DESC,
       verified_at DESC NULLS LAST,
       name ASC
-    LIMIT $2
-    OFFSET $3
-  `, [excludedSlugs, pageSize, offset])) as ChurchIndexQueryRow[];
+    LIMIT $${where.params.length + 1}
+    OFFSET $${where.params.length + 2}
+  `, [...where.params, pageSize, offset])) as ChurchIndexQueryRow[];
 }
 
-async function fetchChurchIndexTotalCount(query: string): Promise<number> {
+async function fetchChurchIndexTotalCount(filters: ChurchDirectoryFilters): Promise<number> {
   const sql = getSql();
-  const trimmedQuery = query.trim();
-  const excludedSlugs = getChurchIndexExcludedSlugs();
-
-  if (trimmedQuery) {
-    const pattern = `%${trimmedQuery}%`;
-    const rows = (await sql.query(`
-      SELECT count(*)::int AS count
-      FROM churches
-      WHERE status = 'approved'
-        AND NOT (slug = ANY($1::text[]))
-        AND (
-          name ILIKE $2
-          OR description ILIKE $2
-          OR country ILIKE $2
-          OR location ILIKE $2
-          OR denomination ILIKE $2
-          OR array_to_string(music_style, ' ') ILIKE $2
-          OR array_to_string(aliases, ' ') ILIKE $2
-        )
-    `, [excludedSlugs, pattern])) as Array<{ count: number | string | bigint }>;
-    return toCount(rows[0]?.count);
-  }
+  const where = buildChurchIndexWhereClause(filters);
 
   const rows = (await sql.query(`
     SELECT count(*)::int AS count
     FROM churches
-    WHERE status = 'approved'
-      AND NOT (slug = ANY($1::text[]))
-  `, [excludedSlugs])) as Array<{ count: number | string | bigint }>;
+    WHERE ${where.sql}
+  `, where.params)) as Array<{ count: number | string | bigint }>;
   return toCount(rows[0]?.count);
 }
 
 export async function getChurchIndexPageData(input: {
   query?: string;
+  filters?: Omit<ChurchDirectoryFilters, "query">;
   page: number;
   pageSize: number;
 }): Promise<ChurchIndexPageData> {
-  const query = input.query?.trim().slice(0, 80) ?? "";
+  const filters: ChurchDirectoryFilters = {
+    ...(input.filters ?? {}),
+    query: input.query?.trim().slice(0, 80) ?? "",
+  };
   const requestedPage = normalizePage(input.page);
 
   if (isOfflinePublicBuild() || !hasServiceConfig()) {
-    return getLocalChurchIndexPageData(query, requestedPage, input.pageSize);
+    return getLocalChurchIndexPageData(filters, requestedPage, input.pageSize);
   }
 
   try {
-    const firstRows = await fetchChurchIndexPageRows(query, requestedPage, input.pageSize);
+    const firstRows = await fetchChurchIndexPageRows(filters, requestedPage, input.pageSize);
     const totalCount = firstRows.length > 0
       ? toCount(firstRows[0]?.total_count)
-      : await fetchChurchIndexTotalCount(query);
+      : await fetchChurchIndexTotalCount(filters);
     const totalPages = Math.max(1, Math.ceil(totalCount / input.pageSize));
     const currentPage = Math.min(requestedPage, totalPages);
-    const rows = currentPage === requestedPage ? firstRows : await fetchChurchIndexPageRows(query, currentPage, input.pageSize);
+    const rows = currentPage === requestedPage ? firstRows : await fetchChurchIndexPageRows(filters, currentPage, input.pageSize);
     const filteredRows = filterExplicitNonChurchRows(filterCanonicalChurchSlugRecords(rows));
     const enrichmentMeta = await getEnrichmentMetaForSlugs(filteredRows.map((row) => row.slug));
     const pageItems = filteredRows.map((row) => {
       const enrichmentHint = enrichmentMeta.get(row.slug);
-      return mapChurchToIndexRecord(mapChurchIndexRowToConfig(row, enrichmentHint), enrichmentHint);
+      return withDirectoryMatchReasons(
+        mapChurchToIndexRecord(mapChurchIndexRowToConfig(row, enrichmentHint), enrichmentHint),
+        filters,
+      );
     });
 
     return {
@@ -1471,7 +1568,7 @@ export async function getChurchIndexPageData(input: {
   } catch (error) {
     const detail = error instanceof Error ? error.message : String(error);
     console.error(`[church-index-page] Falling back to local snapshot: ${detail}`);
-    return getLocalChurchIndexPageData(query, requestedPage, input.pageSize);
+    return getLocalChurchIndexPageData(filters, requestedPage, input.pageSize);
   }
 }
 

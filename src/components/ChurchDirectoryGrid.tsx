@@ -16,6 +16,7 @@ type ChurchDirectoryGridItem = {
     serviceTimes?: string;
     location?: string;
   };
+  matchReasons?: string[];
 };
 
 export function ChurchDirectoryGrid({ churches }: { churches: ChurchDirectoryGridItem[] }) {
@@ -45,6 +46,7 @@ export function ChurchDirectoryGrid({ churches }: { churches: ChurchDirectoryGri
           enrichmentLocation={church.enrichmentHint?.location || church.location}
           serviceTimes={church.enrichmentHint?.serviceTimes}
           enrichmentSummary={church.enrichmentHint?.summary}
+          matchReasons={church.matchReasons}
           prefetch={index < 8}
         />
       ))}

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { ChurchFitQuizClient } from "@/components/tools/ChurchFitQuizClient";
 import { ToolPageTracker } from "@/components/tools/ToolPageTracker";
-import { getChurchIndexData } from "@/lib/church";
 import { buildDiscoveryLanes } from "@/lib/tooling";
 
 export const revalidate = 3600;
@@ -14,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ChurchFitQuizPage() {
-  const lanes = buildDiscoveryLanes(await getChurchIndexData());
+  const lanes = buildDiscoveryLanes([]);
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">

@@ -7,6 +7,7 @@ type ChurchDirectoryEnrichmentHint = {
   location?: string;
   serviceTimes?: string;
   summary?: string;
+  languages?: string[];
 };
 
 export type ChurchDirectoryEntry = {
@@ -31,6 +32,19 @@ export type ChurchDirectoryEntry = {
   updatedAt?: string;
   songCount?: number;
   sourceKind?: ChurchConfig["sourceKind"];
+  matchReasons?: string[];
+};
+
+export type ChurchDirectoryFilters = {
+  query?: string;
+  countrySlug?: string;
+  citySlug?: string;
+  styleSlug?: string;
+  denominationSlug?: string;
+  language?: string;
+  hasKids?: boolean;
+  hasServiceTimes?: boolean;
+  hasMusic?: boolean;
 };
 
 export type FacetLink = {
@@ -224,15 +238,60 @@ export function getPrimaryDenominationFilter(church: Pick<ChurchDirectoryEntry, 
   return DENOMINATION_FILTERS.find((filter) => matchesDenomination(church.denomination, filter.slug));
 }
 
+function matchesLanguage(church: Pick<ChurchDirectoryEntry, "enrichmentHint"> & { language?: string }, language: string): boolean {
+  const needle = normalize(language);
+  if (!needle) return false;
+  const values = [
+    church.language,
+    ...(church.enrichmentHint?.languages ?? []),
+  ].filter((value): value is string => Boolean(value));
+  return values.some((value) => normalize(value).includes(needle));
+}
+
+function hasMusicSignal(church: Pick<ChurchDirectoryEntry, "playlistCount" | "spotifyPlaylistIds" | "additionalPlaylists"> & { spotifyUrl?: string }): boolean {
+  return getPlaylistCount(church) > 0 || Boolean(church.spotifyUrl);
+}
+
+export function buildChurchMatchReasons(church: ChurchDirectoryEntry, filters: ChurchDirectoryFilters = {}): string[] {
+  const reasons: string[] = [];
+  const query = filters.query?.trim();
+
+  if (query) {
+    reasons.push(`Matches "${query}"`);
+  }
+
+  if (filters.styleSlug && matchesStyle(church.musicStyle, filters.styleSlug)) {
+    const filter = getStyleFilterBySlug(filters.styleSlug);
+    reasons.push(filter ? filter.label : "Worship style match");
+  }
+
+  if (filters.denominationSlug && matchesDenomination(church.denomination, filters.denominationSlug)) {
+    const filter = getDenominationFilterBySlug(filters.denominationSlug);
+    reasons.push(filter ? `${filter.label} roots` : "Tradition match");
+  }
+
+  if (filters.language && matchesLanguage(church, filters.language)) {
+    reasons.push(`${filters.language} language`);
+  }
+
+  if (filters.hasKids) {
+    reasons.push("Kids/youth ministry");
+  }
+
+  if (filters.hasServiceTimes && church.enrichmentHint?.serviceTimes) {
+    reasons.push("Service times listed");
+  }
+
+  if (filters.hasMusic && hasMusicSignal(church)) {
+    reasons.push("Music available");
+  }
+
+  return Array.from(new Set(reasons)).slice(0, 3);
+}
+
 export function filterChurchDirectory(
   churches: ChurchDirectoryEntry[],
-  options: {
-    query?: string;
-    countrySlug?: string;
-    citySlug?: string;
-    styleSlug?: string;
-    denominationSlug?: string;
-  } = {},
+  options: ChurchDirectoryFilters = {},
 ): ChurchDirectoryEntry[] {
   const query = options.query?.trim() ?? "";
 
@@ -259,6 +318,18 @@ export function filterChurchDirectory(
 
   if (options.denominationSlug) {
     filtered = filtered.filter((church) => matchesDenomination(church.denomination, options.denominationSlug!));
+  }
+
+  if (options.language) {
+    filtered = filtered.filter((church) => matchesLanguage(church, options.language!));
+  }
+
+  if (options.hasServiceTimes) {
+    filtered = filtered.filter((church) => Boolean(church.enrichmentHint?.serviceTimes));
+  }
+
+  if (options.hasMusic) {
+    filtered = filtered.filter((church) => hasMusicSignal(church));
   }
 
   if (query) {

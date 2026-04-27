@@ -1,9 +1,24 @@
 const LEGACY_STORAGE_PREFIX = "/storage/v1/object/public/church-assets/";
 
 const MEDIA_BASE_URL = (process.env.NEXT_PUBLIC_MEDIA_BASE_URL || "https://media.gospelchannel.com").replace(/\/$/, "");
+const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
 function getMediaBaseUrl() {
   return MEDIA_BASE_URL;
+}
+
+function getOwnMediaPath(src: string): string | undefined {
+  if (!src.startsWith(MEDIA_BASE_URL)) return undefined;
+  return src.slice(MEDIA_BASE_URL.length) || "/";
+}
+
+export function devMediaImage(src: string): string {
+  if (!IS_DEVELOPMENT) return src;
+
+  const mediaPath = getOwnMediaPath(src);
+  if (!mediaPath) return src;
+
+  return `/api/dev-media${mediaPath}`;
 }
 
 export function rewriteLegacyMediaUrl(value: string | null | undefined): string | undefined {
@@ -39,6 +54,11 @@ export function cfImage(
   opts: { width?: number; height?: number; fit?: "cover" | "contain" | "crop" | "scale-down"; quality?: number; format?: "auto" | "webp" | "avif" } = {},
 ): string {
   if (!src) return src;
+
+  if (IS_DEVELOPMENT) {
+    const devSrc = devMediaImage(src);
+    if (devSrc !== src) return devSrc;
+  }
 
   // Only transform images served from our own domain (R2 via media.gospelchannel.com
   // or same-origin paths). External images (ytimg, scdn) can't go through our CDN.

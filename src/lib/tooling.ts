@@ -3,6 +3,7 @@ import {
   matchesDenomination,
   matchesStyle,
   type ChurchDirectoryEntry,
+  type ChurchDirectoryFilters,
 } from "@/lib/church-directory";
 
 export type ToolChurchPreview = {
@@ -988,6 +989,35 @@ export function scoreQuizLanes(answers: Record<string, string>, lanes: Discovery
   return [...lanes]
     .sort((a, b) => (totals.get(b.id) ?? 0) - (totals.get(a.id) ?? 0))
     .slice(0, 3);
+}
+
+export function getLaneDirectoryFilters(lane: Pick<DiscoveryLane, "matchRules">): Omit<ChurchDirectoryFilters, "query"> {
+  const primaryStyle = lane.matchRules.find((rule) => rule.styleSlug)?.styleSlug;
+  const primaryDenomination = lane.matchRules.find((rule) => rule.denominationSlug)?.denominationSlug;
+
+  return {
+    styleSlug: primaryStyle,
+    denominationSlug: primaryStyle ? undefined : primaryDenomination,
+  };
+}
+
+export function buildChurchDirectoryHrefForLane(
+  lane: Pick<DiscoveryLane, "matchRules">,
+  options: {
+    area?: string;
+    answers?: Record<string, string>;
+  } = {},
+): string {
+  const filters = getLaneDirectoryFilters(lane);
+  const params = new URLSearchParams();
+  const area = options.area?.trim();
+
+  if (area) params.set("q", area.slice(0, 80));
+  if (filters.styleSlug) params.set("style", filters.styleSlug);
+  if (filters.denominationSlug) params.set("denomination", filters.denominationSlug);
+  if (options.answers?.family === "high") params.set("kids", "1");
+
+  return `/church?${params.toString()}`;
 }
 
 export function collectLaneChurchMatches(
