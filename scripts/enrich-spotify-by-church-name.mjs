@@ -98,12 +98,14 @@ function parseArgs(argv) {
     dailyLimit: DEFAULTS.dailyLimit,
     throttleMs: DEFAULTS.throttleMs,
     recheckAfterDays: DEFAULTS.recheckAfterDays,
+    revalidateLegacy: false,
   };
   for (const arg of argv) {
     if (arg === "--dry-run") options.dryRun = true;
     else if (arg === "--force") options.force = true;
     else if (arg === "--since-import") options.sinceImport = true;
     else if (arg === "--daily") options.daily = true;
+    else if (arg === "--revalidate-legacy") options.revalidateLegacy = true;
     else if (arg.startsWith("--slugs=")) options.slugs = arg.split("=")[1].split(",").map((s) => s.trim()).filter(Boolean);
     else if (arg.startsWith("--reason-prefix=")) options.reasonPrefix = arg.split("=")[1];
     else if (arg.startsWith("--limit=")) options.limit = Math.max(0, Number(arg.split("=")[1]) || 0);
@@ -400,6 +402,22 @@ async function loadTargets(sql, options) {
         AND status = 'approved'
     `;
   }
+  if (options.revalidateLegacy) {
+    // Legacy matches: spotify_url set by the old discover flow but never
+    // verified by this strict matcher (spotify_searched_at IS NULL).
+    // Re-runs the matcher against every such row. Kept as-is when the new
+    // best match equals the existing URL, replaced when a better one wins,
+    // cleared when nothing passes minScore.
+    return sql`
+      SELECT slug, name, location, country, website, spotify_url, spotify_searched_at
+      FROM churches
+      WHERE status = 'approved'
+        AND spotify_url IS NOT NULL
+        AND spotify_searched_at IS NULL
+      ORDER BY slug
+      LIMIT ${options.limit > 0 ? options.limit : 1000}
+    `;
+  }
   if (options.daily) {
     // Daily cron-friendly mode: process the next slice of churches that
     // haven't been searched recently, skipping ones that already have a
@@ -465,6 +483,18 @@ async function loadTargets(sql, options) {
 
 async function markSearched(sql, slug) {
   await sql`UPDATE churches SET spotify_searched_at = NOW(), updated_at = NOW() WHERE slug = ${slug}`;
+}
+
+async function clearMatch(sql, slug) {
+  await sql`
+    UPDATE churches
+    SET spotify_url = NULL,
+        spotify_playlist_ids = ARRAY[]::text[],
+        spotify_artist_ids = NULL,
+        spotify_owner_id = NULL,
+        updated_at = NOW()
+    WHERE slug = ${slug}
+  `;
 }
 
 async function writeMatch(sql, slug, match) {
@@ -540,6 +570,9 @@ async function main() {
     belowThreshold: 0,
     errors: 0,
     written: 0,
+    kept: 0,
+    replaced: 0,
+    cleared: 0,
   };
   const matches = [];
 
@@ -577,10 +610,11 @@ async function main() {
     const best = pickBestMatch(church, result);
     const rowUpdated = !options.dryRun;
 
-    const recordMatch = (kept) => {
+    const recordMatch = (action) => {
       matches.push({
         slug: church.slug,
         name: church.name,
+        existingUrl: church.spotify_url || null,
         best: best
           ? {
               type: best.type,
@@ -589,34 +623,63 @@ async function main() {
               url: best.url,
             }
           : null,
-        kept,
+        action,
       });
     };
 
-    if (!best) {
-      summary.noMatch += 1;
-      recordMatch(false);
-      if (rowUpdated) await markSearched(sql, church.slug).catch(() => summary.errors++);
-      return;
-    }
+    const passesThreshold = best && best.score >= options.minScore;
 
-    if (best.score < options.minScore) {
-      summary.belowThreshold += 1;
-      recordMatch(false);
+    if (!passesThreshold) {
+      if (!best) summary.noMatch += 1;
+      else summary.belowThreshold += 1;
+
+      // Legacy revalidation: existing URL is now declared bad, clear it.
+      if (options.revalidateLegacy && church.spotify_url) {
+        recordMatch("cleared");
+        summary.cleared += 1;
+        if (rowUpdated) {
+          try {
+            await clearMatch(sql, church.slug);
+            await markSearched(sql, church.slug);
+          } catch {
+            summary.errors += 1;
+          }
+        }
+        return;
+      }
+
+      recordMatch("rejected");
       if (rowUpdated) await markSearched(sql, church.slug).catch(() => summary.errors++);
       return;
     }
 
     if (best.type === "artist") summary.matchedArtist += 1;
     else summary.matchedPlaylist += 1;
-    recordMatch(true);
 
+    // Legacy revalidation: distinguish kept vs replaced for clarity.
+    if (options.revalidateLegacy) {
+      const isSame = church.spotify_url === best.url;
+      recordMatch(isSame ? "kept" : "replaced");
+      if (isSame) summary.kept += 1;
+      else { summary.replaced += 1; summary.written += 1; }
+      if (!options.dryRun) {
+        try {
+          if (!isSame) await writeMatch(sql, church.slug, best);
+          await markSearched(sql, church.slug);
+        } catch {
+          summary.errors += 1;
+        }
+      }
+      return;
+    }
+
+    recordMatch("written");
     if (!options.dryRun) {
       try {
         await writeMatch(sql, church.slug, best);
         await markSearched(sql, church.slug);
         summary.written += 1;
-      } catch (error) {
+      } catch {
         summary.errors += 1;
       }
     }
@@ -627,24 +690,53 @@ async function main() {
   console.log("\n--- Summary ---");
   console.log(JSON.stringify(summary, null, 2));
 
-  const kept = matches.filter((m) => m.kept);
-  const rejected = matches.filter((m) => !m.kept);
+  if (options.revalidateLegacy) {
+    const replaced = matches.filter((m) => m.action === "replaced");
+    const kept = matches.filter((m) => m.action === "kept");
+    const cleared = matches.filter((m) => m.action === "cleared");
 
-  console.log(`\nKept matches (${kept.length}):`);
-  for (const m of kept.slice(0, 30)) {
-    console.log(`  ${m.best.score.toFixed(2)} [${m.best.type}] ${m.name} → ${m.best.label} | ${m.best.url}`);
-  }
-  if (kept.length > 30) console.log(`  ...and ${kept.length - 30} more`);
-
-  console.log(`\nRejected / below threshold (${rejected.length}):`);
-  for (const m of rejected.slice(0, 15)) {
-    if (m.best) {
-      console.log(`  ${m.best.score.toFixed(2)} [${m.best.type}] ${m.name} → ${m.best.label}`);
-    } else {
-      console.log(`  (no match)   ${m.name}`);
+    console.log(`\nReplaced (${replaced.length}) — strict matcher found a better candidate:`);
+    for (const m of replaced.slice(0, 30)) {
+      console.log(`  ${m.best.score.toFixed(2)} [${m.best.type}] ${m.name}`);
+      console.log(`        old: ${m.existingUrl}`);
+      console.log(`        new: ${m.best.url} (${m.best.label})`);
     }
+    if (replaced.length > 30) console.log(`  ...and ${replaced.length - 30} more`);
+
+    console.log(`\nCleared (${cleared.length}) — no candidate above threshold:`);
+    for (const m of cleared.slice(0, 30)) {
+      const top = m.best ? `${m.best.score.toFixed(2)} [${m.best.type}] → ${m.best.label}` : "(no candidate)";
+      console.log(`  ${m.name}`);
+      console.log(`        old: ${m.existingUrl}`);
+      console.log(`        top: ${top}`);
+    }
+    if (cleared.length > 30) console.log(`  ...and ${cleared.length - 30} more`);
+
+    console.log(`\nKept (${kept.length}) — existing match validated by strict matcher:`);
+    for (const m of kept.slice(0, 10)) {
+      console.log(`  ${m.best.score.toFixed(2)} [${m.best.type}] ${m.name} | ${m.best.url}`);
+    }
+    if (kept.length > 10) console.log(`  ...and ${kept.length - 10} more`);
+  } else {
+    const kept = matches.filter((m) => m.action === "written");
+    const rejected = matches.filter((m) => m.action === "rejected");
+
+    console.log(`\nKept matches (${kept.length}):`);
+    for (const m of kept.slice(0, 30)) {
+      console.log(`  ${m.best.score.toFixed(2)} [${m.best.type}] ${m.name} → ${m.best.label} | ${m.best.url}`);
+    }
+    if (kept.length > 30) console.log(`  ...and ${kept.length - 30} more`);
+
+    console.log(`\nRejected / below threshold (${rejected.length}):`);
+    for (const m of rejected.slice(0, 15)) {
+      if (m.best) {
+        console.log(`  ${m.best.score.toFixed(2)} [${m.best.type}] ${m.name} → ${m.best.label}`);
+      } else {
+        console.log(`  (no match)   ${m.name}`);
+      }
+    }
+    if (rejected.length > 15) console.log(`  ...and ${rejected.length - 15} more`);
   }
-  if (rejected.length > 15) console.log(`  ...and ${rejected.length - 15} more`);
 
   if (options.dryRun) console.log("\nDRY RUN — no DB writes performed.");
 }
