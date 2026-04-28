@@ -2,6 +2,11 @@ const LEGACY_STORAGE_PREFIX = "/storage/v1/object/public/church-assets/";
 
 const MEDIA_BASE_URL = (process.env.NEXT_PUBLIC_MEDIA_BASE_URL || "https://media.gospelchannel.com").replace(/\/$/, "");
 const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
+const RENDERABLE_IMAGE_HOSTS = new Set([
+  "i.ytimg.com",
+  "i.scdn.co",
+  "mosaic.scdn.co",
+]);
 
 function getMediaBaseUrl() {
   return MEDIA_BASE_URL;
@@ -40,6 +45,24 @@ export function rewriteLegacyMediaUrl(value: string | null | undefined): string 
     return `${getMediaBaseUrl()}/${key}`;
   } catch {
     return trimmed;
+  }
+}
+
+export function isRenderableImageUrl(value: string | null | undefined): value is string {
+  const src = value?.trim();
+  if (!src) return false;
+  if (src.startsWith("/")) return true;
+
+  try {
+    const parsed = new URL(src);
+    const mediaBase = new URL(MEDIA_BASE_URL);
+    const hostname = parsed.hostname.toLowerCase();
+
+    return hostname === mediaBase.hostname.toLowerCase()
+      || RENDERABLE_IMAGE_HOSTS.has(hostname)
+      || hostname.endsWith(".googleusercontent.com");
+  } catch {
+    return false;
   }
 }
 

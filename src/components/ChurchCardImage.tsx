@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { cfImage } from "@/lib/media";
+import { cfImage, isRenderableImageUrl } from "@/lib/media";
 
 type ChurchCardImageProps = {
   initials: string;
@@ -16,13 +16,15 @@ const CARD_IMG_WIDTH = 700;
 const CARD_IMG_HEIGHT = 224;
 
 export function ChurchCardImage({ initials, gradient, thumbnailUrl, logoUrl }: ChurchCardImageProps) {
-  const [imageUrl, setImageUrl] = useState<string | undefined>(thumbnailUrl || logoUrl);
+  const renderableThumbnailUrl = isRenderableImageUrl(thumbnailUrl) ? thumbnailUrl : undefined;
+  const renderableLogoUrl = isRenderableImageUrl(logoUrl) ? logoUrl : undefined;
+  const [imageUrl, setImageUrl] = useState<string | undefined>(renderableThumbnailUrl || renderableLogoUrl);
   const showImage = Boolean(imageUrl);
-  const isThumbnail = Boolean(thumbnailUrl) && imageUrl === thumbnailUrl;
+  const isThumbnail = Boolean(renderableThumbnailUrl) && imageUrl === renderableThumbnailUrl;
 
   function handleError() {
-    if (imageUrl === thumbnailUrl && logoUrl && logoUrl !== thumbnailUrl) {
-      setImageUrl(logoUrl);
+    if (imageUrl === renderableThumbnailUrl && renderableLogoUrl && renderableLogoUrl !== renderableThumbnailUrl) {
+      setImageUrl(renderableLogoUrl);
       return;
     }
     setImageUrl(undefined);

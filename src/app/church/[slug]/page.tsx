@@ -41,6 +41,7 @@ import { slugify } from "@/lib/prayer-filters";
 import { uniqueSpotifyPlaylistIds } from "@/lib/spotify-playlist";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { HeroImage } from "@/components/HeroImage";
+import { isRenderableImageUrl } from "@/lib/media";
 import { resolveCanonicalChurchSlug } from "@/lib/church-slugs";
 import { CHURCH_SIZE_LABELS, getProfileOptionLabel } from "@/lib/profile-fields";
 import { buildChurchDescription, buildChurchTitle } from "@/lib/church-metadata";
@@ -97,19 +98,6 @@ function pickDisplayChurchName(churchName: string, officialChurchName?: string):
 
   const tokenSimilarity = (2 * overlap) / (baseTokens.size + officialTokens.size);
   return tokenSimilarity >= 0.6 ? official : churchName;
-}
-
-function isRenderableImageUrl(value: string | null | undefined): value is string {
-  if (!value) return false;
-  if (value.startsWith("/")) return true;
-  if (!isValidPublicUrl(value)) return false;
-
-  const hostname = new URL(value).hostname.toLowerCase();
-  return hostname === "media.gospelchannel.com"
-    || hostname === "i.ytimg.com"
-    || hostname === "i.scdn.co"
-    || hostname === "mosaic.scdn.co"
-    || hostname.endsWith(".googleusercontent.com");
 }
 
 /* ─── metadata (unchanged) ─── */

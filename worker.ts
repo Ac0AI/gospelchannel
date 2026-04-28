@@ -23,7 +23,7 @@ type WorkerHandler = {
 
 const openNextWorker = generatedOpenNextWorker as OpenNextWorkerModule;
 const SITEMAP_EDGE_CACHE_NAME = "gospelchannel-sitemaps";
-const HTML_EDGE_CACHE_NAME = "gospelchannel-html";
+const HTML_EDGE_CACHE_NAME = "gospelchannel-html-v2";
 const HTML_EDGE_CACHE_TTL_SECONDS = 3600;
 const HTML_EDGE_CACHE_SWR_SECONDS = 86400;
 const AUTH_COOKIE_PATTERN = /(?:^|;\s*)(?:better-auth|session|auth)/i;
