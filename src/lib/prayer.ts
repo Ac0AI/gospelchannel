@@ -68,6 +68,37 @@ function revalidatePrayers(): void {
   revalidateTag(PRAYERS_CACHE_TAG, "max");
 }
 
+// Slugs of churches that have at least one prayer. Used by the sitemap and
+// metadata to skip empty filter pages — Google was flagging ~1.6k empty
+// prayerwall sub-pages as "duplicate without user-selected canonical"
+// because they share the same shell.
+const getChurchSlugsWithPrayersCached = unstable_cache(
+  async (): Promise<string[]> => {
+    if (!isPrayerStoreEnabled()) {
+      return [...new Set(listMemoryPrayers().map((p) => p.churchSlug))];
+    }
+    try {
+      const sb = createAdminClient();
+      const { data } = await sb
+        .from<{ church_slug: string }[]>("prayers")
+        .select("church_slug");
+      const set = new Set<string>();
+      for (const row of (data as Array<{ church_slug: string }> | null) ?? []) {
+        if (row?.church_slug) set.add(row.church_slug);
+      }
+      return [...set];
+    } catch {
+      return [];
+    }
+  },
+  ["prayer-church-slug-list"],
+  { revalidate: PRAYERS_CACHE_SECONDS, tags: [PRAYERS_CACHE_TAG] }
+);
+
+export async function getChurchSlugsWithPrayers(): Promise<Set<string>> {
+  return new Set(await getChurchSlugsWithPrayersCached());
+}
+
 const getPrayersCached = unstable_cache(
   async (churchSlug: string | null, limit: number, offset: number): Promise<Prayer[]> => {
     if (!isPrayerStoreEnabled()) return getMemoryPrayers({ churchSlug, limit, offset });

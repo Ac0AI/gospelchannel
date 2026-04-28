@@ -23,6 +23,7 @@ import {
   getPublishedCampusesSlice,
 } from "@/lib/church-networks";
 import { getPrayerFilterIndex, type FilterOption } from "@/lib/prayer-filters";
+import { getChurchSlugsWithPrayers } from "@/lib/prayer";
 import { getCompareGuideSlugs } from "@/lib/tooling";
 import { CONTENT_UPDATED_AT } from "@/lib/utils";
 
@@ -225,14 +226,41 @@ const getSitemapFacetDataCached = unstable_cache(
 
 const getSitemapPrayerDataCached = unstable_cache(
   async (): Promise<SitemapPrayerData> => {
-    const index = await getPrayerFilterIndex();
+    // Only emit sitemap entries for filter pages that have at least one
+    // prayer. Empty filter pages share the same shell and triggered "Duplicate
+    // without user-selected canonical" issues for ~1.6k URLs in GSC.
+    const [index, prayerSlugs] = await Promise.all([
+      getPrayerFilterIndex(),
+      getChurchSlugsWithPrayers(),
+    ]);
+
+    const populatedChurchSlugs = new Set<string>();
+    const populatedCountrySlugs = new Set<string>();
+    const populatedCitySlugs = new Set<string>();
+    for (const churchSlug of prayerSlugs) {
+      populatedChurchSlugs.add(churchSlug);
+      const country = index.countrySlugByChurchSlug[churchSlug];
+      if (country) populatedCountrySlugs.add(country);
+      // City lookup is by reverse: walk allCityOptions to find which contain this slug.
+    }
+    // Country/city options that have prayers
+    const countryOptions = index.countryOptions.filter((o) =>
+      populatedCountrySlugs.has(o.slug),
+    );
+    const cityOptions = index.allCityOptions.filter((opt) => {
+      // Key for "no country, just city" entries from getCountryCityKey
+      const cityChurches = index.churchOptionsByCountryAndCity[`::${opt.slug}`];
+      if (!cityChurches) return false;
+      return cityChurches.some((c) => populatedChurchSlugs.has(c.slug));
+    });
+
     return {
-      countryOptions: index.countryOptions,
-      cityOptions: index.allCityOptions,
-      prayerChurchCount: index.allChurchOptions.length,
+      countryOptions,
+      cityOptions,
+      prayerChurchCount: populatedChurchSlugs.size,
     };
   },
-  ["sitemap-prayer-v1"],
+  ["sitemap-prayer-v2"],
   { revalidate: 3600, tags: [CHURCH_INDEX_TAG] },
 );
 
@@ -408,8 +436,17 @@ export async function buildSitemapEntriesForChunk(id: number): Promise<SitemapEn
 
   const prayerChurchWindow = getSectionWindow(rangeStart, rangeEndExclusive, cursor, counts.prayerChurchCount);
   if (prayerChurchWindow) {
-    const prayerIndex = await getPrayerFilterIndex();
-    const prayerChurches = prayerIndex.allChurchOptions.slice(
+    // Filter to slugs that actually have prayers — emitting all 72k church
+    // slugs as prayer-wall entries causes Google to flag empty pages as
+    // duplicates.
+    const [prayerIndex, prayerSlugs] = await Promise.all([
+      getPrayerFilterIndex(),
+      getChurchSlugsWithPrayers(),
+    ]);
+    const populatedChurches = prayerIndex.allChurchOptions.filter((o) =>
+      prayerSlugs.has(o.slug),
+    );
+    const prayerChurches = populatedChurches.slice(
       prayerChurchWindow.offset,
       prayerChurchWindow.offset + prayerChurchWindow.limit,
     );

@@ -81,9 +81,22 @@ export async function generateMetadata({
     church: `Pray for ${filter.displayName} and their community.`,
   };
 
+  // Empty filter pages all look identical to Google (same shell, "No prayers"
+  // body) and trigger "Duplicate without user-selected canonical" issues.
+  // Tell crawlers to skip them until they have at least one prayer. Same
+  // unstable_cache entry as the page render so this is a free DB call.
+  const samplePrayers = await getPrayersFiltered({
+    country: filter.type === "country" ? filter.slug : undefined,
+    city: filter.type === "city" ? filter.slug : undefined,
+    churchSlug: filter.type === "church" ? filter.slug : undefined,
+    limit: 1,
+  });
+  const isEmpty = samplePrayers.length === 0;
+
   return {
     title: titles[filter.type],
     description: descriptions[filter.type],
+    robots: isEmpty ? { index: false, follow: true } : undefined,
     alternates: {
       canonical: `https://gospelchannel.com/prayerwall/${segments.join("/")}`,
     },
