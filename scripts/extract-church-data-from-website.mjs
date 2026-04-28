@@ -28,12 +28,13 @@ import { fileURLToPath } from "node:url";
 import { existsSync, readFileSync, appendFileSync } from "node:fs";
 import { neon } from "@neondatabase/serverless";
 import { loadLocalEnv } from "./lib/local-env.mjs";
+import { detectTechnologies, pickPrimaryPlatform, getSalesAngle } from "./lib/website-platform.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(resolve(__dirname, ".."));
 
-const FETCH_TIMEOUT = 10_000;
-const CONCURRENCY = 8;
+const FETCH_TIMEOUT = 6_000;
+const CONCURRENCY = 16;
 const HTML_CAP_BYTES = 600_000;
 
 const CONTACT_PATHS = [
@@ -229,6 +230,12 @@ async function scrapeChurch(church) {
   const emails = extractEmails(combined);
   const email = pickBestEmail(emails);
 
+  // Platform / tech detection — uses only the homepage HTML for stability
+  const homepageHtml = allHtml[0];
+  const technologies = detectTechnologies({ website: church.website, finalUrl: baseUrl, html: homepageHtml });
+  const primaryPlatform = pickPrimaryPlatform(technologies);
+  const salesAngle = getSalesAngle(primaryPlatform);
+
   return {
     email,
     phone: extractPhone(combined),
@@ -238,6 +245,10 @@ async function scrapeChurch(church) {
     apple_podcast_url: extractApplePodcast(combined),
     donate_url: extractDonate(combined),
     service_times: extractServiceTimes(combined),
+    primary_platform: primaryPlatform,
+    technologies: technologies && technologies.length > 0 ? technologies : null,
+    sales_angle: salesAngle,
+    final_url: baseUrl,
   };
 }
 
@@ -372,6 +383,37 @@ async function applyPhase(sql, outputFile, dryRun) {
     process.stdout.write(`\r  ${written}/${records.length}`);
   }
   console.log(`\nPhase 2 done in ${((Date.now()-startedAt)/1000).toFixed(1)}s.`);
+
+  // Phase 2b: upsert platform/tech data into church_website_tech
+  const techRecords = records.filter((r) => r.primary_platform || r.technologies);
+  if (techRecords.length > 0) {
+    console.log(`\nPhase 2b (church_website_tech): ${techRecords.length} platform records`);
+    const startedTech = Date.now();
+    for (let i = 0; i < techRecords.length; i += BATCH) {
+      const slice = techRecords.slice(i, i + BATCH);
+      for (const r of slice) {
+        await sql`
+          INSERT INTO church_website_tech (
+            church_slug, website_url, final_url, http_status, primary_platform,
+            technologies, sales_angle, detection_version, last_checked_at, created_at, updated_at
+          ) VALUES (
+            ${r.slug}, ${r.final_url || null}, ${r.final_url || null}, 200, ${r.primary_platform || 'Unknown'},
+            ${r.technologies && r.technologies.length > 0 ? JSON.stringify(r.technologies) : '[]'}::jsonb,
+            ${r.sales_angle || null}, 1, NOW(), NOW(), NOW()
+          )
+          ON CONFLICT (church_slug) DO UPDATE SET
+            primary_platform = EXCLUDED.primary_platform,
+            technologies = EXCLUDED.technologies,
+            sales_angle = EXCLUDED.sales_angle,
+            final_url = EXCLUDED.final_url,
+            last_checked_at = NOW(),
+            updated_at = NOW()
+        `;
+      }
+      process.stdout.write(`\r  ${Math.min(i + BATCH, techRecords.length)}/${techRecords.length}`);
+    }
+    console.log(`\nPhase 2b done in ${((Date.now()-startedTech)/1000).toFixed(1)}s.`);
+  }
 }
 
 /* ── Main ── */
