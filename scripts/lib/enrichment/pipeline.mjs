@@ -4,22 +4,38 @@
  */
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { createClient } from "@supabase/supabase-js";
 import { fetchGooglePlaces } from "./google-places.mjs";
 import { fetchFacebookPage } from "./facebook-scraper.mjs";
 import { crawlChurchWebsite } from "./website-crawler.mjs";
 import { extractChurchData, generateChurchContent } from "./llm-extractor.mjs";
 import { findPublishedDuplicate } from "./disambiguator.mjs";
-import { mapWithConcurrency, sleep } from "./rate-limiter.mjs";
+import { sleep } from "./rate-limiter.mjs";
 
 const SCHEMA_VERSION = 1;
+
+const JSONB_FIELDS = new Set([
+  "service_times",
+  "raw_google_places",
+  "raw_crawled_pages",
+  "sources",
+  "visitor_faq",
+  "amenities",
+]);
+
+function serializeValue(column, value) {
+  if (value === null || value === undefined) return null;
+  if (JSONB_FIELDS.has(column) && typeof value !== "string") {
+    return JSON.stringify(value);
+  }
+  return value;
+}
 
 /**
  * Load all churches that need enrichment.
  */
 export async function loadChurchesForEnrichment({
   rootDir,
-  supabase,
+  sql,
   status,
   region,
   slug,
@@ -47,73 +63,74 @@ export async function loadChurchesForEnrichment({
 
   // Load pending/approved candidates from church_candidates table
   if (!slug) {
-    const query = supabase
-      .from("church_candidates")
-      .select("id,name,country,website,status,location");
-
+    let candidates;
     if (status) {
-      query.eq("status", status);
+      candidates = await sql.query(
+        `SELECT id, name, country, website, status, location FROM church_candidates WHERE status = $1`,
+        [status],
+      );
     } else {
-      query.in("status", ["pending", "approved"]);
+      candidates = await sql.query(
+        `SELECT id, name, country, website, status, location FROM church_candidates WHERE status = ANY($1)`,
+        [["pending", "approved"]],
+      );
     }
 
-    const { data: candidates } = await query;
+    for (const c of candidates) {
+      if (region && !matchesRegion(c.country, region)) continue;
 
-    if (candidates) {
-      for (const c of candidates) {
-        if (region && !matchesRegion(c.country, region)) continue;
+      // Check for duplicate against published churches
+      const dup = findPublishedDuplicate(c, published);
+      if (dup) continue;
 
-        // Check for duplicate against published churches
-        const dup = findPublishedDuplicate(c, published);
-        if (dup) continue;
-
-        churches.push({
-          type: "candidate",
-          candidateId: c.id,
-          name: c.name,
-          location: c.location || "",
-          country: c.country || "",
-          website: c.website || "",
-          denomination: "",
-        });
-      }
+      churches.push({
+        type: "candidate",
+        candidateId: c.id,
+        name: c.name,
+        location: c.location || "",
+        country: c.country || "",
+        website: c.website || "",
+        denomination: "",
+      });
     }
   }
 
   // Load discovered churches from churches table (not in churches.json)
   const publishedSlugs = new Set(published.map((c) => c.slug));
   {
-    let query = supabase
-      .from("churches")
-      .select("slug,name,country,location,website,denomination,discovery_source");
-
+    let dbChurches;
     if (slug) {
-      query = query.eq("slug", slug);
+      dbChurches = await sql.query(
+        `SELECT slug, name, country, location, website, denomination, discovery_source FROM churches WHERE slug = $1`,
+        [slug],
+      );
     } else if (status) {
-      query = query.eq("status", status);
+      dbChurches = await sql.query(
+        `SELECT slug, name, country, location, website, denomination, discovery_source FROM churches WHERE status = $1`,
+        [status],
+      );
     } else {
-      query = query.in("status", ["pending", "approved"]);
+      dbChurches = await sql.query(
+        `SELECT slug, name, country, location, website, denomination, discovery_source FROM churches WHERE status = ANY($1)`,
+        [["pending", "approved"]],
+      );
     }
 
-    const { data: dbChurches } = await query;
+    for (const c of dbChurches) {
+      if (publishedSlugs.has(c.slug)) continue;
+      if (churches.some((ch) => ch.slug === c.slug)) continue;
+      if (region && !matchesRegion(c.country, region)) continue;
 
-    if (dbChurches) {
-      for (const c of dbChurches) {
-        if (publishedSlugs.has(c.slug)) continue;
-        if (churches.some((ch) => ch.slug === c.slug)) continue;
-        if (region && !matchesRegion(c.country, region)) continue;
-
-        churches.push({
-          type: "discovered",
-          slug: c.slug,
-          name: c.name,
-          location: c.location || "",
-          country: c.country || "",
-          website: c.website || "",
-          denomination: c.denomination || "",
-          discoverySource: c.discovery_source,
-        });
-      }
+      churches.push({
+        type: "discovered",
+        slug: c.slug,
+        name: c.name,
+        location: c.location || "",
+        country: c.country || "",
+        website: c.website || "",
+        denomination: c.denomination || "",
+        discoverySource: c.discovery_source,
+      });
     }
   }
 
@@ -123,13 +140,13 @@ export async function loadChurchesForEnrichment({
 /**
  * Check which churches already have enrichment data.
  */
-export async function loadExistingEnrichments(supabase) {
-  const { data } = await supabase
-    .from("church_enrichments")
-    .select("church_slug,candidate_id,enrichment_status");
+export async function loadExistingEnrichments(sql) {
+  const rows = await sql.query(
+    `SELECT church_slug, candidate_id, enrichment_status FROM church_enrichments`,
+  );
 
   const enriched = new Map();
-  for (const row of data || []) {
+  for (const row of rows) {
     const key = row.church_slug || row.candidate_id;
     enriched.set(key, row.enrichment_status);
   }
@@ -139,17 +156,16 @@ export async function loadExistingEnrichments(supabase) {
 /**
  * Load existing raw data for re-extraction mode.
  */
-async function loadExistingRawData(supabase, church) {
+async function loadExistingRawData(sql, church) {
   const column = church.slug ? "church_slug" : "candidate_id";
   const value = church.slug || church.candidateId;
 
-  const { data } = await supabase
-    .from("church_enrichments")
-    .select("raw_google_places,raw_crawled_pages,raw_website_markdown")
-    .eq(column, value)
-    .single();
+  const rows = await sql.query(
+    `SELECT raw_google_places, raw_crawled_pages, raw_website_markdown FROM church_enrichments WHERE ${column} = $1 LIMIT 1`,
+    [value],
+  );
 
-  return data;
+  return rows[0] || null;
 }
 
 /**
@@ -157,13 +173,13 @@ async function loadExistingRawData(supabase, church) {
  */
 export async function enrichOneChurch(
   church,
-  { supabase, apifyToken, firecrawlKey, anthropicKey, reExtract = false }
+  { sql, apifyToken, firecrawlKey, anthropicKey, reExtract = false },
 ) {
   const label = `${church.name} (${church.location || church.country})`;
   console.log(`\n--- Enriching: ${label} ---`);
 
   // Mark as enriching
-  await upsertEnrichmentStatus(supabase, church, "enriching");
+  await upsertEnrichmentStatus(sql, church, "enriching");
 
   try {
     const sources = [];
@@ -177,7 +193,7 @@ export async function enrichOneChurch(
     if (reExtract) {
       // Re-extract mode: load existing raw data, skip crawling
       console.log(`  [re-extract] Loading cached raw data`);
-      const existing = await loadExistingRawData(supabase, church);
+      const existing = await loadExistingRawData(sql, church);
 
       if (existing) {
         rawGooglePlaces = existing.raw_google_places;
@@ -204,7 +220,7 @@ export async function enrichOneChurch(
           });
       } else {
         console.log(`  [re-extract] No existing raw data found, skipping`);
-        await upsertEnrichmentStatus(supabase, church, "failed");
+        await upsertEnrichmentStatus(sql, church, "failed");
         return { success: false, confidence: 0, label };
       }
     } else {
@@ -225,10 +241,9 @@ export async function enrichOneChurch(
       }
 
       // Step 1.5: Facebook page (if URL known from previous enrichment or church data)
-      let facebookData = null;
       if (apifyToken) {
         // Check if we already know the Facebook URL from a previous run
-        const existingFbUrl = await getExistingFacebookUrl(supabase, church);
+        const existingFbUrl = await getExistingFacebookUrl(sql, church);
         if (existingFbUrl) {
           facebookData = await fetchFacebookPage(existingFbUrl, apifyToken);
           if (facebookData.data) {
@@ -267,7 +282,7 @@ export async function enrichOneChurch(
     if (anthropicKey && (googleData || allMarkdown)) {
       extracted = await extractChurchData(
         { googleData, websiteMarkdown: allMarkdown, church },
-        anthropicKey
+        anthropicKey,
       );
       sources.push({
         type: "claude_extraction",
@@ -278,7 +293,7 @@ export async function enrichOneChurch(
 
       content = await generateChurchContent(
         { church, extractedData: extracted, websiteMarkdown: homepageMarkdown },
-        anthropicKey
+        anthropicKey,
       );
       sources.push({
         type: "claude_content",
@@ -290,7 +305,7 @@ export async function enrichOneChurch(
     const confidence = computeConfidence(
       googleData,
       extracted,
-      googleConfidence
+      googleConfidence,
     );
 
     const fb = facebookData?.data || {};
@@ -300,16 +315,24 @@ export async function enrichOneChurch(
       candidate_id: church.candidateId || null,
 
       // Name
-      official_church_name: extracted?.officialChurchName || googleData?.title || null,
+      official_church_name:
+        extracted?.officialChurchName || googleData?.title || null,
 
       // Level 1 — merge Google Places > Facebook > LLM extraction
       street_address: googleData?.streetAddress || fb.address || null,
       google_maps_url: googleData?.googleMapsUrl || null,
       latitude: googleData?.latitude || null,
       longitude: googleData?.longitude || null,
-      service_times: extracted?.serviceTimes || googleData?.serviceTimes || fb.businessHours || null,
+      service_times:
+        extracted?.serviceTimes ||
+        googleData?.serviceTimes ||
+        fb.businessHours ||
+        null,
       theological_orientation: extracted?.theologicalOrientation || null,
-      denomination_network: extracted?.denominationNetwork || extractDenominationFromCategories(fb.categories) || null,
+      denomination_network:
+        extracted?.denominationNetwork ||
+        extractDenominationFromCategories(fb.categories) ||
+        null,
       languages: extracted?.languages || null,
       phone: extracted?.phone || googleData?.phone || fb.phone || null,
       contact_email: extracted?.contactEmail || fb.email || null,
@@ -324,7 +347,10 @@ export async function enrichOneChurch(
       children_ministry: extracted?.childrenMinistry ?? null,
       youth_ministry: extracted?.youthMinistry ?? null,
       ministries: extracted?.ministries || null,
-      church_size: extracted?.churchSize || estimateChurchSizeFromFollowers(fb.followers || fb.likes) || null,
+      church_size:
+        extracted?.churchSize ||
+        estimateChurchSizeFromFollowers(fb.followers || fb.likes) ||
+        null,
 
       // Level 3
       seo_description: content?.seoDescription || null,
@@ -347,17 +373,17 @@ export async function enrichOneChurch(
       last_enriched_at: new Date().toISOString(),
     };
 
-    await upsertEnrichment(supabase, church, enrichmentRow);
+    await upsertEnrichment(sql, church, enrichmentRow);
 
     console.log(
-      `  [done] Confidence: ${confidence.toFixed(2)}, Sources: ${sources.map((s) => s.type).join(", ")}`
+      `  [done] Confidence: ${confidence.toFixed(2)}, Sources: ${sources.map((s) => s.type).join(", ")}`,
     );
     return { success: true, confidence, label };
   } catch (err) {
     // Ensure we mark as failed if anything throws
     console.error(`  [error] ${err.message}`);
     try {
-      await upsertEnrichmentStatus(supabase, church, "failed");
+      await upsertEnrichmentStatus(sql, church, "failed");
     } catch {
       // Ignore upsert failure during error handling
     }
@@ -365,26 +391,58 @@ export async function enrichOneChurch(
   }
 }
 
-async function upsertEnrichmentStatus(supabase, church, status) {
-  const key = church.slug
-    ? { church_slug: church.slug }
-    : { candidate_id: church.candidateId };
-
-  await supabase.from("church_enrichments").upsert(
-    { ...key, enrichment_status: status },
-    { onConflict: church.slug ? "church_slug" : "candidate_id" }
-  );
+async function upsertEnrichmentStatus(sql, church, status) {
+  if (church.slug) {
+    await sql.query(
+      `INSERT INTO church_enrichments (church_slug, enrichment_status)
+       VALUES ($1, $2)
+       ON CONFLICT (church_slug) DO UPDATE SET
+         enrichment_status = EXCLUDED.enrichment_status,
+         updated_at = NOW()`,
+      [church.slug, status],
+    );
+  } else {
+    await sql.query(
+      `INSERT INTO church_enrichments (candidate_id, enrichment_status)
+       VALUES ($1, $2)
+       ON CONFLICT (candidate_id) DO UPDATE SET
+         enrichment_status = EXCLUDED.enrichment_status,
+         updated_at = NOW()`,
+      [church.candidateId, status],
+    );
+  }
 }
 
-async function upsertEnrichment(supabase, church, row) {
+async function upsertEnrichment(sql, church, row) {
   const conflict = church.slug ? "church_slug" : "candidate_id";
-  const { error } = await supabase
-    .from("church_enrichments")
-    .upsert(row, { onConflict: conflict });
 
-  if (error) {
-    console.error(`  [save] Upsert error: ${error.message}`);
-    throw error;
+  // Strip null primary key alternative — only the real one stays
+  const filtered = { ...row };
+  if (church.slug) delete filtered.candidate_id;
+  else delete filtered.church_slug;
+
+  const columns = Object.keys(filtered);
+  const values = columns.map((col) => serializeValue(col, filtered[col]));
+  const placeholders = columns.map((_, i) => `$${i + 1}`);
+  const updates = columns
+    .filter((col) => col !== conflict)
+    .map((col) => `${col} = EXCLUDED.${col}`);
+
+  // Always bump updated_at on UPDATE path
+  updates.push(`updated_at = NOW()`);
+
+  const text = `
+    INSERT INTO church_enrichments (${columns.join(", ")})
+    VALUES (${placeholders.join(", ")})
+    ON CONFLICT (${conflict}) DO UPDATE SET
+      ${updates.join(",\n      ")}
+  `;
+
+  try {
+    await sql.query(text, values);
+  } catch (err) {
+    console.error(`  [save] Upsert error: ${err.message}`);
+    throw err;
   }
 }
 
@@ -414,17 +472,16 @@ function computeConfidence(googleData, extracted, googleConfidence) {
 /**
  * Look up existing Facebook URL from a previous enrichment run.
  */
-async function getExistingFacebookUrl(supabase, church) {
+async function getExistingFacebookUrl(sql, church) {
   const column = church.slug ? "church_slug" : "candidate_id";
   const value = church.slug || church.candidateId;
 
-  const { data } = await supabase
-    .from("church_enrichments")
-    .select("facebook_url")
-    .eq(column, value)
-    .single();
+  const rows = await sql.query(
+    `SELECT facebook_url FROM church_enrichments WHERE ${column} = $1 LIMIT 1`,
+    [value],
+  );
 
-  return data?.facebook_url || null;
+  return rows[0]?.facebook_url || null;
 }
 
 /**

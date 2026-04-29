@@ -31,7 +31,7 @@ process.on("uncaughtException", (err) => {
 
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { createClient } from "@supabase/supabase-js";
+import { neon } from "@neondatabase/serverless";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import {
   loadChurchesForEnrichment,
@@ -72,7 +72,7 @@ async function main() {
   const limit = args.limit ? parseInt(args.limit, 10) : Infinity;
 
   // Validate required env
-  const required = ["NEXT_PUBLIC_SUPABASE_URL", "SUPABASE_SECRET_KEY"];
+  const required = ["DATABASE_URL"];
   for (const key of required) {
     if (!process.env[key]) {
       console.error(`Missing required env var: ${key}`);
@@ -96,17 +96,13 @@ async function main() {
     }
   }
 
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.SUPABASE_SECRET_KEY,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  );
+  const sql = neon(process.env.DATABASE_URL);
 
   // Load churches
   console.log("Loading churches...");
   const allChurches = await loadChurchesForEnrichment({
     rootDir: ROOT_DIR,
-    supabase,
+    sql,
     status,
     region,
     slug,
@@ -116,7 +112,7 @@ async function main() {
   );
 
   // Filter already-enriched
-  const existing = await loadExistingEnrichments(supabase);
+  const existing = await loadExistingEnrichments(sql);
   let toProcess = allChurches.filter((c) => {
     const key = c.slug || c.candidateId;
     const currentStatus = existing.get(key);
@@ -124,7 +120,13 @@ async function main() {
     if (force) return true;
     if (reExtract) return currentStatus === "complete";
     if (!currentStatus) return true;
-    if (currentStatus === "pending" || currentStatus === "failed" || currentStatus === "stale") return true;
+    if (
+      currentStatus === "pending" ||
+      currentStatus === "partial" ||
+      currentStatus === "failed" ||
+      currentStatus === "stale"
+    )
+      return true;
     return false;
   });
 
@@ -167,7 +169,7 @@ async function main() {
     CONCURRENCY,
     (church) =>
       enrichOneChurch(church, {
-        supabase,
+        sql,
         apifyToken: process.env.APIFY_TOKEN || null,
         firecrawlKey: process.env.FIRECRAWL_API_KEY || null,
         anthropicKey: process.env.ANTHROPIC_API_KEY || null,
