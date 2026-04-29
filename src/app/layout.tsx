@@ -80,6 +80,16 @@ export default function RootLayout({
 }>) {
   const scriptChurchCopy = "Gospel helps you find the right church before your first visit. Every church has a channel you can tune into through worship, service details, and community signals.";
   const scriptBrowseCopy = "Compare church channels by worship style, tradition, language, city, and service details before your first visit.";
+  const knowsAbout = [
+    "church discovery",
+    "worship style",
+    "church tradition",
+    "denomination",
+    "language",
+    "service details",
+    "first church visit",
+    "public church directory",
+  ];
   return (
     <html lang="en">
       <body className={`${sans.variable} ${serif.variable} min-h-screen overflow-x-hidden bg-linen text-espresso antialiased`}>
@@ -104,6 +114,8 @@ export default function RootLayout({
                 name: "GospelChannel",
                 url: "https://gospelchannel.com",
                 description: scriptChurchCopy,
+                knowsAbout,
+                isAccessibleForFree: true,
                 logo: {
                   "@type": "ImageObject",
                   url: "https://gospelchannel.com/icon.svg",
@@ -118,6 +130,8 @@ export default function RootLayout({
                 url: "https://gospelchannel.com",
                 description: scriptBrowseCopy,
                 inLanguage: "en",
+                about: knowsAbout,
+                isAccessibleForFree: true,
                 publisher: { "@id": "https://gospelchannel.com/#organization" },
                 potentialAction: {
                   "@type": "SearchAction",

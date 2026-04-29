@@ -76,6 +76,14 @@ const nextConfig: NextConfig = {
               "media-src 'self' https://media.gospelchannel.com",
             ].join("; "),
           },
+          {
+            key: "Link",
+            value: [
+              "</sitemap.xml>; rel=\"sitemap\"; type=\"application/xml\"",
+              "</llms.txt>; rel=\"describedby\"; type=\"text/plain\"",
+              "</index.md>; rel=\"alternate\"; type=\"text/markdown\"",
+            ].join(", "),
+          },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
