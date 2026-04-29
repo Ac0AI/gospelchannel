@@ -11,6 +11,13 @@ export const revalidate = 3600;
 
 const PAGE_URL = "https://gospelchannel.com/european-church-tech-2026";
 const OG_IMAGE_URL = "https://gospelchannel.com/european-church-tech/og-hero.png";
+const DOI = "10.5281/zenodo.19882722";
+const DOI_URL = `https://doi.org/${DOI}`;
+const KAGGLE_URL =
+  "https://www.kaggle.com/datasets/gospelchannel/european-church-tech-2026-observed-data";
+const HUGGINGFACE_URL =
+  "https://huggingface.co/datasets/ac0ai/european-church-tech-2026";
+const GITHUB_URL = "https://github.com/Ac0AI/european-church-tech-2026";
 
 export const metadata: Metadata = {
   title: "European Church Tech Index 2026 — What 14 000 Churches Actually Run",
@@ -153,8 +160,71 @@ export default async function EuropeanChurchTechReportPage() {
   const ukStats = data.primary.find((s) => s.country === "United Kingdom");
   const italyStats = data.primary.find((s) => s.country === "Italy");
 
+  const datasetSchema = {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    name: "European Church Tech 2026 — Observed Data",
+    alternateName: "European Church Tech Index 2026",
+    description:
+      "Country-level and platform-by-country measurements of digital adoption across " +
+      `${data.totals.churches.toLocaleString("en-GB")} evangelical and Protestant churches in ` +
+      `${data.totals.countries} European countries. Observed-data methodology — every coverage rate ` +
+      "is derived from publicly observable signals about each church's web presence. We did not survey.",
+    url: PAGE_URL,
+    sameAs: [DOI_URL, KAGGLE_URL, HUGGINGFACE_URL, GITHUB_URL],
+    identifier: [
+      { "@type": "PropertyValue", propertyID: "DOI", value: DOI },
+      { "@type": "PropertyValue", propertyID: "URL", value: DOI_URL },
+    ],
+    license: "https://creativecommons.org/licenses/by/4.0/",
+    creator: {
+      "@type": "Organization",
+      name: "GospelChannel",
+      url: "https://gospelchannel.com",
+    },
+    publisher: [
+      { "@type": "Organization", name: "Zenodo", url: "https://zenodo.org/records/19882722" },
+      { "@type": "Organization", name: "GospelChannel", url: "https://gospelchannel.com" },
+    ],
+    datePublished: data.generatedAt,
+    dateModified: data.generatedAt,
+    version: data.version,
+    inLanguage: "en",
+    isAccessibleForFree: true,
+    keywords: [
+      "churches",
+      "europe",
+      "digital adoption",
+      "religion",
+      "web platforms",
+      "content management systems",
+      "observational data",
+      "open data",
+    ],
+    spatialCoverage: { "@type": "Place", name: "Europe" },
+    distribution: [
+      {
+        "@type": "DataDownload",
+        encodingFormat: "application/json",
+        contentUrl: "https://gospelchannel.com/api/european-church-tech-2026.json",
+      },
+      {
+        "@type": "DataDownload",
+        encodingFormat: "text/csv",
+        contentUrl:
+          "https://huggingface.co/datasets/ac0ai/european-church-tech-2026/resolve/main/country_aggregates.csv",
+      },
+    ],
+    citation: DOI_URL,
+  };
+
   return (
     <article className="mx-auto w-full max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetSchema) }}
+      />
       {/* ── Visual anchor: Europe map ── */}
       <div className="relative mx-auto mb-10 max-w-3xl overflow-hidden rounded-2xl">
         <Image
@@ -554,30 +624,116 @@ export default async function EuropeanChurchTechReportPage() {
       {/* ── Press kit / sources ── */}
       <section className="mt-16 rounded-2xl border border-espresso/15 bg-linen-deep/30 p-6 sm:p-8">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-mauve">
-          For press
+          For press &amp; researchers
         </p>
         <h2 className="mt-2 font-serif text-2xl font-semibold text-espresso sm:text-3xl">
-          Cite, embed, ask
+          Cite, download, ask
         </h2>
         <p className="mt-4 text-base leading-relaxed text-espresso/80">
-          Numbers in this report are free to cite with attribution to{" "}
-          <strong className="text-espresso">GospelChannel</strong> and a link
-          to{" "}
-          <Link
-            href="/european-church-tech-2026"
+          The underlying dataset is open under{" "}
+          <a
+            href="https://creativecommons.org/licenses/by/4.0/"
             className="underline decoration-mauve/40 underline-offset-2 hover:decoration-mauve"
           >
-            this report URL
-          </Link>
-          . Raw country-level figures available as JSON at{" "}
+            CC&nbsp;BY&nbsp;4.0
+          </a>{" "}
+          and has a citable DOI. Country-level aggregates are released
+          openly; per-church platform detections stay internal. Raw JSON of
+          everything on this page is available at{" "}
           <Link
             href="/api/european-church-tech-2026.json"
             className="underline decoration-mauve/40 underline-offset-2 hover:decoration-mauve"
           >
             /api/european-church-tech-2026.json
           </Link>
-          . For methodology questions, sample-size queries, or per-country
-          deep dives, write to press at gospelchannel dot com.
+          .
+        </p>
+
+        <p className="mt-6 text-xs font-semibold uppercase tracking-[0.18em] text-espresso/60">
+          Get the data
+        </p>
+        <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+          <li>
+            <a
+              href={DOI_URL}
+              className="flex items-baseline gap-3 rounded-lg border border-espresso/15 bg-white px-4 py-3 text-sm transition hover:border-mauve hover:bg-linen-deep/40"
+            >
+              <span className="font-semibold text-espresso">Zenodo</span>
+              <span className="text-xs text-espresso/60">
+                DOI · citable
+              </span>
+            </a>
+          </li>
+          <li>
+            <a
+              href={KAGGLE_URL}
+              className="flex items-baseline gap-3 rounded-lg border border-espresso/15 bg-white px-4 py-3 text-sm transition hover:border-mauve hover:bg-linen-deep/40"
+            >
+              <span className="font-semibold text-espresso">Kaggle</span>
+              <span className="text-xs text-espresso/60">
+                CSV + notebook
+              </span>
+            </a>
+          </li>
+          <li>
+            <a
+              href={HUGGINGFACE_URL}
+              className="flex items-baseline gap-3 rounded-lg border border-espresso/15 bg-white px-4 py-3 text-sm transition hover:border-mauve hover:bg-linen-deep/40"
+            >
+              <span className="font-semibold text-espresso">Hugging Face</span>
+              <span className="text-xs text-espresso/60">
+                load_dataset()
+              </span>
+            </a>
+          </li>
+          <li>
+            <a
+              href={GITHUB_URL}
+              className="flex items-baseline gap-3 rounded-lg border border-espresso/15 bg-white px-4 py-3 text-sm transition hover:border-mauve hover:bg-linen-deep/40"
+            >
+              <span className="font-semibold text-espresso">GitHub</span>
+              <span className="text-xs text-espresso/60">
+                source &amp; issues
+              </span>
+            </a>
+          </li>
+        </ul>
+
+        <details className="mt-6 rounded-lg border border-espresso/15 bg-white p-4 text-sm">
+          <summary className="cursor-pointer font-semibold text-espresso">
+            Citation
+          </summary>
+          <p className="mt-3 text-espresso/80">
+            <em>
+              European Church Tech 2026: an observed-data dataset on digital
+              adoption across {data.totals.churches.toLocaleString("en-GB")}{" "}
+              European churches.
+            </em>{" "}
+            GospelChannel, 2026. doi:
+            <a
+              href={DOI_URL}
+              className="underline decoration-mauve/40 underline-offset-2 hover:decoration-mauve"
+            >
+              {DOI}
+            </a>
+            .
+          </p>
+          <pre className="mt-4 overflow-x-auto rounded bg-linen-deep/50 p-3 text-xs leading-relaxed text-espresso">
+{`@dataset{gospelchannel_ect2026,
+  title     = {European Church Tech 2026: an observed-data dataset on digital adoption across ${data.totals.churches.toLocaleString("en-GB")} European churches},
+  author    = {GospelChannel},
+  year      = {2026},
+  publisher = {Zenodo},
+  doi       = {${DOI}},
+  url       = {${PAGE_URL}},
+  note      = {CC-BY-4.0}
+}`}
+          </pre>
+        </details>
+
+        <p className="mt-6 text-base leading-relaxed text-espresso/80">
+          For methodology questions, sample-size queries, or per-country deep
+          dives, write to press at gospelchannel dot com.
         </p>
         <p className="mt-3 text-xs text-espresso/60">
           Generated {formatDate(data.generatedAt)} · Data version{" "}
