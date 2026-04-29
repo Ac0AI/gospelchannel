@@ -10,6 +10,26 @@
  */
 import { unstable_cache } from "next/cache";
 import { getSql } from "@/db";
+import { isOfflinePublicBuild } from "@/lib/runtime-mode";
+
+const EMPTY_REPORT: ReportData = {
+  generatedAt: new Date(0).toISOString(),
+  version: "offline-stub",
+  primary: [],
+  smaller: [],
+  totals: { countries: 0, churches: 0 },
+  topPlatforms: [],
+  cmsBreakdown: {
+    totalDetected: 0,
+    wordpressCount: 0,
+    wordpressShare: 0,
+    modernDiyCount: 0,
+    churchPlatformCount: 0,
+    modernFrameworkCount: 0,
+  },
+  cmsByCountry: [],
+  spotifyRates: [],
+};
 
 export const REPORT_VERSION = "2026-04-28-r5";
 
@@ -317,6 +337,11 @@ async function fetchSpotifyRates(): Promise<SpotifyRate[]> {
 }
 
 async function buildReport(): Promise<ReportData> {
+  // CI / build-time prerender runs without DATABASE_URL; return a stub so
+  // the page and JSON API can be statically built. First runtime request
+  // re-fetches with real data.
+  if (isOfflinePublicBuild()) return EMPTY_REPORT;
+
   const [stats, topPlatforms, cmsResult, spotifyRates] = await Promise.all([
     fetchCountryStats(),
     fetchTopPlatforms(),
