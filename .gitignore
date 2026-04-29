@@ -42,6 +42,7 @@ scripts/.discovery-checkpoint.json
 
 # playwright
 .playwright-cli/
+.playwright-mcp/
 .tmp/
 
 # local npm cache override
@@ -74,6 +75,7 @@ lighthouse-*.json
 .gsc-push-checkpoint.json
 .pnpm-store/
 posthog-setup-report.md
+skills-lock.json
 
 # internal docs (local paths, strategies, plans)
 docs/superpowers/
@@ -101,3 +103,7 @@ docs/lemlist-tools/
 
 # Firecrawl scraping cache — competitor research, not source code
 .firecrawl/
+.gstack/
+
+# European Church Tech 2026 dataset — separate published repo, not source
+data-release/

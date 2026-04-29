@@ -52,7 +52,9 @@
     "screen:candidates": "node scripts/screen-church-candidates.mjs",
     "discover:sweden": "node scripts/discover-sweden-church-playlists.mjs && tmp/spreadsheets/.venv/bin/python scripts/export-sweden-church-playlists.py",
     "discover:sweden:loop": "node scripts/run-sweden-playlist-harvest-loop.mjs",
-    "enrich": "node scripts/enrich-churches.mjs"
+    "enrich": "node scripts/enrich-churches.mjs",
+    "dataset:export": "node scripts/export-european-church-tech-dataset.mjs",
+    "dataset:publish:kaggle": "node scripts/publish-kaggle-dataset.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",
@@ -89,7 +91,7 @@
     "typescript": "^5",
     "vite": "^8.0.0",
     "vitest": "^4.1.0",
-    "wrangler": "^4.84.1",
+    "wrangler": "^4.85.0",
     "xlsx": "^0.18.5"
   }
 }
