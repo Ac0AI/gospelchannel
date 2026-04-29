@@ -5,7 +5,13 @@ import { getChurchSlugsByCountry, getChurchSlugsByCity, getChurchSlugsForNetwork
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
 
 const PRAYERS_CACHE_TAG = "prayers";
-const PRAYERS_CACHE_SECONDS = 60;
+// Bumped from 60s → 300s on 2026-04-29: the homepage and 1.6k prayerwall
+// sub-pages all read this cache. With 60s TTL the homepage was perpetually
+// STALE (s-maxage=2 in live headers) and triggered constant background
+// revalidation against Neon — single biggest contributor to ~10 GB/day
+// transfer after the module-level cache bug was fixed. Prayers don't need
+// to surface within seconds; 5 min is fine for a community feed.
+const PRAYERS_CACHE_SECONDS = 300;
 const memoryPrayers = new Map<string, Prayer>();
  
 let prayerStoreUnavailableSince = 0;
