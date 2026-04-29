@@ -14,6 +14,7 @@ const {
   getPublishedCampusesSliceMock,
   getPrayerFilterIndexMock,
   getCompareGuideSlugsMock,
+  getChurchSlugsWithPrayersMock,
 } = vi.hoisted(() => ({
   getChurchDirectorySeedAsyncMock: vi.fn(),
   getChurchDirectorySeedCountAsyncMock: vi.fn(),
@@ -28,6 +29,7 @@ const {
   getPublishedCampusesSliceMock: vi.fn(),
   getPrayerFilterIndexMock: vi.fn(),
   getCompareGuideSlugsMock: vi.fn(),
+  getChurchSlugsWithPrayersMock: vi.fn(),
 }));
 
 vi.mock("next/cache", () => ({
@@ -57,6 +59,10 @@ vi.mock("@/lib/church-networks", () => ({
 
 vi.mock("@/lib/prayer-filters", () => ({
   getPrayerFilterIndex: getPrayerFilterIndexMock,
+}));
+
+vi.mock("@/lib/prayer", () => ({
+  getChurchSlugsWithPrayers: getChurchSlugsWithPrayersMock,
 }));
 
 vi.mock("@/lib/tooling", () => ({
@@ -109,8 +115,23 @@ describe("sitemap-data", () => {
         { slug: "prayer-1", label: "Prayer 1" },
         { slug: "prayer-2", label: "Prayer 2" },
       ],
+      countrySlugByChurchSlug: {
+        "prayer-1": "sweden",
+        "prayer-2": "sweden",
+      },
+      churchOptionsByCountryAndCity: {
+        "sweden::stockholm": [
+          { slug: "prayer-1", label: "Prayer 1" },
+          { slug: "prayer-2", label: "Prayer 2" },
+        ],
+        "::stockholm": [
+          { slug: "prayer-1", label: "Prayer 1" },
+          { slug: "prayer-2", label: "Prayer 2" },
+        ],
+      },
     });
     getCompareGuideSlugsMock.mockReturnValue(["compare-a"]);
+    getChurchSlugsWithPrayersMock.mockResolvedValue(new Set(["prayer-1", "prayer-2"]));
   });
 
   it("computes the total sitemap entry count from section counts", async () => {
