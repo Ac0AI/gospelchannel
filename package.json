@@ -55,7 +55,8 @@
     "enrich": "node scripts/enrich-churches.mjs",
     "dataset:export": "node scripts/export-european-church-tech-dataset.mjs",
     "dataset:publish:kaggle": "node scripts/publish-kaggle-dataset.mjs",
-    "dataset:publish:zenodo": "node scripts/publish-zenodo-dataset.mjs"
+    "dataset:publish:zenodo": "node scripts/publish-zenodo-dataset.mjs",
+    "dataset:publish:huggingface": "node scripts/publish-huggingface-dataset.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",
@@ -77,6 +78,7 @@
   },
   "devDependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@huggingface/hub": "^2.11.0",
     "@next/env": "^16.2.3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
