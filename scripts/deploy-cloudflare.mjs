@@ -1,7 +1,10 @@
 import { spawnSync } from "node:child_process";
+import { loadLocalEnv } from "./lib/local-env.mjs";
+
+const ROOT = process.cwd();
+loadLocalEnv(ROOT);
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://gospelchannel.com").replace(/\/+$/, "");
-const ROOT = process.cwd();
 const DEFAULT_WARM_PATHS = [
   "/",
   "/church",
