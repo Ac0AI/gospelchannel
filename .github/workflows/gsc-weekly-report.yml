@@ -30,12 +30,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Send weekly GSC email
+      - name: Send weekly GSC + Cloudflare email
         env:
           GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
           GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY }}
           BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
           ADMIN_EMAILS: ${{ secrets.ADMIN_EMAILS }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
           NOTIFY_FROM_EMAIL: noreply@gospelchannel.com
         run: node scripts/gsc-weekly-email.mjs

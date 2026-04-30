@@ -13,6 +13,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { neon } from "@neondatabase/serverless";
 import { generateReport, delta } from "./gsc-report.mjs";
+import { generateReport as generateCfReport, delta as cfDelta } from "./cf-report.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -45,7 +46,81 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
-function renderEmailHtml(report, days) {
+function renderCloudflareSection(cf) {
+  if (!cf) return "";
+  const { totals, prevTotals, blocked, prevBlocked, topBlockedSources, topCountries, cacheHitRate } = cf;
+  const cell = "padding: 6px 10px; border-bottom: 1px solid #f0e5de; font-size: 14px;";
+  const headCell = "padding: 8px 10px; background: #faf6f3; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: #7a6a5a; font-weight: 600;";
+
+  const blockedRows = topBlockedSources.slice(0, 6).map(r => {
+    const src = escapeHtml(r.dimensions?.source || "—");
+    const ua = escapeHtml((r.dimensions?.userAgent || "").slice(0, 50));
+    return `
+    <tr>
+      <td style="${cell}">${src}</td>
+      <td style="${cell}">${ua}</td>
+      <td style="${cell} text-align: right;">${r.count.toLocaleString()}</td>
+    </tr>`;
+  }).join("");
+
+  const countryRows = topCountries.slice(0, 8).map(r => `
+    <tr>
+      <td style="${cell}"><strong>${escapeHtml(r.dimensions?.clientCountryName || "—")}</strong></td>
+      <td style="${cell} text-align: right;">${(r.sum.visits || 0).toLocaleString()}</td>
+      <td style="${cell} text-align: right;">${(r.sum.requests || 0).toLocaleString()}</td>
+    </tr>`).join("");
+
+  return `
+    <h2 style="font-size: 18px; margin: 36px 0 4px 0; color: #3b2f2f;">Cloudflare</h2>
+    <p style="font-size: 13px; color: #7a6a5a; margin: 0 0 18px 0;">Edge traffic, bot blocking, infrastructure.</p>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+      <div style="background: #faf6f3; padding: 16px 18px; border-radius: 12px;">
+        <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: #7a6a5a;">Visits</div>
+        <div style="font-size: 24px; font-weight: 700; color: #3b2f2f; margin: 4px 0;">${(totals.visits || 0).toLocaleString()}</div>
+        <div style="font-size: 13px; color: #b06a50;">${escapeHtml(cfDelta(totals.visits, prevTotals.visits))}</div>
+      </div>
+      <div style="background: #faf6f3; padding: 16px 18px; border-radius: 12px;">
+        <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: #7a6a5a;">Blocked</div>
+        <div style="font-size: 24px; font-weight: 700; color: #3b2f2f; margin: 4px 0;">${blocked.toLocaleString()}</div>
+        <div style="font-size: 13px; color: #b06a50;">${escapeHtml(cfDelta(blocked, prevBlocked))}</div>
+      </div>
+      <div style="background: #faf6f3; padding: 16px 18px; border-radius: 12px;">
+        <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: #7a6a5a;">Cache hit</div>
+        <div style="font-size: 24px; font-weight: 700; color: #3b2f2f; margin: 4px 0;">${(cacheHitRate * 100).toFixed(1)}%</div>
+        <div style="font-size: 13px; color: #7a6a5a;">edge cache</div>
+      </div>
+    </div>
+
+    ${blockedRows ? `
+    <h3 style="font-size: 14px; margin: 24px 0 12px 0; color: #3b2f2f;">Top blocked sources</h3>
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+      <thead>
+        <tr>
+          <th style="${headCell}">Source</th>
+          <th style="${headCell}">User-agent</th>
+          <th style="${headCell} text-align: right;">Count</th>
+        </tr>
+      </thead>
+      <tbody>${blockedRows}</tbody>
+    </table>` : ""}
+
+    ${countryRows ? `
+    <h3 style="font-size: 14px; margin: 24px 0 12px 0; color: #3b2f2f;">Top countries (Cloudflare)</h3>
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+      <thead>
+        <tr>
+          <th style="${headCell}">Country</th>
+          <th style="${headCell} text-align: right;">Visits</th>
+          <th style="${headCell} text-align: right;">Requests</th>
+        </tr>
+      </thead>
+      <tbody>${countryRows}</tbody>
+    </table>` : ""}
+  `;
+}
+
+function renderEmailHtml(report, days, cf) {
   const { range, totals, prevTotals, topCountries, topQueries, topPages, sitemap } = report;
   const sortedCountries = [...topCountries].sort((a, b) => b.impressions - a.impressions).slice(0, 8);
 
@@ -167,10 +242,12 @@ function renderEmailHtml(report, days) {
       <tbody>${pageRows}</tbody>
     </table>
 
+    ${renderCloudflareSection(cf)}
+
     <hr style="border: none; border-top: 1px solid #e8d8d0; margin: 32px 0;">
     <p style="font-size: 12px; color: #9a8a7a; margin: 0;">
       Automated weekly report from GospelChannel.com.
-      Full dashboard: <a href="https://search.google.com/search-console?resource_id=sc-domain%3Agospelchannel.com" style="color: #b06a50;">Google Search Console</a>.
+      Full dashboards: <a href="https://search.google.com/search-console?resource_id=sc-domain%3Agospelchannel.com" style="color: #b06a50;">Google Search Console</a>${cf ? ` · <a href="https://dash.cloudflare.com/?to=/:account/gospelchannel.com/analytics/traffic" style="color: #b06a50;">Cloudflare Analytics</a>` : ""}.
     </p>
   </div>
 </body>
@@ -203,9 +280,21 @@ async function main() {
   console.log(`Generating ${days}-day report...`);
   const report = await generateReport(days);
 
+  let cf = null;
+  if (process.env.CLOUDFLARE_API_TOKEN && process.env.CLOUDFLARE_ZONE_ID) {
+    try {
+      cf = await generateCfReport(days);
+      console.log(`Cloudflare report: ${cf.totals.visits.toLocaleString()} visits, ${cf.blocked.toLocaleString()} blocked.`);
+    } catch (err) {
+      console.warn(`Cloudflare report failed: ${err.message}. Sending GSC-only.`);
+    }
+  } else {
+    console.log("Cloudflare env vars missing — skipping CF section.");
+  }
+
   const dateLabel = report.range.current.end;
   const subject = `GospelChannel weekly report — ${dateLabel}`;
-  const html = renderEmailHtml(report, days);
+  const html = renderEmailHtml(report, days, cf);
 
   const recipients = await getAdminEmails();
   if (recipients.length === 0) {
