@@ -1,7 +1,8 @@
 import { revalidateTag, unstable_cache } from "next/cache";
 import { createAdminClient, hasServiceConfig } from "@/lib/neon-client";
+import { getSql } from "@/db";
 import type { Prayer } from "@/types/gospel";
-import { getChurchSlugsByCountry, getChurchSlugsByCity, getChurchSlugsForNetwork } from "@/lib/prayer-filters";
+import { getChurchSlugsByCity, getChurchSlugsForNetwork, getNormalizedCountryLabel } from "@/lib/prayer-filters";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
 
 const PRAYERS_CACHE_TAG = "prayers";
@@ -132,6 +133,27 @@ const getPrayersCached = unstable_cache(
   { revalidate: PRAYERS_CACHE_SECONDS, tags: [PRAYERS_CACHE_TAG] }
 );
 
+// Country pages bypass the slug-list path because countries can have 60k+
+// churches (USA had 65k after bulk imports), and a 65k-element IN clause
+// against Postgres regularly takes 9s+. A direct JOIN runs in <100ms.
+async function getPrayersForCountrySQL(
+  countryLabel: string,
+  limit: number,
+  offset: number,
+): Promise<Prayer[]> {
+  const sql = getSql();
+  const rows = (await sql`
+    SELECT p.id, p.church_slug, p.content, p.original_content, p.author_name,
+           p.prayed_count, p.moderated, p.created_at
+    FROM prayers p
+    JOIN churches c ON c.slug = p.church_slug
+    WHERE c.country = ${countryLabel}
+    ORDER BY p.created_at DESC
+    LIMIT ${limit} OFFSET ${offset}
+  `) as PrayerRow[];
+  return rows.map(mapPrayerRow);
+}
+
 const getPrayersFilteredCached = unstable_cache(
   async (
     country: string | null,
@@ -141,17 +163,25 @@ const getPrayersFilteredCached = unstable_cache(
     offset: number
   ): Promise<Prayer[]> => {
     let slugs: string[] | undefined;
+    const countryLabel = country ? getNormalizedCountryLabel(country) : undefined;
 
     if (churchSlug) {
       slugs = await getChurchSlugsForNetwork(churchSlug);
     } else if (city) {
       slugs = await getChurchSlugsByCity(city);
-    } else if (country) {
-      slugs = await getChurchSlugsByCountry(country);
     }
 
     if (!isPrayerStoreEnabled()) {
       return getMemoryPrayers({ slugs, churchSlug: churchSlug ?? null, limit, offset });
+    }
+
+    if (countryLabel && !city && !churchSlug) {
+      try {
+        return await getPrayersForCountrySQL(countryLabel, limit, offset);
+      } catch {
+        prayerStoreUnavailableSince = Date.now();
+        return getMemoryPrayers({ slugs: undefined, churchSlug: null, limit, offset });
+      }
     }
 
     try {
