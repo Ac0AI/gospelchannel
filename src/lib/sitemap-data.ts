@@ -30,8 +30,10 @@ import { CONTENT_UPDATED_AT } from "@/lib/utils";
 export const BASE_URL = "https://gospelchannel.com";
 
 // Google allows up to 50 000 URLs per sitemap, but smaller chunks avoid Worker
-// timeouts while rendering large XML responses at the edge.
-export const CHUNK_SIZE = 5_000;
+// timeouts while rendering large XML responses at the edge. Lowered from 5 000
+// to 2 500 after the US import push — the heaviest chunk (last one, with all
+// facet/network/campus/prayer queries) was hitting Cloudflare's gateway timeout.
+export const CHUNK_SIZE = 2_500;
 
 const STATIC_ROUTE_PATHS = [
   "",

@@ -141,26 +141,26 @@ describe("sitemap-data", () => {
   });
 
   it("builds chunk 0 from the exact church slice without touching later DB slices", async () => {
-    getChurchDirectorySeedCountAsyncMock.mockResolvedValue(5_002);
+    getChurchDirectorySeedCountAsyncMock.mockResolvedValue(2_502);
     getChurchDirectorySeedSliceAsyncMock.mockImplementation(async (offset: number, limit: number) => (
       Array.from({ length: limit }, (_, index) => makeChurch(`church-${offset + index}`))
     ));
 
     const entries = await buildSitemapEntriesForChunk(0);
 
-    expect(entries).toHaveLength(5_000);
+    expect(entries).toHaveLength(2_500);
     expect(entries[0]?.url).toBe("https://gospelchannel.com");
     expect(entries[9]?.url).toBe("https://gospelchannel.com/compare");
     expect(entries[10]?.url).toBe("https://gospelchannel.com/european-church-tech-2026");
     expect(entries[11]?.url).toBe("https://gospelchannel.com/church/church-0");
-    expect(entries.at(-1)?.url).toBe("https://gospelchannel.com/church/church-4988");
-    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(0, 4_989);
+    expect(entries.at(-1)?.url).toBe("https://gospelchannel.com/church/church-2488");
+    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(0, 2_489);
     expect(getNetworksSliceMock).not.toHaveBeenCalled();
     expect(getPublishedCampusesSliceMock).not.toHaveBeenCalled();
   });
 
   it("builds later chunks in section order after the church slice ends", async () => {
-    getChurchDirectorySeedCountAsyncMock.mockResolvedValue(5_002);
+    getChurchDirectorySeedCountAsyncMock.mockResolvedValue(2_502);
     getChurchDirectorySeedSliceAsyncMock.mockImplementation(async (offset: number, limit: number) => (
       Array.from({ length: limit }, (_, index) => makeChurch(`church-${offset + index}`))
     ));
@@ -168,19 +168,19 @@ describe("sitemap-data", () => {
     const entries = await buildSitemapEntriesForChunk(1);
 
     expect(entries.map((entry) => entry.url)).toEqual([
-      "https://gospelchannel.com/church/church-4989",
-      "https://gospelchannel.com/church/church-4990",
-      "https://gospelchannel.com/church/church-4991",
-      "https://gospelchannel.com/church/church-4992",
-      "https://gospelchannel.com/church/church-4993",
-      "https://gospelchannel.com/church/church-4994",
-      "https://gospelchannel.com/church/church-4995",
-      "https://gospelchannel.com/church/church-4996",
-      "https://gospelchannel.com/church/church-4997",
-      "https://gospelchannel.com/church/church-4998",
-      "https://gospelchannel.com/church/church-4999",
-      "https://gospelchannel.com/church/church-5000",
-      "https://gospelchannel.com/church/church-5001",
+      "https://gospelchannel.com/church/church-2489",
+      "https://gospelchannel.com/church/church-2490",
+      "https://gospelchannel.com/church/church-2491",
+      "https://gospelchannel.com/church/church-2492",
+      "https://gospelchannel.com/church/church-2493",
+      "https://gospelchannel.com/church/church-2494",
+      "https://gospelchannel.com/church/church-2495",
+      "https://gospelchannel.com/church/church-2496",
+      "https://gospelchannel.com/church/church-2497",
+      "https://gospelchannel.com/church/church-2498",
+      "https://gospelchannel.com/church/church-2499",
+      "https://gospelchannel.com/church/church-2500",
+      "https://gospelchannel.com/church/church-2501",
       "https://gospelchannel.com/church/country/sweden",
       "https://gospelchannel.com/church/city/stockholm",
       "https://gospelchannel.com/church/style/gospel",
@@ -194,7 +194,7 @@ describe("sitemap-data", () => {
       "https://gospelchannel.com/prayerwall/church/prayer-1",
       "https://gospelchannel.com/prayerwall/church/prayer-2",
     ]);
-    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(4_989, 13);
+    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(2_489, 13);
     expect(getNetworksSliceMock).toHaveBeenCalledWith(0, 1);
     expect(getPublishedCampusesSliceMock).toHaveBeenCalledWith(0, 1);
   });
