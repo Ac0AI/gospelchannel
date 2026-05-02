@@ -44,6 +44,7 @@ const STATIC_ROUTE_PATHS = [
   "/guides/first-visit-guide",
   "/guides/worship-style-match",
   "/compare",
+  "/european-church-tech-2026",
 ] as const;
 
 export type SitemapEntry = {
