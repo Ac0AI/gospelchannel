@@ -15,12 +15,16 @@ const DEFAULT_WARM_PATHS = [
   "/contact",
   "/prayerwall",
   "/prayerwall/country/united-states",
-  "/sitemap.xml",
-  "/sitemap-chunk/0.xml",
   "/robots.txt",
 ];
 const SKIP_WARM_FLAGS = new Set(["--skip-warm", "--no-warm"]);
 const SITEMAP_WARM_PASSES = 2;
+const PRIMARY_WARM_CONCURRENCY = 6;
+// Sitemap chunks each render 5k URLs from Neon. Running them concurrently piles
+// up cold-isolate hydrations and trips Cloudflare's gateway timeout (503).
+// Serialize them so the first chunk warms the R2 unstable_cache layer and the
+// rest hit it warm.
+const SITEMAP_WARM_CONCURRENCY = 2;
 
 function runCommand(command, args, options = {}) {
   const result = spawnSync(command, args, {
@@ -64,7 +68,7 @@ async function collectWarmUrls() {
     const response = await fetch(buildWarmUrl("/church"), { redirect: "follow" });
     if (!response.ok) {
       console.warn(`[deploy] Prewarm seed request failed: /church returned ${response.status}.`);
-      return urls;
+      return { urls: [...urls], sitemapUrls: [] };
     }
 
     const html = await response.text();
@@ -91,7 +95,6 @@ async function collectWarmUrls() {
         .filter((url) => url.startsWith(`${SITE_URL}/sitemap-chunk/`));
 
       for (const url of discovered) {
-        urls.add(url);
         sitemapUrls.push(url);
       }
     }
@@ -107,7 +110,7 @@ async function collectWarmUrls() {
   };
 }
 
-async function warmUrls(urls) {
+async function warmUrls(urls, concurrency = PRIMARY_WARM_CONCURRENCY) {
   const results = [];
   let currentIndex = 0;
 
@@ -135,7 +138,7 @@ async function warmUrls(urls) {
     }
   }
 
-  await Promise.all(Array.from({ length: 6 }, worker));
+  await Promise.all(Array.from({ length: concurrency }, worker));
   return results;
 }
 
@@ -165,15 +168,15 @@ function logWarmResults(results) {
 
 async function prewarmSite() {
   const { urls, sitemapUrls } = await collectWarmUrls();
-  const primaryResults = await warmUrls(urls);
+  const primaryResults = await warmUrls(urls, PRIMARY_WARM_CONCURRENCY);
   logWarmResults(primaryResults);
 
-  for (let pass = 2; pass <= SITEMAP_WARM_PASSES; pass += 1) {
+  for (let pass = 1; pass <= SITEMAP_WARM_PASSES; pass += 1) {
     if (sitemapUrls.length === 0) {
       break;
     }
 
-    const passResults = await warmUrls(sitemapUrls);
+    const passResults = await warmUrls(sitemapUrls, SITEMAP_WARM_CONCURRENCY);
     const failures = passResults.filter((result) => result.status !== 200);
     if (failures.length > 0) {
       console.warn(`[deploy] Sitemap warm pass ${pass} completed with warnings.`);
