@@ -71,6 +71,10 @@ type SitemapPrayerData = {
   countryOptions: FilterOption[];
   cityOptions: FilterOption[];
   prayerChurchCount: number;
+  // Pre-sorted slugs of churches with at least one prayer. Computed once and
+  // cached so chunk renders skip the 73k allChurchOptions JS filter that was
+  // pushing tail chunks past the CF Worker CPU limit (error 1102).
+  populatedChurchSlugs: string[];
 };
 
 type SitemapSectionCounts = {
@@ -260,9 +264,10 @@ const getSitemapPrayerDataCached = unstable_cache(
       countryOptions,
       cityOptions,
       prayerChurchCount: populatedChurchSlugs.size,
+      populatedChurchSlugs: [...populatedChurchSlugs].sort(),
     };
   },
-  ["sitemap-prayer-v2"],
+  ["sitemap-prayer-v3"],
   { revalidate: 3600, tags: [CHURCH_INDEX_TAG] },
 );
 
@@ -438,21 +443,14 @@ export async function buildSitemapEntriesForChunk(id: number): Promise<SitemapEn
 
   const prayerChurchWindow = getSectionWindow(rangeStart, rangeEndExclusive, cursor, counts.prayerChurchCount);
   if (prayerChurchWindow) {
-    // Filter to slugs that actually have prayers — emitting all 72k church
-    // slugs as prayer-wall entries causes Google to flag empty pages as
-    // duplicates.
-    const [prayerIndex, prayerSlugs] = await Promise.all([
-      getPrayerFilterIndex(),
-      getChurchSlugsWithPrayers(),
-    ]);
-    const populatedChurches = prayerIndex.allChurchOptions.filter((o) =>
-      prayerSlugs.has(o.slug),
-    );
-    const prayerChurches = populatedChurches.slice(
+    // Read the pre-sorted populated-slug list from the prayer-data cache
+    // instead of re-filtering 73k allChurchOptions on every chunk render.
+    const prayerData = prayerDataPromise ? await prayerDataPromise : await getSitemapPrayerDataCached();
+    const slice = prayerData.populatedChurchSlugs.slice(
       prayerChurchWindow.offset,
       prayerChurchWindow.offset + prayerChurchWindow.limit,
     );
-    entries.push(...prayerChurches.map((option) => buildPrayerChurchRoute(option, lastModified)));
+    entries.push(...slice.map((slug) => buildPrayerChurchRoute({ slug }, lastModified)));
   }
 
   return entries;
