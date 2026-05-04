@@ -422,14 +422,23 @@ async function fetchApprovedChurchDirectorySeedChunkFromDb(
 ): Promise<ChurchDirectorySeed[]> {
   const sql = getSql();
   const offset = chunkIndex * CHURCH_DIRECTORY_SEED_CHUNK_SIZE;
+  // CTE drives the ordered pagination via index-only scan on
+  // (status, name, slug); JOIN back fetches the wide columns by PK.
+  // Avoids a full table sort that spilled to disk past OFFSET ~10k.
   const rawRows = (await sql.query(`
-    SELECT slug, name, country, location, music_style, denomination
-    FROM churches
-    WHERE status = 'approved'
-      AND NOT (slug = ANY($1::text[]))
-    ORDER BY name, slug
-    LIMIT $2
-    OFFSET $3
+    WITH ranked AS (
+      SELECT slug
+      FROM churches
+      WHERE status = 'approved'
+        AND NOT (slug = ANY($1::text[]))
+      ORDER BY name, slug
+      LIMIT $2
+      OFFSET $3
+    )
+    SELECT c.slug, c.name, c.country, c.location, c.music_style, c.denomination
+    FROM ranked r
+    JOIN churches c ON c.slug = r.slug
+    ORDER BY c.name, c.slug
   `, [
     CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS,
     CHURCH_DIRECTORY_SEED_CHUNK_SIZE,

@@ -56,6 +56,11 @@ export const churches = pgTable(
   },
   (table) => ({
     statusIndex: index("idx_churches_status").on(table.status),
+    statusNameSlugIndex: index("churches_status_name_slug_idx").on(
+      table.status,
+      table.name,
+      table.slug,
+    ),
     countryIndex: index("idx_churches_country").on(table.country),
     candidateUnique: uniqueIndex("idx_churches_candidate_id").on(table.candidateId),
     spotifyOwnerUnique: uniqueIndex("idx_churches_spotify_owner_id").on(table.spotifyOwnerId),
