@@ -148,13 +148,13 @@ describe("sitemap-data", () => {
 
     const entries = await buildSitemapEntriesForChunk(0);
 
-    expect(entries).toHaveLength(5_000);
+    expect(entries).toHaveLength(2_500);
     expect(entries[0]?.url).toBe("https://gospelchannel.com");
     expect(entries[9]?.url).toBe("https://gospelchannel.com/compare");
     expect(entries[10]?.url).toBe("https://gospelchannel.com/european-church-tech-2026");
     expect(entries[11]?.url).toBe("https://gospelchannel.com/church/church-0");
-    expect(entries.at(-1)?.url).toBe("https://gospelchannel.com/church/church-4988");
-    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(0, 4_989);
+    expect(entries.at(-1)?.url).toBe("https://gospelchannel.com/church/church-2488");
+    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(0, 2_489);
     expect(getNetworksSliceMock).not.toHaveBeenCalled();
     expect(getPublishedCampusesSliceMock).not.toHaveBeenCalled();
   });
@@ -165,7 +165,7 @@ describe("sitemap-data", () => {
       Array.from({ length: limit }, (_, index) => makeChurch(`church-${offset + index}`))
     ));
 
-    const entries = await buildSitemapEntriesForChunk(1);
+    const entries = await buildSitemapEntriesForChunk(2);
 
     expect(entries.map((entry) => entry.url)).toEqual([
       "https://gospelchannel.com/church/church-4989",
