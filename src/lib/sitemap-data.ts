@@ -30,8 +30,9 @@ import { CONTENT_UPDATED_AT } from "@/lib/utils";
 export const BASE_URL = "https://gospelchannel.com";
 
 // Google allows up to 50 000 URLs per sitemap, but smaller chunks avoid Worker
-// timeouts while rendering large XML responses at the edge.
-export const CHUNK_SIZE = 5_000;
+// CPU-limit kills (CF error 1102) on tail chunks that filter prayer-church
+// data over ~73k options in JS. Halved from 5000 after chunk 16 6/6 failed.
+export const CHUNK_SIZE = 2_500;
 
 const STATIC_ROUTE_PATHS = [
   "",
