@@ -44,7 +44,7 @@ export function ChurchLatestUpdatesSection({
               href={item.url}
               target="_blank"
               rel="noreferrer"
-              className="group rounded-2xl border border-rose-200/60 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+              className="group block overflow-hidden rounded-2xl border border-rose-200/60 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
             >
               <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-wide">
                 <span className="rounded-full bg-blush-light px-2.5 py-1 text-rose-gold-deep">
@@ -55,12 +55,12 @@ export function ChurchLatestUpdatesSection({
                 )}
               </div>
 
-              <h3 className="mt-3 text-lg font-semibold leading-snug text-espresso transition-colors group-hover:text-rose-gold-deep">
+              <h3 className="mt-3 text-lg font-semibold leading-snug text-espresso break-words transition-colors group-hover:text-rose-gold-deep [overflow-wrap:anywhere] line-clamp-3">
                 {item.title}
               </h3>
 
               {item.summary && (
-                <p className="mt-2 text-sm leading-relaxed text-warm-brown">
+                <p className="mt-2 text-sm leading-relaxed text-warm-brown break-words [overflow-wrap:anywhere] line-clamp-3">
                   {item.summary}
                 </p>
               )}
