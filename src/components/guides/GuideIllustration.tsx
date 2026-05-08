@@ -24,8 +24,8 @@ export function GuideIllustration({ src, alt, wide }: GuideIllustrationProps) {
       sizes={wide ? "100vw" : "(max-width: 768px) 100vw, 800px"}
       className={
         wide
-          ? "-mx-4 my-10 h-auto w-full sm:-mx-6"
-          : "my-8 h-auto w-full rounded-2xl"
+          ? "my-10 h-auto w-full rounded-[18px]"
+          : "my-8 h-auto w-full rounded-[18px] shadow-[var(--shadow-sm)]"
       }
     />
   );

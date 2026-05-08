@@ -6,15 +6,15 @@ interface GuideCTAProps {
 
 export function GuideCTA({ links }: GuideCTAProps) {
   return (
-    <nav className="my-12 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+    <nav className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
       {links.map((link, i) => (
         <Link
           key={link.href}
           href={link.href}
           className={
             i === 0
-              ? "rounded-full bg-rose-gold px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-rose-gold-deep hover:shadow-md"
-              : "rounded-full border border-blush px-6 py-2.5 text-sm font-semibold text-warm-brown hover:border-rose-gold hover:text-espresso"
+              ? "rounded-full bg-rose-gold px-6 py-3 text-sm font-bold text-white transition-all duration-150 hover:-translate-y-px hover:bg-rose-gold-deep hover:shadow-[0_8px_24px_rgba(176,106,80,0.3)]"
+              : "rounded-full border border-rose-gold/30 px-6 py-3 text-sm font-semibold text-espresso transition-colors hover:bg-rose-gold/[0.06]"
           }
         >
           {link.label}

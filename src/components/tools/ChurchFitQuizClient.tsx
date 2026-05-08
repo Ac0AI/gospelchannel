@@ -130,64 +130,86 @@ export function ChurchFitQuizClient({ lanes }: { lanes: DiscoveryLane[] }) {
   }
 
   return (
-    <div className="space-y-8">
-      <section className="rounded-3xl border border-rose-200/60 bg-gradient-to-br from-white to-blush-light/45 p-6 shadow-sm sm:p-8">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-mauve">Church Fit Quiz</p>
-            <h1 className="mt-2 font-serif text-3xl font-semibold text-espresso sm:text-4xl">Take the Church Fit Quiz</h1>
-            <p className="mt-3 max-w-3xl text-base leading-relaxed text-warm-brown">
-              Find where you&apos;ll fit before your first visit. Answer seven fast questions about worship feel, social comfort, family needs, and sermon style, and we&apos;ll point you to three strong church lanes.
-            </p>
-          </div>
-          <div className="rounded-full border border-rose-200/70 bg-white/80 px-4 py-2 text-sm font-semibold text-espresso shadow-sm">
-            {answeredCount}/{QUIZ_QUESTIONS.length} answered
-          </div>
+    <div className="space-y-12">
+      {/* Progress bar */}
+      <div>
+        <div className="mb-3 flex items-center justify-between text-[11px] font-bold uppercase tracking-[0.18em]">
+          <span className="text-mauve">Question {Math.min(answeredCount + 1, QUIZ_QUESTIONS.length)} of {QUIZ_QUESTIONS.length}</span>
+          {isComplete ? (
+            <button
+              type="button"
+              onClick={restart}
+              className="text-rose-gold underline transition-colors hover:text-rose-gold-deep"
+            >
+              Retake quiz
+            </button>
+          ) : (
+            <span className="text-muted-warm">{answeredCount}/{QUIZ_QUESTIONS.length} answered</span>
+          )}
         </div>
-        <div className="mt-5 h-2 overflow-hidden rounded-full bg-white">
+        <div className="h-1 overflow-hidden rounded-full bg-rose-gold/[0.10]">
           <div
-            className="h-full rounded-full bg-rose-gold transition-all"
+            className="h-full rounded-full bg-rose-gold transition-all duration-300"
             style={{ width: `${(answeredCount / QUIZ_QUESTIONS.length) * 100}%` }}
           />
         </div>
-      </section>
+      </div>
 
       {!isComplete && currentQuestion ? (
-        <section className="rounded-3xl border border-rose-200/60 bg-white/85 p-6 shadow-sm sm:p-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-mauve">
-            Question {answeredCount + 1} of {QUIZ_QUESTIONS.length}
-          </p>
-          <h2 className="mt-2 font-serif text-2xl font-semibold text-espresso sm:text-3xl">{currentQuestion.title}</h2>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-warm-brown">{currentQuestion.description}</p>
+        <section>
+          <h2
+            className="m-0 font-serif font-semibold leading-[1.1] tracking-[-0.01em] text-espresso"
+            style={{ fontSize: "clamp(28px, 4.5vw, 48px)" }}
+          >
+            {currentQuestion.title}
+          </h2>
+          {currentQuestion.description && (
+            <p className="mt-3 max-w-[640px] text-base leading-relaxed text-warm-brown sm:text-lg">
+              {currentQuestion.description}
+            </p>
+          )}
 
-          <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            {currentQuestion.options.map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                onClick={() => chooseOption(currentQuestion.id, option.value)}
-                className="rounded-2xl border border-rose-200/70 bg-white px-5 py-4 text-left transition-all hover:border-rose-300 hover:bg-blush-light/60 hover:shadow-sm"
-              >
-                <span className="block font-serif text-xl font-semibold text-espresso">{option.label}</span>
-                <span className="mt-2 block text-sm leading-relaxed text-warm-brown">{option.description}</span>
-              </button>
-            ))}
+          <div className="mt-8 flex flex-col gap-3">
+            {currentQuestion.options.map((option) => {
+              const isSelected = answers[currentQuestion.id] === option.value;
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => chooseOption(currentQuestion.id, option.value)}
+                  className={`rounded-[16px] px-6 py-5 text-left transition-all duration-150 ${
+                    isSelected
+                      ? "border-2 border-rose-gold bg-rose-gold text-white"
+                      : "border border-rose-gold/[0.18] bg-white hover:-translate-y-px hover:border-rose-gold/40 hover:shadow-[var(--shadow-sm)]"
+                  }`}
+                >
+                  <span className={`block font-serif text-lg font-medium leading-[1.3] sm:text-xl ${isSelected ? "text-white" : "text-espresso"}`}>
+                    {option.label}
+                  </span>
+                  {option.description && (
+                    <span className={`mt-2 block text-sm leading-[1.5] ${isSelected ? "text-white/85" : "text-warm-brown"}`}>
+                      {option.description}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
 
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-wrap gap-3">
             <button
               type="button"
               onClick={goBack}
               disabled={answeredCount === 0}
-              className="rounded-full border border-rose-200/80 px-4 py-2 text-sm font-semibold text-warm-brown transition-colors hover:border-rose-300 hover:bg-blush-light disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-full border border-rose-gold/30 px-5 py-2.5 text-sm font-semibold text-espresso transition-colors hover:bg-rose-gold/[0.06] disabled:cursor-not-allowed disabled:opacity-40"
             >
-              Back
+              &larr; Back
             </button>
             <button
               type="button"
               onClick={restart}
               disabled={answeredCount === 0}
-              className="rounded-full border border-rose-200/80 px-4 py-2 text-sm font-semibold text-warm-brown transition-colors hover:border-rose-300 hover:bg-blush-light disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-full px-5 py-2.5 text-sm font-semibold text-muted-warm underline transition-colors hover:text-rose-gold disabled:cursor-not-allowed disabled:opacity-40"
             >
               Start over
             </button>
@@ -197,22 +219,19 @@ export function ChurchFitQuizClient({ lanes }: { lanes: DiscoveryLane[] }) {
 
       {isComplete ? (
         <>
-          <section className="space-y-4">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-mauve">Your best-fit lanes</p>
-                <h2 className="mt-2 font-serif text-2xl font-semibold text-espresso sm:text-3xl">Start with these three directions</h2>
-              </div>
-              <button
-                type="button"
-                onClick={restart}
-                className="rounded-full border border-rose-200/80 px-4 py-2 text-sm font-semibold text-warm-brown transition-colors hover:border-rose-300 hover:bg-blush-light"
-              >
-                Retake quiz
-              </button>
-            </div>
+          <section>
+            <p className="gc-eyebrow">Your matches</p>
+            <h2
+              className="mt-3 m-0 font-serif font-semibold leading-[1.05] tracking-[-0.02em] text-espresso"
+              style={{ fontSize: "clamp(36px, 6vw, 64px)" }}
+            >
+              Three churches <em className="gc-italic">for you</em>.
+            </h2>
+            <p className="mt-4 max-w-[580px] text-base leading-relaxed text-warm-brown sm:text-lg">
+              Based on your answers. Visit one this Sunday &mdash; or save them and decide later.
+            </p>
 
-            <div className="grid gap-4 xl:grid-cols-3">
+            <div className="mt-10 grid gap-4 xl:grid-cols-3">
               {results.map((lane) => (
                 <ToolActionCard
                   key={lane.id}
@@ -230,27 +249,27 @@ export function ChurchFitQuizClient({ lanes }: { lanes: DiscoveryLane[] }) {
             </div>
           </section>
 
-          <section className="space-y-4">
+          <section className="mt-20 space-y-6">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-mauve">Real churches to open next</p>
-              <h2 className="mt-2 font-serif text-2xl font-semibold text-espresso sm:text-3xl">
+              <p className="gc-eyebrow">Real churches to open next</p>
+              <h2 className="mt-3 m-0 font-serif text-3xl font-semibold tracking-[-0.01em] text-espresso sm:text-4xl">
                 {showAreaFallback
-                  ? "Broader churches to start with"
+                  ? "Broader churches to start with."
                   : deferredAreaQuery
-                    ? `Best-fit churches for ${deferredAreaQuery}`
-                    : "Start with these churches"}
+                    ? <>Best-fit churches for <em className="gc-italic">{deferredAreaQuery}</em>.</>
+                    : "Start with these churches."}
               </h2>
-              <p className="mt-2 max-w-3xl text-sm leading-relaxed text-warm-brown">
-                We now move from abstract lane advice to real church suggestions. If you already know your area, add it below and the quiz will tighten the church matches directly.
+              <p className="mt-3 max-w-[640px] text-base leading-relaxed text-warm-brown">
+                If you know your area, add it below and we&rsquo;ll tighten the matches without making you start over.
               </p>
             </div>
-            <div className="rounded-2xl border border-rose-200/60 bg-white/80 p-4 shadow-sm sm:p-5">
-              <label htmlFor="quiz-area" className="text-sm font-semibold text-espresso">
+            <div
+              className="rounded-[18px] border border-rose-gold/[0.14] p-6 sm:p-7"
+              style={{ background: "var(--linen-deep)" }}
+            >
+              <label htmlFor="quiz-area" className="gc-eyebrow">
                 Know the area already?
               </label>
-              <p className="mt-1 text-sm leading-relaxed text-warm-brown">
-                Add a city, country, or area and we&apos;ll narrow the church suggestions without making you start over.
-              </p>
               <div className="mt-4 flex flex-col gap-3 sm:flex-row">
                 <input
                   id="quiz-area"
@@ -258,13 +277,13 @@ export function ChurchFitQuizClient({ lanes }: { lanes: DiscoveryLane[] }) {
                   value={areaQuery}
                   onChange={(event) => setAreaQuery(event.target.value.slice(0, 80))}
                   placeholder="Try Stockholm, Malaga, Spain, Texas..."
-                  className="w-full rounded-full border border-rose-200/80 bg-white px-5 py-3 text-base text-espresso shadow-sm outline-none transition-colors placeholder:text-warm-brown/50 focus:border-rose-gold focus:ring-2 focus:ring-rose-gold/20"
+                  className="w-full rounded-full border border-rose-gold/20 bg-white px-5 py-3 text-base text-espresso outline-none transition-colors placeholder:text-warm-brown/50 focus:border-rose-gold focus:ring-2 focus:ring-rose-gold/20"
                 />
                 {areaQuery ? (
                   <button
                     type="button"
                     onClick={() => setAreaQuery("")}
-                    className="rounded-full border border-rose-200/80 px-5 py-3 text-sm font-semibold text-warm-brown transition-colors hover:border-rose-300 hover:bg-blush-light"
+                    className="rounded-full border border-rose-gold/30 px-5 py-3 text-sm font-semibold text-espresso transition-colors hover:bg-rose-gold/[0.06]"
                   >
                     Clear area
                   </button>
@@ -276,11 +295,11 @@ export function ChurchFitQuizClient({ lanes }: { lanes: DiscoveryLane[] }) {
                     ? `Filtering church suggestions for ${deferredAreaQuery}.`
                     : "No area set yet. Showing the strongest church matches overall."}
                 </p>
-                {isLoadingMatches ? <p className="text-mauve">Updating church suggestions…</p> : null}
+                {isLoadingMatches ? <p className="text-mauve">Updating church suggestions&hellip;</p> : null}
                 {matchesError ? <p className="text-amber-700">{matchesError}</p> : null}
                 {showAreaFallback && !isLoadingMatches ? (
                   <p className="text-warm-brown">
-                    No strong matches turned up in that area yet, so we&apos;re showing the broader best-fit churches below instead.
+                    No strong matches turned up in that area yet, so we&rsquo;re showing the broader best-fit churches below instead.
                   </p>
                 ) : null}
               </div>
