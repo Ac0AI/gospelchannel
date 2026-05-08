@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 
 export default async function PrayerWallPage() {
   const [prayers, filterIndex] = await Promise.all([
-    getPrayers({ limit: 20 }),
+    getPrayers({ limit: 8 }),
     getPrayerFilterIndex(),
   ]);
   const churchNames = await getChurchNamesBySlugs(prayers.map((prayer) => prayer.churchSlug));
@@ -77,7 +77,7 @@ export default async function PrayerWallPage() {
         <PrayerFeed
           initialPrayers={prayers}
           churchNames={churchNames}
-          limit={20}
+          limit={8}
           showChurch
         />
       </section>

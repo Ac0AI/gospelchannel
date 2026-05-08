@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { COPYRIGHT_YEAR } from "@/lib/utils";
+import { getChurchStatsAsync } from "@/lib/content";
 
 const cols = [
   {
@@ -39,7 +40,8 @@ const cols = [
   },
 ];
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const { churchCountLabel, countryCount } = await getChurchStatsAsync();
   return (
     <footer className="mt-24 bg-espresso px-5 pt-20 pb-10 text-[rgba(253,248,244,0.7)] sm:px-12">
       <div className="mx-auto max-w-[1280px]">
@@ -52,7 +54,10 @@ export function SiteFooter() {
             <p className="mt-3.5 max-w-[320px] text-sm leading-relaxed">
               A directory for the world&rsquo;s churches. Free, no ads, no tracking. Built for the people who haven&rsquo;t found a church yet &mdash; and the ones already serving one.
             </p>
-            <p className="mt-4 font-serif text-xs italic text-[rgba(253,248,244,0.55)]">
+            <p className="mt-4 text-xs uppercase tracking-[0.08em] text-[rgba(253,248,244,0.55)]">
+              {churchCountLabel} churches &middot; {countryCount} countries
+            </p>
+            <p className="mt-3 font-serif text-xs italic text-[rgba(253,248,244,0.45)]">
               &ldquo;Praise the Lord. Praise God in his sanctuary.&rdquo; &mdash; Psalm 150:1
             </p>
           </div>

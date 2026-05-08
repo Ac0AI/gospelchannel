@@ -139,7 +139,10 @@ function decodeXmlEntities(value: string): string {
 }
 
 function stripHtml(value: string): string {
-  return decodeXmlEntities(stripCdata(value).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim());
+  return decodeXmlEntities(stripCdata(value))
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function truncate(value: string | undefined, maxLength: number): string | undefined {
