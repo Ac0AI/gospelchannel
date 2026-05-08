@@ -87,6 +87,25 @@ export const churchSuggestions = pgTable("church_suggestions", {
   status: text("status").notNull().default("pending"),
 });
 
+export const searchSuggestions = pgTable(
+  "search_suggestions",
+  {
+    suggestionKey: text("suggestion_key").primaryKey(),
+    targetType: text("target_type").notNull().default("church"),
+    targetId: text("target_id").notNull(),
+    title: text("title").notNull(),
+    subtitle: text("subtitle"),
+    slug: text("slug").notNull(),
+    searchKey: text("search_key").notNull(),
+    popularity: integer("popularity").notNull().default(0),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => ({
+    targetIndex: index("search_suggestions_target_idx").on(table.targetType, table.targetId),
+    popularityIndex: index("search_suggestions_popularity_idx").on(table.popularity),
+  }),
+);
+
 export const churchFeedback = pgTable("church_feedback", {
   id: uuid("id").defaultRandom().primaryKey(),
   churchSlug: text("church_slug").notNull(),

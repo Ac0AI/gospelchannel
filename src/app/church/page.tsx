@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ChurchDirectoryGrid } from "@/components/ChurchDirectoryGrid";
+import { ChurchSearchAutocomplete } from "@/components/ChurchSearchAutocomplete";
 import {
   buildSearchSummary,
   DENOMINATION_FILTERS,
@@ -225,12 +226,19 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
                 <circle cx="11" cy="11" r="7" />
                 <path d="M21 21l-4.5-4.5" />
               </svg>
-              <input
-                type="search"
-                name="q"
+              <ChurchSearchAutocomplete
                 defaultValue={query}
                 placeholder={`Search ${directoryCount.toLocaleString("en-US")} churches by name, city, or country`}
-                className="min-w-0 flex-1 bg-transparent px-3 py-3 text-base text-espresso outline-none placeholder:text-warm-brown/50 sm:py-4"
+                extraSearchParams={{
+                  style: filters.styleSlug,
+                  denomination: filters.denominationSlug,
+                  language: filters.language,
+                  kids: filters.hasKids ? "1" : undefined,
+                  serviceTimes: filters.hasServiceTimes ? "1" : undefined,
+                  music: filters.hasMusic ? "1" : undefined,
+                }}
+                containerClassName="relative min-w-0 flex-1"
+                inputClassName="w-full bg-transparent px-3 py-3 text-base text-espresso outline-none placeholder:text-warm-brown/50 sm:py-4"
               />
               <button
                 type="submit"
