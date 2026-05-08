@@ -1453,6 +1453,12 @@ function buildChurchIndexWhereClause(filters: ChurchDirectoryFilters) {
   };
 }
 
+/**
+ * Page-rows query: drops `count(*) OVER()` to avoid full-table sort spill.
+ * The total count is fetched separately (and cached) — see `getChurchIndexTotalCountCached`.
+ * On cold isolate, this query now uses index-only scans + early LIMIT instead of
+ * materializing all matching rows in memory before pagination.
+ */
 async function fetchChurchIndexPageRows(filters: ChurchDirectoryFilters, currentPage: number, pageSize: number): Promise<ChurchIndexQueryRow[]> {
   const sql = getSql();
   const offset = (currentPage - 1) * pageSize;
@@ -1465,8 +1471,7 @@ async function fetchChurchIndexPageRows(filters: ChurchDirectoryFilters, current
       SELECT
         slug, name, description, spotify_playlist_ids, additional_playlists, logo, website, spotify_url,
         country, denomination, location, music_style, email, header_image, verified_at, last_researched,
-        aliases, language, source_kind,
-        count(*) OVER() AS total_count
+        aliases, language, source_kind
       FROM churches
       WHERE ${where.sql}
       ORDER BY
@@ -1494,8 +1499,7 @@ async function fetchChurchIndexPageRows(filters: ChurchDirectoryFilters, current
     SELECT
       slug, name, description, spotify_playlist_ids, additional_playlists, logo, website, spotify_url,
       country, denomination, location, music_style, email, header_image, verified_at, last_researched,
-      aliases, language, source_kind,
-      count(*) OVER() AS total_count
+      aliases, language, source_kind
     FROM churches
     WHERE ${where.sql}
     ORDER BY
@@ -1525,6 +1529,17 @@ async function fetchChurchIndexTotalCount(filters: ChurchDirectoryFilters): Prom
   return toCount(rows[0]?.count);
 }
 
+/**
+ * Cached count query — keyed on filter shape via the function args.
+ * 1h TTL; invalidates with CHURCH_INDEX_TAG when an admin action fires
+ * `revalidatePublicChurchContent()` in src/lib/content.ts.
+ */
+const getChurchIndexTotalCountCached = unstable_cache(
+  async (filters: ChurchDirectoryFilters): Promise<number> => fetchChurchIndexTotalCount(filters),
+  ["church-index-total-count-v1"],
+  { revalidate: 3600, tags: [CHURCH_INDEX_TAG] }
+);
+
 export async function getChurchIndexPageData(input: {
   query?: string;
   filters?: Omit<ChurchDirectoryFilters, "query">;
@@ -1542,10 +1557,12 @@ export async function getChurchIndexPageData(input: {
   }
 
   try {
-    const firstRows = await fetchChurchIndexPageRows(filters, requestedPage, input.pageSize);
-    const totalCount = firstRows.length > 0
-      ? toCount(firstRows[0]?.total_count)
-      : await fetchChurchIndexTotalCount(filters);
+    // Page rows + total count run in parallel. Count is cached via
+    // `getChurchIndexTotalCountCached` so most hits skip the DB entirely.
+    const [firstRows, totalCount] = await Promise.all([
+      fetchChurchIndexPageRows(filters, requestedPage, input.pageSize),
+      getChurchIndexTotalCountCached(filters),
+    ]);
     const totalPages = Math.max(1, Math.ceil(totalCount / input.pageSize));
     const currentPage = Math.min(requestedPage, totalPages);
     const rows = currentPage === requestedPage ? firstRows : await fetchChurchIndexPageRows(filters, currentPage, input.pageSize);

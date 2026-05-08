@@ -41,21 +41,23 @@ export function PrayerWallFilters({
         ))}
       </select>
 
-      <select
-        value={activeCity || ""}
-        onChange={(e) => {
-          const val = e.target.value;
-          router.push(val ? `/prayerwall/city/${val}` : activeCountry ? `/prayerwall/country/${activeCountry}` : "/prayerwall");
-        }}
-        className="rounded-full border border-rose-200/60 bg-white px-4 py-2.5 text-sm text-espresso shadow-sm outline-none transition focus:border-rose-gold focus:ring-2 focus:ring-rose-gold/20"
-      >
-        <option value="">All cities</option>
-        {cities.map((c) => (
-          <option key={c.slug} value={c.slug}>
-            {c.label}
-          </option>
-        ))}
-      </select>
+      {cities.length > 0 ? (
+        <select
+          value={activeCity || ""}
+          onChange={(e) => {
+            const val = e.target.value;
+            router.push(val ? `/prayerwall/city/${val}` : activeCountry ? `/prayerwall/country/${activeCountry}` : "/prayerwall");
+          }}
+          className="rounded-full border border-rose-200/60 bg-white px-4 py-2.5 text-sm text-espresso shadow-sm outline-none transition focus:border-rose-gold focus:ring-2 focus:ring-rose-gold/20"
+        >
+          <option value="">All cities</option>
+          {cities.map((c) => (
+            <option key={c.slug} value={c.slug}>
+              {c.label}
+            </option>
+          ))}
+        </select>
+      ) : null}
 
       {churches.length > 0 ? (
         <select

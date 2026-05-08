@@ -66,7 +66,7 @@ export default async function PrayerWallPage() {
         <div className="mx-auto max-w-[1280px] px-5 py-5 sm:px-12">
           <PrayerWallFilters
             countries={filterIndex.countryOptions}
-            cities={filterIndex.allCityOptions}
+            cities={[]}
             churches={[]}
           />
         </div>
