@@ -15,6 +15,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Design handoff is mock JSX shipped for reference (window.X
+    // assignments, no imports, embedded react). Not production code.
+    "design_handoff_gospelchannel/**",
   ]),
 ]);
 
