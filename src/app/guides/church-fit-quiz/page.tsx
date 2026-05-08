@@ -16,9 +16,27 @@ export default async function ChurchFitQuizPage() {
   const lanes = buildDiscoveryLanes([]);
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+    <>
       <ToolPageTracker toolName="church_fit_quiz" />
-      <ChurchFitQuizClient lanes={lanes} />
-    </div>
+
+      <section className="px-5 pt-14 sm:px-12 sm:pt-16">
+        <div className="mx-auto max-w-[720px] text-center">
+          <p className="gc-eyebrow">Find your fit</p>
+          <h1
+            className="mx-auto mt-3.5 m-0 max-w-[16ch] font-serif font-semibold leading-[1.1] tracking-[-0.02em] text-espresso"
+            style={{ fontSize: "clamp(40px, 6vw, 72px)" }}
+          >
+            Find <em className="gc-italic">your</em> Sunday in eight questions.
+          </h1>
+          <p className="mx-auto mt-5 max-w-[520px] text-base leading-relaxed text-warm-brown sm:text-lg">
+            No data saved. No login. Three matches at the end &mdash; visit one this Sunday or save them and decide later.
+          </p>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-[1100px] px-5 py-12 sm:px-12 sm:py-14">
+        <ChurchFitQuizClient lanes={lanes} />
+      </section>
+    </>
   );
 }

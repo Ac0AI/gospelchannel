@@ -11,109 +11,168 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+const PRINCIPLES = [
+  { n: "I.", t: "Free, always.", b: "Charging churches to be found is wrong. We'd rather grow slowly." },
+  { n: "II.", t: "No ads.", b: "Not now, not ever. Not even tasteful ones. Not even from publishers." },
+  { n: "III.", t: "No data sold.", b: "We don't track visitors, we don't share emails, we don't have a CRM to leak. Less data is more peace." },
+  { n: "IV.", t: "Every tradition welcome.", b: "Catholic and Pentecostal. Lutheran and non-denominational. We don't editorialize on theology." },
+  { n: "V.", t: "Beauty is part of the mission.", b: "A page can be a sermon. We design like every visitor is making up their mind in 90 seconds — because they are." },
+];
+
 export default async function AboutPage() {
   const { churchCountLabel, countryCount } = await getChurchStatsAsync();
+
   return (
-    <div className="mx-auto w-full max-w-4xl space-y-8 px-4 py-10 sm:space-y-12 sm:px-6 sm:py-14 lg:px-8">
-      <section className="space-y-6">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-mauve">About</p>
-        <h1 className="font-serif text-3xl font-semibold leading-tight text-espresso sm:text-4xl lg:text-5xl">
-          Why Gospel exists
-        </h1>
-        <p className="max-w-2xl text-lg leading-relaxed text-warm-brown">
-          Finding a church should feel clearer before Sunday. Gospel helps you compare fit first, then tune in to church channels across {churchCountLabel} churches in {countryCount} countries.
-        </p>
-      </section>
-
-      <section className="rounded-3xl border border-rose-200/60 bg-gradient-to-br from-white to-blush-light/40 p-5 shadow-sm sm:p-8">
-        <h2 className="font-serif text-2xl font-semibold text-espresso">Why This Exists</h2>
-        <div className="mt-4 space-y-4 text-warm-brown leading-relaxed">
-          <p>
-            Most people are not looking for a church directory. They are trying to answer a harder question: where will I actually fit? That usually means comparing worship style, tradition, language, service details, and overall room feel before they ever walk through the door.
-          </p>
-          <p>
-            So we built GospelChannel around two layers. The first is fit: helping you choose with more confidence before your first visit. The second is channel: once you are here, you can tune in to a church through playlists, videos, service details, and community signals on one page.
+    <>
+      {/* Manifesto hero */}
+      <section className="px-5 pt-24 pb-16 text-center sm:px-12 sm:pt-32 sm:pb-20">
+        <div className="mx-auto max-w-[920px]">
+          <p className="gc-eyebrow">A short manifesto</p>
+          <h1
+            className="m-0 mt-4 font-serif font-semibold leading-[1.02] tracking-[-0.02em] text-espresso"
+            style={{ fontSize: "clamp(48px, 9vw, 96px)" }}
+          >
+            People find God <em className="gc-italic">differently</em>.
+          </h1>
+          <p className="mt-8 font-serif text-xl font-medium italic leading-[1.45] text-warm-brown sm:text-2xl lg:text-[28px]">
+            Some through hymns. Some through Hillsong. Some through silence in a stone cathedral. Some through a guitar in a school gym. We believe every one of those rooms deserves a beautiful door.
           </p>
         </div>
       </section>
 
-      <section className="grid gap-6 sm:grid-cols-2">
-        <div className="rounded-2xl border border-rose-200/60 bg-white/70 p-6 shadow-sm">
-          <h3 className="font-serif text-xl font-semibold text-espresso">For Churchgoers</h3>
-          <p className="mt-3 text-sm leading-relaxed text-warm-brown">
-            New in town? Curious about a different tradition? Start with fit. Compare churches by location, tradition, worship style, and service details before you decide where to go.
-          </p>
-        </div>
-        <div className="rounded-2xl border border-rose-200/60 bg-white/70 p-6 shadow-sm">
-          <h3 className="font-serif text-xl font-semibold text-espresso">For Churches</h3>
-          <p className="mt-3 text-sm leading-relaxed text-warm-brown">
-            Your church already has a page. Claim it to strengthen your channel for first-time visitors with better service details, official links, and clearer signals before they arrive.
-          </p>
-        </div>
-      </section>
-
-      <section className="rounded-3xl border border-rose-200/60 bg-gradient-to-br from-white to-blush-light/40 p-5 shadow-sm sm:p-8">
-        <h2 className="font-serif text-2xl font-semibold text-espresso">How It Works</h2>
-        <p className="mt-2 text-sm text-muted-warm">Three steps to finding the right fit before your first visit.</p>
-        <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
-          {[
-            {
-              step: "1. Browse",
-              body: "Filter by city, tradition, or worship style. Start by narrowing to churches that look like the right fit.",
-              href: "/church",
-              cta: "Browse churches",
-            },
-            {
-              step: "2. Listen",
-              body: "Tune in to each church channel through music, videos, and service details. Get a feel for the room before you visit.",
-              href: "/church",
-              cta: "Explore",
-            },
-            {
-              step: "3. Connect",
-              body: "Choose with more confidence, visit in person, and help improve pages so the next first-time visitor has fewer unknowns.",
-              href: "/church/suggest",
-              cta: "Suggest a church",
-            },
-          ].map((item) => (
-            <article
-              key={item.step}
-              className="rounded-2xl border border-rose-200/60 bg-white/70 p-5 shadow-sm backdrop-blur-sm"
+      {/* Long-form story */}
+      <section className="mx-auto max-w-[720px] px-5 sm:px-12">
+        <div className="font-serif text-lg leading-[1.7] text-espresso sm:text-[19px]">
+          <p className="m-0">
+            <span
+              className="float-left mr-3.5 mt-2 font-serif text-7xl font-semibold italic leading-[0.85] text-rose-gold sm:text-[96px]"
             >
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-mauve">{item.step}</p>
-              <p className="mt-3 text-sm leading-relaxed text-warm-brown">{item.body}</p>
-              <Link
-                href={item.href}
-                className="mt-4 inline-flex rounded-full border border-blush px-3 py-1.5 text-xs font-semibold text-rose-gold transition-colors hover:border-rose-300 hover:bg-blush-light"
-              >
-                {item.cta}
-              </Link>
-            </article>
+              G
+            </span>
+            ospelChannel started because two of us moved to a new city and couldn&rsquo;t find a church we&rsquo;d want to walk into. Not because there weren&rsquo;t any &mdash; there were dozens &mdash; but because every one of their websites looked like it was designed by someone who didn&rsquo;t believe people would actually visit.
+          </p>
+          <p className="mt-5">
+            The information we needed &mdash; what time, what kind of music, will I be the only person under 60, do they have anything for kids &mdash; was buried. Or missing. Or last updated in 2014.
+          </p>
+          <p className="mt-5">
+            We&rsquo;re not pastors. We&rsquo;re designers and engineers who love the church. And we kept asking: <em className="text-rose-gold-deep">why does the place that&rsquo;s supposed to welcome strangers have the worst onboarding on the internet?</em>
+          </p>
+          <p className="mt-5">
+            So we built one page. Then five. Then we asked thirty pastors if we could rebuild theirs. They said yes. Then they said please. Then they sent it to other pastors.
+          </p>
+          <p className="mt-5">
+            This is a directory of churches, made by people who think the front door matters. It&rsquo;s free because we think charging churches to be findable is wrong. It&rsquo;s ad-free because we think putting a Coca-Cola banner next to a prayer is also wrong.
+          </p>
+          <p className="mt-5">
+            We&rsquo;re small. We&rsquo;re independent. We&rsquo;re <em className="text-rose-gold-deep">{churchCountLabel} churches in</em>. Most days we still can&rsquo;t believe it.
+          </p>
+        </div>
+      </section>
+
+      {/* Numbers */}
+      <section className="mx-auto mt-24 max-w-[1280px] px-5 sm:px-12 sm:mt-28">
+        <div className="grid grid-cols-2 border-y border-rose-gold/[0.14] sm:grid-cols-4">
+          {[
+            { n: churchCountLabel, l: "Churches listed" },
+            { n: `${countryCount}`, l: "Countries" },
+            { n: "Free", l: "Forever, no ads" },
+            { n: "Open", l: "Source on GitHub" },
+          ].map((s, i) => (
+            <div
+              key={s.l}
+              className={`px-6 py-12 text-center sm:px-8 sm:py-14 ${
+                i === 0 || i === 2 ? "border-r border-rose-gold/[0.14]" : ""
+              } ${i < 2 ? "border-b border-rose-gold/[0.14] sm:border-b-0" : ""} ${
+                i === 1 ? "" : ""
+              } ${i < 3 ? "sm:border-r sm:border-rose-gold/[0.14]" : ""}`}
+            >
+              <p className="m-0 font-serif font-semibold tracking-[-0.02em] text-espresso" style={{ fontSize: "clamp(36px, 5vw, 64px)" }}>
+                {s.n}
+              </p>
+              <p className="mt-2 text-xs uppercase tracking-[0.16em] text-muted-warm sm:text-[12px]">
+                {s.l}
+              </p>
+            </div>
           ))}
         </div>
       </section>
 
-      <section className="text-center">
-        <p className="mx-auto max-w-lg font-serif text-xl italic leading-relaxed text-warm-brown">
-          &ldquo;For where two or three gather in my name, there am I with them.&rdquo;
-        </p>
-        <p className="mt-2 text-sm text-muted-warm">- Matthew 18:20</p>
+      {/* Principles */}
+      <section className="mx-auto mt-24 max-w-[1280px] px-5 sm:px-12 sm:mt-28">
+        <p className="gc-eyebrow text-center">What we believe</p>
+        <h2
+          className="mt-3 text-center font-serif font-semibold tracking-[-0.01em] text-espresso"
+          style={{ fontSize: "clamp(36px, 6vw, 56px)" }}
+        >
+          Five things we won&rsquo;t <em className="gc-italic">compromise</em>.
+        </h2>
+        <div className="mt-14 grid gap-5 lg:grid-cols-2">
+          {PRINCIPLES.map((p, i) => {
+            const isLast = i === PRINCIPLES.length - 1;
+            return (
+              <div
+                key={p.n}
+                className={`flex items-start gap-6 rounded-[22px] px-9 py-8 ${
+                  isLast
+                    ? "bg-espresso text-linen lg:col-span-2"
+                    : "border border-rose-gold/[0.10] bg-white text-espresso"
+                }`}
+              >
+                <p
+                  className={`m-0 min-w-[60px] font-serif text-4xl font-medium italic leading-none sm:text-[44px] ${
+                    isLast ? "text-blush" : "text-rose-gold"
+                  }`}
+                >
+                  {p.n}
+                </p>
+                <div>
+                  <h3 className="m-0 font-serif text-2xl font-semibold tracking-[-0.01em] sm:text-[28px]">
+                    {p.t}
+                  </h3>
+                  <p className={`mt-2 text-[15px] leading-[1.55] ${isLast ? "text-linen/80" : "text-warm-brown"}`}>
+                    {p.b}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
 
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
+      {/* Closing CTA + scripture */}
+      <section className="mx-auto mt-24 max-w-[920px] px-5 pb-24 text-center sm:px-12 sm:mt-28 sm:pb-32">
+        <h2
+          className="font-serif font-semibold tracking-[-0.01em] text-espresso"
+          style={{ fontSize: "clamp(36px, 6vw, 56px)" }}
+        >
+          Get in <em className="gc-italic">touch</em>.
+        </h2>
+        <p className="mx-auto mt-5 max-w-[520px] text-base leading-relaxed text-warm-brown sm:text-lg">
+          We read every email. Press, partnerships, pastors with questions, theologians with concerns &mdash; all welcome.
+        </p>
+        <p className="mt-8 font-serif text-2xl font-medium italic text-rose-gold sm:text-3xl lg:text-[32px]">
+          hello@gospelchannel.com
+        </p>
+
+        <div className="mt-12 flex flex-wrap justify-center gap-3">
           <Link
             href="/church"
-            className="rounded-full bg-espresso px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-warm-brown hover:shadow-md"
+            className="rounded-full bg-rose-gold px-6 py-3 text-sm font-bold text-white transition-all duration-150 hover:-translate-y-px hover:bg-rose-gold-deep hover:shadow-[0_8px_24px_rgba(176,106,80,0.3)]"
           >
-            Browse Churches
+            Browse churches
           </Link>
           <Link
             href="/church/suggest"
-            className="rounded-full bg-rose-gold px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-rose-gold-deep hover:shadow-md"
+            className="rounded-full border border-rose-gold/30 px-6 py-3 text-sm font-semibold text-espresso transition-colors hover:bg-rose-gold/[0.06]"
           >
-            Suggest a Church
+            Suggest a church
           </Link>
         </div>
+
+        <p className="mx-auto mt-14 max-w-[520px] font-serif text-base italic leading-relaxed text-muted-warm sm:text-lg">
+          &ldquo;For where two or three gather in my name, there am I with them.&rdquo; &mdash; Matthew 18:20
+        </p>
       </section>
-    </div>
+    </>
   );
 }

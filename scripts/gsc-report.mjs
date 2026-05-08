@@ -104,12 +104,20 @@ export async function getTop(client, range, dimension, limit = 10) {
   });
 }
 
+export async function getTopByImpressions(client, range, dimension, limit = 10) {
+  const rows = await getTop(client, range, dimension, Math.max(limit * 20, 250));
+  return rows
+    .sort((a, b) => b.impressions - a.impressions)
+    .slice(0, limit);
+}
+
 export async function getSitemap(client) {
   try {
     const res = await client.request({
       url: `${API}/sites/${SITE_ENC}/sitemaps`,
     });
-    return (res.data.sitemap || [])[0] || null;
+    const sitemaps = res.data.sitemap || [];
+    return sitemaps.find((sitemap) => sitemap.path === "https://gospelchannel.com/sitemap.xml") || sitemaps[0] || null;
   } catch {
     return null;
   }
@@ -217,9 +225,9 @@ export async function generateReport(days = 28) {
   const [totals, prevTotals, topCountries, topQueries, topPages, sitemap] = await Promise.all([
     getTotals(client, range.current),
     getTotals(client, range.previous),
-    getTop(client, range.current, "country", 10),
-    getTop(client, range.current, "query", 15),
-    getTop(client, range.current, "page", 15),
+    getTopByImpressions(client, range.current, "country", 10),
+    getTopByImpressions(client, range.current, "query", 15),
+    getTopByImpressions(client, range.current, "page", 15),
     getSitemap(client),
   ]);
 

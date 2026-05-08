@@ -95,6 +95,16 @@ type ChurchDataRow = ChurchDirectorySeedRow & {
   youtube_videos?: ChurchConfig["youtubeVideos"] | null;
 };
 
+type ChurchStatsRow = {
+  church_count: number | string | bigint;
+  country_count: number | string | bigint;
+};
+
+type ChurchNameRow = {
+  slug: string;
+  name: string;
+};
+
 let localChurchSnapshotCache: ChurchConfig[] | null = null;
 let fallbackChurchMapCache: Map<string, ChurchConfig> | null = null;
 let fallbackChurchDirectorySeedCache: ChurchDirectorySeed[] | null = null;
@@ -417,6 +427,29 @@ async function fetchApprovedChurchDirectorySeedCountFromDb(): Promise<number> {
   return Number(rawRows[0]?.count ?? 0);
 }
 
+async function fetchApprovedChurchStatsFromDb(): Promise<{
+  churchCount: number;
+  churchCountLabel: string;
+  countryCount: number;
+}> {
+  const sql = getSql();
+  const rows = (await sql.query(`
+    SELECT
+      COUNT(*)::int AS church_count,
+      COUNT(DISTINCT NULLIF(country, ''))::int AS country_count
+    FROM churches
+    WHERE status = 'approved'
+      AND NOT (slug = ANY($1::text[]))
+  `, [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS])) as ChurchStatsRow[];
+
+  const churchCount = Number(rows[0]?.church_count ?? 0);
+  return {
+    churchCount,
+    churchCountLabel: formatChurchCountLabel(churchCount),
+    countryCount: Number(rows[0]?.country_count ?? 0),
+  };
+}
+
 async function fetchApprovedChurchDirectorySeedChunkFromDb(
   chunkIndex: number,
 ): Promise<ChurchDirectorySeed[]> {
@@ -519,12 +552,26 @@ const getApprovedChurchDirectorySeedCached = cache(async (): Promise<ChurchDirec
 
 const getApprovedChurchStatsCached = unstable_cache(
   async () => {
-    const churches = await getApprovedChurchDirectorySeedCached();
-    return {
-      churchCount: churches.length,
-      churchCountLabel: formatChurchCountLabel(churches.length),
-      countryCount: new Set(churches.map((church) => church.country).filter(Boolean)).size,
-    };
+    if (isOfflinePublicBuild() || !hasServiceConfig()) {
+      const churches = getFallbackChurchDirectorySeed();
+      return {
+        churchCount: churches.length,
+        churchCountLabel: formatChurchCountLabel(churches.length),
+        countryCount: new Set(churches.map((church) => church.country).filter(Boolean)).size,
+      };
+    }
+
+    try {
+      return await fetchApprovedChurchStatsFromDb();
+    } catch (error) {
+      logChurchSnapshotFallback("church-stats", error);
+      const churches = getFallbackChurchDirectorySeed();
+      return {
+        churchCount: churches.length,
+        churchCountLabel: formatChurchCountLabel(churches.length),
+        countryCount: new Set(churches.map((church) => church.country).filter(Boolean)).size,
+      };
+    }
   },
   ["approved-church-stats-v2"],
   { revalidate: 3600, tags: [CHURCH_CONTENT_TAG, CHURCH_STATS_TAG] }
@@ -598,6 +645,61 @@ export async function getChurchDirectorySeedSliceAsync(
 
 export async function getChurchDirectorySeedCountAsync(): Promise<number> {
   return getApprovedChurchDirectorySeedCountCached();
+}
+
+export async function getChurchNamesBySlugsAsync(slugs: string[]): Promise<Record<string, string>> {
+  const originalToCanonical = new Map(
+    slugs
+      .filter(Boolean)
+      .map((slug) => [slug, resolveCanonicalChurchSlug(slug)]),
+  );
+  const uniqueCanonicalSlugs = [...new Set(originalToCanonical.values())];
+  if (uniqueCanonicalSlugs.length === 0) return {};
+
+  const buildNameMap = (canonicalNameMap: Map<string, string>) => {
+    const names: Record<string, string> = {};
+    for (const [originalSlug, canonicalSlug] of originalToCanonical) {
+      const name = canonicalNameMap.get(canonicalSlug);
+      if (name) {
+        names[originalSlug] = name;
+        names[canonicalSlug] = name;
+      }
+    }
+    return names;
+  };
+
+  if (isOfflinePublicBuild() || !hasServiceConfig()) {
+    const fallbackMap = getFallbackChurchMap();
+    const canonicalNameMap = new Map(
+      uniqueCanonicalSlugs.flatMap((slug) => {
+        const church = fallbackMap.get(slug);
+        return church ? [[slug, church.name]] : [];
+      }),
+    );
+    return buildNameMap(canonicalNameMap);
+  }
+
+  try {
+    const sql = getSql();
+    const rows = (await sql.query(`
+      SELECT slug, name
+      FROM churches
+      WHERE status = 'approved'
+        AND slug = ANY($1::text[])
+    `, [uniqueCanonicalSlugs])) as ChurchNameRow[];
+
+    return buildNameMap(new Map(rows.map((row) => [row.slug, row.name])));
+  } catch (error) {
+    logChurchSnapshotFallback("church-names-by-slugs", error);
+    const fallbackMap = getFallbackChurchMap();
+    const canonicalNameMap = new Map(
+      uniqueCanonicalSlugs.flatMap((slug) => {
+        const church = fallbackMap.get(slug);
+        return church ? [[slug, church.name]] : [];
+      }),
+    );
+    return buildNameMap(canonicalNameMap);
+  }
 }
 
 /**

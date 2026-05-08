@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>For Churches — GospelChannel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lib/shared.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="lib/shared.jsx"></script>
+<style>
+@media (max-width: 768px) {
+  .fc-hero { grid-template-columns: 1fr !important; gap: 40px !important; padding: 40px 20px 32px !important; }
+  .fc-hero h1 { font-size: 48px !important; }
+  .fc-hero .fc-card-float { position: static !important; margin: 16px 0 0 !important; max-width: 100% !important; }
+  .fc-trust { padding: 24px 20px !important; }
+  .fc-trust-row { justify-content: flex-start !important; gap: 18px !important; overflow-x: auto; }
+  .fc-trust-row span { font-size: 18px !important; white-space: nowrap; }
+  .fc-section { padding: 64px 20px 0 !important; }
+  .fc-section h2 { font-size: 36px !important; }
+  .fc-grid-3, .fc-grid-2, .fc-grid-4 { grid-template-columns: 1fr !important; gap: 14px !important; }
+  .fc-quote p { font-size: 26px !important; }
+  .fc-step-line { display: none !important; }
+  .fc-pricing { padding: 40px 24px !important; border-radius: 20px !important; }
+  .fc-pricing h2 { font-size: 36px !important; }
+  .fc-final h2 { font-size: 36px !important; }
+  .fc-faq summary { font-size: 18px !important; }
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+const App = () =>
+<div className="gc-page">
+    <GCHeader active="For churches" />
+
+    {/* Hero — editorial split */}
+    <section className="fc-hero" style={{ maxWidth: 1280, margin: "0 auto", padding: "80px 48px 60px", display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 64, alignItems: "center" }}>
+      <div>
+        <p className="gc-eyebrow">For pastors & church leaders</p>
+        <h1 className="gc-h1" style={{ marginTop: 14, fontSize: 84 }}>
+          The page your church <em className="gc-italic">deserves</em>.
+        </h1>
+        <p className="gc-lede" style={{ marginTop: 22, maxWidth: 540 }}>
+          A premium directory page for your church — Spotify, YouTube, service times, prayer wall, all in one place. Free forever. No ads. No tracking. Built so first-time visitors find what they need before Sunday.
+        </p>
+        <div style={{ marginTop: 32, display: "flex", gap: 12, flexWrap: "wrap" }}>
+          <button className="gc-btn gc-btn-primary gc-btn-lg">Add your church</button>
+          <button className="gc-btn gc-btn-ghost gc-btn-lg">Claim existing page</button>
+        </div>
+        <p style={{ marginTop: 18, fontSize: 13, color: "var(--muted-warm)" }}>Takes 4 minutes. Completly Free</p>
+      </div>
+      <div style={{ position: "relative" }}>
+        <div style={{ aspectRatio: "3/4", borderRadius: 24, overflow: "hidden", boxShadow: "var(--shadow-lg)", backgroundImage: "url(https://images.unsplash.com/photo-1519834785169-98be25ec3f84?w=900&q=80&auto=format&fit=crop)", backgroundSize: "cover", backgroundPosition: "center" }} />
+        <div className="fc-card-float" style={{ position: "absolute", bottom: -24, left: -24, background: "white", padding: "20px 24px", borderRadius: 18, boxShadow: "var(--shadow)", border: "var(--border-soft)", maxWidth: 280 }}>
+          <p className="gc-eyebrow"></p>
+          <p style={{ fontFamily: "var(--font-serif)", fontSize: 22, fontWeight: 600, margin: "6px 0 0", lineHeight: 1.2 }}>"12 new visitors found us last month through GospelChannel."</p>
+          <p style={{ fontSize: 12, color: "var(--muted-warm)", marginTop: 8 }}>— Jonas,  Pastor, London</p>
+        </div>
+      </div>
+    </section>
+
+    {/* Trust strip */}
+    <section className="fc-trust" style={{ background: "var(--linen-deep)", padding: "32px 48px", borderTop: "var(--border-soft)", borderBottom: "var(--border-soft)" }}>
+      <div className="fc-trust-row" style={{ maxWidth: 1280, margin: "0 auto", display: "flex", justifyContent: "space-around", alignItems: "center", flexWrap: "wrap", gap: 24 }}>
+        <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--muted-warm)", margin: 0 }}>FEATURING CHURCHES IN 100+ COUNTRIES</p>
+        {["Hillsong", "Bethel", "Elevation", "Holy Trinity", "Passion City", "Redeemer"].map((n) =>
+      <span key={n} style={{ fontFamily: "var(--font-serif)", fontSize: 22, fontWeight: 500, color: "var(--warm-brown)", letterSpacing: "-0.01em", opacity: 0.7 }}>{n}</span>
+      )}
+      </div>
+    </section>
+
+    {/* Why list */}
+    <section className="fc-section" style={{ maxWidth: 1280, margin: "0 auto", padding: "100px 48px 0" }}>
+      <div style={{ textAlign: "center", marginBottom: 56 }}>
+        <p className="gc-eyebrow">Why list with us</p>
+        <h2 className="gc-h2" style={{ marginTop: 12, fontSize: 56 }}>Three things every directory should do.</h2>
+        <p className="gc-lede" style={{ marginTop: 18, maxWidth: 580, marginInline: "auto" }}>And one thing they shouldn't.</p>
+      </div>
+      <div className="fc-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
+        {[
+      { num: "01", title: "Show your soul, not just hours.", body: "Your music, your photos, your team, the feel of a Sunday. People decide on vibe before they decide on doctrine." },
+      { num: "02", title: "Help the right people find you.", body: "Filters by language, kids program, denomination, worship style. We surface you to people whose Sunday is incomplete without you." },
+      { num: "03", title: "Stay out of the way after.", body: "We don't email your visitors. We don't sell their data. We don't advertise. The page is a doorway — what happens inside is yours." }].
+      map((b) =>
+      <div key={b.num} className="gc-card gc-card-pad">
+            <p style={{ fontFamily: "var(--font-serif)", fontSize: 48, fontWeight: 500, color: "var(--rose-gold)", margin: 0, lineHeight: 1, fontStyle: "italic" }}>{b.num}</p>
+            <h3 className="gc-h3" style={{ marginTop: 14, fontSize: 24 }}>{b.title}</h3>
+            <p style={{ fontSize: 14, color: "var(--warm-brown)", lineHeight: 1.6, marginTop: 10 }}>{b.body}</p>
+          </div>
+      )}
+      </div>
+    </section>
+
+    {/* What you get — feature grid */}
+    <section className="fc-section" style={{ maxWidth: 1280, margin: "0 auto", padding: "100px 48px 0" }}>
+      <p className="gc-eyebrow">What's on every page</p>
+      <h2 className="gc-h2" style={{ marginTop: 12, marginBottom: 40 }}>Everything in one place. Nothing in the way.</h2>
+      <div className="fc-grid-2" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 }}>
+        {[
+      { ic: "01", t: "Music & playlists", d: "Embed Spotify, Apple Music, YouTube. Visitors hear your sound before they walk in." },
+      { ic: "02", t: "Sermons & live", d: "YouTube embeds, latest series, livestream link surfaced when you go live Sunday morning." },
+      { ic: "03", t: "Service times that update", d: "Multiple gatherings, holiday hours, language tracks — all editable from your dashboard." },
+      { ic: "04", t: "Map & directions", d: "One tap to walking, transit or driving directions. Parking notes for first-timers." },
+      { ic: "05", t: "Verified badge", d: "Once you claim and confirm, visitors see the verified mark. Trust-signal for new faces." },
+      { ic: "06", t: "Prayer wall integration", d: "Receive prayers from your wall, respond from one inbox. Volunteers can moderate together." },
+      { ic: "07", t: "Team & pastor profiles", d: "Faces and short bios. New visitors arrive knowing who they'll meet." },
+      { ic: "08", t: "Multilingual", d: "Mark languages spoken at services. Show your page in Swedish, Spanish, Arabic, Mandarin and 16 more." }].
+      map((f) =>
+      <div key={f.t} style={{ display: "flex", gap: 18, padding: "22px 24px", background: "white", borderRadius: 16, border: "var(--border-soft)" }}>
+            <div style={{ width: 44, height: 44, borderRadius: 12, background: "var(--linen-deep)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0, color: "var(--rose-gold)" }}>{f.ic}</div>
+            <div>
+              <h4 style={{ fontFamily: "var(--font-serif)", fontSize: 20, fontWeight: 600, margin: 0, letterSpacing: "-0.01em" }}>{f.t}</h4>
+              <p style={{ fontSize: 13, color: "var(--warm-brown)", lineHeight: 1.55, margin: "6px 0 0" }}>{f.d}</p>
+            </div>
+          </div>
+      )}
+      </div>
+    </section>
+
+    {/* Pastor quote */}
+    <section className="fc-quote fc-section" style={{ maxWidth: 920, margin: "100px auto 0", padding: "0 48px", textAlign: "center" }}>
+      <p className="gc-eyebrow">A pastor told us</p>
+      <p style={{ fontFamily: "var(--font-serif)", fontSize: 44, fontWeight: 500, fontStyle: "italic", color: "var(--espresso)", lineHeight: 1.3, margin: "20px 0 24px", letterSpacing: "-0.01em" }}>
+        "We've had a website for 11 years. The GospelChannel page does what ours never did — it makes us look like a place you'd want to walk into."
+      </p>
+      <p style={{ fontSize: 14, color: "var(--warm-brown)", letterSpacing: "0.06em" }}>Pastor Daniel · Trinity Anglican · Auckland</p>
+    </section>
+
+    {/* How it works */}
+    <section className="fc-section" style={{ maxWidth: 1280, margin: "100px auto 0", padding: "0 48px" }}>
+      <p className="gc-eyebrow" style={{ textAlign: "center" }}>The four-minute setup</p>
+      <h2 className="gc-h2" style={{ textAlign: "center", marginTop: 12, marginBottom: 48 }}>From signup to live.</h2>
+      <div className="fc-grid-4" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, position: "relative" }}>
+        {[
+      { n: "1", t: "Find or add", d: "Search for your church. If we have it, claim it. If not, add it in 2 minutes." },
+      { n: "2", t: "Verify", d: "We send a code to the church email or phone on file. One step." },
+      { n: "3", t: "Polish", d: "Add photos, music links, service times. Live preview as you go." },
+      { n: "4", t: "Publish", d: "Press publish. The page is live. Edit anytime, no review queue." }].
+      map((s, i) =>
+      <div key={s.n} style={{ position: "relative" }}>
+            {i < 3 && <div className="fc-step-line" style={{ position: "absolute", top: 24, left: "60%", right: "-40%", height: 1, background: "rgba(176,106,80,0.25)", zIndex: 0 }} />}
+            <div style={{ position: "relative", zIndex: 1, width: 48, height: 48, borderRadius: "50%", background: "var(--rose-gold)", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--font-serif)", fontSize: 22, fontWeight: 600, marginBottom: 18 }}>{s.n}</div>
+            <h4 className="gc-h3" style={{ fontSize: 22 }}>{s.t}</h4>
+            <p style={{ fontSize: 14, color: "var(--warm-brown)", lineHeight: 1.55, marginTop: 8 }}>{s.d}</p>
+          </div>
+      )}
+      </div>
+    </section>
+
+    {/* Pricing-honest box */}
+    <section className="fc-section" style={{ maxWidth: 920, margin: "100px auto 0", padding: "0 48px" }}>
+      <div className="fc-pricing" style={{ background: "var(--espresso)", color: "var(--linen)", borderRadius: 28, padding: "56px 48px", textAlign: "center" }}>
+        <p className="gc-eyebrow" style={{ color: "var(--blush)" }}>Pricing</p>
+        <h2 className="gc-h2" style={{ color: "var(--linen)", marginTop: 12, fontSize: 56 }}>Free. Forever. Truly.</h2>
+        <p style={{ fontSize: 17, color: "rgba(253,248,244,0.75)", lineHeight: 1.6, maxWidth: 560, margin: "20px auto 0" }}>
+          We take a small donation from supporting churches who want to. We don't run ads. We don't sell data. We don't gate features. The same page Hillsong has, your village parish has.
+        </p>
+        <button className="gc-btn gc-btn-lg" style={{ marginTop: 32, background: "var(--linen)", color: "var(--espresso)" }}>Add your church free</button>
+      </div>
+    </section>
+
+    {/* FAQ */}
+    <section className="fc-faq fc-section" style={{ maxWidth: 920, margin: "100px auto 0", padding: "0 48px" }}>
+      <p className="gc-eyebrow" style={{ textAlign: "center" }}>Common questions</p>
+      <h2 className="gc-h2" style={{ textAlign: "center", marginTop: 12, marginBottom: 32 }}>Before you sign up.</h2>
+      <div>
+        {[
+      { q: "Who runs GospelChannel?", a: "A small team based in Stockholm with backgrounds in tech and ministry. We're independent and not affiliated with any single denomination or network." },
+      { q: "What if my church doesn't have great photos?", a: "Use the 'no-photo' layout — we generate a beautiful color page using your tradition's palette. Many small churches choose this even when they have photos." },
+      { q: "Can I edit the page anytime?", a: "Yes. Changes are live immediately. No review queue. You can also add multiple admins from your team." },
+      { q: "Will you email my visitors?", a: "Never. Visitors who tap your contact button go to your channels, not ours. We don't have a newsletter to push them into." },
+      { q: "What about prayer requests?", a: "If you turn on the wall, prayers come into a moderation inbox you control. Volunteers from your church can moderate together." },
+      { q: "Can I delete my church anytime?", a: "Yes. One click in the dashboard. The page disappears. We don't keep an archive." }].
+      map((f, i) =>
+      <details key={i} style={{ borderBottom: "var(--border-soft)", padding: "22px 0" }}>
+            <summary style={{ fontFamily: "var(--font-serif)", fontSize: 22, fontWeight: 600, color: "var(--espresso)", cursor: "pointer", listStyle: "none", display: "flex", justifyContent: "space-between", alignItems: "center", letterSpacing: "-0.01em" }}>
+              {f.q}<span style={{ color: "var(--rose-gold)", fontSize: 28, fontWeight: 300 }}>+</span>
+            </summary>
+            <p style={{ fontSize: 15, color: "var(--warm-brown)", lineHeight: 1.6, marginTop: 14, maxWidth: 720 }}>{f.a}</p>
+          </details>
+      )}
+      </div>
+    </section>
+
+    {/* Final CTA */}
+    <section className="fc-final fc-section" style={{ maxWidth: 1280, margin: "100px auto 0", padding: "0 48px", textAlign: "center" }}>
+      <h2 className="gc-h2" style={{ fontSize: 56 }}>Your next first-time visitor is searching <em className="gc-italic">tonight</em>.</h2>
+      <div style={{ marginTop: 32, display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+        <button className="gc-btn gc-btn-primary gc-btn-lg">Add your church free</button>
+        <button className="gc-btn gc-btn-ghost gc-btn-lg">Talk to us first</button>
+      </div>
+    </section>
+
+    <GCFooter />
+  </div>;
+
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

@@ -22,53 +22,64 @@ const topics = [
   },
   {
     heading: "Corrections and takedowns",
-    body: "Spotted something wrong on a page, or want a page removed? Email us and we will sort it out within a few days.",
+    body: "Spotted something wrong on a page, or want a page removed? Email us and we'll sort it out within a few days.",
     cta: { href: `mailto:${contactEmail}?subject=Correction`, label: contactEmail },
   },
   {
-    heading: "Press, partnerships, and everything else",
-    body: "For partnerships, press, or a question that does not fit the boxes above, email us directly.",
+    heading: "Press, partnerships, everything else",
+    body: "For partnerships, press, or a question that doesn't fit the boxes above, email us directly.",
     cta: { href: `mailto:${contactEmail}`, label: contactEmail },
   },
 ];
 
 export default function ContactPage() {
   return (
-    <div className="mx-auto w-full max-w-4xl space-y-10 px-4 py-10 sm:space-y-14 sm:px-6 sm:py-14 lg:px-8">
-      <section className="space-y-5">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-mauve">Contact</p>
-        <h1 className="font-serif text-3xl font-semibold leading-tight text-espresso sm:text-4xl lg:text-5xl">
-          Get in touch
-        </h1>
-        <p className="max-w-2xl text-lg leading-relaxed text-warm-brown">
-          GospelChannel is a small, independent project. Emails reach a real person and we usually reply within a few days.
-        </p>
-        <p className="max-w-2xl text-base leading-relaxed text-warm-brown">
-          General email:{" "}
-          <a href={`mailto:${contactEmail}`} className="font-semibold text-rose-gold hover:text-rose-gold-deep">
-            {contactEmail}
-          </a>
-        </p>
+    <>
+      <section className="px-5 pt-14 sm:px-12 sm:pt-16">
+        <div className="mx-auto max-w-[1100px]">
+          <p className="gc-eyebrow">Contact</p>
+          <h1
+            className="mt-3.5 m-0 font-serif font-semibold leading-[1.05] tracking-[-0.02em] text-espresso"
+            style={{ fontSize: "clamp(40px, 6vw, 64px)" }}
+          >
+            Get in <em className="gc-italic">touch</em>.
+          </h1>
+          <p className="mt-5 max-w-[640px] text-lg leading-relaxed text-warm-brown">
+            GospelChannel is a small, independent project. Emails reach a real person and we usually reply within a few days.
+          </p>
+          <p className="mt-8 font-serif text-2xl italic text-rose-gold sm:text-3xl">
+            <a href={`mailto:${contactEmail}`} className="transition-colors hover:text-rose-gold-deep">
+              {contactEmail}
+            </a>
+          </p>
+        </div>
       </section>
 
-      <section className="grid gap-5 sm:grid-cols-2">
-        {topics.map((topic) => (
-          <article
-            key={topic.heading}
-            className="rounded-2xl border border-rose-200/60 bg-white/70 p-6 shadow-sm"
-          >
-            <h2 className="font-serif text-xl font-semibold text-espresso">{topic.heading}</h2>
-            <p className="mt-3 text-sm leading-relaxed text-warm-brown">{topic.body}</p>
-            <Link
-              href={topic.cta.href}
-              prefetch={false}
-              className="mt-4 inline-flex rounded-full border border-blush px-3 py-1.5 text-xs font-semibold text-rose-gold transition-colors hover:border-rose-300 hover:bg-blush-light"
+      <section className="mx-auto max-w-[1100px] px-5 py-14 pb-24 sm:px-12 sm:py-16">
+        <div className="grid gap-5 sm:grid-cols-2">
+          {topics.map((topic, i) => (
+            <article
+              key={topic.heading}
+              className="rounded-[18px] border border-rose-gold/[0.10] bg-white p-7 shadow-[var(--shadow-sm)]"
             >
-              {topic.cta.label}
-            </Link>
-          </article>
-        ))}
+              <p className="font-serif text-3xl font-medium italic leading-none text-rose-gold">
+                {String(i + 1).padStart(2, "0")}
+              </p>
+              <h2 className="mt-4 font-serif text-xl font-semibold tracking-[-0.01em] text-espresso">
+                {topic.heading}
+              </h2>
+              <p className="mt-3 text-sm leading-[1.6] text-warm-brown">{topic.body}</p>
+              <Link
+                href={topic.cta.href}
+                prefetch={false}
+                className="mt-5 inline-flex items-center gap-1 text-sm font-bold text-rose-gold transition-colors hover:text-rose-gold-deep"
+              >
+                {topic.cta.label} &rarr;
+              </Link>
+            </article>
+          ))}
+        </div>
       </section>
-    </div>
+    </>
   );
 }

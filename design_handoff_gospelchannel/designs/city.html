@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Churches in Stockholm — GospelChannel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lib/shared.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="lib/shared.jsx"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const CHURCHES = [
+  { name: "Hillsong Stockholm", neighborhood: "Södermalm", denom: "Pentecostal", style: "Contemporary · bilingual", size: "1,200 weekly", img: "https://images.unsplash.com/photo-1519682337058-a94d519337bc?w=800&q=80&auto=format&fit=crop", verified: true },
+  { name: "Storkyrkan", neighborhood: "Gamla Stan", denom: "Lutheran", style: "Hymns · liturgy", size: "300 weekly", img: null, verified: true, initial: "S" },
+  { name: "Citykyrkan", neighborhood: "Norrmalm", denom: "Pentecostal", style: "Contemporary worship", size: "800 weekly", img: "https://images.unsplash.com/photo-1507692049790-de58290a4334?w=800&q=80&auto=format&fit=crop", verified: true },
+  { name: "S:t Eriks Katolska Domkyrka", neighborhood: "Södermalm", denom: "Catholic", style: "Mass · multilingual", size: "500 weekly", img: null, verified: false, initial: "E" },
+  { name: "Adolf Fredriks kyrka", neighborhood: "Vasastan", denom: "Lutheran", style: "Choir tradition", size: "200 weekly", img: null, verified: true, initial: "A" },
+  { name: "Immanuelskyrkan", neighborhood: "Norrmalm", denom: "Equmenia", style: "Bilingual · diverse", size: "600 weekly", img: "https://images.unsplash.com/photo-1438032005730-c779502df39b?w=800&q=80&auto=format&fit=crop", verified: true },
+  { name: "Klara kyrka", neighborhood: "Centrum", denom: "Lutheran", style: "Hymns · open doors", size: "150 weekly", img: null, verified: false, initial: "K" },
+  { name: "Pingstkyrkan Filadelfia", neighborhood: "Vasastan", denom: "Pentecostal", style: "Anthemic worship", size: "1,500 weekly", img: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?w=800&q=80&auto=format&fit=crop", verified: true },
+  { name: "S:ta Clara kyrka", neighborhood: "Centrum", denom: "Lutheran", style: "Open church · social", size: "120 weekly", img: null, verified: false, initial: "C" },
+];
+
+const App = () => (
+  <div className="gc-page">
+    <GCHeader />
+    <section style={{ maxWidth: 1280, margin: "0 auto", padding: "48px 48px 0" }}>
+      <p className="gc-eyebrow">City guide</p>
+      <h1 className="gc-h1" style={{ fontSize: 96, marginTop: 14, lineHeight: 0.95 }}>Stockholm</h1>
+      <div style={{ display: "flex", gap: 32, marginTop: 20, flexWrap: "wrap", alignItems: "baseline" }}>
+        <div><span style={{ fontFamily: "var(--font-serif)", fontSize: 36, fontWeight: 600, color: "var(--rose-gold)" }}>{CHURCHES.length}</span> <span style={{ fontSize: 13, color: "var(--muted-warm)", letterSpacing: "0.06em", textTransform: "uppercase", marginLeft: 6 }}>churches listed</span></div>
+        <div><span style={{ fontFamily: "var(--font-serif)", fontSize: 36, fontWeight: 600, color: "var(--mauve)" }}>5</span> <span style={{ fontSize: 13, color: "var(--muted-warm)", letterSpacing: "0.06em", textTransform: "uppercase", marginLeft: 6 }}>traditions</span></div>
+        <div><span style={{ fontFamily: "var(--font-serif)", fontSize: 36, fontWeight: 600, color: "var(--sage)" }}>{CHURCHES.filter(c => c.verified).length}</span> <span style={{ fontSize: 13, color: "var(--muted-warm)", letterSpacing: "0.06em", textTransform: "uppercase", marginLeft: 6 }}>verified</span></div>
+      </div>
+    </section>
+
+    <section style={{ maxWidth: 1280, margin: "32px auto 0", padding: "0 48px" }}>
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", padding: "20px 0", borderTop: "var(--border)", borderBottom: "var(--border-soft)" }}>
+        {["All", "Lutheran", "Pentecostal", "Catholic", "Equmenia", "English-speaking", "Family-friendly"].map((f, i) => (
+          <button key={f} className={`gc-btn ${i === 0 ? "gc-btn-primary" : "gc-btn-ghost"} gc-btn-sm`}>{f}</button>
+        ))}
+      </div>
+    </section>
+
+    <section style={{ maxWidth: 1280, margin: "32px auto 0", padding: "0 48px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
+        {CHURCHES.map(c => (
+          <a key={c.name} href="#" style={{ textDecoration: "none", color: "inherit", display: "block" }}>
+            <div style={{ aspectRatio: "4/3", borderRadius: 18, overflow: "hidden", boxShadow: "var(--shadow)" }}>
+              {c.img ? (
+                <div style={{ width: "100%", height: "100%", backgroundImage: `url(${c.img})`, backgroundSize: "cover", backgroundPosition: "center" }} />
+              ) : (
+                <div style={{ width: "100%", height: "100%", background: "var(--espresso)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <div style={{ fontFamily: "var(--font-serif)", fontSize: 120, fontWeight: 600, color: "var(--rose-gold)", letterSpacing: "-0.04em" }}>{c.initial}</div>
+                </div>
+              )}
+            </div>
+            <div style={{ marginTop: 14 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <h3 style={{ fontFamily: "var(--font-serif)", fontSize: 24, fontWeight: 600, margin: 0, letterSpacing: "-0.01em" }}>{c.name}</h3>
+                {c.verified && <span style={{ color: "var(--rose-gold)", fontSize: 14 }}>✓</span>}
+              </div>
+              <p style={{ fontSize: 12, color: "var(--muted-warm)", margin: "4px 0 0", letterSpacing: "0.06em" }}>{c.neighborhood.toUpperCase()} · {c.denom.toUpperCase()}</p>
+              <p style={{ fontSize: 14, color: "var(--warm-brown)", margin: "8px 0 0", fontStyle: "italic", fontFamily: "var(--font-serif)" }}>{c.style}</p>
+              <p style={{ fontSize: 12, color: "var(--muted-warm)", margin: "4px 0 0" }}>{c.size}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section style={{ maxWidth: 1280, margin: "60px auto 0", padding: "32px 48px", borderTop: "var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div>
+        <p className="gc-eyebrow">Don't see yours?</p>
+        <h3 style={{ fontFamily: "var(--font-serif)", fontSize: 28, fontWeight: 600, margin: "8px 0 0" }}>Suggest a Stockholm church.</h3>
+      </div>
+      <button className="gc-btn gc-btn-primary"><a href="suggest-church.html" style={{ color: "inherit", textDecoration: "none" }}>Suggest a church →</a></button>
+    </section>
+
+    <GCFooter />
+  </div>
+);
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

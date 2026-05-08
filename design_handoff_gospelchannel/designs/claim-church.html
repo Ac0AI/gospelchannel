@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Claim your church — GospelChannel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lib/shared.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="lib/shared.jsx"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const RESULTS = [
+  { name: "Hillsong Stockholm", city: "Stockholm, SE", verified: false, addr: "Götgatan 91, Skanstull" },
+  { name: "Hillsong Church", city: "Sydney, AU", verified: true, addr: "1 Solent Cir, Norwest" },
+  { name: "Hillsong London", city: "London, UK", verified: true, addr: "Tottenham Court Rd" },
+];
+
+const App = () => {
+  const [step, setStep] = React.useState(1);
+  const [picked, setPicked] = React.useState(null);
+  return (
+    <div className="gc-page">
+      <GCHeader />
+      <section style={{ maxWidth: 720, margin: "0 auto", padding: "60px 48px 0", textAlign: "center" }}>
+        <p className="gc-eyebrow">Claim a church · Step {step} of 3</p>
+        <h1 className="gc-h1" style={{ fontSize: 64, marginTop: 14 }}>
+          {step === 1 && <>Find <em className="gc-italic">your</em> church.</>}
+          {step === 2 && <>How should we <em className="gc-italic">verify</em> you?</>}
+          {step === 3 && <>You're <em className="gc-italic">in</em>.</>}
+        </h1>
+        <div style={{ display: "flex", gap: 6, justifyContent: "center", marginTop: 28 }}>
+          {[1, 2, 3].map(s => (
+            <div key={s} style={{ width: s === step ? 32 : 8, height: 6, borderRadius: 999, background: s <= step ? "var(--rose-gold)" : "rgba(176,106,80,0.2)", transition: "all .3s" }} />
+          ))}
+        </div>
+      </section>
+
+      <section style={{ maxWidth: 720, margin: "40px auto 0", padding: "0 48px" }}>
+        {step === 1 && (
+          <div className="gc-card" style={{ padding: 32 }}>
+            <label className="gc-label">Search by name, city, or address</label>
+            <div style={{ display: "flex", gap: 10 }}>
+              <input className="gc-input" placeholder="e.g. Hillsong Stockholm" defaultValue="Hillsong" />
+              <button className="gc-btn gc-btn-primary">Search</button>
+            </div>
+            <div style={{ marginTop: 24, display: "flex", flexDirection: "column", gap: 8 }}>
+              <p className="gc-eyebrow" style={{ marginBottom: 6 }}>3 matches</p>
+              {RESULTS.map(r => (
+                <button key={r.name} onClick={() => setPicked(r)} style={{
+                  background: picked?.name === r.name ? "var(--linen-deep)" : "white",
+                  border: picked?.name === r.name ? "2px solid var(--rose-gold)" : "var(--border-soft)",
+                  borderRadius: 14, padding: "16px 20px", display: "flex", justifyContent: "space-between", alignItems: "center",
+                  cursor: "pointer", textAlign: "left", fontFamily: "inherit",
+                }}>
+                  <div>
+                    <div style={{ fontFamily: "var(--font-serif)", fontSize: 20, fontWeight: 600, letterSpacing: "-0.01em" }}>
+                      {r.name} {r.verified && <span className="gc-badge-verified" style={{ marginLeft: 8, fontSize: 10 }}>Already claimed</span>}
+                    </div>
+                    <div style={{ fontSize: 13, color: "var(--muted-warm)", marginTop: 4 }}>{r.addr} · {r.city}</div>
+                  </div>
+                  <span style={{ color: "var(--rose-gold)", fontSize: 13, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" }}>{r.verified ? "Verified" : "Claim"}</span>
+                </button>
+              ))}
+            </div>
+            <div style={{ marginTop: 24, padding: 18, background: "var(--linen-deep)", borderRadius: 14, fontSize: 14, color: "var(--warm-brown)" }}>
+              Don't see it? <a href="suggest-church.html" style={{ color: "var(--rose-gold)", fontWeight: 700 }}>Add it as a new church →</a>
+            </div>
+            <div style={{ marginTop: 24, display: "flex", justifyContent: "flex-end" }}>
+              <button className="gc-btn gc-btn-primary gc-btn-lg" disabled={!picked || picked.verified} onClick={() => setStep(2)} style={{ opacity: !picked || picked.verified ? 0.4 : 1 }}>Continue →</button>
+            </div>
+          </div>
+        )}
+
+        {step === 2 && (
+          <div className="gc-card" style={{ padding: 32 }}>
+            <p style={{ fontSize: 14, color: "var(--warm-brown)", margin: 0 }}>You're claiming <strong>{picked.name}</strong>. Pick a verification method.</p>
+            <div style={{ marginTop: 24, display: "flex", flexDirection: "column", gap: 12 }}>
+              {[
+                { ic: "01", t: "Email on file", d: "We'll send a code to info@hillsong-stockholm.se", rec: true },
+                { ic: "02", t: "Phone on file", d: "Code by SMS to +46 8 …", rec: false },
+                { ic: "03", t: "Postcard", d: "Letter mailed to the church address. 3-5 days.", rec: false },
+                { ic: "04", t: "Pastor reference", d: "A pastor of an already-verified church can vouch for you.", rec: false },
+              ].map(m => (
+                <label key={m.t} style={{ display: "flex", gap: 16, padding: "18px 22px", border: "var(--border-soft)", borderRadius: 14, cursor: "pointer", background: m.rec ? "var(--linen-deep)" : "white" }}>
+                  <input type="radio" name="verify" defaultChecked={m.rec} style={{ accentColor: "var(--rose-gold)" }} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontFamily: "var(--font-serif)", fontSize: 20, fontWeight: 600, letterSpacing: "-0.01em" }}>
+                      {m.t} {m.rec && <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.16em", color: "var(--rose-gold)", marginLeft: 8, textTransform: "uppercase" }}>Recommended</span>}
+                    </div>
+                    <div style={{ fontSize: 13, color: "var(--muted-warm)", marginTop: 4 }}>{m.d}</div>
+                  </div>
+                  <div style={{ fontSize: 22 }}>{m.ic}</div>
+                </label>
+              ))}
+            </div>
+            <div style={{ marginTop: 28, display: "flex", justifyContent: "space-between" }}>
+              <button className="gc-btn gc-btn-ghost" onClick={() => setStep(1)}>← Back</button>
+              <button className="gc-btn gc-btn-primary gc-btn-lg" onClick={() => setStep(3)}>Send code →</button>
+            </div>
+          </div>
+        )}
+
+        {step === 3 && (
+          <div className="gc-card" style={{ padding: 48, textAlign: "center" }}>
+            <p className="gc-eyebrow" style={{ color: "var(--rose-gold)", marginBottom: 12 }}>Verified</p>
+            <h2 className="gc-h2" style={{ fontSize: 36 }}>Welcome to GospelChannel.</h2>
+            <p className="gc-lede" style={{ marginTop: 14, maxWidth: 460, marginInline: "auto" }}>
+              <strong>{picked.name}</strong> is now yours to edit. Add photos, music, service times — your page is live and editable.
+            </p>
+            <div style={{ display: "flex", gap: 10, justifyContent: "center", marginTop: 28 }}>
+              <button className="gc-btn gc-btn-primary gc-btn-lg">Open your dashboard</button>
+              <button className="gc-btn gc-btn-ghost gc-btn-lg">View your page</button>
+            </div>
+          </div>
+        )}
+      </section>
+
+      <GCFooter />
+    </div>
+  );
+};
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

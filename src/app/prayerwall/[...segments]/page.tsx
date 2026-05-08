@@ -183,61 +183,77 @@ export default async function FilteredPrayerWallPage({
     },
   };
 
+  const heroEyebrows: Record<string, string> = {
+    country: `Prayer Wall · ${filter.displayName}`,
+    city: `Prayer Wall · ${filter.displayName}`,
+    church: `Prayer Wall · ${filter.displayName}`,
+  };
+
   return (
-    <div className="mx-auto w-full max-w-3xl space-y-6 px-4 py-10 sm:px-6">
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
       <PrayerWallHero
-        title="Prayer Wall"
+        eyebrow={heroEyebrows[filter.type]}
+        title={filter.type === "church" ? `Pray for ${filter.displayName}.` : `Prayers from ${filter.displayName}.`}
+        accentWord={filter.displayName.split(" ")[0]}
         subtitle={subtitles[filter.type]}
       />
 
-      <PrayerWallFilters
-        countries={countries}
-        cities={cities}
-        churches={churchOptions}
-        activeCountry={filter.type === "country" ? filter.slug : filter.countrySlug}
-        activeCity={filter.type === "city" ? filter.slug : undefined}
-        activeChurch={filter.type === "church" ? filter.slug : undefined}
-      />
+      <div className="sticky top-[64px] z-30 border-y border-rose-gold/10 bg-linen-deep/85 backdrop-blur-md">
+        <div className="mx-auto max-w-[1280px] px-5 py-5 sm:px-12">
+          <PrayerWallFilters
+            countries={countries}
+            cities={cities}
+            churches={churchOptions}
+            activeCountry={filter.type === "country" ? filter.slug : filter.countrySlug}
+            activeCity={filter.type === "city" ? filter.slug : undefined}
+            activeChurch={filter.type === "church" ? filter.slug : undefined}
+          />
+        </div>
+      </div>
 
-      <PrayerWallBreadcrumbs crumbs={crumbs} />
+      <section className="mx-auto max-w-[1280px] px-5 pt-10 sm:px-12 sm:pt-12">
+        <PrayerWallBreadcrumbs crumbs={crumbs} />
+      </section>
 
-      {filter.type === "church" ? (
-        <PrayerWallChurchSection
-          churchSlug={filter.slug}
-          churchName={filter.displayName}
-          initialPrayers={prayers}
-          churchNames={visibleChurchNames}
-        />
-      ) : (
-        <>
-          {prayers.length > 0 ? (
-            <PrayerFeed
-              initialPrayers={prayers}
-              churchNames={visibleChurchNames}
-              limit={20}
-              showChurch
-              country={filter.type === "country" ? filter.slug : undefined}
-              city={filter.type === "city" ? filter.slug : undefined}
-            />
-          ) : (
-            <div className="rounded-2xl border border-rose-200/60 bg-white px-5 py-8 text-center text-sm text-warm-brown">
-              {emptyMessages[filter.type]}
+      <section className="mx-auto max-w-[1280px] px-5 pt-6 pb-20 sm:px-12">
+        {filter.type === "church" ? (
+          <PrayerWallChurchSection
+            churchSlug={filter.slug}
+            churchName={filter.displayName}
+            initialPrayers={prayers}
+            churchNames={visibleChurchNames}
+          />
+        ) : (
+          <>
+            {prayers.length > 0 ? (
+              <PrayerFeed
+                initialPrayers={prayers}
+                churchNames={visibleChurchNames}
+                limit={20}
+                showChurch
+                country={filter.type === "country" ? filter.slug : undefined}
+                city={filter.type === "city" ? filter.slug : undefined}
+              />
+            ) : (
+              <div className="rounded-[18px] border border-rose-gold/[0.14] bg-white px-6 py-10 text-center text-sm text-warm-brown">
+                {emptyMessages[filter.type]}
+              </div>
+            )}
+            <div className="mt-8 rounded-[18px] border border-rose-gold/[0.14] bg-white/70 px-6 py-5 text-center text-sm text-warm-brown">
+              Want to share a prayer?{" "}
+              <Link href="/church" prefetch={false} className="font-bold text-rose-gold transition-colors hover:text-rose-gold-deep">
+                Find a church
+              </Link>{" "}
+              and post your prayer on their page.
             </div>
-          )}
-          <div className="rounded-2xl border border-rose-200/60 bg-linen px-5 py-4 text-center text-sm text-warm-brown">
-            Want to share a prayer?{" "}
-            <Link href="/church" prefetch={false} className="font-semibold text-rose-gold hover:underline">
-              Find a church
-            </Link>{" "}
-            and post your prayer on their page.
-          </div>
-        </>
-      )}
-    </div>
+          </>
+        )}
+      </section>
+    </>
   );
 }

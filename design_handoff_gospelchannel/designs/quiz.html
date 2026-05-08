@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Find your fit — GospelChannel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lib/shared.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="lib/shared.jsx"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const QUIZ = [
+  { q: "What pulls you toward a Sunday gathering?", a: ["Music that moves me", "A teaching that challenges me", "Quiet, reverent space", "Community for my kids"] },
+  { q: "Worship sounds like…", a: ["Full band, anthems", "Hymns and organ", "Acoustic and intimate", "Choir and liturgy"] },
+  { q: "How big is too big?", a: ["I want a crowd I can disappear in", "Few hundred — known but not seen", "Small — under 100", "I don't mind either way"] },
+  { q: "How important is doctrine?", a: ["Critical — Reformed-leaning", "I lean charismatic / Spirit-led", "I'm Catholic / liturgical", "I'm still figuring it out"] },
+  { q: "First-time experience matters most when…", a: ["Someone greets me", "I can slip in and observe", "There's something for my kids immediately", "There's clear info online before I arrive"] },
+  { q: "Language at services?", a: ["English", "Swedish", "Bilingual is great", "Other"] },
+  { q: "Sunday morning energy:", a: ["High-energy, lights, big production", "Warm and personal", "Quiet, reflective", "Joyful but grounded"] },
+  { q: "After service, you'd love to…", a: ["Stay for coffee with strangers", "Head home, reflect", "Talk to a pastor about my week", "Bring my kids to a class"] },
+];
+
+const App = () => {
+  const [step, setStep] = React.useState(0);
+  const [answers, setAnswers] = React.useState({});
+  const done = step === QUIZ.length;
+  const pct = (step / QUIZ.length) * 100;
+
+  if (done) {
+    return (
+      <div className="gc-page">
+        <GCHeader />
+        <section style={{ maxWidth: 1100, margin: "0 auto", padding: "60px 48px 0", textAlign: "center" }}>
+          <p className="gc-eyebrow">Your matches</p>
+          <h1 className="gc-h1" style={{ fontSize: 72, marginTop: 14 }}>Three churches <em className="gc-italic">for you</em>.</h1>
+          <p className="gc-lede" style={{ marginTop: 14, maxWidth: 580, marginInline: "auto" }}>Based on your eight answers. Visit one this Sunday — or save them and decide later.</p>
+        </section>
+
+        <section style={{ maxWidth: 1100, margin: "48px auto 0", padding: "0 48px" }}>
+          {[
+            { name: "Hillsong Stockholm", city: "Stockholm", country: "Sweden", style: "Bilingual contemporary", thumbnail: "https://images.unsplash.com/photo-1519682337058-a94d519337bc?w=900&q=80&auto=format&fit=crop", verified: true, hasMusic: true, hasKids: true, hasService: true, blurb: "Söndag 11:00 & 17:00. English-friendly. Big band, big crowd, kids program parallel.", match: 94, why: "Matches: contemporary worship, bilingual, kids program, high-energy" },
+            { name: "Holy Trinity Brompton", city: "London", country: "UK", style: "Charismatic Anglican", thumbnail: null, verified: true, hasMusic: true, hasKids: true, hasService: true, denomination: "Anglican", blurb: "Charismatic and traditional at once. Home of Alpha. Five Sunday services.", match: 87, why: "Matches: charismatic, warm, English, doctrine matters", initial: "H" },
+            { name: "Passion City Church", city: "Atlanta", country: "US", style: "Worship + teaching", thumbnail: "https://images.unsplash.com/photo-1507692049790-de58290a4334?w=900&q=80&auto=format&fit=crop", verified: true, hasMusic: true, hasKids: true, hasService: true, blurb: "Louie Giglio's church. Two campuses. College-heavy welcome culture.", match: 81, why: "Matches: worship-led, teaching-strong, after-service community" },
+          ].map((c, i) => (
+            <div key={c.name} style={{ display: "grid", gridTemplateColumns: "60px 1fr 280px", gap: 28, padding: "32px 0", borderBottom: "var(--border-soft)", alignItems: "center" }}>
+              <div style={{ fontFamily: "var(--font-serif)", fontSize: 64, fontWeight: 600, color: i === 0 ? "var(--rose-gold)" : "var(--mauve)", lineHeight: 1, letterSpacing: "-0.04em" }}>0{i + 1}</div>
+              <div>
+                <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                  <div style={{ display: "inline-flex", padding: "5px 12px", borderRadius: 999, background: i === 0 ? "var(--rose-gold)" : "var(--linen-deep)", color: i === 0 ? "white" : "var(--rose-gold-deep)", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em" }}>{c.match}% match</div>
+                  {c.verified && <span className="gc-badge-verified">✓ Verified</span>}
+                </div>
+                <h2 className="gc-h2" style={{ fontSize: 36, marginTop: 10 }}>{c.name}</h2>
+                <p style={{ fontSize: 14, color: "var(--muted-warm)", letterSpacing: "0.06em", marginTop: 2 }}>{c.city.toUpperCase()} · {c.country.toUpperCase()} · {c.style}</p>
+                <p style={{ fontSize: 15, color: "var(--warm-brown)", lineHeight: 1.6, marginTop: 14, maxWidth: 540 }}>{c.blurb}</p>
+                <p style={{ fontSize: 12, color: "var(--rose-gold-deep)", fontStyle: "italic", marginTop: 12, fontFamily: "var(--font-serif)", fontSize: 15 }}>↳ {c.why}</p>
+              </div>
+              <div>
+                {c.thumbnail ? (
+                  <div style={{ aspectRatio: "1/1", borderRadius: 18, backgroundImage: `url(${c.thumbnail})`, backgroundSize: "cover", backgroundPosition: "center", boxShadow: "var(--shadow)" }} />
+                ) : (
+                  <div style={{ aspectRatio: "1/1", borderRadius: 18, background: "var(--espresso)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "var(--shadow)" }}>
+                    <div style={{ fontFamily: "var(--font-serif)", fontSize: 120, fontWeight: 600, color: "var(--rose-gold)", letterSpacing: "-0.04em" }}>{c.initial || c.name[0]}</div>
+                  </div>
+                )}
+                <button className="gc-btn gc-btn-primary" style={{ marginTop: 14, width: "100%" }}>View page →</button>
+              </div>
+            </div>
+          ))}
+
+          <div style={{ display: "flex", justifyContent: "center", gap: 12, marginTop: 40 }}>
+            <button className="gc-btn gc-btn-ghost" onClick={() => { setStep(0); setAnswers({}); }}>Retake the quiz</button>
+            <button className="gc-btn gc-btn-ghost">Email me my matches</button>
+          </div>
+        </section>
+
+        <GCFooter />
+      </div>
+    );
+  }
+
+  const cur = QUIZ[step];
+
+  return (
+    <div className="gc-page">
+      <GCHeader />
+      <section style={{ maxWidth: 720, margin: "0 auto", padding: "60px 48px 0" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <p className="gc-eyebrow">Find your fit · Question {step + 1} of {QUIZ.length}</p>
+          <button onClick={() => setStep(QUIZ.length)} style={{ background: "transparent", border: "none", color: "var(--muted-warm)", fontSize: 13, cursor: "pointer", textDecoration: "underline" }}>Skip to results</button>
+        </div>
+        <div style={{ height: 4, background: "var(--linen-deep)", borderRadius: 4, marginTop: 14, overflow: "hidden" }}>
+          <div style={{ height: "100%", width: `${pct}%`, background: "var(--rose-gold)", transition: "width .4s" }} />
+        </div>
+        <h1 className="gc-h1" style={{ fontSize: 48, marginTop: 36, lineHeight: 1.1 }}>{cur.q}</h1>
+        <div style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 12 }}>
+          {cur.a.map(opt => (
+            <button key={opt} onClick={() => { setAnswers({ ...answers, [step]: opt }); setTimeout(() => setStep(step + 1), 250); }} style={{
+              padding: "20px 24px", borderRadius: 16,
+              background: answers[step] === opt ? "var(--rose-gold)" : "white",
+              color: answers[step] === opt ? "white" : "var(--espresso)",
+              border: answers[step] === opt ? "2px solid var(--rose-gold)" : "var(--border-soft)",
+              fontSize: 17, fontFamily: "var(--font-serif)", fontWeight: 500, textAlign: "left", cursor: "pointer",
+              transition: "all .15s",
+            }}>{opt}</button>
+          ))}
+        </div>
+        <div style={{ marginTop: 32, display: "flex", justifyContent: "space-between" }}>
+          <button onClick={() => setStep(Math.max(0, step - 1))} disabled={step === 0} className="gc-btn gc-btn-ghost" style={{ opacity: step === 0 ? 0.4 : 1 }}>← Back</button>
+          {answers[step] && <button onClick={() => setStep(step + 1)} className="gc-btn gc-btn-primary">Next →</button>}
+        </div>
+      </section>
+      <GCFooter />
+    </div>
+  );
+};
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

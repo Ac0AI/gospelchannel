@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Prayer Wall — GospelChannel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lib/shared.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="lib/shared.jsx"></script>
+<style>
+@media (max-width:768px){
+  .pw-wall{column-count:1 !important;padding:24px 16px 0 !important}
+  .pw-hero{padding:32px 16px !important}
+  .pw-hero h1{font-size:44px !important}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const PRAYERS = [
+  { id:1, text:"Praying for my dad's surgery on Tuesday. He's nervous but trying to trust. Doctors say it's routine but he's 78 and he's my best friend.", church:"Hillsong Church", city:"Sydney", hours:2, hearts:347, prayed:128, color:"#fce9e5", category:"Health" },
+  { id:2, text:"First sober Sunday in 8 years. Thank you to whoever prayed for me last week — I felt every one of you.", church:"Elevation Church", city:"Charlotte", hours:5, hearts:1247, prayed:512, color:"#f7ede4", category:"Gratitude", featured:true },
+  { id:3, text:"Job interview Wednesday. Single mom, two kids. Need this one — rent is due and I've been job-hunting for four months.", church:"Holy Trinity Brompton", city:"London", hours:11, hearts:489, prayed:201, color:"#e8dff0", category:"Work" },
+  { id:4, text:"Marriage feels hard. Hoping for softness this week. We're doing therapy but the silences at home are getting longer.", church:"Hillsong Stockholm", city:"Stockholm", hours:18, hearts:256, prayed:88, color:"#fce9e5", category:"Family" },
+  { id:5, text:"My grandmother passed last night. She was the one who taught me to pray. Pray she's with Jesus.", church:"Sankta Maria", city:"Malmö", hours:22, hearts:892, prayed:444, color:"#f7ede4", category:"Loss" },
+  { id:6, text:"Starting chemo Thursday. Stage 2. Three kids under 10. I'm trying to be brave for them but tonight I'm not.", church:"Bethel Church", city:"Redding", hours:29, hearts:2104, prayed:1102, color:"#fce9e5", category:"Health", featured:true },
+  { id:7, text:"My son hasn't spoken to me in 3 years. Today he texted 'happy birthday mom'. Pray for the door staying open.", church:"Redeemer Presbyterian", city:"New York", hours:34, hearts:578, prayed:230, color:"#e8dff0", category:"Family" },
+  { id:8, text:"Asylum hearing on the 14th. Been waiting 4 years. My kids only know this country.", church:"Passion City Church", city:"Atlanta", hours:41, hearts:412, prayed:198, color:"#f7ede4", category:"Other" },
+  { id:9, text:"Got the scholarship. First in my family to go to university. Tears.", church:"Hillsong Church", city:"Sydney", hours:48, hearts:1820, prayed:0, color:"#fce9e5", category:"Gratitude" },
+  { id:10, text:"Husband has been deployed for 8 months. Two more to go. Trying to keep the kids' spirits up but I'm tired.", church:"Holy Trinity Brompton", city:"London", hours:52, hearts:344, prayed:142, color:"#e8dff0", category:"Family" },
+];
+const CATEGORIES = ["All", "Health", "Family", "Work", "Loss", "Gratitude", "Other"];
+
+const PrayerCard = ({ p, big = false }) => (
+  <div style={{
+    background: "white", borderRadius: 22, padding: big ? "36px 38px" : "26px 28px",
+    border: "var(--border-soft)", boxShadow: "var(--shadow-sm)",
+    breakInside: "avoid", marginBottom: 16,
+    position: "relative", overflow: "hidden",
+  }}>
+    <div style={{ position: "absolute", top: 0, right: 0, width: big ? 120 : 80, height: big ? 120 : 80, background: p.color, opacity: 0.5, borderRadius: "0 22px 0 100%" }} />
+    <div style={{ position: "relative" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+        <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--rose-gold)" }}>{p.category}</span>
+        <span style={{ fontSize: 11, color: "var(--muted-warm)" }}>{p.hours < 24 ? `${p.hours}h` : `${Math.floor(p.hours / 24)}d`} ago</span>
+      </div>
+      <p style={{ fontFamily: "var(--font-serif)", fontSize: big ? 26 : 18, lineHeight: 1.45, color: "var(--espresso)", margin: 0, fontStyle: "italic" }}>
+        "{p.text}"
+      </p>
+      <div style={{ marginTop: big ? 28 : 18, paddingTop: 16, borderTop: "1px solid rgba(176,106,80,0.12)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ fontSize: 12, color: "var(--warm-brown)" }}>
+          <span style={{ fontWeight: 700, color: "var(--espresso)" }}>{p.church}</span>
+          <span style={{ opacity: 0.5, margin: "0 6px" }}>·</span>
+          {p.city}
+        </div>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button className="gc-pill" style={{ display: "flex", gap: 6, alignItems: "center" }}>
+            <span style={{ color: "var(--rose-gold)" }}>♡</span> {p.hearts.toLocaleString()}
+          </button>
+          <button className="gc-pill" style={{ background: "var(--linen-deep)", color: "var(--rose-gold-deep)", fontWeight: 700 }}>
+            🙏 I prayed
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const App = () => {
+  const [cat, setCat] = React.useState("All");
+  const [showCompose, setShowCompose] = React.useState(false);
+  const filtered = cat === "All" ? PRAYERS : PRAYERS.filter(p => p.category === cat);
+  const featured = PRAYERS.find(p => p.featured);
+  const rest = filtered.filter(p => p !== featured);
+
+  return (
+    <div className="gc-page">
+      <GCHeader active="Prayer Wall" />
+
+      {/* Hero */}
+      <section style={{ padding: "80px 48px 60px", textAlign: "center", maxWidth: 1280, margin: "0 auto", position: "relative" }}>
+        <p className="gc-eyebrow" style={{ color: "var(--rose-gold)" }}>The Prayer Wall</p>
+        <h1 className="gc-h1" style={{ marginTop: 14, fontSize: 88 }}>
+          Carry someone's <em className="gc-italic">prayer</em> today.
+        </h1>
+        <p className="gc-lede" style={{ marginTop: 22, maxWidth: 580, marginInline: "auto" }}>
+          Real prayers, posted by real people, from churches around the world. Read them. Pray for them. Leave one of your own — anonymously or signed.
+        </p>
+        <div style={{ marginTop: 32, display: "flex", gap: 12, justifyContent: "center" }}>
+          <button className="gc-btn gc-btn-primary gc-btn-lg" onClick={() => setShowCompose(true)}>+ Submit a prayer</button>
+          <button className="gc-btn gc-btn-ghost gc-btn-lg">How this works</button>
+        </div>
+        <div style={{ marginTop: 40, display: "flex", gap: 32, justifyContent: "center", fontSize: 13, color: "var(--muted-warm)" }}>
+          <span><strong style={{ color: "var(--espresso)", fontSize: 22, fontFamily: "var(--font-serif)", fontWeight: 600, marginRight: 6 }}>12,847</strong> prayers this week</span>
+          <span><strong style={{ color: "var(--espresso)", fontSize: 22, fontFamily: "var(--font-serif)", fontWeight: 600, marginRight: 6 }}>89,302</strong> people praying</span>
+          <span><strong style={{ color: "var(--espresso)", fontSize: 22, fontFamily: "var(--font-serif)", fontWeight: 600, marginRight: 6 }}>67</strong> countries</span>
+        </div>
+      </section>
+
+      {/* Filters */}
+      <div style={{ padding: "24px 48px", borderTop: "var(--border-soft)", borderBottom: "var(--border-soft)", background: "rgba(247,237,228,0.5)", position: "sticky", top: 64, zIndex: 30, backdropFilter: "blur(8px)" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            {CATEGORIES.map(c => (
+              <button key={c} className={"gc-pill " + (cat === c ? "gc-pill-active" : "")} onClick={() => setCat(c)}>
+                {c} {c !== "All" && <span style={{ opacity: 0.5, marginLeft: 4 }}>{PRAYERS.filter(p => p.category === c).length}</span>}
+              </button>
+            ))}
+          </div>
+          <div style={{ display: "flex", gap: 8, alignItems: "center", fontSize: 13, color: "var(--muted-warm)" }}>
+            Sort:
+            <select className="gc-input" style={{ padding: "8px 14px", fontSize: 13, width: "auto" }}>
+              <option>Most recent</option>
+              <option>Most prayed for</option>
+              <option>Near me</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* Featured prayer */}
+      {featured && cat === "All" && (
+        <section style={{ maxWidth: 920, margin: "0 auto", padding: "60px 48px 0" }}>
+          <div className="gc-rule" style={{ marginBottom: 24, fontSize: 11, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase" }}>
+            <span>Most prayed for · this week</span>
+          </div>
+          <PrayerCard p={featured} big />
+        </section>
+      )}
+
+      {/* Wall — masonry */}
+      <section className="pw-wall" style={{ maxWidth: 1280, margin: "0 auto", padding: "40px 48px 0", columnCount: 3, columnGap: 16 }}>
+        {rest.map(p => <PrayerCard key={p.id} p={p} />)}
+      </section>
+
+      {/* CTA strip */}
+      <section style={{ maxWidth: 1280, margin: "80px auto 0", padding: "0 48px" }}>
+        <div style={{
+          borderRadius: 28, padding: "56px 48px",
+          background: "linear-gradient(135deg, var(--blush-light) 0%, white 70%)",
+          border: "var(--border)",
+          textAlign: "center",
+        }}>
+          <p className="gc-eyebrow">A note about this place</p>
+          <h2 className="gc-h2" style={{ marginTop: 12, maxWidth: 720, marginInline: "auto" }}>
+            We pray for every prayer that's posted here. <em className="gc-italic">Every one.</em>
+          </h2>
+          <p style={{ fontSize: 16, color: "var(--warm-brown)", lineHeight: 1.6, maxWidth: 580, margin: "20px auto 28px" }}>
+            Posts are reviewed by volunteers from partner churches. No ads. No data sold. Names hidden by default. The wall is a reminder that no prayer goes into the void.
+          </p>
+          <button className="gc-btn gc-btn-primary gc-btn-lg" onClick={() => setShowCompose(true)}>Submit a prayer</button>
+        </div>
+      </section>
+
+      <GCFooter />
+
+      {/* Compose modal */}
+      {showCompose && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(20,12,8,0.6)", backdropFilter: "blur(8px)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }} onClick={() => setShowCompose(false)}>
+          <div style={{ background: "white", borderRadius: 24, padding: 40, maxWidth: 560, width: "100%", boxShadow: "var(--shadow-lg)" }} onClick={e => e.stopPropagation()}>
+            <p className="gc-eyebrow">Submit a prayer</p>
+            <h3 className="gc-h2" style={{ fontSize: 32, marginTop: 8 }}>What can we pray for?</h3>
+            <p style={{ fontSize: 14, color: "var(--warm-brown)", marginTop: 8, marginBottom: 24 }}>Write as much or as little as you want. You can post anonymously.</p>
+            <textarea className="gc-input" rows="5" placeholder="Lord, I'm praying for…" style={{ resize: "vertical", lineHeight: 1.5 }} />
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 14 }}>
+              <select className="gc-input"><option>Choose a category</option>{CATEGORIES.slice(1).map(c => <option key={c}>{c}</option>)}</select>
+              <select className="gc-input"><option>Anonymous</option><option>Sign with my name</option></select>
+            </div>
+            <label style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 18, fontSize: 13, color: "var(--warm-brown)" }}>
+              <input type="checkbox" defaultChecked /> Notify me when someone prays
+            </label>
+            <div style={{ display: "flex", gap: 10, marginTop: 24, justifyContent: "flex-end" }}>
+              <button className="gc-btn gc-btn-ghost" onClick={() => setShowCompose(false)}>Cancel</button>
+              <button className="gc-btn gc-btn-primary">Post prayer</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

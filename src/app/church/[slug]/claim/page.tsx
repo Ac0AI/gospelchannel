@@ -26,51 +26,71 @@ export default async function ClaimChurchPage({ params }: ClaimPageProps) {
 
   if (isClaimed) {
     return (
-      <div className="mx-auto max-w-lg px-4 py-20 text-center">
-        <div className="flex justify-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-500/10">
-            <svg className="h-7 w-7 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M16.403 12.652a3 3 0 010-5.304 3 3 0 00-3.75-3.751 3 3 0 00-5.305 0 3 3 0 00-3.751 3.75 3 3 0 000 5.305 3 3 0 003.75 3.751 3 3 0 005.305 0 3 3 0 003.751-3.75zm-2.546-4.46a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
-            </svg>
-          </div>
-        </div>
-        <h1 className="mt-5 font-serif text-2xl font-bold text-espresso">Already Claimed</h1>
-        <p className="mt-3 text-sm leading-relaxed text-warm-brown">
-          This church has already been claimed and verified.
+      <section className="mx-auto max-w-[720px] px-5 pt-20 pb-32 text-center sm:px-12">
+        <p className="gc-eyebrow">Claim a church</p>
+        <h1
+          className="mx-auto mt-3.5 m-0 max-w-[14ch] font-serif font-semibold leading-[1] tracking-[-0.02em] text-espresso"
+          style={{ fontSize: "clamp(40px, 6vw, 64px)" }}
+        >
+          Already <em className="gc-italic">claimed</em>.
+        </h1>
+        <p className="mx-auto mt-5 max-w-[520px] text-base leading-relaxed text-warm-brown sm:text-lg">
+          This church has already been claimed and verified by its team.
         </p>
         <Link
           href={`/church/${church.slug}`}
-          className="mt-6 inline-flex items-center gap-2 rounded-full bg-rose-gold px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-rose-gold-deep hover:shadow-md"
+          className="mt-8 inline-flex rounded-full bg-rose-gold px-6 py-3 text-sm font-bold text-white transition-all duration-150 hover:-translate-y-px hover:bg-rose-gold-deep hover:shadow-[0_8px_24px_rgba(176,106,80,0.3)]"
         >
-          ← Back to {church.name}
+          &larr; Back to {church.name}
         </Link>
-      </div>
+      </section>
     );
   }
 
   if (hasPending) {
     return (
-      <div className="mx-auto max-w-lg px-4 py-20 text-center">
-        <div className="flex justify-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-amber-500/10">
-            <svg className="h-7 w-7 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-        </div>
-        <h1 className="mt-5 font-serif text-2xl font-bold text-espresso">Claim Under Review</h1>
-        <p className="mt-3 text-sm leading-relaxed text-warm-brown">
+      <section className="mx-auto max-w-[720px] px-5 pt-20 pb-32 text-center sm:px-12">
+        <p className="gc-eyebrow">Claim a church</p>
+        <h1
+          className="mx-auto mt-3.5 m-0 max-w-[16ch] font-serif font-semibold leading-[1] tracking-[-0.02em] text-espresso"
+          style={{ fontSize: "clamp(40px, 6vw, 64px)" }}
+        >
+          Claim <em className="gc-italic">under review</em>.
+        </h1>
+        <p className="mx-auto mt-5 max-w-[520px] text-base leading-relaxed text-warm-brown sm:text-lg">
           A claim for this church is already under review. We&rsquo;ll get back within 48 hours.
         </p>
         <Link
           href={`/church/${church.slug}`}
-          className="mt-6 inline-flex items-center gap-2 rounded-full bg-rose-gold px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-rose-gold-deep hover:shadow-md"
+          className="mt-8 inline-flex rounded-full bg-rose-gold px-6 py-3 text-sm font-bold text-white transition-all duration-150 hover:-translate-y-px hover:bg-rose-gold-deep hover:shadow-[0_8px_24px_rgba(176,106,80,0.3)]"
         >
-          ← Back to {church.name}
+          &larr; Back to {church.name}
         </Link>
-      </div>
+      </section>
     );
   }
 
-  return <ClaimChurchForm slug={church.slug} churchName={church.name} />;
+  return (
+    <>
+      {/* Editorial hero */}
+      <section className="px-5 pt-14 text-center sm:px-12 sm:pt-16">
+        <div className="mx-auto max-w-[720px]">
+          <p className="gc-eyebrow">Claim a church &middot; Verify</p>
+          <h1
+            className="mx-auto mt-3.5 m-0 max-w-[18ch] font-serif font-semibold leading-[1] tracking-[-0.02em] text-espresso"
+            style={{ fontSize: "clamp(40px, 6vw, 64px)" }}
+          >
+            How should we <em className="gc-italic">verify</em> you?
+          </h1>
+          <p className="mx-auto mt-5 max-w-[520px] text-base leading-relaxed text-warm-brown sm:text-lg">
+            You&rsquo;re claiming <strong className="text-espresso">{church.name}</strong>. Pick a verification path and we&rsquo;ll review within 48 hours.
+          </p>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-[720px] px-5 py-12 sm:px-12 sm:py-14">
+        <ClaimChurchForm slug={church.slug} churchName={church.name} />
+      </section>
+    </>
+  );
 }

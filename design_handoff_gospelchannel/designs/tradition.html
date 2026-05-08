@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lutheran churches — GospelChannel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lib/shared.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="lib/shared.jsx"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const App = () => (
+  <div className="gc-page">
+    <GCHeader />
+
+    {/* Editorial hero */}
+    <section style={{ background: "var(--espresso)", color: "var(--linen)" }}>
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "80px 48px", display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 60, alignItems: "center" }}>
+        <div>
+          <p className="gc-eyebrow" style={{ color: "var(--rose-gold)" }}>Tradition · No. 02</p>
+          <h1 className="gc-h1" style={{ fontSize: 96, marginTop: 14, lineHeight: 0.92, color: "var(--linen)" }}>Lutheran <em className="gc-italic" style={{ color: "var(--rose-gold)" }}>churches</em>.</h1>
+          <p className="gc-lede" style={{ marginTop: 20, color: "rgba(247,237,228,0.75)", maxWidth: 520, fontSize: 22 }}>Hymns. Liturgy. Sacrament. The tradition of Sweden, Germany, the Nordics, and a quiet majority around the world.</p>
+        </div>
+        <div style={{ position: "relative", aspectRatio: "1/1.2", borderRadius: 20, overflow: "hidden" }}>
+          <div style={{ position: "absolute", inset: 0, fontFamily: "var(--font-serif)", color: "rgba(217,179,144,0.15)", fontSize: 600, fontWeight: 700, lineHeight: 0.8, letterSpacing: "-0.05em", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>L</div>
+          <div style={{ position: "absolute", inset: 0, padding: 40, display: "flex", flexDirection: "column", justifyContent: "flex-end", color: "var(--linen)" }}>
+            <p className="gc-eyebrow" style={{ color: "var(--rose-gold)" }}>The numbers</p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16, marginTop: 14 }}>
+              <div><div style={{ fontFamily: "var(--font-serif)", fontSize: 56, color: "var(--rose-gold)", fontWeight: 600, lineHeight: 1 }}>847</div><div style={{ fontSize: 12, letterSpacing: "0.06em", textTransform: "uppercase", marginTop: 4 }}>churches listed</div></div>
+              <div><div style={{ fontFamily: "var(--font-serif)", fontSize: 56, color: "var(--rose-gold)", fontWeight: 600, lineHeight: 1 }}>74M</div><div style={{ fontSize: 12, letterSpacing: "0.06em", textTransform: "uppercase", marginTop: 4 }}>worldwide</div></div>
+              <div><div style={{ fontFamily: "var(--font-serif)", fontSize: 56, color: "var(--rose-gold)", fontWeight: 600, lineHeight: 1 }}>1517</div><div style={{ fontSize: 12, letterSpacing: "0.06em", textTransform: "uppercase", marginTop: 4 }}>founded</div></div>
+              <div><div style={{ fontFamily: "var(--font-serif)", fontSize: 56, color: "var(--rose-gold)", fontWeight: 600, lineHeight: 1 }}>SE</div><div style={{ fontSize: 12, letterSpacing: "0.06em", textTransform: "uppercase", marginTop: 4 }}>state church</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* What it sounds like / feels like */}
+    <section style={{ maxWidth: 1280, margin: "0 auto", padding: "80px 48px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 48, borderTop: "var(--border)", paddingTop: 40 }}>
+        <div>
+          <p className="gc-eyebrow">What it sounds like</p>
+          <h3 style={{ fontFamily: "var(--font-serif)", fontSize: 32, fontWeight: 600, marginTop: 12, lineHeight: 1.15 }}>Hymns. Organ. Choir.</h3>
+          <p style={{ fontSize: 15, color: "var(--warm-brown)", lineHeight: 1.7, marginTop: 14 }}>Centuries-old hymnody — Bach, Luther, Wesley. Some congregations have introduced contemporary settings; most still anchor in the hymnal.</p>
+        </div>
+        <div>
+          <p className="gc-eyebrow">What a service feels like</p>
+          <h3 style={{ fontFamily: "var(--font-serif)", fontSize: 32, fontWeight: 600, marginTop: 12, lineHeight: 1.15 }}>Liturgical. Reverent. Quiet.</h3>
+          <p style={{ fontSize: 15, color: "var(--warm-brown)", lineHeight: 1.7, marginTop: 14 }}>Set order of service. Confession, absolution, scripture, sermon, Eucharist. About 60–75 minutes. People stand, sit, kneel together.</p>
+        </div>
+        <div>
+          <p className="gc-eyebrow">If you're new</p>
+          <h3 style={{ fontFamily: "var(--font-serif)", fontSize: 32, fontWeight: 600, marginTop: 12, lineHeight: 1.15 }}>You can slip in.</h3>
+          <p style={{ fontSize: 15, color: "var(--warm-brown)", lineHeight: 1.7, marginTop: 14 }}>You won't be put on the spot. Most services hand you a printed bulletin or hymnal that walks you through the whole thing.</p>
+        </div>
+      </div>
+    </section>
+
+    {/* Featured */}
+    <section style={{ maxWidth: 1280, margin: "0 auto", padding: "0 48px 80px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", borderTop: "var(--border)", paddingTop: 32, marginBottom: 28 }}>
+        <h2 className="gc-h2" style={{ fontSize: 44 }}>Featured Lutheran churches</h2>
+        <a href="city.html" style={{ fontSize: 13, color: "var(--rose-gold-deep)", letterSpacing: "0.06em", textTransform: "uppercase", textDecoration: "none" }}>See all 847 →</a>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
+        {[
+          { name: "Storkyrkan", city: "Stockholm", initial: "S", verified: true },
+          { name: "Lunds domkyrka", city: "Lund", initial: "L", verified: true },
+          { name: "Adolf Fredriks kyrka", city: "Stockholm", initial: "A", verified: true },
+        ].map(c => (
+          <a key={c.name} href="#" style={{ textDecoration: "none", color: "inherit" }}>
+            <div style={{ aspectRatio: "4/3", borderRadius: 18, background: "var(--espresso)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "var(--shadow)" }}>
+              <div style={{ fontFamily: "var(--font-serif)", fontSize: 160, fontWeight: 600, color: "var(--rose-gold)", letterSpacing: "-0.04em" }}>{c.initial}</div>
+            </div>
+            <div style={{ marginTop: 14 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <h3 style={{ fontFamily: "var(--font-serif)", fontSize: 24, fontWeight: 600, margin: 0 }}>{c.name}</h3>
+                {c.verified && <span style={{ color: "var(--rose-gold)", fontSize: 14 }}>✓</span>}
+              </div>
+              <p style={{ fontSize: 12, color: "var(--muted-warm)", margin: "4px 0 0", letterSpacing: "0.06em" }}>{c.city.toUpperCase()} · LUTHERAN</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    {/* Other traditions */}
+    <section style={{ background: "var(--linen-deep)", padding: "60px 0" }}>
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 48px" }}>
+        <p className="gc-eyebrow">Explore other traditions</p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginTop: 18 }}>
+          {[
+            { name: "Pentecostal", count: 1240, color: "var(--rose-gold)" },
+            { name: "Catholic", count: 980, color: "var(--mauve)" },
+            { name: "Anglican", count: 412, color: "var(--sage)" },
+            { name: "Baptist", count: 678, color: "var(--rose-gold-deep)" },
+          ].map(t => (
+            <a key={t.name} href="#" style={{ textDecoration: "none", color: "inherit", display: "block", padding: 24, background: "white", borderRadius: 18, position: "relative", overflow: "hidden", height: 140 }}>
+              <div style={{ position: "absolute", top: -20, right: -10, fontFamily: "var(--font-serif)", fontSize: 200, color: t.color, opacity: 0.12, fontWeight: 700, lineHeight: 0.8, letterSpacing: "-0.04em" }}>{t.name[0]}</div>
+              <div style={{ position: "relative" }}>
+                <p style={{ fontSize: 11, color: "var(--muted-warm)", letterSpacing: "0.06em", textTransform: "uppercase", margin: 0 }}>Tradition</p>
+                <h4 style={{ fontFamily: "var(--font-serif)", fontSize: 28, fontWeight: 600, margin: "6px 0 0" }}>{t.name}</h4>
+                <p style={{ fontSize: 13, color: "var(--warm-brown)", margin: "6px 0 0" }}>{t.count.toLocaleString()} churches</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <GCFooter />
+  </div>
+);
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

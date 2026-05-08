@@ -56,52 +56,55 @@ export function SiteHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-rose-200/60 bg-linen/95 backdrop-blur-sm">
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <Link href="/" prefetch={false} className="flex items-center gap-2">
-          <svg className="h-5 w-5 text-rose-gold/40" viewBox="0 0 24 24" fill="currentColor">
-            <rect x="10.5" y="2" width="3" height="20" rx="1.5" />
-            <rect x="4" y="7.5" width="16" height="3" rx="1.5" />
-          </svg>
-          <span className="font-serif text-xl font-semibold tracking-tight text-espresso">
-            Gospel<span className="text-rose-gold italic">Channel</span>
-          </span>
+    <header className="sticky top-0 z-40 border-b border-rose-gold/10 bg-linen/85 backdrop-blur-md">
+      <div className="mx-auto flex w-full max-w-[1280px] items-center justify-between gap-4 px-5 py-4 sm:gap-8 sm:px-12 sm:py-[18px]">
+        <Link
+          href="/"
+          prefetch={false}
+          className="font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso no-underline"
+        >
+          GospelChannel
         </Link>
 
         {/* Desktop navigation */}
-        <div className="hidden items-center gap-3 md:flex">
-          <nav className="items-center gap-1 text-sm font-medium text-warm-brown md:flex">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                prefetch={false}
-                className={`rounded-full px-3 py-2 transition-all duration-200 hover:bg-blush-light hover:text-espresso ${
-                  isActive(item.href) ? "bg-blush-light text-espresso" : ""
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+        <div className="hidden items-center gap-7 md:flex">
+          <nav className="flex items-center gap-7 text-sm">
+            {navItems.map((item) => {
+              const active = isActive(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  prefetch={false}
+                  className={`transition-colors hover:text-rose-gold ${
+                    active ? "font-bold text-rose-gold" : "font-medium text-warm-brown"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
-          {myChurchHref && (
+          <div className="flex items-center gap-2.5">
+            {myChurchHref && (
+              <Link
+                href={myChurchHref}
+                prefetch={false}
+                className="rounded-full border border-rose-gold/30 bg-transparent px-4 py-2 text-[13px] font-bold tracking-[0.01em] text-espresso transition-all duration-150 hover:-translate-y-px hover:bg-rose-gold/[0.06]"
+                title={churchCount > 1 ? "Your church admin" : "Your church"}
+              >
+                {myChurchLabel}
+              </Link>
+            )}
             <Link
-              href={myChurchHref}
+              href="/church/suggest"
               prefetch={false}
-              className="rounded-full border border-rose-200/60 bg-white px-3 py-2 text-sm font-medium text-rose-gold transition-colors hover:bg-blush-light"
-              title={churchCount > 1 ? "Your church admin" : "Your church"}
+              className="rounded-full bg-rose-gold px-4 py-2 text-[13px] font-bold tracking-[0.01em] text-white transition-all duration-150 hover:-translate-y-px hover:bg-rose-gold-deep hover:shadow-[0_8px_24px_rgba(176,106,80,0.3)]"
             >
-              {myChurchLabel}
+              Add a church
             </Link>
-          )}
-          <Link
-            href="/church/suggest"
-            prefetch={false}
-            className="rounded-full bg-rose-gold px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-rose-gold-deep hover:shadow-md"
-          >
-            Add Your Church
-          </Link>
-          <HeaderUserMenu churchSlug={churchSlug} churchCount={churchCount} />
+            <HeaderUserMenu churchSlug={churchSlug} churchCount={churchCount} />
+          </div>
         </div>
 
         {/* Mobile: My Church shortcut + hamburger */}
@@ -110,7 +113,7 @@ export function SiteHeader() {
             <Link
               href={myChurchHref}
               prefetch={false}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-rose-200/60 bg-white text-rose-gold transition-colors hover:bg-blush-light"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-rose-gold/30 bg-white text-rose-gold transition-colors hover:bg-rose-gold/[0.06]"
               title={churchCount > 1 ? "Your church admin" : "Your church"}
               aria-label={churchCount > 1 ? "Open church admin" : "Go to your church"}
             >
@@ -122,7 +125,7 @@ export function SiteHeader() {
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="relative z-50 flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-blush-light"
+            className="relative z-50 flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-rose-gold/[0.06]"
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             aria-controls="mobile-nav"
@@ -162,14 +165,14 @@ export function SiteHeader() {
             className="fixed top-0 right-0 z-[45] flex h-dvh w-full flex-col bg-linen shadow-xl transition-transform duration-300 md:hidden sm:w-72"
             style={{ transitionTimingFunction: "cubic-bezier(0.32, 0.72, 0, 1)" }}
           >
-            <div className="flex items-center justify-between border-b border-rose-200/60 px-6 py-5">
-              <span className="font-serif text-lg font-semibold text-espresso">
+            <div className="flex items-center justify-between border-b border-rose-gold/10 px-6 py-5">
+              <span className="font-serif text-lg font-semibold tracking-[-0.01em] text-espresso">
                 Menu
               </span>
               <button
                 type="button"
                 onClick={closeMenu}
-                className="flex h-8 w-8 items-center justify-center rounded-full text-warm-brown transition-colors hover:bg-blush-light hover:text-espresso"
+                className="flex h-8 w-8 items-center justify-center rounded-full text-warm-brown transition-colors hover:bg-rose-gold/[0.06] hover:text-espresso"
                 aria-label="Close menu"
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -179,27 +182,30 @@ export function SiteHeader() {
             </div>
 
             <div className="flex-1 overflow-y-auto px-4 py-4">
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  prefetch={false}
-                  onClick={closeMenu}
-                  className={`flex items-center rounded-xl px-4 py-3.5 text-base font-medium transition-all duration-200 hover:bg-blush-light/60 hover:text-espresso ${
-                    isActive(item.href) ? "bg-blush-light/60 text-espresso" : "text-warm-brown"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {navItems.map((item) => {
+                const active = isActive(item.href);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    prefetch={false}
+                    onClick={closeMenu}
+                    className={`flex items-center rounded-xl px-4 py-3.5 text-base transition-colors duration-150 hover:bg-rose-gold/[0.06] ${
+                      active ? "font-bold text-rose-gold" : "font-medium text-warm-brown"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
               {myChurchHref && (
                 <Link
                   href={myChurchHref}
                   prefetch={false}
                   onClick={closeMenu}
-                  className="flex items-center gap-2 rounded-xl px-4 py-3.5 text-base font-medium text-rose-gold transition-all duration-200 hover:bg-blush-light/60"
+                  className="mt-1 flex items-center gap-2 rounded-xl border border-rose-gold/30 px-4 py-3.5 text-base font-bold text-espresso transition-colors duration-150 hover:bg-rose-gold/[0.06]"
                 >
-                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="h-5 w-5 text-rose-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
                   {myChurchLabel}
@@ -209,15 +215,15 @@ export function SiteHeader() {
                 href="/church/suggest"
                 prefetch={false}
                 onClick={closeMenu}
-                className="mt-3 flex items-center justify-center rounded-xl bg-rose-gold px-4 py-3.5 text-base font-semibold text-white transition-all duration-200 hover:bg-rose-gold-deep"
+                className="mt-3 flex items-center justify-center rounded-full bg-rose-gold px-4 py-3.5 text-base font-bold text-white transition-all duration-150 hover:bg-rose-gold-deep"
               >
-                Add Your Church
+                Add a church
               </Link>
             </div>
 
             <HeaderUserMenuMobile onNavigate={closeMenu} churchSlug={churchSlug} churchCount={churchCount} />
 
-            <div className="border-t border-rose-200/60 px-6 py-4">
+            <div className="border-t border-rose-gold/10 px-6 py-4">
               <Link
                 href="/for-churches"
                 prefetch={false}

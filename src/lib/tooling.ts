@@ -991,14 +991,22 @@ export function scoreQuizLanes(answers: Record<string, string>, lanes: Discovery
     .slice(0, 3);
 }
 
-export function getLaneDirectoryFilters(lane: Pick<DiscoveryLane, "matchRules">): Omit<ChurchDirectoryFilters, "query"> {
-  const primaryStyle = lane.matchRules.find((rule) => rule.styleSlug)?.styleSlug;
-  const primaryDenomination = lane.matchRules.find((rule) => rule.denominationSlug)?.denominationSlug;
+function getPrimaryDirectoryFilters(matchRules: MatchRule[]): Omit<ChurchDirectoryFilters, "query"> {
+  const primaryStyle = matchRules.find((rule) => rule.styleSlug)?.styleSlug;
+  const primaryDenomination = matchRules.find((rule) => rule.denominationSlug)?.denominationSlug;
 
   return {
     styleSlug: primaryStyle,
     denominationSlug: primaryStyle ? undefined : primaryDenomination,
   };
+}
+
+export function getLaneDirectoryFilters(lane: Pick<DiscoveryLane, "matchRules">): Omit<ChurchDirectoryFilters, "query"> {
+  return getPrimaryDirectoryFilters(lane.matchRules);
+}
+
+export function getSoundProfileDirectoryFilters(profile: Pick<SoundProfile, "matchRules">): Omit<ChurchDirectoryFilters, "query"> {
+  return getPrimaryDirectoryFilters(profile.matchRules);
 }
 
 export function buildChurchDirectoryHrefForLane(

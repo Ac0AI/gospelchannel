@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Compare churches — GospelChannel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lib/shared.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="lib/shared.jsx"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const C = [
+  { name: "Hillsong Church", city: "Sydney, AU", denom: "Pentecostal", style: "Contemporary · Anthemic", size: "8,000 weekly", times: "Sun 9am, 11am, 6pm", lang: "English", kids: "Yes — 0 to 18", music: "Spotify · YouTube · Apple", verified: true, vibe: "High-energy", parking: "Free, ample", first: "Welcome desk in foyer", img: "https://images.unsplash.com/photo-1519834785169-98be25ec3f84?w=800&q=80&auto=format&fit=crop", initial: "H" },
+  { name: "Holy Trinity Brompton", city: "London, UK", denom: "Anglican", style: "Charismatic Anglican", size: "5,000 weekly", times: "Sun 9am, 11am, 5pm, 7pm", lang: "English", kids: "Yes — Sundays only", music: "Spotify", verified: true, vibe: "Warm, traditional-modern", parking: "Tube — South Kensington", first: "Greeted at door", img: null, initial: "H" },
+  { name: "Sankta Maria", city: "Malmö, SE", denom: "Lutheran", style: "Hymns · liturgy", size: "60 weekly", times: "Sun 11am", lang: "Swedish", kids: "No", music: "Acoustic organ", verified: false, vibe: "Quiet, reverent", parking: "Street parking", first: "Walk in any time", img: null, initial: "M" },
+];
+
+const Row = ({ label, k, alt }) => (
+  <div style={{ display: "grid", gridTemplateColumns: `200px repeat(${C.length}, 1fr)`, gap: 0, padding: "20px 0", borderBottom: "var(--border-soft)", background: alt ? "rgba(247,237,228,0.4)" : "transparent" }}>
+    <div style={{ paddingLeft: 32, fontSize: 12, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--muted-warm)", alignSelf: "center" }}>{label}</div>
+    {C.map(c => (
+      <div key={c.name} style={{ paddingInline: 24, fontSize: 15, color: "var(--espresso)", alignSelf: "center", lineHeight: 1.5 }}>
+        {c[k]}
+      </div>
+    ))}
+  </div>
+);
+
+const App = () => (
+  <div className="gc-page">
+    <GCHeader />
+    <section style={{ maxWidth: 1280, margin: "0 auto", padding: "60px 48px 0" }}>
+      <p className="gc-eyebrow">Side by side</p>
+      <h1 className="gc-h1" style={{ fontSize: 64, marginTop: 14 }}>Comparing <em className="gc-italic">3 churches</em>.</h1>
+      <p className="gc-lede" style={{ marginTop: 14, maxWidth: 580 }}>What's the same. What's different. Made to help you choose where to walk in this Sunday.</p>
+    </section>
+
+    {/* Header strip with cards */}
+    <section style={{ maxWidth: 1280, margin: "40px auto 0", padding: "0 48px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: `200px repeat(${C.length}, 1fr)`, gap: 0, alignItems: "stretch", borderTop: "var(--border)", borderBottom: "var(--border)" }}>
+        <div style={{ paddingLeft: 32, alignSelf: "center", paddingBlock: 24 }}>
+          <button className="gc-btn gc-btn-ghost gc-btn-sm">+ Add a 4th</button>
+        </div>
+        {C.map(c => (
+          <div key={c.name} style={{ padding: "24px", borderLeft: "var(--border-soft)" }}>
+            {c.img ? (
+              <div style={{ aspectRatio: "16/9", borderRadius: 12, backgroundImage: `url(${c.img})`, backgroundSize: "cover", backgroundPosition: "center" }} />
+            ) : (
+              <div style={{ aspectRatio: "16/9", borderRadius: 12, background: "var(--espresso)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div style={{ fontFamily: "var(--font-serif)", fontSize: 64, color: "var(--rose-gold)", fontWeight: 600 }}>{c.initial}</div>
+              </div>
+            )}
+            <h3 style={{ fontFamily: "var(--font-serif)", fontSize: 24, fontWeight: 600, margin: "12px 0 4px", letterSpacing: "-0.01em" }}>
+              {c.name} {c.verified && <span style={{ color: "var(--rose-gold)", fontSize: 14 }}>✓</span>}
+            </h3>
+            <p style={{ fontSize: 12, color: "var(--muted-warm)", margin: 0, letterSpacing: "0.06em" }}>{c.city}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Comparison rows */}
+      <div style={{ background: "white" }}>
+        <Row label="Tradition" k="denom" alt />
+        <Row label="Style" k="style" />
+        <Row label="Size" k="size" alt />
+        <Row label="Service times" k="times" />
+        <Row label="Language" k="lang" alt />
+        <Row label="Kids" k="kids" />
+        <Row label="Music" k="music" alt />
+        <Row label="Vibe" k="vibe" />
+        <Row label="Parking" k="parking" alt />
+        <Row label="First-time" k="first" />
+      </div>
+    </section>
+
+    <section style={{ maxWidth: 1280, margin: "60px auto 0", padding: "0 48px", textAlign: "center" }}>
+      <p className="gc-eyebrow">Still deciding?</p>
+      <h2 className="gc-h2" style={{ marginTop: 12, fontSize: 44 }}>Take the <em className="gc-italic">2-minute</em> fit quiz.</h2>
+      <p className="gc-lede" style={{ marginTop: 14, maxWidth: 460, marginInline: "auto" }}>Eight questions. We'll surface three churches that match how you actually want to worship.</p>
+      <button className="gc-btn gc-btn-primary gc-btn-lg" style={{ marginTop: 24 }}><a href="quiz.html" style={{ color: "inherit", textDecoration: "none" }}>Start the quiz →</a></button>
+    </section>
+
+    <GCFooter />
+  </div>
+);
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

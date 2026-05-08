@@ -73,41 +73,51 @@ export default async function NetworkPage({ params }: NetworkPageProps) {
   };
 
   return (
-    <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-10 sm:px-6 lg:px-8">
+    <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <nav>
-        <Link href="/church" className="inline-flex items-center gap-1 text-sm font-medium text-rose-gold transition-colors hover:text-rose-gold-deep">
-          ← Churches
-        </Link>
-      </nav>
-
-      {/* Hero */}
-      <section className="rounded-[2rem] border border-rose-200/60 bg-gradient-to-br from-espresso to-warm-brown px-5 py-10 shadow-sm sm:px-8 sm:py-12 lg:px-10 lg:py-14">
-        <h1 className="text-3xl font-black leading-tight text-white sm:text-4xl lg:text-5xl">
-          {network.name}
-        </h1>
-        {network.description && (
-          <p className="mt-4 max-w-3xl text-sm leading-relaxed text-white/82 sm:text-base">
-            {network.description}
+      {/* Editorial dark hero */}
+      <section className="bg-espresso px-5 py-16 text-linen sm:px-12 sm:py-20">
+        <div className="mx-auto max-w-[1280px]">
+          <Link
+            href="/church"
+            className="inline-flex items-center gap-1 text-[12px] font-bold uppercase tracking-[0.22em] text-blush/70 no-underline transition-colors hover:text-blush"
+          >
+            &larr; All churches
+          </Link>
+          <p className="mt-6 gc-eyebrow" style={{ color: "var(--rose-gold)" }}>
+            Network
           </p>
-        )}
-        <div className="mt-6 flex flex-wrap gap-2 text-xs text-white/80">
-          {network.headquartersCountry && (
-            <span className="rounded-full bg-white/10 px-3 py-1.5 backdrop-blur-sm">
-              HQ: {network.headquartersCountry}
-            </span>
+          <h1
+            className="mt-3.5 m-0 max-w-[18ch] font-serif font-semibold leading-[1] tracking-[-0.02em] text-linen"
+            style={{ fontSize: "clamp(40px, 7vw, 88px)" }}
+          >
+            {network.name}.
+          </h1>
+          {network.description && (
+            <p className="mt-5 max-w-[640px] text-base leading-relaxed text-linen/75 sm:text-lg">
+              {network.description}
+            </p>
           )}
-          {network.founded && (
-            <span className="rounded-full bg-white/10 px-3 py-1.5 backdrop-blur-sm">
-              Founded {network.founded}
+          <div className="mt-7 flex flex-wrap gap-2 text-xs">
+            {network.headquartersCountry && (
+              <span className="rounded-full border border-blush/25 bg-blush/[0.08] px-3.5 py-2 font-bold uppercase tracking-[0.16em] text-blush backdrop-blur-sm">
+                HQ &middot; {network.headquartersCountry}
+              </span>
+            )}
+            {network.founded && (
+              <span className="rounded-full border border-blush/25 bg-blush/[0.08] px-3.5 py-2 font-bold uppercase tracking-[0.16em] text-blush backdrop-blur-sm">
+                Founded {network.founded}
+              </span>
+            )}
+            <span className="rounded-full border border-blush/25 bg-blush/[0.08] px-3.5 py-2 font-bold uppercase tracking-[0.16em] text-blush backdrop-blur-sm">
+              {campuses.length} {campuses.length === 1 ? "campus" : "campuses"}
             </span>
-          )}
-          <span className="rounded-full bg-white/10 px-3 py-1.5 backdrop-blur-sm">
-            {campuses.length} {campuses.length === 1 ? "campus" : "campuses"}
-          </span>
+          </div>
         </div>
       </section>
+
+      <div className="mx-auto max-w-[1280px] space-y-10 px-5 py-14 pb-24 sm:px-12 sm:py-16">
 
       {/* Worship music link */}
       {parentChurch && (
@@ -181,14 +191,14 @@ export default async function NetworkPage({ params }: NetworkPageProps) {
 
       {/* Network website link */}
       {network.website && (
-        <section className="flex items-center gap-3 rounded-2xl border border-rose-200/60 bg-white px-5 py-4 shadow-sm">
+        <section className="flex items-center gap-3 rounded-[18px] border border-rose-gold/[0.10] bg-white px-6 py-4">
           <a
             href={network.website}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex rounded-full border border-rose-200 bg-white px-4 py-2 text-sm font-semibold text-warm-brown transition-colors hover:bg-blush-light hover:text-espresso"
+            className="inline-flex rounded-full border border-rose-gold/30 px-4 py-2 text-sm font-semibold text-espresso transition-colors hover:bg-rose-gold/[0.06]"
           >
-            Visit {network.name} →
+            Visit {network.name} &rarr;
           </a>
           <span className="text-xs text-muted-warm">
             {new URL(network.website).hostname.replace(/^www\./, "")}
@@ -196,5 +206,6 @@ export default async function NetworkPage({ params }: NetworkPageProps) {
         </section>
       )}
     </div>
+    </>
   );
 }

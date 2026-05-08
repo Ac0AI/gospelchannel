@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<title>Vackrare kyrksidor — 3 varianter</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --linen:#fdf8f4; --linen-deep:#f7ede4; --blush:#f4c9c0; --blush-light:#fce9e5;
+    --rose-gold:#b06a50; --rose-gold-deep:#944f3c; --mauve:#9b7fa0; --mauve-light:#e8dff0;
+    --espresso:#3b2a22; --warm-brown:#7a5c4e; --muted-warm:#9e8075;
+    --font-sans:'Nunito',system-ui,sans-serif;
+    --font-serif:'Cormorant Garamond',serif;
+  }
+  html,body{margin:0;padding:0;background:#1a1411;font-family:var(--font-sans);color:var(--espresso);}
+  *{box-sizing:border-box}
+  @keyframes pulse {0%,100%{opacity:1}50%{opacity:0.5}}
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="data/hillsong.js"></script>
+<script src="data/landing-data.js"></script>
+<script type="text/babel" src="lib/design-canvas.jsx"></script>
+<script type="text/babel" src="variants/landing-safe.jsx"></script>
+<script type="text/babel" src="variants/landing-push.jsx"></script>
+<script type="text/babel" src="variants/search-safe.jsx"></script>
+<script type="text/babel" src="variants/search-push.jsx"></script>
+<script type="text/babel" src="variants/variant-1-polished.jsx"></script>
+<script type="text/babel" src="variants/variant-2-editorial.jsx"></script>
+<script type="text/babel" src="variants/variant-3-bold.jsx"></script>
+<script type="text/babel" src="variants/variant-3-bold-mobile.jsx"></script>
+<script type="text/babel" src="variants/variant-4-fallbacks.jsx"></script>
+<script type="text/babel" src="variants/variant-5-giant-initial.jsx"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+  const { DesignCanvas, DCSection, DCArtboard } = window;
+  const church = window.HILLSONG;
+  const landingData = window.LANDING_DATA;
+
+  function App() {
+    return (
+      <DesignCanvas
+        title="Vackrare kyrksidor"
+        subtitle="Kyrkprofil-varianter, landing & search. Alla med befintligt designsystem (rose-gold, Cormorant + Nunito). Klicka en artboard för fullskärm."
+        defaultZoom={0.28}
+      >
+        <DCSection id="landing-search" title="Startsida & sök" subtitle="Mål: hitta rätt kyrka snabbt. Cinematic full-bleed hero med sök i fokus + söksida med filter-chips. Två riktningar vardera (säker / push).">
+          <DCArtboard id="landing-safe" label="Landing · Säker — cinematic + magazine grid" width={1440} height={3600}>
+            <window.LandingSafe data={landingData} />
+          </DCArtboard>
+          <DCArtboard id="landing-push" label="Landing · Push — editorial split + church-in-focus" width={1440} height={4200}>
+            <window.LandingPush data={landingData} />
+          </DCArtboard>
+          <DCArtboard id="search-safe" label="Search · Säker — sök först, chips under" width={1440} height={2200}>
+            <window.SearchSafe data={landingData} />
+          </DCArtboard>
+          <DCArtboard id="search-push" label="Search · Push — sticky filter rail + spotlight" width={1500} height={2600}>
+            <window.SearchPush data={landingData} />
+          </DCArtboard>
+        </DCSection>
+        <DCSection id="variants" title="Kyrkprofil — tre riktningar" subtitle="Säker → Push → Bold. Varje variant skalar gracefully när data saknas.">
+          <DCArtboard id="v1" label="01 · Polished — refinement of current system" width={1440} height={5400}>
+            <VariantOne church={church} />
+          </DCArtboard>
+          <DCArtboard id="v2" label="02 · Editorial — magazine push" width={1440} height={6000}>
+            <VariantTwo church={church} />
+          </DCArtboard>
+          <DCArtboard id="v3" label="03 · Bold — cinematic remix" width={1440} height={6800}>
+            <VariantThree church={church} />
+          </DCArtboard>
+        </DCSection>
+        <DCSection id="bold-responsive" title="Bold — på mobil & i praktiken" subtitle="Samma DNA, men med sticky CTA, 'Save my seat'-widget högt upp, quick-actions och full reflow för 375px. Funkar lika bra för stora kyrkor med massa innehåll som små med bara grunderna.">
+          <DCArtboard id="v3-mobile" label="Bold · iPhone 375px" width={375} height={5400}>
+            <VariantThreeMobile church={church} />
+          </DCArtboard>
+          <DCArtboard id="v3-desktop-practical" label="Bold · Desktop med Plan-widget" width={1440} height={7200}>
+            <VariantThreeMobile church={church} />
+          </DCArtboard>
+        </DCSection>
+        <DCSection id="fallbacks" title="När kyrkan saknar bra hero-bild" subtitle="Idag: alla bildlösa kyrkor får samma bruna gradient. Här: 5 strategier som behåller premium-känsla även utan foto, plus en rekommenderad priority-chain.">
+          <DCArtboard id="v4-fallbacks" label="Hero fallback-strategier" width={1440} height={4600}>
+            <FallbackHeroVariants />
+          </DCArtboard>
+        </DCSection>
+        <DCSection id="giant-initial" title="Color + giant initial — utbyggt" subtitle="Den valda riktningen för kyrkor utan hero-bild. Tre layout-varianter, sju traditions-paletter, små till stora kyrkor.">
+          <DCArtboard id="v5-showcase" label="Layout-varianter & paletter" width={1440} height={4400}>
+            <GiantInitialShowcase />
+          </DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

@@ -3,29 +3,6 @@ import Link from "next/link";
 import { getChurchStatsAsync } from "@/lib/content";
 import { COMPARE_CARDS, GUIDE_CARDS } from "@/lib/tooling";
 
-const GUIDE_ICONS: Record<string, React.ReactNode> = {
-  church: (
-    <svg className="h-8 w-8 text-rose-gold/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 3v4M12 7l5 4v9H7V11l5-4Z" />
-      <path d="M10 20v-4h4v4" />
-      <path d="M3 20h18" />
-      <path d="M9 7V3h6v4" />
-    </svg>
-  ),
-  hands: (
-    <svg className="h-8 w-8 text-rose-gold/60" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-    </svg>
-  ),
-  book: (
-    <svg className="h-8 w-8 text-rose-gold/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
-      <path d="M8 7h6" />
-      <path d="M8 11h4" />
-    </svg>
-  ),
-};
-
 export async function generateMetadata(): Promise<Metadata> {
   const { churchCountLabel, countryCount } = await getChurchStatsAsync();
   return {
@@ -43,76 +20,101 @@ export default async function GuidesPage() {
   const quizzes = GUIDE_CARDS.filter((g) => g.href.includes("quiz") || g.href.includes("match"));
 
   return (
-    <div className="mx-auto w-full max-w-7xl space-y-10 px-4 py-8 sm:space-y-12 sm:px-6 sm:py-10 lg:px-8">
-      <section className="rounded-[2rem] border border-rose-200/60 bg-gradient-to-br from-espresso to-warm-brown px-6 py-10 text-white shadow-sm sm:px-8 sm:py-12">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/70">Free guides</p>
-        <h1 className="mt-2 max-w-3xl font-serif text-3xl font-semibold leading-tight sm:text-5xl">
-          Know what to expect before your first visit
-        </h1>
-        <p className="mt-4 max-w-3xl text-base leading-relaxed text-white/80">
-          Step-by-step guides for church seekers. Honest, practical, and written in your language - not church jargon. Across {churchCountLabel} churches in {countryCount} countries.
-        </p>
-        <div className="mt-7 flex flex-wrap gap-3">
-          <Link
-            href="/guides/first-visit-guide"
-            className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-espresso transition-colors hover:bg-white/90"
+    <>
+      {/* Editorial dark hero */}
+      <section className="bg-espresso px-5 py-20 text-linen sm:px-12 sm:py-24">
+        <div className="mx-auto max-w-[1280px]">
+          <p className="gc-eyebrow" style={{ color: "var(--rose-gold)" }}>
+            Free guides
+          </p>
+          <h1
+            className="mt-3.5 m-0 max-w-[20ch] font-serif font-semibold leading-[1.05] tracking-[-0.02em] text-linen"
+            style={{ fontSize: "clamp(40px, 7vw, 72px)" }}
           >
-            Read the first-visit guide
-          </Link>
-          <Link
-            href="/compare"
-            className="rounded-full border border-white/20 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"
-          >
-            Compare church styles
-          </Link>
+            Know what to expect before your <em className="gc-italic">first visit</em>.
+          </h1>
+          <p className="mt-5 max-w-[640px] text-lg leading-relaxed text-linen/75 sm:text-xl">
+            Step-by-step guides for church seekers. Honest, practical, and written in your language &mdash; not church jargon. Across {churchCountLabel} churches in {countryCount} countries.
+          </p>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <Link
+              href="/guides/first-visit-guide"
+              className="rounded-full bg-linen px-6 py-3 text-sm font-bold text-espresso transition-all duration-150 hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(255,255,255,0.15)]"
+            >
+              Read the first-visit guide
+            </Link>
+            <Link
+              href="/compare"
+              className="rounded-full border border-linen/25 px-6 py-3 text-sm font-semibold text-linen transition-colors hover:bg-linen/10"
+            >
+              Compare church styles
+            </Link>
+          </div>
         </div>
       </section>
 
-      <section className="space-y-4">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-mauve">Start here</p>
-          <h2 className="mt-2 font-serif text-2xl font-semibold text-espresso sm:text-3xl">Guides for church seekers</h2>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {guides.map((guide) => (
-            <article key={guide.href} className="rounded-2xl border border-rose-200/60 bg-white/80 p-5 shadow-sm">
-              {guide.icon && GUIDE_ICONS[guide.icon] && (
-                <div className="mb-3">{GUIDE_ICONS[guide.icon]}</div>
-              )}
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-mauve">{guide.eyebrow}</p>
-              <h3 className="mt-2 font-serif text-2xl font-semibold text-espresso">{guide.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-warm-brown">{guide.description}</p>
+      {/* Start here */}
+      <section className="mx-auto max-w-[1280px] px-5 pt-16 sm:px-12 sm:pt-20">
+        <p className="gc-eyebrow">Start here</p>
+        <h2 className="mt-3 font-serif text-3xl font-semibold tracking-[-0.01em] text-espresso sm:text-4xl">
+          Guides for <em className="gc-italic">church seekers</em>.
+        </h2>
+        <div className="mt-10 grid gap-5 sm:grid-cols-2">
+          {guides.map((guide, i) => (
+            <article
+              key={guide.href}
+              className="rounded-[18px] border border-rose-gold/[0.10] bg-white p-7 shadow-[var(--shadow-sm)]"
+            >
+              <p className="font-serif text-3xl font-medium italic leading-none text-rose-gold">
+                {String(i + 1).padStart(2, "0")}
+              </p>
+              <p className="mt-5 gc-eyebrow">{guide.eyebrow}</p>
+              <h3 className="mt-2 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso">
+                {guide.title}
+              </h3>
+              <p className="mt-3 text-sm leading-[1.6] text-warm-brown">{guide.description}</p>
               <Link
                 href={guide.href}
-                className="mt-5 inline-flex rounded-full bg-rose-gold px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-rose-gold-deep"
+                className="mt-5 inline-flex rounded-full bg-rose-gold px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-rose-gold-deep"
               >
-                Read guide
+                Read guide &rarr;
               </Link>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+      {/* Compare */}
+      <section className="mx-auto mt-20 max-w-[1280px] px-5 sm:px-12">
+        <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-mauve">Compare</p>
-            <h2 className="mt-2 font-serif text-2xl font-semibold text-espresso sm:text-3xl">Compare before you visit</h2>
+            <p className="gc-eyebrow">Compare</p>
+            <h2 className="mt-3 font-serif text-3xl font-semibold tracking-[-0.01em] text-espresso sm:text-4xl">
+              Compare before you visit.
+            </h2>
           </div>
-          <Link href="/compare" className="text-sm font-semibold text-rose-gold transition-colors hover:text-rose-gold-deep">
-            See all compare guides →
+          <Link
+            href="/compare"
+            className="text-sm font-bold text-rose-gold transition-colors hover:text-rose-gold-deep"
+          >
+            See all &rarr;
           </Link>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="mt-10 grid gap-5 sm:grid-cols-2">
           {COMPARE_CARDS.map((guide) => (
-            <article key={guide.href} className="rounded-2xl border border-rose-200/60 bg-white/80 p-5 shadow-sm">
-              <h3 className="font-serif text-xl font-semibold text-espresso">{guide.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-warm-brown">{guide.description}</p>
+            <article
+              key={guide.href}
+              className="rounded-[18px] border border-rose-gold/[0.10] bg-white p-7"
+            >
+              <h3 className="font-serif text-xl font-semibold tracking-[-0.01em] text-espresso">
+                {guide.title}
+              </h3>
+              <p className="mt-2.5 text-sm leading-[1.6] text-warm-brown">{guide.description}</p>
               <Link
                 href={guide.href}
-                className="mt-4 inline-flex rounded-full border border-rose-200/80 px-4 py-2 text-sm font-semibold text-rose-gold transition-colors hover:border-rose-300 hover:bg-blush-light"
+                className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-rose-gold transition-colors hover:text-rose-gold-deep"
               >
-                Read guide
+                Read guide &rarr;
               </Link>
             </article>
           ))}
@@ -120,28 +122,34 @@ export default async function GuidesPage() {
       </section>
 
       {quizzes.length > 0 && (
-        <section className="space-y-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-mauve">Interactive</p>
-            <h2 className="mt-2 font-serif text-xl font-semibold text-espresso sm:text-2xl">Quick-match quizzes</h2>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
+        <section className="mx-auto mt-20 max-w-[1280px] px-5 pb-24 sm:px-12">
+          <p className="gc-eyebrow">Interactive</p>
+          <h2 className="mt-3 font-serif text-3xl font-semibold tracking-[-0.01em] text-espresso sm:text-4xl">
+            Quick-match quizzes.
+          </h2>
+          <div className="mt-10 grid gap-5 sm:grid-cols-2">
             {quizzes.map((quiz) => (
-              <article key={quiz.href} className="rounded-2xl border border-rose-200/40 bg-linen-deep/50 p-4">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-warm">{quiz.eyebrow}</p>
-                <h3 className="mt-1.5 font-serif text-lg font-semibold text-espresso">{quiz.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-warm-brown">{quiz.description}</p>
+              <article
+                key={quiz.href}
+                className="rounded-[18px] border border-rose-gold/[0.10] p-7"
+                style={{ background: "var(--linen-deep)" }}
+              >
+                <p className="gc-eyebrow">{quiz.eyebrow}</p>
+                <h3 className="mt-2 font-serif text-xl font-semibold tracking-[-0.01em] text-espresso">
+                  {quiz.title}
+                </h3>
+                <p className="mt-2.5 text-sm leading-[1.6] text-warm-brown">{quiz.description}</p>
                 <Link
                   href={quiz.href}
-                  className="mt-4 inline-flex rounded-full border border-rose-200/60 px-4 py-2 text-sm font-semibold text-warm-brown transition-colors hover:border-rose-gold hover:text-espresso"
+                  className="mt-4 inline-flex rounded-full border border-rose-gold/30 px-5 py-2.5 text-sm font-semibold text-espresso transition-colors hover:bg-rose-gold/[0.06]"
                 >
-                  Take quiz
+                  Take quiz &rarr;
                 </Link>
               </article>
             ))}
           </div>
         </section>
       )}
-    </div>
+    </>
   );
 }

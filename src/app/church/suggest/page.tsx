@@ -13,82 +13,83 @@ export const metadata: Metadata = {
 
 export default function SuggestChurchPage() {
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-8 px-4 py-10 sm:px-6 sm:py-14">
-      <div className="text-center">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-mauve">Church onboarding</p>
-        <h1 className="font-serif text-3xl font-semibold leading-tight text-espresso sm:text-4xl lg:text-5xl">
-          Give your church
-          <br />
-          <span className="italic text-rose-gold">a home on GospelChannel</span>
-        </h1>
-        <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-warm-brown">
-          Share your playlist, website, and contact email - and we&apos;ll create a page where people
-          can tune in to your church.
-        </p>
-      </div>
-
-      <section className="grid gap-4 md:grid-cols-3">
-        {[
-          {
-            title: "Send one strong link",
-            body: "A Spotify playlist is the clearest starting signal. You can also send a YouTube playlist or channel.",
-          },
-          {
-            title: "Add real church context",
-            body: "Website, city, country, and contact email help us verify that the page points to a real church.",
-          },
-          {
-            title: "Improve discoverability",
-            body: "Once listed, your church becomes easier to share, easier to find, and easier to connect with.",
-          },
-        ].map((item) => (
-          <article
-            key={item.title}
-            className="rounded-3xl border border-rose-200/60 bg-gradient-to-br from-white to-blush-light/45 p-5 shadow-sm"
+    <>
+      {/* Hero */}
+      <section className="px-5 pt-14 sm:px-12 sm:pt-16">
+        <div className="mx-auto max-w-[1100px]">
+          <p className="gc-eyebrow">Add a new church</p>
+          <h1
+            className="mt-3.5 m-0 font-serif font-semibold leading-[1] tracking-[-0.02em] text-espresso"
+            style={{ fontSize: "clamp(40px, 6vw, 60px)" }}
           >
-            <h2 className="font-serif text-2xl font-semibold text-espresso">{item.title}</h2>
-            <p className="mt-3 text-sm leading-relaxed text-warm-brown">{item.body}</p>
-          </article>
-        ))}
+            Tell us about your <em className="gc-italic">church</em>.
+          </h1>
+          <p className="mt-4 max-w-[480px] text-base leading-relaxed text-warm-brown sm:text-lg">
+            The basics now, polish later. We&rsquo;ll review and publish within 24 hours. You can claim it as the official admin afterward.
+          </p>
+        </div>
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-[0.88fr_1.12fr]">
-        <aside className="space-y-4">
-          <div className="rounded-3xl border border-rose-200/60 bg-white/80 p-5 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-mauve">Already in the catalog?</p>
-            <h2 className="mt-3 font-serif text-2xl font-semibold text-espresso">Claim it instead of submitting a duplicate</h2>
-            <p className="mt-3 text-sm leading-relaxed text-warm-brown">
-              If your church already has a page, open it and use the claim flow there. That is the best path for
-              corrections and ownership signals.
+      <section className="mx-auto max-w-[1100px] px-5 pt-12 pb-20 sm:px-12 sm:pt-14">
+        <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:gap-14">
+          {/* Form */}
+          <div>
+            <SuggestChurchForm />
+            <p className="mt-6 text-xs leading-relaxed text-muted-warm">
+              By submitting you agree to our editorial review. We&rsquo;ll email you within 24 hours.
             </p>
-            <Link
-              href="/church"
-              className="mt-5 inline-flex rounded-full border border-blush px-4 py-2 text-sm font-semibold text-rose-gold transition-colors hover:border-rose-300 hover:bg-blush-light"
-            >
-              Browse church pages
-            </Link>
           </div>
 
-          <div className="rounded-3xl border border-rose-200/60 bg-gradient-to-br from-blush-light/70 to-white p-5 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-mauve">What helps approval faster</p>
-            <ul className="mt-3 space-y-2 text-sm leading-relaxed text-warm-brown">
-              <li>Spotify playlist URL</li>
-              <li>Official website domain</li>
-              <li>Contact email from the church</li>
-              <li>City and country</li>
-              <li>Short description of the worship sound</li>
-            </ul>
-          </div>
-        </aside>
+          {/* Sticky side rail */}
+          <aside className="lg:sticky lg:top-24 lg:self-start">
+            <div className="space-y-6">
+              <div className="rounded-[18px] border border-rose-gold/[0.14] bg-white p-7 shadow-[var(--shadow-sm)]">
+                <p className="gc-eyebrow">What happens next?</p>
+                <ol className="mt-3.5 list-decimal space-y-1.5 pl-5 text-sm leading-relaxed text-warm-brown">
+                  <li>We review for spam &mdash; usually within 24h</li>
+                  <li>The page goes live with a &ldquo;Listed by community&rdquo; tag</li>
+                  <li>You (or someone at the church) can claim it to verify</li>
+                </ol>
+              </div>
 
-        <SuggestChurchForm />
-      </section>
+              <div
+                className="rounded-[18px] p-7"
+                style={{ background: "var(--linen-deep)" }}
+              >
+                <p className="gc-eyebrow">What helps approval faster</p>
+                <ul className="mt-3.5 space-y-2 text-sm leading-relaxed text-warm-brown">
+                  <li>Spotify playlist URL</li>
+                  <li>Official website domain</li>
+                  <li>Contact email from the church</li>
+                  <li>City &amp; country</li>
+                  <li>Short description of the worship sound</li>
+                </ul>
+              </div>
 
-      <div className="mt-10 text-center">
-        <p className="font-serif text-sm italic text-muted-warm">
-          &ldquo;For where two or three gather in my name, there am I with them.&rdquo; — Matthew 18:20
+              <div className="rounded-[18px] border border-rose-gold/[0.14] bg-white p-7">
+                <p className="gc-eyebrow">Already in the catalog?</p>
+                <h3 className="mt-2.5 font-serif text-xl font-semibold tracking-[-0.01em] text-espresso">
+                  Claim it instead of submitting a duplicate.
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-warm-brown">
+                  If your church already has a page, open it and use the claim flow there. That&rsquo;s the cleanest path for corrections and ownership signals.
+                </p>
+                <Link
+                  href="/church"
+                  prefetch={false}
+                  className="mt-4 inline-flex rounded-full border border-rose-gold/30 px-4 py-2 text-sm font-semibold text-rose-gold transition-colors hover:bg-rose-gold/[0.06]"
+                >
+                  Browse church pages &rarr;
+                </Link>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <p className="mt-16 text-center font-serif text-sm italic text-muted-warm">
+          &ldquo;For where two or three gather in my name, there am I with them.&rdquo; &mdash; Matthew 18:20
         </p>
-      </div>
-    </div>
+      </section>
+    </>
   );
 }

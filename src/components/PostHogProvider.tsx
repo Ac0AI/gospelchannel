@@ -22,6 +22,7 @@ if (typeof window !== "undefined" && POSTHOG_KEY) {
     advanced_disable_decide: true,
     on_xhr_error: () => {},
   });
+  posthog.analyticsDefaultEndpoint = "/e";
 }
 
 function PostHogPageView() {

@@ -4,8 +4,10 @@ interface GuideQuoteProps {
 
 export function GuideQuote({ text }: GuideQuoteProps) {
   return (
-    <blockquote className="my-6 rounded-r-xl border-l-[3px] border-rose-gold bg-white px-5 py-4">
-      <p className="text-sm italic leading-relaxed text-warm-brown">{text}</p>
+    <blockquote className="my-10 border-l-2 border-rose-gold pl-6 sm:my-12 sm:pl-8">
+      <p className="m-0 font-serif text-xl font-medium italic leading-[1.45] text-espresso sm:text-2xl">
+        {text}
+      </p>
     </blockquote>
   );
 }

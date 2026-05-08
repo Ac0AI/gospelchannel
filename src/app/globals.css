@@ -4,6 +4,7 @@
   /* Pinterest-worship palette */
   --linen:        #fdf8f4;
   --linen-deep:   #f7ede4;
+  --linen-darker: #efe2d4;
   --blush:        #f4c9c0;
   --blush-light:  #fce9e5;
   --rose-gold:    #b06a50;
@@ -13,11 +14,23 @@
   --espresso:     #3b2a22;
   --warm-brown:   #7a5c4e;
   --muted-warm:   #9e8075;
+  --sage:         #8a9d83;
+  --gold:         #c89b58;
+
+  /* Warm-tinted, low-spread shadows (per handoff shared.css) */
+  --shadow-sm: 0 2px 10px rgba(59, 42, 34, 0.04);
+  --shadow:    0 8px 30px rgba(59, 42, 34, 0.07);
+  --shadow-lg: 0 24px 60px rgba(59, 42, 34, 0.12);
+
+  /* Rose-gold-tinted hairline borders */
+  --border:      1px solid rgba(176, 106, 80, 0.14);
+  --border-soft: 1px solid rgba(176, 106, 80, 0.10);
 }
 
 @theme inline {
   --color-linen:        var(--linen);
   --color-linen-deep:   var(--linen-deep);
+  --color-linen-darker: var(--linen-darker);
   --color-blush:        var(--blush);
   --color-blush-light:  var(--blush-light);
   --color-rose-gold:    var(--rose-gold);
@@ -27,6 +40,8 @@
   --color-espresso:     var(--espresso);
   --color-warm-brown:   var(--warm-brown);
   --color-muted-warm:   var(--muted-warm);
+  --color-sage:         var(--sage);
+  --color-gold:         var(--gold);
   --font-sans:          var(--font-sans);
   --font-serif:         var(--font-serif);
 }
@@ -44,6 +59,24 @@ h1, h2, h3 {
   font-family: var(--font-serif), serif;
   font-weight: 700;
   letter-spacing: -0.01em;
+}
+
+/* Signature italic accent — Cormorant italic in rose-gold, used inside headlines */
+.gc-italic {
+  font-family: var(--font-serif), serif;
+  font-style: italic;
+  color: var(--rose-gold);
+}
+
+/* Editorial eyebrow above section headlines */
+.gc-eyebrow {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mauve);
+  margin: 0;
 }
 
 /* Heart pulse animation for "This Moved Me" */

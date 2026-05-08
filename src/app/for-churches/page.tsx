@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { getChurchStatsAsync } from "@/lib/content";
 
@@ -10,296 +9,301 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://gospelchannel.com/for-churches" },
 };
 
-/* ── tiny icon helpers (inline SVGs to avoid deps) ── */
-const ClockIcon = () => (
-  <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-  </svg>
-);
-const PinIcon = () => (
-  <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-  </svg>
-);
-const GlobeIcon = () => (
-  <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582" />
-  </svg>
-);
-const MusicIcon = () => (
-  <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z" />
-  </svg>
-);
-const CheckBadgeIcon = () => (
-  <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
-    <path fillRule="evenodd" d="M16.403 12.652a3 3 0 010-5.304 3 3 0 00-3.75-3.751 3 3 0 00-5.305 0 3 3 0 00-3.751 3.75 3 3 0 000 5.305 3 3 0 003.75 3.751 3 3 0 005.305 0 3 3 0 003.751-3.75zm-2.546-4.46a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
-  </svg>
-);
+const WHY = [
+  {
+    num: "01",
+    title: "Show your soul, not just hours.",
+    body: "Your music, your photos, your team, the feel of a Sunday. People decide on vibe before they decide on doctrine.",
+  },
+  {
+    num: "02",
+    title: "Help the right people find you.",
+    body: "Filters by language, kids program, denomination, worship style. We surface you to people whose Sunday is incomplete without you.",
+  },
+  {
+    num: "03",
+    title: "Stay out of the way after.",
+    body: "We don't email your visitors. We don't sell their data. We don't advertise. The page is a doorway — what happens inside is yours.",
+  },
+];
+
+const FEATURES = [
+  { ic: "01", t: "Music & playlists", d: "Embed Spotify, Apple Music, YouTube. Visitors hear your sound before they walk in." },
+  { ic: "02", t: "Sermons & live", d: "YouTube embeds, latest series, livestream link surfaced when you go live Sunday morning." },
+  { ic: "03", t: "Service times that update", d: "Multiple gatherings, holiday hours, language tracks — all editable from your dashboard." },
+  { ic: "04", t: "Map & directions", d: "One tap to walking, transit or driving directions. Parking notes for first-timers." },
+  { ic: "05", t: "Verified badge", d: "Once you claim and confirm, visitors see the verified mark. Trust-signal for new faces." },
+  { ic: "06", t: "Prayer wall integration", d: "Receive prayers from your wall, respond from one inbox. Volunteers can moderate together." },
+  { ic: "07", t: "Team & pastor profiles", d: "Faces and short bios. New visitors arrive knowing who they'll meet." },
+  { ic: "08", t: "Multilingual", d: "Mark languages spoken at services. Show your page in Swedish, Spanish, Arabic, Mandarin and more." },
+];
+
+const STEPS = [
+  { n: "1", t: "Find or add", d: "Search for your church. If we have it, claim it. If not, add it in 2 minutes." },
+  { n: "2", t: "Verify", d: "We send a code to the church email or phone on file. One step." },
+  { n: "3", t: "Polish", d: "Add photos, music links, service times. Live preview as you go." },
+  { n: "4", t: "Publish", d: "Press publish. The page is live. Edit anytime, no review queue." },
+];
+
+const FAQ = [
+  { q: "Who runs GospelChannel?", a: "A small team based in Stockholm with backgrounds in tech and ministry. We're independent and not affiliated with any single denomination or network." },
+  { q: "What if my church doesn't have great photos?", a: "Use the no-photo layout — we generate a beautiful color page using your tradition's palette. Many small churches choose this even when they have photos." },
+  { q: "Can I edit the page anytime?", a: "Yes. Changes are live immediately. No review queue. You can also add multiple admins from your team." },
+  { q: "Will you email my visitors?", a: "Never. Visitors who tap your contact button go to your channels, not ours. We don't have a newsletter to push them into." },
+  { q: "What about prayer requests?", a: "If you turn on the wall, prayers come into a moderation inbox you control. Volunteers from your church can moderate together." },
+  { q: "Can I delete my church anytime?", a: "Yes. One click in the dashboard. The page disappears. We don't keep an archive." },
+];
+
+const TRUST_NAMES = ["Hillsong", "Bethel", "Elevation", "Holy Trinity", "Passion City", "Redeemer"];
 
 export default async function ForChurchesPage() {
-  const { churchCount, countryCount } = await getChurchStatsAsync();
+  const { churchCountLabel, countryCount } = await getChurchStatsAsync();
 
   return (
-    <div className="mx-auto w-full max-w-6xl space-y-16 px-4 py-10 sm:px-6 lg:px-8">
-      {/* ─── Hero ─── */}
-      <section className="text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-mauve">For churches</p>
-        <h1 className="mx-auto mt-3 max-w-2xl font-serif text-3xl font-semibold leading-tight text-espresso sm:text-5xl">
-          People are looking for a church like yours
-        </h1>
-        <p className="mx-auto mt-5 max-w-lg text-base leading-relaxed text-warm-brown sm:text-lg">
-          They&apos;ll hear your worship and watch your sermons before they ever visit. Make sure what they find is right. <strong className="text-espresso">Completely free.</strong>
+    <>
+      {/* Editorial split hero */}
+      <section className="mx-auto max-w-[1280px] px-5 pt-20 pb-15 sm:px-12 sm:pt-24 sm:pb-16">
+        <div className="grid items-center gap-12 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
+          <div>
+            <p className="gc-eyebrow">For pastors &amp; church leaders</p>
+            <h1
+              className="mt-3.5 m-0 font-serif font-semibold leading-[1.05] tracking-[-0.02em] text-espresso"
+              style={{ fontSize: "clamp(48px, 8vw, 84px)" }}
+            >
+              The page your church <em className="gc-italic">deserves</em>.
+            </h1>
+            <p className="mt-6 max-w-[540px] text-lg leading-relaxed text-warm-brown sm:text-xl">
+              A premium directory page for your church &mdash; Spotify, YouTube, service times, prayer wall, all in one place. Free forever. No ads. No tracking. Built so first-time visitors find what they need before Sunday.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                href="/church/suggest"
+                className="rounded-full bg-rose-gold px-7 py-4 text-sm font-bold text-white transition-all duration-150 hover:-translate-y-px hover:bg-rose-gold-deep hover:shadow-[0_8px_24px_rgba(176,106,80,0.3)]"
+              >
+                Add your church
+              </Link>
+              <Link
+                href="/church"
+                className="rounded-full border border-rose-gold/30 px-7 py-4 text-sm font-semibold text-espresso transition-colors hover:bg-rose-gold/[0.06]"
+              >
+                Claim existing page
+              </Link>
+            </div>
+            <p className="mt-4 text-xs text-muted-warm">Takes 4 minutes. Completely free.</p>
+          </div>
+
+          <div className="relative">
+            <div
+              className="aspect-[3/4] overflow-hidden rounded-[24px] shadow-[var(--shadow-lg)] bg-cover bg-center"
+              style={{
+                backgroundImage:
+                  "url(/hero/intimate-worship.png)",
+              }}
+            />
+            <div className="absolute -bottom-6 -left-6 max-w-[280px] rounded-[18px] border border-rose-gold/[0.10] bg-white px-6 py-5 shadow-[var(--shadow)]">
+              <p className="m-0 mt-1.5 font-serif text-xl font-semibold leading-[1.2] text-espresso">
+                &ldquo;12 new visitors found us last month through GospelChannel.&rdquo;
+              </p>
+              <p className="mt-2 text-xs text-muted-warm">— Jonas, Pastor, London</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Trust strip */}
+      <section
+        className="border-y border-rose-gold/10 px-5 py-8 sm:px-12"
+        style={{ background: "var(--linen-deep)" }}
+      >
+        <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-around gap-6">
+          <p className="m-0 text-[12px] font-bold uppercase tracking-[0.2em] text-muted-warm">
+            Featuring churches in {countryCount}+ countries
+          </p>
+          {TRUST_NAMES.map((n) => (
+            <span
+              key={n}
+              className="font-serif text-xl font-medium tracking-[-0.01em] text-warm-brown opacity-70 sm:text-[22px]"
+            >
+              {n}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      {/* Why list */}
+      <section className="mx-auto max-w-[1280px] px-5 pt-24 sm:px-12 sm:pt-28">
+        <div className="mb-14 text-center">
+          <p className="gc-eyebrow">Why list with us</p>
+          <h2
+            className="mt-3 font-serif font-semibold tracking-[-0.01em] text-espresso"
+            style={{ fontSize: "clamp(36px, 6vw, 56px)" }}
+          >
+            Three things every directory should do.
+          </h2>
+          <p className="mx-auto mt-5 max-w-[580px] text-lg text-warm-brown">
+            And one thing they shouldn&rsquo;t.
+          </p>
+        </div>
+        <div className="grid gap-6 lg:grid-cols-3">
+          {WHY.map((b) => (
+            <div key={b.num} className="rounded-[18px] border border-rose-gold/[0.10] bg-white p-7 shadow-[var(--shadow-sm)]">
+              <p className="m-0 font-serif text-5xl font-medium italic leading-none text-rose-gold">
+                {b.num}
+              </p>
+              <h3 className="mt-3.5 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso">
+                {b.title}
+              </h3>
+              <p className="mt-2.5 text-sm leading-[1.6] text-warm-brown">{b.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Feature grid */}
+      <section className="mx-auto max-w-[1280px] px-5 pt-24 sm:px-12 sm:pt-28">
+        <p className="gc-eyebrow">What&rsquo;s on every page</p>
+        <h2
+          className="mt-3 font-serif font-semibold tracking-[-0.01em] text-espresso"
+          style={{ fontSize: "clamp(32px, 5vw, 44px)" }}
+        >
+          Everything in one place. <em className="gc-italic">Nothing</em> in the way.
+        </h2>
+        <div className="mt-10 grid gap-4 lg:grid-cols-2">
+          {FEATURES.map((f) => (
+            <div
+              key={f.t}
+              className="flex gap-5 rounded-[16px] border border-rose-gold/[0.10] bg-white px-6 py-6"
+            >
+              <div
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-base font-bold text-rose-gold"
+                style={{ background: "var(--linen-deep)" }}
+              >
+                {f.ic}
+              </div>
+              <div>
+                <h4 className="m-0 font-serif text-xl font-semibold tracking-[-0.01em] text-espresso">{f.t}</h4>
+                <p className="mt-1.5 text-[13px] leading-[1.55] text-warm-brown">{f.d}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Pastor quote */}
+      <section className="mx-auto mt-24 max-w-[920px] px-5 text-center sm:px-12 sm:mt-28">
+        <p className="gc-eyebrow">A pastor told us</p>
+        <p
+          className="m-0 mt-5 font-serif font-medium italic leading-[1.3] tracking-[-0.01em] text-espresso"
+          style={{ fontSize: "clamp(28px, 4.5vw, 44px)" }}
+        >
+          &ldquo;We&rsquo;ve had a website for 11 years. The GospelChannel page does what ours never did &mdash; it makes us look like a place you&rsquo;d want to walk into.&rdquo;
+        </p>
+        <p className="mt-6 text-sm tracking-[0.06em] text-warm-brown">
+          Pastor Daniel · Trinity Anglican · Auckland
+        </p>
+      </section>
+
+      {/* How it works */}
+      <section className="mx-auto mt-24 max-w-[1280px] px-5 sm:px-12 sm:mt-28">
+        <p className="gc-eyebrow text-center">The four-minute setup</p>
+        <h2
+          className="mt-3 text-center font-serif font-semibold tracking-[-0.01em] text-espresso"
+          style={{ fontSize: "clamp(32px, 5vw, 44px)" }}
+        >
+          From signup to <em className="gc-italic">live</em>.
+        </h2>
+        <div className="relative mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+          {STEPS.map((s) => (
+            <div key={s.n} className="relative">
+              <div className="z-10 mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-rose-gold font-serif text-xl font-semibold text-white">
+                {s.n}
+              </div>
+              <h4 className="m-0 font-serif text-xl font-semibold tracking-[-0.01em] text-espresso">{s.t}</h4>
+              <p className="mt-2 text-sm leading-[1.55] text-warm-brown">{s.d}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Pricing-honest box */}
+      <section className="mx-auto mt-24 max-w-[920px] px-5 sm:px-12 sm:mt-28">
+        <div className="rounded-[28px] bg-espresso px-12 py-14 text-center text-linen sm:px-12 sm:py-16">
+          <p className="gc-eyebrow" style={{ color: "var(--blush)" }}>
+            Pricing
+          </p>
+          <h2
+            className="mt-3 m-0 font-serif font-semibold tracking-[-0.01em] text-linen"
+            style={{ fontSize: "clamp(36px, 6vw, 56px)" }}
+          >
+            Free. Forever. <em className="gc-italic">Truly</em>.
+          </h2>
+          <p className="mx-auto mt-5 max-w-[560px] text-base leading-relaxed text-linen/75 sm:text-[17px]">
+            We take a small donation from supporting churches who want to. We don&rsquo;t run ads. We don&rsquo;t sell data. We don&rsquo;t gate features. The same page Hillsong has, your village parish has.
+          </p>
+          <Link
+            href="/church/suggest"
+            className="mt-8 inline-flex rounded-full bg-linen px-7 py-4 text-sm font-bold text-espresso transition-all duration-150 hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(255,255,255,0.15)]"
+          >
+            Add your church free
+          </Link>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="mx-auto mt-24 max-w-[920px] px-5 sm:px-12 sm:mt-28">
+        <p className="gc-eyebrow text-center">Common questions</p>
+        <h2
+          className="mt-3 mb-8 text-center font-serif font-semibold tracking-[-0.01em] text-espresso"
+          style={{ fontSize: "clamp(32px, 5vw, 44px)" }}
+        >
+          Before you sign up.
+        </h2>
+        <div>
+          {FAQ.map((f, i) => (
+            <details
+              key={i}
+              className="group border-b border-rose-gold/[0.10] py-6 [&_summary::-webkit-details-marker]:hidden"
+            >
+              <summary className="flex cursor-pointer list-none items-center justify-between font-serif text-xl font-semibold tracking-[-0.01em] text-espresso sm:text-[22px]">
+                <span>{f.q}</span>
+                <span className="text-2xl font-light text-rose-gold transition-transform duration-200 group-open:rotate-45">
+                  +
+                </span>
+              </summary>
+              <p className="mt-4 max-w-[720px] text-[15px] leading-[1.6] text-warm-brown">
+                {f.a}
+              </p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="mx-auto mt-24 max-w-[1280px] px-5 pb-24 text-center sm:px-12 sm:mt-28">
+        <h2
+          className="mx-auto m-0 max-w-[20ch] font-serif font-semibold tracking-[-0.01em] text-espresso"
+          style={{ fontSize: "clamp(36px, 6vw, 56px)" }}
+        >
+          Your next first-time visitor is searching <em className="gc-italic">tonight</em>.
+        </h2>
+        <p className="mt-4 text-sm text-muted-warm">
+          Among {churchCountLabel} churches already listed.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link
-            href="/church"
-            prefetch={false}
-            className="rounded-full bg-espresso px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-warm-brown"
-          >
-            Find your church
-          </Link>
-          <Link
             href="/church/suggest"
-            prefetch={false}
-            className="rounded-full border border-espresso/15 px-6 py-3 text-sm font-semibold text-espresso transition-all duration-200 hover:border-espresso/30 hover:bg-linen-deep/50"
+            className="rounded-full bg-rose-gold px-7 py-4 text-sm font-bold text-white transition-all duration-150 hover:-translate-y-px hover:bg-rose-gold-deep hover:shadow-[0_8px_24px_rgba(176,106,80,0.3)]"
           >
-            Submit a missing church
-          </Link>
-        </div>
-
-        {/* Stats row */}
-        <div className="mx-auto mt-10 flex max-w-md justify-center divide-x divide-espresso/10">
-          {[
-            { value: churchCount, label: "Churches" },
-            { value: countryCount, label: "Countries" },
-            { value: "Free", label: "To claim" },
-          ].map((s) => (
-            <div key={s.label} className="flex-1 px-4">
-              <p className="font-serif text-2xl font-semibold text-espresso sm:text-3xl">{s.value}</p>
-              <p className="mt-0.5 text-xs text-warm-brown/70">{s.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ─── Before / After ─── */}
-      <section>
-        <div className="mb-8 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-mauve">Before and after</p>
-          <h2 className="mt-2 font-serif text-2xl font-semibold text-espresso sm:text-3xl">
-            What visitors see today vs what they could see
-          </h2>
-        </div>
-
-        <div className="grid gap-5 md:grid-cols-2">
-          {/* BEFORE — unclaimed */}
-          <div className="relative">
-            <span className="absolute -top-3 left-5 z-10 rounded-full bg-gray-400 px-3.5 py-1 text-xs font-bold uppercase tracking-wide text-white">
-              Before
-            </span>
-            <div className="rounded-2xl border border-gray-200 bg-gray-50 shadow-sm">
-              {/* Bare header — no image */}
-              <div className="h-24 rounded-t-2xl bg-gradient-to-br from-gray-200 via-gray-150 to-gray-100 sm:h-32" />
-              <div className="space-y-4 p-5 sm:p-6">
-                {/* Name — no badge */}
-                <div className="flex items-center gap-3">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-200 text-xl font-bold text-gray-300">
-                    ?
-                  </div>
-                  <div>
-                    <p className="text-lg font-semibold text-gray-500">Hope Church</p>
-                    <p className="text-xs text-gray-300">Unclaimed page</p>
-                  </div>
-                </div>
-
-                {/* Partial info — some data but gaps */}
-                <div className="space-y-2.5">
-                  <div className="flex items-center gap-2.5 text-sm text-gray-400">
-                    <PinIcon /> <span>London, United Kingdom</span>
-                  </div>
-                  <div className="flex items-center gap-2.5 text-sm text-gray-300">
-                    <ClockIcon /> <span className="italic">No service times listed</span>
-                  </div>
-                  <div className="flex items-center gap-2.5 text-sm text-gray-300">
-                    <GlobeIcon /> <span className="italic">No website linked</span>
-                  </div>
-                </div>
-
-                {/* No playlists */}
-                <div className="flex items-center gap-2.5 text-sm text-gray-300">
-                  <MusicIcon /> <span className="italic">No playlists</span>
-                </div>
-
-                {/* No description */}
-                <div className="rounded-xl border border-dashed border-gray-200 px-4 py-6 text-center text-sm italic text-gray-300">
-                  No story or description
-                </div>
-
-                {/* Outcome */}
-                <p className="text-center text-xs text-gray-300">
-                  First-time visitors land here with too many unanswered questions
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* AFTER — claimed & verified */}
-          <div className="relative">
-            <span className="absolute -top-3 left-5 z-10 rounded-full bg-rose-gold px-3.5 py-1 text-xs font-bold uppercase tracking-wide text-white">
-              After
-            </span>
-            <div className="rounded-2xl border border-rose-200/60 bg-white shadow-md ring-1 ring-rose-gold/15">
-              {/* Hero header with real image */}
-              <div className="relative h-28 overflow-hidden rounded-t-2xl sm:h-36">
-                <Image src="/hero-worship.jpg" alt="" fill className="object-cover" sizes="(max-width: 640px) 100vw, 50vw" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-              </div>
-              <div className="space-y-4 p-5 sm:p-6">
-                {/* Name + verified badge */}
-                <div className="flex items-center gap-3">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-rose-gold/12 text-xl font-bold text-rose-gold">
-                    HC
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <p className="text-lg font-semibold text-espresso">Hope Church London</p>
-                      <span className="inline-flex items-center gap-0.5 rounded-full bg-blue-500/12 px-2 py-0.5 text-[10px] font-bold text-blue-600">
-                        <CheckBadgeIcon />
-                        Verified
-                      </span>
-                    </div>
-                    <p className="text-xs text-warm-brown">London, United Kingdom</p>
-                  </div>
-                </div>
-
-                {/* Complete info + map link */}
-                <div className="space-y-2.5">
-                  {[
-                    { icon: <ClockIcon />, text: "Sundays 9:30 AM & 11:30 AM" },
-                    { icon: <GlobeIcon />, text: "hopechurch.org.uk" },
-                  ].map((f) => (
-                    <div key={f.text} className="flex items-center gap-2.5 text-sm text-espresso">
-                      <span className="text-rose-gold">{f.icon}</span>
-                      <span>{f.text}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Mini map link */}
-                <div className="flex items-center gap-3 rounded-xl border border-rose-200/40 bg-linen-deep/30 p-3">
-                  <div className="flex h-10 w-14 shrink-0 items-center justify-center rounded-lg bg-rose-gold/10">
-                    <PinIcon />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-espresso">42 Worship Lane, London SE1</p>
-                    <p className="text-xs text-warm-brown/60">Open in Google Maps</p>
-                  </div>
-                </div>
-
-                {/* Description */}
-                <div className="rounded-xl bg-blush-light/40 px-4 py-3 text-sm leading-relaxed text-warm-brown">
-                  A welcoming community in the heart of South London. Contemporary worship, verse-by-verse teaching, and real fellowship every Sunday.
-                </div>
-
-                {/* Spotify playlists */}
-                <div className="rounded-xl border border-rose-200/40 bg-white p-3">
-                  <p className="mb-2.5 text-[10px] font-semibold uppercase tracking-wide text-mauve">Playlists</p>
-                  <div className="space-y-2.5">
-                    {[
-                      { name: "Sunday Worship 2026", tracks: "24 tracks" },
-                      { name: "Acoustic Worship", tracks: "18 tracks" },
-                      { name: "Youth Night Setlist", tracks: "12 tracks" },
-                    ].map((pl) => (
-                      <div key={pl.name} className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded bg-gradient-to-br from-rose-gold/20 to-mauve-light/30">
-                          <MusicIcon />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="truncate text-sm font-medium text-espresso">{pl.name}</p>
-                          <p className="text-xs text-warm-brown/60">{pl.tracks}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Verified badge embed preview */}
-                <div className="rounded-xl border border-rose-200/40 bg-linen-deep/20 p-3">
-                  <p className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-mauve">Badge for your website</p>
-                  <div className="flex items-center gap-3">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/badges/concept-4-compact-light.svg"
-                      alt="GospelChannel Verified badge"
-                      width={130}
-                      height={36}
-                      className="shrink-0"
-                    />
-                    <p className="text-xs leading-snug text-warm-brown/70">
-                      Embed this on your own site so first-time visitors know your page is verified
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── How to get started (single section replacing 3 old ones) ─── */}
-      <section className="rounded-3xl border border-rose-200/60 bg-gradient-to-br from-white via-blush-light/20 to-mauve-light/15 p-6 sm:p-10">
-        <div className="mb-8 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-mauve">Get started</p>
-          <h2 className="mt-2 font-serif text-2xl font-semibold text-espresso sm:text-3xl">
-            Three steps. Then let your church speak for itself.
-          </h2>
-        </div>
-
-        <div className="grid gap-6 sm:grid-cols-3">
-          {[
-            {
-              step: "1",
-              title: "Find or add your church",
-              body: "Search for your church. If it's not listed yet, add it with your website and a short description.",
-            },
-            {
-              step: "2",
-              title: "Make it yours",
-              body: "Claim your page. Add your Spotify playlists, YouTube channel, service times, and anything that shows who you are.",
-            },
-            {
-              step: "3",
-              title: "Let people find you",
-              body: "Visitors hear your music and watch your sermons before Sunday. They arrive already knowing this is their kind of place.",
-            },
-          ].map((item) => (
-            <div key={item.step} className="text-center">
-              <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-rose-gold/12 font-serif text-lg font-semibold text-rose-gold">
-                {item.step}
-              </span>
-              <h3 className="mt-4 font-serif text-lg font-semibold text-espresso">{item.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-warm-brown">{item.body}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-10 flex flex-wrap justify-center gap-3">
-          <Link
-            href="/church"
-            className="rounded-full bg-espresso px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-warm-brown"
-          >
-            Find your church
+            Add your church free
           </Link>
           <Link
-            href="/church/suggest"
-            className="rounded-full border border-espresso/15 px-6 py-3 text-sm font-semibold text-espresso transition-all duration-200 hover:border-espresso/30 hover:bg-linen-deep/50"
+            href="/contact"
+            className="rounded-full border border-rose-gold/30 px-7 py-4 text-sm font-semibold text-espresso transition-colors hover:bg-rose-gold/[0.06]"
           >
-            Submit a missing church
+            Talk to us first
           </Link>
         </div>
       </section>
-    </div>
+    </>
   );
 }

@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Suggest a church — GospelChannel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lib/shared.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="lib/shared.jsx"></script>
+<style>
+@media (max-width: 768px) {
+  .sc-grid { grid-template-columns: 1fr !important; gap: 32px !important; padding: 32px 16px 0 !important; }
+  .sc-grid h1 { font-size: 40px !important; }
+  .sc-grid .gc-card { padding: 22px !important; }
+  .sc-grid .gc-card h3 { font-size: 18px !important; }
+  .sc-row-2 { grid-template-columns: 1fr !important; }
+  .sc-row-times { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
+  .sc-row-times .gc-btn { grid-column: 1 / -1; }
+  .sc-role { flex-direction: column !important; }
+  .sc-submit { flex-direction: column !important; align-items: flex-start !important; gap: 16px; }
+  .sc-submit .gc-btn { width: 100%; }
+  .sc-preview { position: static !important; }
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const App = () => {
+  const [name, setName] = React.useState("");
+  const [denom, setDenom] = React.useState("");
+  return (
+    <div className="gc-page">
+      <GCHeader />
+      <section className="sc-grid" style={{ maxWidth: 1100, margin: "0 auto", padding: "60px 48px 0", display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 56 }}>
+        {/* Form */}
+        <div>
+          <p className="gc-eyebrow">Add a new church</p>
+          <h1 className="gc-h1" style={{ fontSize: 60, marginTop: 14 }}>Tell us about your <em className="gc-italic">church</em>.</h1>
+          <p className="gc-lede" style={{ marginTop: 16, maxWidth: 480 }}>
+            The basics now, polish later. We'll review and publish within 24 hours. You can claim it as the official admin afterward.
+          </p>
+
+          <div className="gc-card" style={{ padding: 32, marginTop: 32 }}>
+            <h3 className="gc-h3" style={{ fontSize: 22 }}>The basics</h3>
+            <div style={{ display: "grid", gap: 16, marginTop: 20 }}>
+              <div>
+                <label className="gc-label">Church name</label>
+                <input className="gc-input" placeholder="e.g. Trinity Anglican" value={name} onChange={e => setName(e.target.value)} />
+              </div>
+              <div className="sc-row-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <div>
+                  <label className="gc-label">City</label>
+                  <input className="gc-input" placeholder="Stockholm" />
+                </div>
+                <div>
+                  <label className="gc-label">Country</label>
+                  <input className="gc-input" placeholder="Sweden" />
+                </div>
+              </div>
+              <div>
+                <label className="gc-label">Address</label>
+                <input className="gc-input" placeholder="Götgatan 91, 116 62 Stockholm" />
+              </div>
+              <div>
+                <label className="gc-label">Tradition / denomination</label>
+                <select className="gc-input" value={denom} onChange={e => setDenom(e.target.value)}>
+                  <option value="">Choose one…</option>
+                  {["Pentecostal", "Anglican", "Baptist", "Lutheran", "Catholic", "Orthodox", "Non-denominational", "Charismatic", "Methodist", "Other"].map(d => <option key={d}>{d}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="gc-label">Worship style — pick all that fit</label>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  {["Contemporary", "Hymns", "Gospel", "Liturgical", "Charismatic", "Acoustic", "Choir", "Anthemic", "Bilingual"].map(s => (
+                    <label key={s} style={{ display: "flex", gap: 6, alignItems: "center", padding: "8px 14px", borderRadius: 999, background: "var(--linen-deep)", fontSize: 13, fontWeight: 600, color: "var(--warm-brown)", cursor: "pointer" }}>
+                      <input type="checkbox" style={{ accentColor: "var(--rose-gold)" }} />{s}
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="gc-card" style={{ padding: 32, marginTop: 20 }}>
+            <h3 className="gc-h3" style={{ fontSize: 22 }}>Service times <span style={{ fontSize: 13, fontWeight: 500, color: "var(--muted-warm)", letterSpacing: 0, textTransform: "none" }}>· optional but recommended</span></h3>
+            <div style={{ display: "grid", gap: 10, marginTop: 16 }}>
+              {[0, 1].map(i => (
+                <div key={i} className="sc-row-times" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 0.6fr", gap: 8 }}>
+                  <select className="gc-input" defaultValue="Sunday">{["Sunday", "Saturday", "Wednesday", "Friday"].map(d => <option key={d}>{d}</option>)}</select>
+                  <input className="gc-input" placeholder="Time (11:00)" />
+                  <input className="gc-input" placeholder="Language (English)" />
+                  <button className="gc-btn gc-btn-ghost gc-btn-sm">Remove</button>
+                </div>
+              ))}
+              <button className="gc-btn gc-btn-ghost gc-btn-sm" style={{ alignSelf: "flex-start" }}>+ Add another time</button>
+            </div>
+          </div>
+
+          <div className="gc-card" style={{ padding: 32, marginTop: 20 }}>
+            <h3 className="gc-h3" style={{ fontSize: 22 }}>Links <span style={{ fontSize: 13, fontWeight: 500, color: "var(--muted-warm)", letterSpacing: 0, textTransform: "none" }}>· paste any you have</span></h3>
+            <div style={{ display: "grid", gap: 12, marginTop: 16 }}>
+              {[
+                { l: "Website", p: "https://" },
+                { l: "Spotify", p: "Spotify artist or playlist URL" },
+                { l: "YouTube", p: "Channel URL" },
+                { l: "Instagram", p: "@handle" },
+              ].map(f => (
+                <div key={f.l}>
+                  <label className="gc-label">{f.l}</label>
+                  <input className="gc-input" placeholder={f.p} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="gc-card" style={{ padding: 32, marginTop: 20 }}>
+            <h3 className="gc-h3" style={{ fontSize: 22 }}>About you</h3>
+            <p style={{ fontSize: 13, color: "var(--muted-warm)", marginTop: 4 }}>So we can give you credit and reach out if we need to verify.</p>
+            <div className="sc-row-2" style={{ display: "grid", gap: 12, marginTop: 16, gridTemplateColumns: "1fr 1fr" }}>
+              <div>
+                <label className="gc-label">Your name</label>
+                <input className="gc-input" />
+              </div>
+              <div>
+                <label className="gc-label">Email</label>
+                <input className="gc-input" type="email" />
+              </div>
+              <div style={{ gridColumn: "1 / -1" }}>
+                <label className="gc-label">Are you part of this church?</label>
+                <div className="sc-role" style={{ display: "flex", gap: 10 }}>
+                  {["Pastor / leader", "Member", "Just a fan"].map(o => (
+                    <label key={o} style={{ flex: 1, padding: "14px 18px", border: "var(--border-soft)", borderRadius: 12, display: "flex", gap: 10, alignItems: "center", cursor: "pointer", fontSize: 14 }}>
+                      <input type="radio" name="role" style={{ accentColor: "var(--rose-gold)" }} />{o}
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="sc-submit" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 32, marginBottom: 80 }}>
+            <p style={{ fontSize: 13, color: "var(--muted-warm)" }}>By submitting you agree to our editorial review. We'll email you within 24 hours.</p>
+            <button className="gc-btn gc-btn-primary gc-btn-lg">Submit church</button>
+          </div>
+        </div>
+
+        {/* Live preview */}
+        <div className="sc-preview" style={{ position: "sticky", top: 100, alignSelf: "flex-start" }}>
+          <p className="gc-eyebrow">Live preview</p>
+          <p style={{ fontSize: 13, color: "var(--muted-warm)", marginTop: 6, marginBottom: 16 }}>This is what your card will look like in the directory.</p>
+          <GCChurchCard church={{
+            name: name || "Your Church Name",
+            city: "Stockholm", country: "Sweden",
+            denomination: denom,
+            style: "Contemporary",
+            blurb: "Your one-line description appears here once you fill it in.",
+            verified: false,
+            hasMusic: true, hasService: true,
+            initial: (name || "C")[0],
+          }} />
+          <div style={{ marginTop: 24, padding: 20, background: "var(--linen-deep)", borderRadius: 14 }}>
+            <p style={{ fontSize: 13, fontWeight: 700, color: "var(--espresso)", margin: 0 }}>What happens next?</p>
+            <ol style={{ fontSize: 13, color: "var(--warm-brown)", lineHeight: 1.6, margin: "10px 0 0", paddingLeft: 18 }}>
+              <li>We review for spam — usually within 24h</li>
+              <li>The page goes live with a "Listed by community" tag</li>
+              <li>You (or someone at the church) can claim it to verify</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <GCFooter />
+    </div>
+  );
+};
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

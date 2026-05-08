@@ -146,11 +146,12 @@ async function getTopCountries(range, limit = 8) {
     .slice(0, limit)
     .map(([name, agg]) => ({
       dimensions: { clientCountryName: name },
-      sum: { visits: agg.requests, requests: agg.requests },
+      sum: { requests: agg.requests },
     }));
 }
 
 export function delta(now, before) {
+  if (before == null) return "no comparison";
   if (!before || before < 5) {
     if (now === before) return "no change";
     return now > before ? `+${(now - before).toLocaleString()} (new)` : `−${(before - now).toLocaleString()}`;
@@ -162,20 +163,29 @@ export function delta(now, before) {
 
 export async function generateReport(days = 7) {
   const range = getRanges(days);
-  const [totals, prevTotals, blocked, prevBlocked, topBlockedSources, topCountries] = await Promise.all([
+  const [totals, blocked, topBlockedSources, topCountries] = await Promise.all([
     getTotals(range.current),
-    getTotals(range.previous),
     getBlockedTotals(range.current),
-    getBlockedTotals(range.previous),
     getTopBlockedSources(range.current),
     getTopCountries(range.current),
   ]);
+  let prevTotals = null;
+  let prevBlocked = null;
+  let comparisonError = null;
+  try {
+    [prevTotals, prevBlocked] = await Promise.all([
+      getTotals(range.previous),
+      getBlockedTotals(range.previous),
+    ]);
+  } catch (err) {
+    comparisonError = err instanceof Error ? err.message : String(err);
+  }
   const cacheHitRate = totals.requests > 0 ? totals.cachedRequests / totals.requests : 0;
-  return { range, totals, prevTotals, blocked, prevBlocked, topBlockedSources, topCountries, cacheHitRate };
+  return { range, totals, prevTotals, blocked, prevBlocked, topBlockedSources, topCountries, cacheHitRate, comparisonError };
 }
 
 function renderText(report) {
-  const { range, totals, prevTotals, blocked, prevBlocked, topBlockedSources, topCountries, cacheHitRate } = report;
+  const { range, totals, prevTotals, blocked, prevBlocked, topBlockedSources, topCountries, cacheHitRate, comparisonError } = report;
   const lines = [];
   lines.push("");
   lines.push("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
@@ -186,9 +196,12 @@ function renderText(report) {
   lines.push("");
   lines.push("TRAFFIC TOTALS");
   lines.push("");
-  lines.push(`  Visits:        ${totals.visits.toLocaleString()}  (${delta(totals.visits, prevTotals.visits)} vs prev)`);
-  lines.push(`  Requests:      ${totals.requests.toLocaleString()}  (${delta(totals.requests, prevTotals.requests)} vs prev)`);
+  lines.push(`  Visits:        ${totals.visits.toLocaleString()}  (${delta(totals.visits, prevTotals?.visits)} vs prev)`);
+  lines.push(`  Requests:      ${totals.requests.toLocaleString()}  (${delta(totals.requests, prevTotals?.requests)} vs prev)`);
   lines.push(`  Cache hit:     ${(cacheHitRate * 100).toFixed(1)}%`);
+  if (comparisonError) {
+    lines.push(`  Compared:      unavailable (${comparisonError})`);
+  }
   lines.push("");
   lines.push("WAF / BOT BLOCKING");
   lines.push("");
@@ -204,12 +217,12 @@ function renderText(report) {
   }
   lines.push("");
   if (topCountries.length > 0) {
-    lines.push("TOP COUNTRIES (by visits)");
+    lines.push("TOP COUNTRIES (by requests)");
     lines.push("");
     for (const r of topCountries.slice(0, 8)) {
       const country = (r.dimensions?.clientCountryName || "—").padEnd(4);
-      const visits = String(r.sum.visits).padStart(8);
-      lines.push(`  ${country}  ${visits} visits`);
+      const requests = String(r.sum.requests).padStart(8);
+      lines.push(`  ${country}  ${requests} requests`);
     }
     lines.push("");
   }

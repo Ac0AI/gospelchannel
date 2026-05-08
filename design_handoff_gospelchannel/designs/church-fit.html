@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hillsong Church — GospelChannel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lib/shared.css">
+<style>
+  .fit-page{max-width:480px;margin:0 auto;background:var(--linen);min-height:100vh;position:relative;padding-bottom:96px}
+  .fit-hero{position:relative;height:340px;overflow:hidden}
+  .fit-hero-img{position:absolute;inset:0;background-size:cover;background-position:center}
+  .fit-hero-gradient{position:absolute;inset:0;background:linear-gradient(180deg,rgba(59,42,34,0.1) 0%,rgba(59,42,34,0.7) 100%)}
+  .fit-hero-content{position:absolute;left:20px;right:20px;bottom:60px;color:white}
+  .fit-back{position:absolute;top:16px;left:16px;width:40px;height:40px;border-radius:999px;background:rgba(0,0,0,0.4);backdrop-filter:blur(8px);color:white;display:flex;align-items:center;justify-content:center;border:none;font-size:18px;cursor:pointer;text-decoration:none}
+  .fit-save{position:absolute;top:16px;right:16px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,0.95);color:var(--espresso);border:none;font-size:13px;font-weight:700;cursor:pointer}
+  .fit-name{font-family:var(--font-serif);font-size:34px;font-weight:600;line-height:1.05;letter-spacing:-0.01em;margin:0}
+  .fit-meta-line{display:flex;gap:6px;align-items:center;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;margin-top:8px;opacity:0.92}
+
+  /* FIT CARD — the killer feature */
+  .fit-card{margin:-32px 16px 0;background:white;border-radius:20px;box-shadow:var(--shadow);position:relative;z-index:2;overflow:hidden}
+  .fit-card-top{padding:18px 20px;background:var(--rose-gold);color:white;display:flex;justify-content:space-between;align-items:center}
+  .fit-score{display:flex;align-items:baseline;gap:6px}
+  .fit-score-num{font-family:var(--font-serif);font-size:36px;font-weight:600;line-height:1;letter-spacing:-0.02em}
+  .fit-score-label{font-size:11px;letter-spacing:0.16em;text-transform:uppercase;opacity:0.85}
+  .fit-quiz-link{font-size:12px;color:white;text-decoration:underline;opacity:0.85}
+
+  /* AT-A-GLANCE — the 6 things you actually need */
+  .glance{padding:18px 20px;display:grid;grid-template-columns:1fr 1fr;gap:14px 18px}
+  .glance-item{display:flex;flex-direction:column;gap:2px}
+  .glance-label{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted-warm);font-weight:700}
+  .glance-value{font-size:14px;color:var(--espresso);font-weight:600;line-height:1.3}
+  .glance-sub{font-size:12px;color:var(--warm-brown)}
+
+  /* GOOD FIT TAGS */
+  .fit-tags{padding:0 20px 18px;border-top:var(--border-soft);padding-top:16px;margin:0 0 0}
+  .fit-tags-label{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted-warm);font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .fit-tag-pills{display:flex;flex-wrap:wrap;gap:6px}
+  .fit-tag{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:999px;background:rgba(176,106,80,0.08);font-size:12px;color:var(--rose-gold-deep);font-weight:600}
+
+  /* TABS */
+  .tabs{display:flex;gap:6px;padding:14px 16px 0;overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{padding:8px 14px;border-radius:999px;background:transparent;border:none;font-size:13px;font-weight:600;color:var(--warm-brown);cursor:pointer;white-space:nowrap}
+  .tab-active{background:var(--espresso);color:var(--linen)}
+
+  /* SECTIONS */
+  .sec{padding:24px 20px;border-bottom:var(--border-soft)}
+  .sec-eyebrow{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--mauve);font-weight:700;margin:0 0 8px}
+  .sec-title{font-family:var(--font-serif);font-size:22px;font-weight:600;letter-spacing:-0.01em;margin:0 0 12px}
+  .expect-grid{display:grid;gap:10px}
+  .expect-row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:var(--border-soft)}
+  .expect-row:last-child{border:none}
+  .expect-icon{width:28px;height:28px;border-radius:8px;background:var(--linen-deep);display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-weight:700;color:var(--rose-gold);font-size:14px;flex-shrink:0}
+  .expect-text{flex:1;font-size:14px;color:var(--espresso);line-height:1.5}
+  .expect-text strong{font-weight:700}
+
+  /* PASTOR */
+  .pastor{display:flex;gap:14px;align-items:center}
+  .pastor-img{width:64px;height:64px;border-radius:999px;background-size:cover;background-position:center;flex-shrink:0}
+  .pastor-q{font-family:var(--font-serif);font-style:italic;font-size:16px;color:var(--warm-brown);line-height:1.5;margin-top:12px}
+
+  /* SERVICE TIMES */
+  .times-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .time-card{padding:12px 8px;border-radius:14px;background:var(--linen-deep);text-align:center}
+  .time-day{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted-warm);font-weight:700}
+  .time-time{font-family:var(--font-serif);font-size:20px;font-weight:600;color:var(--espresso);margin-top:4px}
+
+  /* STICKY ACTION BAR */
+  .stick{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(253,248,244,0.96);backdrop-filter:blur(12px);border-top:var(--border);padding:12px 16px;display:flex;gap:8px;z-index:10}
+  .stick-icon-btn{width:48px;height:48px;border-radius:14px;background:white;border:var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--rose-gold);cursor:pointer;text-decoration:none;flex-shrink:0}
+  .stick-cta{flex:1;padding:14px;border-radius:14px;background:var(--rose-gold);color:white;border:none;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+  .stick-cta-sub{font-size:11px;opacity:0.85;font-weight:500}
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="data/hillsong.js"></script>
+</head>
+<body style="background:#e8dccf">
+<div id="root"></div>
+<script type="text/babel">
+const c = window.HILLSONG;
+const next = c.serviceTimes[0];
+
+const App = () => {
+  const [tab, setTab] = React.useState("expect");
+  return (
+    <div className="fit-page">
+      {/* HERO — short, no nonsense */}
+      <div className="fit-hero">
+        <div className="fit-hero-img" style={{ backgroundImage: `url(${c.hero.primary})` }} />
+        <div className="fit-hero-gradient" />
+        <a className="fit-back" href="Search - Säker.html">←</a>
+        <button className="fit-save">♡ Save</button>
+        <div className="fit-hero-content">
+          <div className="fit-meta-line">
+            <span>{c.city.toUpperCase()}</span>
+            <span>·</span>
+            <span>{c.denomination.toUpperCase()}</span>
+            <span>·</span>
+            <span style={{ color: "#f4c9c0" }}>✓ VERIFIED</span>
+          </div>
+          <h1 className="fit-name">{c.name}</h1>
+        </div>
+      </div>
+
+      {/* FIT CARD — the answer to "is this for me?" */}
+      <div className="fit-card">
+        <div style={{ padding: "20px 20px 4px" }}>
+          <p style={{ fontFamily: "var(--font-serif)", fontSize: 17, fontStyle: "italic", color: "var(--warm-brown)", lineHeight: 1.5, margin: 0 }}>{c.tagline}</p>
+          <p style={{ fontSize: 13, color: "var(--warm-brown)", lineHeight: 1.6, margin: "12px 0 0" }}>A contemporary Pentecostal church known worldwide for its worship music. Services move from heartfelt worship into practical, hope-filled teaching.</p>
+        </div>
+
+        <div className="glance" style={{ borderTop: "var(--border-soft)", marginTop: 16 }}>
+          <div className="glance-item">
+            <span className="glance-label">Next service</span>
+            <span className="glance-value">{next.day} {next.time}</span>
+            <span className="glance-sub">In 3 days · {c.serviceDuration} min</span>
+          </div>
+          <div className="glance-item">
+            <span className="glance-label">Style</span>
+            <span className="glance-value">{c.styles[0]}</span>
+            <span className="glance-sub">{c.styles.slice(1, 3).join(" · ")}</span>
+          </div>
+          <div className="glance-item">
+            <span className="glance-label">Size</span>
+            <span className="glance-value">{c.size}</span>
+            <span className="glance-sub">~5,000 weekly</span>
+          </div>
+          <div className="glance-item">
+            <span className="glance-label">Language</span>
+            <span className="glance-value">{c.languages.join(", ")}</span>
+            <span className="glance-sub">Kids program ✓</span>
+          </div>
+        </div>
+
+        <div className="fit-tags">
+          <div className="fit-tags-label">
+            <span>↳</span><span>You'll fit in if you're</span>
+          </div>
+          <div className="fit-tag-pills">
+            {c.goodFitTags.slice(0, 5).map(t => (
+              <span key={t} className="fit-tag">{t}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* TABS */}
+      <div className="tabs">
+        {[
+          { k: "expect", l: "What to expect" },
+          { k: "times", l: "Times & place" },
+          { k: "people", l: "Pastor" },
+          { k: "music", l: "Music" },
+          { k: "faq", l: "FAQ" },
+        ].map(t => (
+          <button key={t.k} className={`tab ${tab === t.k ? "tab-active" : ""}`} onClick={() => setTab(t.k)}>{t.l}</button>
+        ))}
+      </div>
+
+      {/* TAB CONTENT */}
+      {tab === "expect" && (
+        <section className="sec">
+          <p className="sec-eyebrow">First visit</p>
+          <h2 className="sec-title">What it's actually like.</h2>
+          <div className="expect-grid">
+            <div className="expect-row">
+              <div className="expect-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg></div>
+              <div className="expect-text"><strong>~80 minutes.</strong> 30 min worship, 35 min teaching, 15 min response.</div>
+            </div>
+            <div className="expect-row">
+              <div className="expect-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3l-4 3v5l3-1v11h10V10l3 1V6l-4-3-3 2-2-1-3 1z"/></svg></div>
+              <div className="expect-text"><strong>Come as you are.</strong> Suits to t-shirts, all welcome.</div>
+            </div>
+            <div className="expect-row">
+              <div className="expect-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M4 9h13v6a4 4 0 01-4 4H8a4 4 0 01-4-4V9z"/><path d="M17 11h2a2 2 0 010 4h-2M8 3v2M11 3v2M14 3v2"/></svg></div>
+              <div className="expect-text"><strong>Free coffee in foyer.</strong> Connect Desk for first-timers — small welcome gift, no pressure.</div>
+            </div>
+            <div className="expect-row">
+              <div className="expect-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M5 17h14M5 17l2-7h10l2 7M5 17v3M19 17v3"/><circle cx="8" cy="17" r="1.5"/><circle cx="16" cy="17" r="1.5"/></svg></div>
+              <div className="expect-text"><strong>Free parking on-site.</strong> Wheelchair accessible. Sign language at 11 AM.</div>
+            </div>
+            <div className="expect-row">
+              <div className="expect-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="3"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg></div>
+              <div className="expect-text"><strong>Kids program runs in parallel</strong> for ages 0–12.</div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {tab === "times" && (
+        <section className="sec">
+          <p className="sec-eyebrow">When</p>
+          <h2 className="sec-title">Sundays.</h2>
+          <div className="times-grid">
+            {c.serviceTimes.map((t, i) => (
+              <div key={i} className="time-card">
+                <div className="time-day">{t.day}</div>
+                <div className="time-time">{t.time}</div>
+              </div>
+            ))}
+          </div>
+          <p className="sec-eyebrow" style={{ marginTop: 28 }}>Where</p>
+          <h2 className="sec-title">{c.streetAddress.split(",")[0]}</h2>
+          <p style={{ fontSize: 14, color: "var(--warm-brown)", lineHeight: 1.5, margin: 0 }}>{c.streetAddress.split(",").slice(1).join(",").trim()}</p>
+          <div style={{ marginTop: 14, height: 140, borderRadius: 14, background: "var(--linen-deep)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, color: "var(--muted-warm)", letterSpacing: "0.1em" }}>MAP PLACEHOLDER</div>
+        </section>
+      )}
+
+      {tab === "people" && (
+        <section className="sec">
+          <p className="sec-eyebrow">Who leads</p>
+          <h2 className="sec-title">{c.pastor.name}</h2>
+          <div className="pastor">
+            <div className="pastor-img" style={{ backgroundImage: `url(${c.pastor.photo})` }} />
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "var(--espresso)" }}>{c.pastor.name}</div>
+              <div style={{ fontSize: 12, color: "var(--muted-warm)", letterSpacing: "0.06em", marginTop: 2 }}>{c.pastor.title.toUpperCase()}</div>
+            </div>
+          </div>
+          <p className="pastor-q">"{c.pastor.quote}"</p>
+        </section>
+      )}
+
+      {tab === "music" && (
+        <section className="sec">
+          <p className="sec-eyebrow">Sound check</p>
+          <h2 className="sec-title">{c.styles.slice(0, 2).join(" · ")}</h2>
+          <p style={{ fontSize: 14, color: "var(--warm-brown)", lineHeight: 1.5, margin: "0 0 18px" }}>Big-room band. {c.notableArtists.slice(0, 2).join(", ")}, and many more.</p>
+          {c.topSongs.slice(0, 4).map((s, i) => (
+            <div key={i} style={{ display: "flex", gap: 12, alignItems: "center", padding: "10px 0", borderBottom: "var(--border-soft)" }}>
+              <div style={{ width: 28, fontFamily: "var(--font-serif)", color: "var(--rose-gold)", fontWeight: 600, fontSize: 14 }}>0{i + 1}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 14, fontWeight: 600, color: "var(--espresso)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.title}</div>
+                <div style={{ fontSize: 12, color: "var(--muted-warm)" }}>{s.artist} · {s.plays}</div>
+              </div>
+              <button style={{ width: 36, height: 36, borderRadius: 999, background: "var(--linen-deep)", border: "none", color: "var(--rose-gold)", cursor: "pointer" }}>▶</button>
+            </div>
+          ))}
+        </section>
+      )}
+
+      {tab === "faq" && (
+        <section className="sec">
+          <p className="sec-eyebrow">Common questions</p>
+          <h2 className="sec-title">FAQ</h2>
+          {c.faq.map((f, i) => (
+            <details key={i} style={{ padding: "14px 0", borderBottom: "var(--border-soft)" }}>
+              <summary style={{ fontFamily: "var(--font-serif)", fontSize: 17, fontWeight: 600, color: "var(--espresso)", cursor: "pointer", listStyle: "none" }}>{f.q}</summary>
+              <p style={{ fontSize: 14, color: "var(--warm-brown)", lineHeight: 1.55, marginTop: 8 }}>{f.a}</p>
+            </details>
+          ))}
+        </section>
+      )}
+
+      {/* STICKY ACTION BAR */}
+      <div className="stick">
+        <a className="stick-icon-btn" href={`tel:${c.contact.phone}`}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.37 1.9.72 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0122 16.92z"/></svg></a>
+        <a className="stick-icon-btn" href="#" title="Directions"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></a>
+        <button className="stick-cta">
+          Plan my visit
+          <span className="stick-cta-sub">· {next.day} {next.time}</span>
+        </button>
+      </div>
+    </div>
+  );
+};
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
