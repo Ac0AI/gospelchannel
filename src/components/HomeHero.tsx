@@ -5,17 +5,20 @@ import { HeroSearch } from "@/components/HeroSearch";
 
 const HERO_SLIDES = [
   {
-    image: "/hero/worship-arena.png",
+    avif: "/hero/worship-arena.avif",
+    webp: "/hero/worship-arena.webp",
     caption: "Hands raised",
     city: "Contemporary worship",
   },
   {
-    image: "/hero/intimate-worship.png",
+    avif: "/hero/intimate-worship.avif",
+    webp: "/hero/intimate-worship.webp",
     caption: "Eyes closed",
     city: "Sunday morning",
   },
   {
-    image: "/hero/outdoor-gathering.png",
+    avif: "/hero/outdoor-gathering.avif",
+    webp: "/hero/outdoor-gathering.webp",
     caption: "Wide sky",
     city: "Sunset gathering",
   },
@@ -28,8 +31,10 @@ type Props = {
 
 export function HomeHero({ surpriseSlugs, churchCountLabel }: Props) {
   const [idx, setIdx] = useState(0);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
+    setShowAll(true);
     const id = setInterval(() => setIdx((i) => (i + 1) % HERO_SLIDES.length), 5000);
     return () => clearInterval(id);
   }, []);
@@ -39,19 +44,35 @@ export function HomeHero({ surpriseSlugs, churchCountLabel }: Props) {
   return (
     <section className="relative h-[560px] overflow-hidden sm:h-[680px] lg:h-[760px]">
       {/* Rotating background images */}
-      {HERO_SLIDES.map((slide, i) => (
-        <div
-          key={slide.image}
-          aria-hidden="true"
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: `url(${slide.image})`,
-            opacity: i === idx ? 1 : 0,
-            transform: i === idx ? "scale(1.02)" : "scale(1)",
-            transition: "opacity 1.4s ease, transform 7s ease",
-          }}
-        />
-      ))}
+      {HERO_SLIDES.map((slide, i) => {
+        const shouldRender = i === 0 || showAll;
+        return (
+          <div
+            key={slide.avif}
+            aria-hidden="true"
+            className="absolute inset-0"
+            style={{
+              opacity: i === idx ? 1 : 0,
+              transform: i === idx ? "scale(1.02)" : "scale(1)",
+              transition: "opacity 1.4s ease, transform 7s ease",
+            }}
+          >
+            {shouldRender && (
+              <picture>
+                <source srcSet={slide.avif} type="image/avif" />
+                <img
+                  src={slide.webp}
+                  alt=""
+                  loading={i === 0 ? "eager" : "lazy"}
+                  fetchPriority={i === 0 ? "high" : "low"}
+                  decoding="async"
+                  className="absolute inset-0 h-full w-full object-cover object-center"
+                />
+              </picture>
+            )}
+          </div>
+        );
+      })}
 
       {/* Cinematic vertical gradient */}
       <div
