@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
-import { getPrayers } from "@/lib/prayer";
+import { getLatestPrayersWithChurch, getPrayerCountryOptions } from "@/lib/prayer";
 import { PrayerFeed } from "@/components/PrayerFeed";
 import { PrayerWallHero } from "@/components/PrayerWallHero";
 import { PrayerWallFilters } from "@/components/PrayerWallFilters";
-import {
-  getChurchNamesBySlugs,
-  getPrayerFilterIndex,
-} from "@/lib/prayer-filters";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -29,11 +25,16 @@ export const metadata: Metadata = {
 };
 
 export default async function PrayerWallPage() {
-  const [prayers, filterIndex] = await Promise.all([
-    getPrayers({ limit: 8 }),
-    getPrayerFilterIndex(),
+  const [prayersWithChurch, countryOptions] = await Promise.all([
+    getLatestPrayersWithChurch(8),
+    getPrayerCountryOptions(),
   ]);
-  const churchNames = await getChurchNamesBySlugs(prayers.map((prayer) => prayer.churchSlug));
+
+  const prayers = prayersWithChurch.map(({ churchName: _churchName, ...rest }) => rest);
+  const churchNames: Record<string, string> = {};
+  for (const prayer of prayersWithChurch) {
+    churchNames[prayer.churchSlug] = prayer.churchName;
+  }
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -65,7 +66,7 @@ export default async function PrayerWallPage() {
       <div className="sticky top-[64px] z-30 border-y border-rose-gold/10 bg-linen-deep/85 backdrop-blur-md">
         <div className="mx-auto max-w-[1280px] px-5 py-5 sm:px-12">
           <PrayerWallFilters
-            countries={filterIndex.countryOptions}
+            countries={countryOptions}
             cities={[]}
             churches={[]}
           />
@@ -79,6 +80,7 @@ export default async function PrayerWallPage() {
           churchNames={churchNames}
           limit={8}
           showChurch
+          expandable
         />
       </section>
 

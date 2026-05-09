@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { submitPrayer, getPrayers, getPrayersFiltered } from "@/lib/prayer";
+import { submitPrayer, getPrayers, getPrayersFiltered, getChurchNamesForSlugsSQL } from "@/lib/prayer";
 import { getRateLimitValue, hasKvRateLimit, incrementRateLimitValue, setKvRateLimit } from "@/lib/request-guards";
 
 export async function GET(request: NextRequest) {
@@ -10,13 +10,15 @@ export async function GET(request: NextRequest) {
   const limit = Math.min(Number(searchParams.get("limit") || 20), 50);
   const offset = Number(searchParams.get("offset") || 0);
 
-  if (country || city) {
-    const prayers = await getPrayersFiltered({ country, city, churchSlug, limit, offset });
-    return NextResponse.json({ prayers });
-  }
+  const prayers = (country || city)
+    ? await getPrayersFiltered({ country, city, churchSlug, limit, offset })
+    : await getPrayers({ churchSlug, limit, offset });
 
-  const prayers = await getPrayers({ churchSlug, limit, offset });
-  return NextResponse.json({ prayers });
+  const churchNames = await getChurchNamesForSlugsSQL(
+    [...new Set(prayers.map((p) => p.churchSlug))],
+  );
+
+  return NextResponse.json({ prayers, churchNames });
 }
 
 export async function POST(request: NextRequest) {

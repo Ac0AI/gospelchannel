@@ -2,7 +2,13 @@ import { revalidateTag, unstable_cache } from "next/cache";
 import { createAdminClient, hasServiceConfig } from "@/lib/neon-client";
 import { getSql } from "@/db";
 import type { Prayer } from "@/types/gospel";
-import { getChurchSlugsByCity, getChurchSlugsForNetwork, getNormalizedCountryLabel } from "@/lib/prayer-filters";
+import {
+  getChurchSlugsByCity,
+  getChurchSlugsForNetwork,
+  getNormalizedCountryLabel,
+  getNormalizedCountrySlug,
+  type FilterOption,
+} from "@/lib/prayer-filters";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
 
 const PRAYERS_CACHE_TAG = "prayers";
@@ -314,6 +320,94 @@ export async function submitPrayer(
     return prayer;
   }
 }
+
+// Cheap "show me what to render on /prayerwall" queries. Avoids the giant
+// getPrayerFilterIndex() which materialises every church+campus on cold start
+// and was the root cause of the 503s on first hit after R2 cache eviction.
+
+export type PrayerWithChurch = Prayer & { churchName: string };
+
+export const getLatestPrayersWithChurch = unstable_cache(
+  async (limit: number): Promise<PrayerWithChurch[]> => {
+    if (!isPrayerStoreEnabled()) {
+      return listMemoryPrayers().slice(0, limit).map((p) => ({ ...p, churchName: p.churchSlug }));
+    }
+    try {
+      const sql = getSql();
+      const rows = (await sql`
+        SELECT p.id, p.church_slug, p.content, p.original_content, p.author_name,
+               p.prayed_count, p.moderated, p.created_at,
+               c.name AS church_name
+        FROM prayers p
+        JOIN churches c ON c.slug = p.church_slug
+        ORDER BY p.created_at DESC
+        LIMIT ${limit}
+      `) as Array<PrayerRow & { church_name: string | null }>;
+      return rows.map((row) => ({
+        ...mapPrayerRow(row),
+        churchName: row.church_name ?? row.church_slug,
+      }));
+    } catch {
+      prayerStoreUnavailableSince = Date.now();
+      return listMemoryPrayers().slice(0, limit).map((p) => ({ ...p, churchName: p.churchSlug }));
+    }
+  },
+  ["prayers-with-church-v1"],
+  { revalidate: PRAYERS_CACHE_SECONDS, tags: [PRAYERS_CACHE_TAG] }
+);
+
+// Distinct countries that actually have at least one prayer. Used by the
+// /prayerwall filter dropdown. ~50 rows max — far cheaper than building the
+// 80k-church filter index on every cold start.
+// Cheap slug→name lookup for /api/prayer responses. Single IN query, no
+// index materialisation. Used so the "Show more" button on /prayerwall
+// returns prayers that still display their church name.
+export async function getChurchNamesForSlugsSQL(
+  slugs: string[],
+): Promise<Record<string, string>> {
+  if (slugs.length === 0 || !isPrayerStoreEnabled()) return {};
+  try {
+    const sql = getSql();
+    const rows = (await sql`
+      SELECT slug, name FROM churches WHERE slug = ANY(${slugs})
+    `) as Array<{ slug: string; name: string }>;
+    const result: Record<string, string> = {};
+    for (const row of rows) result[row.slug] = row.name;
+    return result;
+  } catch {
+    return {};
+  }
+}
+
+export const getPrayerCountryOptions = unstable_cache(
+  async (): Promise<FilterOption[]> => {
+    if (!isPrayerStoreEnabled()) return [];
+    try {
+      const sql = getSql();
+      const rows = (await sql`
+        SELECT c.country
+        FROM prayers p
+        JOIN churches c ON c.slug = p.church_slug
+        WHERE c.country IS NOT NULL AND c.country <> ''
+        GROUP BY c.country
+        ORDER BY c.country
+      `) as Array<{ country: string }>;
+      const seen = new Map<string, FilterOption>();
+      for (const row of rows) {
+        const slug = getNormalizedCountrySlug(row.country);
+        const label = getNormalizedCountryLabel(row.country);
+        if (slug && label && !seen.has(slug)) {
+          seen.set(slug, { slug, label });
+        }
+      }
+      return [...seen.values()].sort((a, b) => a.label.localeCompare(b.label));
+    } catch {
+      return [];
+    }
+  },
+  ["prayer-country-options-v1"],
+  { revalidate: PRAYERS_CACHE_SECONDS, tags: [PRAYERS_CACHE_TAG] }
+);
 
 export async function getPrayers(options: {
   churchSlug?: string;

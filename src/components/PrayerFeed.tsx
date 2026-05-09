@@ -30,6 +30,7 @@ export type PrayerFeedProps = {
 export const PrayerFeed = forwardRef<PrayerFeedHandle, PrayerFeedProps>(
   function PrayerFeed({ churchSlug, initialPrayers, limit = 5, showChurch = false, churchNames = {}, country, city, expandable = false }, ref) {
     const [prayers, setPrayers] = useState<PrayerItem[]>(initialPrayers);
+    const [names, setNames] = useState<Record<string, string>>(churchNames);
     const [loading, setLoading] = useState(false);
     const [expanded, setExpanded] = useState(false);
 
@@ -45,6 +46,7 @@ export const PrayerFeed = forwardRef<PrayerFeedHandle, PrayerFeedProps>(
         if (res.ok) {
           const data = await res.json();
           setPrayers(data.prayers ?? []);
+          if (data.churchNames) setNames((prev) => ({ ...prev, ...data.churchNames }));
         }
       } catch {}
       setLoading(false);
@@ -73,6 +75,7 @@ export const PrayerFeed = forwardRef<PrayerFeedHandle, PrayerFeedProps>(
         if (res.ok) {
           const data = await res.json();
           setPrayers(data.prayers ?? []);
+          if (data.churchNames) setNames((prev) => ({ ...prev, ...data.churchNames }));
         }
       } catch {}
       setLoading(false);
@@ -90,7 +93,7 @@ export const PrayerFeed = forwardRef<PrayerFeedHandle, PrayerFeedProps>(
             content={prayer.content}
             authorName={prayer.authorName}
             churchSlug={prayer.churchSlug}
-            churchName={churchNames[prayer.churchSlug]}
+            churchName={names[prayer.churchSlug]}
             prayedCount={prayer.prayedCount}
             createdAt={prayer.createdAt}
             showChurch={showChurch}
