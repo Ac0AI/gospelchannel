@@ -51,6 +51,7 @@ const STATIC_ROUTE_PATHS = [
   "/alternatives/churchfinder",
   "/alternatives/gospel-coalition",
   "/alternatives/mychurchfinder",
+  "/for/expats",
 ] as const;
 
 export type SitemapEntry = {

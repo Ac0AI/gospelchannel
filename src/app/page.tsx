@@ -267,6 +267,7 @@ export default async function HomePage() {
             { href: "/church/denomination", label: "By denomination" },
             { href: "/church/city", label: "By city" },
             { href: "/guides", label: "Free guides" },
+            { href: "/for/expats", label: "For expats" },
           ].map((link) => (
             <Link
               key={link.href}

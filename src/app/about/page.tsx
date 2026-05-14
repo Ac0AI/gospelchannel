@@ -154,6 +154,7 @@ export default async function AboutPage() {
             { href: "/alternatives/churchfinder", label: "ChurchFinder.com alternative" },
             { href: "/alternatives/gospel-coalition", label: "Gospel Coalition alternative" },
             { href: "/alternatives/mychurchfinder", label: "MyChurchFinder alternative" },
+            { href: "/for/expats", label: "For expats" },
           ].map((link) => (
             <Link
               key={link.href}
