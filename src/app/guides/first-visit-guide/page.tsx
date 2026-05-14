@@ -11,6 +11,7 @@ import {
   GuideCTA,
 } from "@/components/guides";
 import { ToolPageTracker } from "@/components/tools/ToolPageTracker";
+import { buildGuideSchema } from "@/lib/seo-schema";
 
 export const revalidate = 3600;
 
@@ -71,12 +72,21 @@ function buildFaqSchema() {
 }
 
 export default function FirstVisitGuidePage() {
+  const guideSchema = buildGuideSchema({
+    slug: "first-visit-guide",
+    headline: "Your First Church Visit, Step by Step",
+    description:
+      "You already know the hardest part is the parking lot. This guide walks you through every moment of your first church visit so nothing catches you off guard.",
+  });
+
   return (
     <article className="mx-auto max-w-xl px-4 pb-16 sm:px-6">
       <ToolPageTracker toolName="first_visit_guide" />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqSchema()) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([...guideSchema, buildFaqSchema()]),
+        }}
       />
 
       <GuideHero

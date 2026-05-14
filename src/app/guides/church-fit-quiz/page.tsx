@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ChurchFitQuizClient } from "@/components/tools/ChurchFitQuizClient";
 import { ToolPageTracker } from "@/components/tools/ToolPageTracker";
+import { buildGuideSchema } from "@/lib/seo-schema";
 import { buildDiscoveryLanes } from "@/lib/tooling";
 
 export const revalidate = 3600;
@@ -14,9 +15,19 @@ export const metadata: Metadata = {
 
 export default async function ChurchFitQuizPage() {
   const lanes = buildDiscoveryLanes([]);
+  const schema = buildGuideSchema({
+    slug: "church-fit-quiz",
+    headline: "Church Fit Quiz",
+    description:
+      "Answer seven fast questions about worship style, tradition, and Sunday priorities to find where you'll fit before your first visit.",
+  });
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
       <ToolPageTracker toolName="church_fit_quiz" />
 
       <section className="px-5 pt-14 sm:px-12 sm:pt-16">

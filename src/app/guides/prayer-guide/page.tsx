@@ -9,6 +9,7 @@ import {
   GuideCTA,
 } from "@/components/guides";
 import { ToolPageTracker } from "@/components/tools/ToolPageTracker";
+import { buildGuideSchema } from "@/lib/seo-schema";
 
 export const revalidate = 3600;
 
@@ -48,8 +49,19 @@ const SAMPLE_PRAYERS: Array<{ title: string; text: string }> = [
 ];
 
 export default function PrayerGuidePage() {
+  const schema = buildGuideSchema({
+    slug: "prayer-guide",
+    headline: "How to Start Praying",
+    description:
+      "There is no wrong way to pray. If you don't know what to say, start here. A practical, no-jargon guide to having your first conversation with God.",
+  });
+
   return (
     <article className="mx-auto max-w-xl px-4 pb-16 sm:px-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
       <ToolPageTracker toolName="prayer_guide" />
 
       <GuideHero

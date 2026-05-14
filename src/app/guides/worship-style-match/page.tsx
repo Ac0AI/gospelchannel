@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ToolPageTracker } from "@/components/tools/ToolPageTracker";
 import { WorshipStyleMatchClient } from "@/components/tools/WorshipStyleMatchClient";
 import { getChurchIndexPageData } from "@/lib/church";
+import { buildGuideSchema } from "@/lib/seo-schema";
 import {
   buildSoundProfiles,
   getSoundProfileDirectoryFilters,
@@ -32,8 +33,19 @@ export default async function WorshipStyleMatchPage() {
     }),
   );
 
+  const schema = buildGuideSchema({
+    slug: "worship-style-match",
+    headline: "Church Sound Match",
+    description:
+      "Match your worship taste to church styles and open church pages that already sound closest to home.",
+  });
+
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
       <ToolPageTracker toolName="worship_style_match" />
       <WorshipStyleMatchClient profiles={profiles} />
     </div>

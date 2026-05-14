@@ -1,6 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Page not found – GospelChannel",
+  description:
+    "This page does not exist. Head back to the homepage, search the directory, or take the church fit quiz.",
+  robots: { index: false, follow: true },
+};
 
 export default function NotFound() {
   return (
@@ -53,7 +61,7 @@ export default function NotFound() {
               &ldquo;For the Son of Man came to seek and to save the lost.&rdquo;
             </p>
             <p className="mt-3 text-xs uppercase tracking-[0.1em] text-muted-warm">
-              &mdash; Luke 19:10
+              &ndash; Luke 19:10
             </p>
           </div>
         </div>

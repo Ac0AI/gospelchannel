@@ -5,6 +5,7 @@ import {
   GuideCTA,
 } from "@/components/guides";
 import { ToolPageTracker } from "@/components/tools/ToolPageTracker";
+import { buildGuideSchema } from "@/lib/seo-schema";
 
 export const revalidate = 3600;
 
@@ -149,12 +150,21 @@ function buildFaqSchema() {
 }
 
 export default function FaithFaqPage() {
+  const guideSchema = buildGuideSchema({
+    slug: "faith-faq",
+    headline: "Common Questions About Faith",
+    description:
+      "What is salvation? Why read the Bible? Is baptism required? Honest answers to the questions everyone asks but nobody wants to be the first to say out loud.",
+  });
+
   return (
     <article className="mx-auto max-w-xl px-4 pb-16 sm:px-6">
       <ToolPageTracker toolName="faith_faq" />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqSchema()) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([...guideSchema, buildFaqSchema()]),
+        }}
       />
 
       <GuideHero
