@@ -268,9 +268,9 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
           "You find a free-church congregation, you go once, and the youngest person is twenty years older than you. Nobody did anything wrong; it's just not your tribe. There's usually a student-heavy church in any university town — you just can't tell from the church website which one it is.",
       },
       {
-        title: "The worship at home doesn't translate",
+        title: "The worship at home doesn't always translate",
         body:
-          "You grew up with contemporary worship, gospel, or charismatic. You walk into a 15th-century stone building and there's an organ and three verses of a hymn you've never heard. There's nothing wrong with hymn services; they're just not what's keeping you connected, and you can't tell from outside which is which.",
+          "You grew up with contemporary worship, gospel, or charismatic. You walk into a 15th-century stone building and there's an organ and three verses of a hymn you've never sung. Both styles are loved by their congregations — they're just not interchangeable, and you can't always tell from outside which a specific Sunday will be. A directory that lets you filter on style saves the guesswork.",
       },
     ],
 
@@ -288,7 +288,7 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       {
         title: "Filter by worship style",
         body:
-          "If you grew up with contemporary worship, gospel, charismatic, or Hillsong-style, filter on that. You'll skip the hymn-only congregations not because they're bad but because they're not your tribe — and arrive on Sunday already familiar with the sound.",
+          "If you grew up with contemporary worship, gospel, charismatic, or Hillsong-style, filter on that and you'll arrive on Sunday already familiar with the sound. Hymn-led, blended, and traditional services are all listed too — useful when you want to try them deliberately, not by accident.",
         href: "/church/style",
         cta: "Browse worship styles",
       },
@@ -438,9 +438,9 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
           "Generic church-finders implicitly optimize for families because that's their primary audience. The contemporary, charismatic, or young-adult-heavy congregations in your city are there too, but you have to hunt. The directory should be able to tell you where the 20-somethings actually go.",
       },
       {
-        title: "You don't want a hymn-only Sunday but you don't want a club either",
+        title: "Different worship styles fit different seasons",
         body:
-          "There's a sweet spot between a traditional service that feels like your grandparents' and a fog-and-LED experience that feels like a concert. Contemporary worship done well sits in that spot. You can't always tell from a church website which side of the line a specific congregation falls on.",
+          "There's a real difference between a traditional hymn service and a fully-produced contemporary worship set — both are loved by real people, and neither is wrong. The challenge is that a church website rarely makes it obvious which end of that range a specific Sunday lands at. Visiting blind costs a Sunday you'd rather spend at the right fit.",
       },
       {
         title: "Loneliness compounds when you keep trying and bouncing",
@@ -456,7 +456,7 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       {
         title: "Filter by worship style first",
         body:
-          "Contemporary, gospel, charismatic, Hillsong-style, Bethel-style — pick the sound that matches what you actually want to sing on Sunday morning. The denomination matters less when the worship is right.",
+          "Contemporary, gospel, charismatic, Hillsong-style, Bethel-style, hymn-led, blended — pick the sound that matches what you actually want to sing on Sunday morning. None is better than the others; the directory just helps you start at the style that fits.",
         href: "/church/style",
         cta: "Browse worship styles",
       },
@@ -583,14 +583,14 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       "Most directories grade churches on what works for one adult. Families need more than one adult's worth of fit — and the dimensions that matter shift with each kid added.",
     pains: [
       {
-        title: "The kids' programme is invisible from the website",
+        title: "The kids' programme is hard to read from the website",
         body:
-          "Some churches have a thriving kids ministry. Others list it on the website but in practice run with two volunteers and a vague theme. You can rarely tell from outside — and finding out the hard way costs you a Sunday and possibly your kid's enthusiasm for church-in-general.",
+          "A thriving kids ministry and a smaller, just-getting-started one can look similar on a church website — both describe themselves warmly. Finding out which is which on the day, with two kids in the car, isn't ideal. A directory listing that shows a few specifics up front saves a Sunday.",
       },
       {
-        title: "You don't want fundamentalist undertones around your kids",
+        title: "You want teaching that fits your family's posture",
         body:
-          "There's a difference between gospel-rooted teaching and culture-war coded teaching. Both can use similar language on the website. As a parent you don't want to gamble — you want the broad, welcoming, free-church spirit, not a sermon series that makes you re-explain things on the drive home.",
+          "Every parent has a sense of the texture they want — how questions are handled, how Scripture is taught, how the room handles complexity. Church websites don't always make that texture easy to read. The directory's filters and profile copy help you spot the fit without committing a Sunday to find out.",
       },
       {
         title: "Music for kids vs music for the rest of the room",
@@ -689,9 +689,9 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
     faq_h2: "Family church-finding FAQ",
     faqs: [
       {
-        question: "How do I know if a church has a real kids ministry?",
+        question: "How do I read a church's kids ministry before visiting?",
         answer:
-          "Read the church's profile copy and website carefully. Real kids ministries describe themselves with specifics — age groups, room locations, security policies, what happens during the main service. Vague \"we love families\" copy without specifics usually means small or under-resourced. Visiting once is the only way to be sure.",
+          "Look for specifics in the church's profile copy and on its own website — age groups, room locations, what happens during the main service, sign-in procedures. Specifics usually signal a well-resourced ministry; warmer general language is common at smaller or newer congregations that are still growing the programme. Either can be the right fit — visiting once is the most honest way to know.",
       },
       {
         question: "What denominations are most family-friendly?",
@@ -748,9 +748,9 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
           "Words like sanctification, atonement, doctrine, communion, intercession show up in normal sentences. You can usually piece together what they mean, but it costs concentration you'd rather spend on the actual sermon. A church that explains its own vocabulary from time to time is doing new believers a quiet favour.",
       },
       {
-        title: "You don't know which questions are okay to ask",
+        title: "You don't always know which questions are routine",
         body:
-          "Some churches treat earnest questions about hell, judgement, the Bible, or sexual ethics as healthy. Others go quiet and steer you back to the small group. As a new believer you can't always tell which kind of room you're in until you've asked a question and watched the temperature change. A directory can help signal the difference.",
+          "Churches handle big questions — hell, judgement, Scripture, ethics — in different ways. Some open them up freely; others prefer to handle them in dedicated discipleship classes. Neither is wrong; both can be excellent. But as a new believer it helps to land somewhere that fits how you process — and a directory with detailed profile copy makes that easier to read in advance.",
       },
       {
         title: "Friend who invited you may not be there next week",
@@ -881,36 +881,36 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
 
     meta_title: "Church for Post-Evangelical Seekers — GospelChannel",
     meta_description:
-      "Looking for a free-church or evangelical congregation that isn't fundamentalist? A broader, non-graded directory for people processing church history.",
+      "Looking for a free-church or evangelical congregation while processing your church history? A broader, non-graded directory that lets you set the filter.",
 
     hero_eyebrow: "For deconstructing seekers",
     hero_h1: "A church for people processing their church history",
     hero_lede:
-      "You grew up in church. Something cracked. Maybe a lot of things. You're not sure you can go back to where you came from, and you're not sure you want to leave entirely. GospelChannel doesn't grade churches on a fundamentalist rubric and doesn't pretend there's one right Sunday for everyone — which makes it usable when you're processing what happened.",
+      "You grew up in church. Something cracked. Maybe a lot of things. You're not sure you can go back to where you came from, and you're not sure you want to leave entirely. GospelChannel doesn't grade churches on anyone's confessional rubric and doesn't pretend there's one right Sunday for everyone — which makes it usable when you're processing what happened.",
 
     pain_h2: "The deconstructing-Sunday problem nobody warns you about",
     pain_lede:
       "Most church directories implicitly serve people who never left. Their filters, their language, their assumed audience. Deconstructing seekers hit a different set of problems — quieter than active deconversion, harder to explain than just \"shopping for a new church.\"",
     pains: [
       {
-        title: "Triggers fire faster than discernment",
+        title: "Familiar phrases fire faster than discernment",
         body:
-          "You walk in. The pastor uses a phrase your home pastor used. Your shoulders go up. Half an hour in you're tracking everything against an old grid: would this congregation have hurt the friend who got hurt at the old place? You can't tell whether the answer is yes or no, and the suspicion is doing all the work the worship was supposed to.",
+          "You walk in. The pastor uses a phrase your home pastor used. Your shoulders go up. Half an hour in you're tracking everything against an old grid — and the comparison is doing all the work the worship was supposed to. That isn't fair to the congregation in front of you; it's also not something you can fully switch off in week one.",
       },
       {
-        title: "You're not interested in being scored",
+        title: "You're tired of being scored",
         body:
-          "Directories that grade churches on a 45-point theological rubric assume there's an obvious right answer. After what you've seen, there isn't. The scoring itself is part of what made you tired. A list that doesn't pretend to settle anything for you is more useful than one that ranks congregations on someone else's confidence.",
+          "Some directories grade churches on a confessional rubric and rank accordingly. After a hard season, that scoring itself can be part of what's tiring. A list that doesn't try to settle the question for you — that just shows what's there and lets you decide — is more usable when you're still working things out.",
       },
       {
-        title: "You want community without ideology in the water",
+        title: "You want community without low-grade tension every Sunday",
         body:
-          "You still want Sunday singing, the lifelong-friend vibe, communion, prayer. You don't want a sermon that doubles as a political position paper. The line between formative theology and culture-war coding is real and it's hard to spot from a website. You need a directory that doesn't assume the latter is fine.",
+          "You still want Sunday singing, the lifelong-friend vibe, communion, prayer. You don't necessarily want every sermon to land on the same set of contemporary debates. The line between formative theology and topical emphasis is real and it's hard to spot from a website — you need a way to read the room before you walk in.",
       },
       {
         title: "Going alone feels safer than going wrong",
         body:
-          "After a bad-fit congregation, going by yourself feels manageable. Going with friends doubles the stakes — you don't want to lead someone else into a Sunday that hurts them or that you have to explain afterwards. Months pass. The not-going hardens into a pattern that wasn't actually what you wanted.",
+          "After a season of hard fit, going alone feels manageable. Going with friends or family doubles the stakes — you don't want to lead someone else into a Sunday that lands wrong or that you have to explain afterwards. Months pass. The not-going hardens into a pattern that wasn't actually what you wanted.",
       },
     ],
 
@@ -928,14 +928,14 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       {
         title: "Filter by tradition you already trust",
         body:
-          "If your old church hurt you but the wider Vineyard tradition didn't, browse Vineyard. If you're easier with Anglican texture than Pentecostal intensity right now, that's an honest filter. Use what works; revisit later when other things stop being tender.",
+          "If the wider Vineyard or Baptist or Anglican feel of things sits well with you right now and another tradition feels tender, that's an honest filter. Use what works for this season; revisit later when other things stop being raw. The directory doesn't judge the filter choice.",
         href: "/church/denomination",
         cta: "Browse denominations",
       },
       {
         title: "Hear the music first",
         body:
-          "For some deconstructing seekers, the worship is the safest entry point — it lets you sit with the room before words land. Profiles with Spotify or YouTube give you a preview. If a track sets your teeth on edge in your own kitchen, you know to skip the Sunday.",
+          "For many in this season, the worship is the easiest entry point — it lets you sit with the room before words land. Profiles with Spotify or YouTube give you a preview. If a track lands well at your kitchen table, the Sunday is worth trying. If it doesn't, you've saved both your time and the congregation's.",
         href: "/church",
         cta: "Browse the directory",
       },
@@ -955,19 +955,19 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       {
         title: "Anglican churches",
         description:
-          "Anglican congregations vary widely but the tradition itself sits comfortably with questions and intellectual breadth. A common landing point for deconstructing evangelicals.",
+          "Anglican congregations vary widely; the tradition itself has long sat comfortably with hard questions and intellectual breadth. A common landing point for evangelicals in this season.",
         href: "/church/denomination/anglican",
       },
       {
         title: "Vineyard churches",
         description:
-          "Warm, low-jargon, charismatic-but-not-shouty. Vineyard tends to handle doubt without panic.",
+          "Warm, low-jargon, charismatic-but-grounded. Vineyard congregations tend to make space for doubt and questions as part of normal church life.",
         href: "/church/denomination/vineyard",
       },
       {
         title: "Non-denominational churches",
         description:
-          "Each non-denominational congregation is its own thing. That means some will fit and some won't — but it also means the tradition itself doesn't carry baggage you might be done with.",
+          "Each non-denominational congregation is its own thing. That variety means it's worth reading individual profiles — but it also means you're not signing on to a specific denominational identity you may not be ready for.",
         href: "/church/denomination/non-denominational",
       },
       {
@@ -1004,9 +1004,9 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
           "We're broad rather than aligned. We don't grade churches against a confessional rubric, we don't assume everyone has the same theology, and we cover the wider free-church spectrum from charismatic to Reformed Baptist. That makes the directory usable when you're processing church history, even though we're not specifically a deconstruction project.",
       },
       {
-        question: "Will I just end up at a church that looks like the one that hurt me?",
+        question: "How do I avoid landing somewhere that feels like the place I came from?",
         answer:
-          "You might if you don't filter carefully. The denomination filter, the worship-style filter, and the church's own profile copy are the main tools. If the original wound was specifically high-control fundamentalism, browse Anglican, Vineyard, or broader non-denominational congregations first — those tend to handle questions and dissent better. Visiting and leaving after one Sunday is a fine response if something feels off.",
+          "The denomination filter, the worship-style filter, and the church's own profile copy are the main tools. If a specific tradition feels tender right now, browse a different tradition first — Anglican, Vineyard, and broader non-denominational congregations are common starting points for people who want a softer entry. Visiting once and not returning is a fine response if a specific Sunday doesn't fit; that's not a judgement on the church, just a fit signal for you.",
       },
       {
         question: "Do I have to be sure of what I believe to use the directory?",
