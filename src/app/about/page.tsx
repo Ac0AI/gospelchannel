@@ -151,6 +151,7 @@ export default async function AboutPage() {
             { href: "/guides", label: "Free guides" },
             { href: "/for-churches", label: "For churches" },
             { href: "/european-church-tech-2026", label: "European Church Tech 2026" },
+            { href: "/alternatives/churchfinder", label: "ChurchFinder.com alternative" },
           ].map((link) => (
             <Link
               key={link.href}

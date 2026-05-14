@@ -121,6 +121,30 @@ export default async function GuidesPage() {
         </div>
       </section>
 
+      {/* Comparing directories */}
+      <section className="mx-auto mt-20 max-w-[1280px] px-5 sm:px-12">
+        <p className="gc-eyebrow">Comparing directories</p>
+        <h2 className="mt-3 font-serif text-3xl font-semibold tracking-[-0.01em] text-espresso sm:text-4xl">
+          GospelChannel vs other church-finders.
+        </h2>
+        <div className="mt-10 grid gap-5 sm:grid-cols-2">
+          <article className="rounded-[18px] border border-rose-gold/[0.10] bg-white p-7">
+            <h3 className="font-serif text-xl font-semibold tracking-[-0.01em] text-espresso">
+              ChurchFinder.com alternative
+            </h3>
+            <p className="mt-2.5 text-sm leading-[1.6] text-warm-brown">
+              How GospelChannel compares with the largest US directory — what we cover better, where they still win.
+            </p>
+            <Link
+              href="/alternatives/churchfinder"
+              className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-rose-gold transition-colors hover:text-rose-gold-deep"
+            >
+              Read comparison &rarr;
+            </Link>
+          </article>
+        </div>
+      </section>
+
       {quizzes.length > 0 && (
         <section className="mx-auto mt-20 max-w-[1280px] px-5 pb-24 sm:px-12">
           <p className="gc-eyebrow">Interactive</p>

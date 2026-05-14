@@ -137,7 +137,7 @@ describe("sitemap-data", () => {
   it("computes the total sitemap entry count from section counts", async () => {
     getChurchDirectorySeedCountAsyncMock.mockResolvedValue(3);
 
-    await expect(getSitemapEntryCount()).resolves.toBe(26);
+    await expect(getSitemapEntryCount()).resolves.toBe(29);
   });
 
   it("builds chunk 0 from the exact church slice without touching later DB slices", async () => {
@@ -150,11 +150,12 @@ describe("sitemap-data", () => {
 
     expect(entries).toHaveLength(2_500);
     expect(entries[0]?.url).toBe("https://gospelchannel.com");
-    expect(entries[9]?.url).toBe("https://gospelchannel.com/compare");
-    expect(entries[10]?.url).toBe("https://gospelchannel.com/european-church-tech-2026");
-    expect(entries[11]?.url).toBe("https://gospelchannel.com/church/church-0");
-    expect(entries.at(-1)?.url).toBe("https://gospelchannel.com/church/church-2488");
-    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(0, 2_489);
+    expect(entries[11]?.url).toBe("https://gospelchannel.com/compare");
+    expect(entries[12]?.url).toBe("https://gospelchannel.com/european-church-tech-2026");
+    expect(entries[13]?.url).toBe("https://gospelchannel.com/alternatives/churchfinder");
+    expect(entries[14]?.url).toBe("https://gospelchannel.com/church/church-0");
+    expect(entries.at(-1)?.url).toBe("https://gospelchannel.com/church/church-2485");
+    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(0, 2_486);
     expect(getNetworksSliceMock).not.toHaveBeenCalled();
     expect(getPublishedCampusesSliceMock).not.toHaveBeenCalled();
   });
@@ -168,6 +169,9 @@ describe("sitemap-data", () => {
     const entries = await buildSitemapEntriesForChunk(2);
 
     expect(entries.map((entry) => entry.url)).toEqual([
+      "https://gospelchannel.com/church/church-4986",
+      "https://gospelchannel.com/church/church-4987",
+      "https://gospelchannel.com/church/church-4988",
       "https://gospelchannel.com/church/church-4989",
       "https://gospelchannel.com/church/church-4990",
       "https://gospelchannel.com/church/church-4991",
@@ -194,7 +198,7 @@ describe("sitemap-data", () => {
       "https://gospelchannel.com/prayerwall/church/prayer-1",
       "https://gospelchannel.com/prayerwall/church/prayer-2",
     ]);
-    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(4_989, 13);
+    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(4_986, 16);
     expect(getNetworksSliceMock).toHaveBeenCalledWith(0, 1);
     expect(getPublishedCampusesSliceMock).toHaveBeenCalledWith(0, 1);
   });

@@ -44,8 +44,11 @@ const STATIC_ROUTE_PATHS = [
   "/guides/church-fit-quiz",
   "/guides/first-visit-guide",
   "/guides/worship-style-match",
+  "/guides/prayer-guide",
+  "/guides/faith-faq",
   "/compare",
   "/european-church-tech-2026",
+  "/alternatives/churchfinder",
 ] as const;
 
 export type SitemapEntry = {
