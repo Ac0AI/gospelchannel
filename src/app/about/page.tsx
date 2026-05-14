@@ -152,6 +152,7 @@ export default async function AboutPage() {
             { href: "/for-churches", label: "For churches" },
             { href: "/european-church-tech-2026", label: "European Church Tech 2026" },
             { href: "/alternatives/churchfinder", label: "ChurchFinder.com alternative" },
+            { href: "/alternatives/gospel-coalition", label: "Gospel Coalition alternative" },
           ].map((link) => (
             <Link
               key={link.href}

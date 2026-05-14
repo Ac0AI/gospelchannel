@@ -228,4 +228,170 @@ export const ALTERNATIVES: Record<string, AlternativeData> = {
     cta_lede:
       "Browse the directory, take the church fit quiz, or jump straight to your country, city, or worship style.",
   },
+
+  "gospel-coalition": {
+    slug: "gospel-coalition",
+    competitor_name: "The Gospel Coalition",
+    competitor_url: "https://www.thegospelcoalition.org/churches",
+
+    meta_title: "Gospel Coalition Directory Alternative — GospelChannel",
+    meta_description:
+      "A free, broader Gospel Coalition Church Directory alternative — 72,000+ free-church congregations across 104 countries, no Reformed-only filter.",
+
+    hero_eyebrow: "The Gospel Coalition alternative",
+    hero_h1: "Looking for a Gospel Coalition Church Directory alternative?",
+    hero_lede:
+      "GospelChannel is the broader, music-aware church directory for people who like The Gospel Coalition's mission but don't want a Reformed-only filter. Free, global, 72,000+ free-church congregations, with Spotify playlists and worship-style filters on every profile.",
+
+    table_h2: "Best Gospel Coalition Church Directory alternatives in 2026",
+    table_lede:
+      "The Gospel Coalition's directory is a small, hand-vetted list of Reformed and Reformed-leaning churches. GospelChannel is wider, more music-led, and covers the whole free-church spectrum. Here's how the two compare.",
+    comparison_rows: [
+      {
+        feature: "Price",
+        yours: { state: "text", note: "Free for visitors and churches" },
+        theirs: { state: "text", note: "Free to browse" },
+      },
+      {
+        feature: "Theological filter",
+        yours: { state: "text", note: "Broad free-church / evangelical / charismatic" },
+        theirs: { state: "text", note: "Reformed / Reformed-leaning only" },
+      },
+      {
+        feature: "Number of churches",
+        yours: { state: "text", note: "72,000+ globally" },
+        theirs: { state: "text", note: "A few thousand, hand-vetted" },
+      },
+      {
+        feature: "Countries covered",
+        yours: { state: "text", note: "104" },
+        theirs: { state: "text", note: "Primarily United States" },
+      },
+      {
+        feature: "Spotify playlists on church profiles",
+        yours: { state: "yes", note: "Every claimable church" },
+        theirs: { state: "no" },
+      },
+      {
+        feature: "YouTube video grid on church profiles",
+        yours: { state: "yes" },
+        theirs: { state: "no" },
+      },
+      {
+        feature: "Filter by worship style",
+        yours: { state: "yes", note: "Contemporary, gospel, charismatic, etc." },
+        theirs: { state: "no" },
+      },
+      {
+        feature: "Filter by language",
+        yours: { state: "yes" },
+        theirs: { state: "no" },
+      },
+      {
+        feature: "Church can self-claim and edit free",
+        yours: { state: "yes" },
+        theirs: { state: "partial", note: "Application + vetting required" },
+      },
+      {
+        feature: "First-visit and faith guides",
+        yours: { state: "yes", note: "5 guides, no signup" },
+        theirs: { state: "yes", note: "Article archive" },
+      },
+      {
+        feature: "Prayer wall",
+        yours: { state: "yes" },
+        theirs: { state: "no" },
+      },
+      {
+        feature: "Open data for AI search (llms.txt)",
+        yours: { state: "yes" },
+        theirs: { state: "no" },
+      },
+    ],
+
+    switch_h2: "Why people use GospelChannel alongside The Gospel Coalition",
+    switch_lede:
+      "Most people don't actually pick one or the other — they read The Gospel Coalition for content, then use GospelChannel as the directory because the directory itself is built for finding a church, not validating one.",
+    switch_reasons: [
+      {
+        title: "Broader than Reformed",
+        body:
+          "The Gospel Coalition vets every listed church against a specific Reformed-leaning confessional standard. That's a feature for some readers and a wall for others. GospelChannel is built around the whole free-church segment — Pentecostal, Vineyard, non-denominational, charismatic, Baptist, Reformed, and more — without locking anyone out for being on the wrong side of an internal theological line.",
+      },
+      {
+        title: "Hear the worship before you commit",
+        body:
+          "TGC's directory tells you a church's confessional position. It does not tell you whether the Sunday service has a piano or an eight-piece band. GospelChannel profiles pull in the church's own Spotify playlists and YouTube videos so you can actually hear the worship style before you walk in — useful when two churches share a denomination but feel completely different.",
+      },
+      {
+        title: "Global, not US-shaped",
+        body:
+          "TGC's church directory is heavily US-centric, with thinner coverage internationally. GospelChannel covers 72,000+ churches across 104 countries with deliberate focus on free-church traditions worldwide. If you're an expat, an international student, or moving abroad for work, you'll find more usable coverage here.",
+      },
+      {
+        title: "Free for churches with no application gauntlet",
+        body:
+          "Any free-church congregation can claim and edit a GospelChannel profile in minutes — service times, photos, playlists, what a first visit feels like. The Gospel Coalition's directory expects churches to apply and meet a confessional standard before listing. Both approaches make sense; they just optimize for different things.",
+      },
+    ],
+
+    honesty_h2: "Where The Gospel Coalition still wins",
+    honesty_lede:
+      "We're not trying to replace what The Gospel Coalition does. They're excellent at things we deliberately don't do. Three places where their directory is the better tool.",
+    honesty_rows: [
+      {
+        feature: "Theological vetting and confessional clarity",
+        body:
+          "Every church in TGC's directory has been checked against a specific confessional standard. If your search criterion is literally 'a Reformed church that holds to historic creeds', their list is exactly the right shape and ours is too broad. We list across the free-church spectrum without confessional gates.",
+      },
+      {
+        feature: "Editorial brand and ecosystem",
+        body:
+          "TGC is first a publishing platform — articles, books, conferences — and the directory is part of that ecosystem. Many readers already trust TGC's editorial voice, so a church endorsed by TGC carries weight. We don't have an editorial brand of that depth; we're a directory first.",
+      },
+      {
+        feature: "Reformed conference and content discovery",
+        body:
+          "If you're trying to find Reformed conferences, podcasts, or thinkers alongside finding a church, TGC's directory is embedded in a larger ecosystem that connects all of those. GospelChannel is laser-focused on the directory — we point you to a church, not to a constellation of resources around it.",
+      },
+    ],
+
+    faq_h2: "Gospel Coalition Church Directory alternative FAQ",
+    faqs: [
+      {
+        question: "Is GospelChannel a Reformed church directory?",
+        answer:
+          "No. GospelChannel is built around the broader free-church segment — evangelical, charismatic, Pentecostal, non-denominational, Vineyard, Baptist (including Reformed Baptist), and similar. Some Reformed churches are listed but Reformed theology is not a filter or a requirement for inclusion. If you specifically want a Reformed-only directory, The Gospel Coalition is a better starting point.",
+      },
+      {
+        question: "Can I use both GospelChannel and The Gospel Coalition?",
+        answer:
+          "Yes, and most people do. The Gospel Coalition is strongest as a content platform and a confessional vetted list. GospelChannel is strongest as a global directory with worship-music integration and self-claim profiles. They solve different parts of the same problem and don't conflict.",
+      },
+      {
+        question: "Does GospelChannel vet churches theologically?",
+        answer:
+          "We verify that a listed entry is in fact a church and that the basic facts (location, contact info, denomination tag) are correct. We do not vet against a specific confession. Visitors evaluate fit themselves using denomination, worship-style filters, playlists, videos, and the church's own profile copy. Pastors who claim their profile can update their tradition, language, and worship style at any time.",
+      },
+      {
+        question: "Why doesn't GospelChannel just adopt TGC's confessional standard?",
+        answer:
+          "Because we cover free-church traditions that include charismatic, Pentecostal, and non-Reformed evangelical churches that wouldn't pass that standard but are still real congregations worth helping people find. Narrowing to one confession would shrink the directory by an order of magnitude and exclude many of the churches our users are actually looking for.",
+      },
+      {
+        question: "Is GospelChannel free for churches and visitors?",
+        answer:
+          "Yes. Browsing the directory is free for visitors, and claiming and editing a church profile is free for churches. No paid tiers today; we may add optional paid promotion features later, but the core directory will stay free.",
+      },
+      {
+        question: "Does GospelChannel cover churches outside the United States?",
+        answer:
+          "Yes. We list 72,000+ churches across 104 countries with strong coverage across Europe, the Americas, and parts of Asia and Africa. The Gospel Coalition's directory is more US-centric, so international visitors and expats often find GospelChannel's coverage more usable.",
+      },
+    ],
+
+    cta_h2: "Find a church that fits — without a confessional gate",
+    cta_lede:
+      "Browse the directory, filter by worship style, or take the church fit quiz to find a free-church congregation near you.",
+  },
 };
