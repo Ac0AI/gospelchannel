@@ -5,7 +5,10 @@ type GuideSlug =
   | "first-visit-guide"
   | "worship-style-match"
   | "prayer-guide"
-  | "faith-faq";
+  | "faith-faq"
+  | "worship-styles-explained"
+  | "denominations-comparison"
+  | "how-to-find-the-right-church";
 
 const ALL_GUIDES: Record<GuideSlug, { href: string; label: string }> = {
   "church-fit-quiz": { href: "/guides/church-fit-quiz", label: "Church Fit Quiz" },
@@ -13,6 +16,9 @@ const ALL_GUIDES: Record<GuideSlug, { href: string; label: string }> = {
   "worship-style-match": { href: "/guides/worship-style-match", label: "Worship Style Match" },
   "prayer-guide": { href: "/guides/prayer-guide", label: "How to Start Praying" },
   "faith-faq": { href: "/guides/faith-faq", label: "Common Questions About Faith" },
+  "worship-styles-explained": { href: "/guides/worship-styles-explained", label: "Worship Styles Explained" },
+  "denominations-comparison": { href: "/guides/denominations-comparison", label: "Denominations Compared" },
+  "how-to-find-the-right-church": { href: "/guides/how-to-find-the-right-church", label: "How to Find the Right Church" },
 };
 
 const HUB_ROUTES: Array<{ href: string; label: string }> = [

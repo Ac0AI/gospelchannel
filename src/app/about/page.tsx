@@ -160,6 +160,9 @@ export default async function AboutPage() {
             { href: "/for/families", label: "For families" },
             { href: "/for/new-believers", label: "For new believers" },
             { href: "/for/deconstructing", label: "For deconstructing seekers" },
+            { href: "/guides/how-to-find-the-right-church", label: "How to find the right church" },
+            { href: "/guides/worship-styles-explained", label: "Worship styles explained" },
+            { href: "/guides/denominations-comparison", label: "Denominations compared" },
           ].map((link) => (
             <Link
               key={link.href}

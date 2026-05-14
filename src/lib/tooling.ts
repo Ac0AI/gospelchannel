@@ -177,6 +177,24 @@ export const GUIDE_CARDS: ToolCard[] = [
     eyebrow: "Guide",
     icon: "book",
   },
+  {
+    href: "/guides/how-to-find-the-right-church",
+    title: "How to Find the Right Church",
+    description: "A seven-step framework that takes you from no plan to a short list of churches worth visiting — usually inside an hour.",
+    eyebrow: "Capstone",
+  },
+  {
+    href: "/guides/worship-styles-explained",
+    title: "Worship Styles Explained",
+    description: "Eight worship styles you'll meet across free-church congregations — how each sounds and who tends to land where.",
+    eyebrow: "Reference",
+  },
+  {
+    href: "/guides/denominations-comparison",
+    title: "Denominations Compared",
+    description: "Baptist, Pentecostal, charismatic, Vineyard, non-denominational, and more — what each tradition emphasises in plain language.",
+    eyebrow: "Reference",
+  },
 ];
 
 export const COMPARE_CARDS: CompareCard[] = [

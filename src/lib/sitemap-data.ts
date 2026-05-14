@@ -57,6 +57,9 @@ const STATIC_ROUTE_PATHS = [
   "/for/families",
   "/for/new-believers",
   "/for/deconstructing",
+  "/guides/worship-styles-explained",
+  "/guides/denominations-comparison",
+  "/guides/how-to-find-the-right-church",
 ] as const;
 
 export type SitemapEntry = {
