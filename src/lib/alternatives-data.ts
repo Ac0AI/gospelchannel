@@ -65,12 +65,12 @@ export const ALTERNATIVES: Record<string, AlternativeData> = {
 
     meta_title: "ChurchFinder.com Alternative — GospelChannel (free, global)",
     meta_description:
-      "GospelChannel is a free, global ChurchFinder.com alternative: 72,000+ gospel- and worship-focused churches with Spotify playlists on every profile.",
+      "GospelChannel is a free, global ChurchFinder.com alternative: 72,000+ gospel- and worship-focused churches with built-in Spotify and YouTube support.",
 
     hero_eyebrow: "ChurchFinder.com alternative",
     hero_h1: "Looking for a ChurchFinder.com alternative?",
     hero_lede:
-      "GospelChannel is the gospel- and worship-focused church directory ChurchFinder.com isn't. You get 72,000+ churches across 104 countries, Spotify and YouTube on every profile, and filters that actually match worship style — not just denomination.",
+      "GospelChannel is the gospel- and worship-focused church directory ChurchFinder.com isn't. You get 72,000+ churches across 104 countries, built-in Spotify and YouTube support on church profiles (with growing coverage), and filters that actually match worship style — not just denomination.",
 
     table_h2: "Best ChurchFinder.com alternatives in 2026",
     table_lede:
@@ -88,7 +88,7 @@ export const ALTERNATIVES: Record<string, AlternativeData> = {
       },
       {
         feature: "Spotify playlists on church profiles",
-        yours: { state: "yes", note: "Every claimable church" },
+        yours: { state: "yes", note: "Built-in; growing coverage" },
         theirs: { state: "no" },
       },
       {
@@ -145,7 +145,7 @@ export const ALTERNATIVES: Record<string, AlternativeData> = {
       {
         title: "Hear the worship before you walk in",
         body:
-          "Every church profile pulls in the church's own Spotify playlists and YouTube videos. Before you set an alarm for Sunday morning you can actually hear whether the worship is contemporary, gospel, charismatic, hymn-based, or something else. No other free directory does this — and it changes how quickly visitors find a fit.",
+          "Church profiles can pull in the church's own Spotify playlists and YouTube videos — coverage is growing and a meaningful share of profiles already have it. Before you set an alarm for Sunday morning you can often hear whether the worship is contemporary, gospel, charismatic, hymn-based, or something else. No other free directory has this kind of music integration built in at all.",
       },
       {
         title: "Filter by worship style, not just denomination",
@@ -200,7 +200,7 @@ export const ALTERNATIVES: Record<string, AlternativeData> = {
       {
         question: "How is GospelChannel different from ChurchFinder.com?",
         answer:
-          "Two big differences. First, every GospelChannel profile pulls in Spotify playlists and YouTube videos, so you can actually hear the worship before you visit. Second, our focus is the global free-church, evangelical, charismatic, and gospel-worship segment — not every Christian tradition. ChurchFinder is broader and more US-centric.",
+          "Two big differences. First, GospelChannel profiles have built-in support for the church's own Spotify playlists and YouTube videos so you can actually hear the worship before you visit — coverage is growing and many profiles already include it. Second, our focus is the global free-church, evangelical, charismatic, and gospel-worship segment — not every Christian tradition. ChurchFinder is broader and more US-centric.",
       },
       {
         question: "Does GospelChannel cover Catholic or Orthodox churches?",
@@ -241,7 +241,7 @@ export const ALTERNATIVES: Record<string, AlternativeData> = {
     hero_eyebrow: "The Gospel Coalition alternative",
     hero_h1: "Looking for a Gospel Coalition Church Directory alternative?",
     hero_lede:
-      "GospelChannel is the broader, music-aware church directory for people who like The Gospel Coalition's mission but don't want a Reformed-only filter. Free, global, 72,000+ free-church congregations, with Spotify playlists and worship-style filters on every profile.",
+      "GospelChannel is the broader, music-aware church directory for people who like The Gospel Coalition's mission but don't want a Reformed-only filter. Free, global, 72,000+ free-church congregations, with built-in Spotify and YouTube support and worship-style filtering.",
 
     table_h2: "Best Gospel Coalition Church Directory alternatives in 2026",
     table_lede:
@@ -269,7 +269,7 @@ export const ALTERNATIVES: Record<string, AlternativeData> = {
       },
       {
         feature: "Spotify playlists on church profiles",
-        yours: { state: "yes", note: "Every claimable church" },
+        yours: { state: "yes", note: "Built-in; growing coverage" },
         theirs: { state: "no" },
       },
       {
@@ -321,7 +321,7 @@ export const ALTERNATIVES: Record<string, AlternativeData> = {
       {
         title: "Hear the worship before you commit",
         body:
-          "TGC's directory tells you a church's confessional position. It does not tell you whether the Sunday service has a piano or an eight-piece band. GospelChannel profiles pull in the church's own Spotify playlists and YouTube videos so you can actually hear the worship style before you walk in — useful when two churches share a denomination but feel completely different.",
+          "TGC's directory tells you a church's confessional position. It does not tell you whether the Sunday service has a piano or an eight-piece band. GospelChannel profiles can carry the church's own Spotify playlists and YouTube videos — coverage is growing, and many profiles already have it — so you can often hear the worship style before you walk in. Useful when two churches share a denomination but feel completely different.",
       },
       {
         title: "Global, not US-shaped",
@@ -393,5 +393,171 @@ export const ALTERNATIVES: Record<string, AlternativeData> = {
     cta_h2: "Find a church that fits — without a confessional gate",
     cta_lede:
       "Browse the directory, filter by worship style, or take the church fit quiz to find a free-church congregation near you.",
+  },
+
+  mychurchfinder: {
+    slug: "mychurchfinder",
+    competitor_name: "MyChurchFinder",
+    competitor_url: "https://mychurchfinder.org",
+
+    meta_title: "MyChurchFinder Alternative — GospelChannel (free, global)",
+    meta_description:
+      "A free, broader MyChurchFinder alternative: 72,000+ free-church congregations with worship-style filters and built-in Spotify and YouTube support.",
+
+    hero_eyebrow: "MyChurchFinder alternative",
+    hero_h1: "Looking for a MyChurchFinder alternative?",
+    hero_lede:
+      "GospelChannel is the music-led, broader-spectrum church directory for people who want to find a free-church congregation without grading every option against a 45-point theological checklist. Free, global, 72,000+ churches, with built-in Spotify and YouTube support and worship-style filtering.",
+
+    table_h2: "Best MyChurchFinder alternatives in 2026",
+    table_lede:
+      "MyChurchFinder is opinionated — it grades churches against 45 theological and cultural criteria and ranks accordingly. GospelChannel is wider and music-led: you decide what matters, then filter by worship style, denomination, language, or country. Here is how the two compare.",
+    comparison_rows: [
+      {
+        feature: "Price",
+        yours: { state: "text", note: "Free for visitors and churches" },
+        theirs: { state: "text", note: "Free to browse" },
+      },
+      {
+        feature: "Approach to fit",
+        yours: { state: "text", note: "Filter-driven; visitor decides criteria" },
+        theirs: { state: "text", note: "45-point graded score per church" },
+      },
+      {
+        feature: "Theological angle",
+        yours: { state: "text", note: "Broad free-church / evangelical" },
+        theirs: { state: "text", note: "Opinionated conservative / Reformed-leaning" },
+      },
+      {
+        feature: "Number of churches",
+        yours: { state: "text", note: "72,000+ globally" },
+        theirs: { state: "text", note: "Smaller, curated US list" },
+      },
+      {
+        feature: "Countries covered",
+        yours: { state: "text", note: "104" },
+        theirs: { state: "text", note: "Primarily United States" },
+      },
+      {
+        feature: "Spotify playlists on church profiles",
+        yours: { state: "yes", note: "Built-in; growing coverage" },
+        theirs: { state: "no" },
+      },
+      {
+        feature: "YouTube video grid on church profiles",
+        yours: { state: "yes" },
+        theirs: { state: "no" },
+      },
+      {
+        feature: "Filter by worship style",
+        yours: { state: "yes", note: "Contemporary, gospel, charismatic, etc." },
+        theirs: { state: "no" },
+      },
+      {
+        feature: "Filter by language",
+        yours: { state: "yes" },
+        theirs: { state: "no" },
+      },
+      {
+        feature: "Church can self-claim and edit free",
+        yours: { state: "yes" },
+        theirs: { state: "partial" },
+      },
+      {
+        feature: "Prayer wall",
+        yours: { state: "yes" },
+        theirs: { state: "no" },
+      },
+      {
+        feature: "Open data for AI search (llms.txt)",
+        yours: { state: "yes" },
+        theirs: { state: "no" },
+      },
+    ],
+
+    switch_h2: "Why people pick GospelChannel over MyChurchFinder",
+    switch_lede:
+      "MyChurchFinder optimizes for a very specific kind of theological certainty. GospelChannel optimizes for finding a church you actually want to attend on Sunday. Both are valid; here is why most visitors end up on our side of that line.",
+    switch_reasons: [
+      {
+        title: "You set the criteria, not us",
+        body:
+          "MyChurchFinder scores every church against 45 fixed theological and cultural criteria, then surfaces the ones that pass. GospelChannel hands you the filters — denomination, worship style, language, country, city — and lets you decide what matters. Useful when your own criteria don't map neatly onto someone else's 45-point grid.",
+      },
+      {
+        title: "Hear the worship before you visit",
+        body:
+          "A 45-point theological score does not tell you whether the Sunday service has hymns, contemporary worship, gospel choirs, or a Bethel-style set. GospelChannel profiles can carry the church's own Spotify playlists and YouTube videos — coverage is growing, and many already do — so you can often decide in 30 seconds whether the music fits. That's something theological scoring deliberately ignores.",
+      },
+      {
+        title: "Bigger directory, more countries",
+        body:
+          "MyChurchFinder's strength is depth on a curated US list. GospelChannel covers 72,000+ churches across 104 countries with strong free-church coverage worldwide. If you're moving abroad, studying overseas, or just live somewhere outside the MyChurchFinder catchment area, the wider directory helps.",
+      },
+      {
+        title: "Less ideological friction",
+        body:
+          "If you're an evangelical, charismatic, or Pentecostal believer who doesn't share every position on MyChurchFinder's grading rubric, their score can make perfectly good churches look 'wrong'. GospelChannel doesn't grade; it lists. You weigh tradition, worship, location, and language yourself — without an algorithm nudging you toward a specific theological camp.",
+      },
+    ],
+
+    honesty_h2: "Where MyChurchFinder still wins",
+    honesty_lede:
+      "MyChurchFinder is genuinely useful for a specific audience and we won't pretend they're not. Three places they do something we deliberately don't.",
+    honesty_rows: [
+      {
+        feature: "Explicit theological grading",
+        body:
+          "If you know exactly what you believe and you want a churchfinder that has already filtered out churches that disagree with you on baptism, eschatology, or complementarianism, MyChurchFinder is built for that. We list across the free-church spectrum and trust visitors to decide for themselves, which means a stricter reader may find our directory too permissive.",
+      },
+      {
+        feature: "Opinionated curation over scale",
+        body:
+          "MyChurchFinder's smaller, hand-evaluated list reflects deliberate editorial work. Every church has been graded by humans against a fixed rubric. We cover 100× as many churches but with AI-assisted enrichment and pastor self-claims — broader, but with less per-church editorial vetting.",
+      },
+      {
+        feature: "A clear compass for conservative seekers",
+        body:
+          "MyChurchFinder gives someone deep in a specific Reformed or conservative tradition a clear ranked compass. We deliberately don't take theological positions on a church's behalf, which is liberating for some visitors and frustrating for those who specifically want a curated, opinionated answer.",
+      },
+    ],
+
+    faq_h2: "MyChurchFinder alternative FAQ",
+    faqs: [
+      {
+        question: "Does GospelChannel grade churches like MyChurchFinder does?",
+        answer:
+          "No. GospelChannel lists churches and lets visitors filter by tradition, worship style, denomination, language, and location. We don't assign theological scores or rank churches against a fixed rubric. If you want a directory that explicitly grades churches on theology and culture, MyChurchFinder is the right tool for that.",
+      },
+      {
+        question: "Is GospelChannel only for Reformed or conservative evangelicals?",
+        answer:
+          "No. We cover the broader free-church segment — evangelical, charismatic, Pentecostal, Baptist (including Reformed Baptist), non-denominational, Vineyard, and similar. Some Reformed churches are listed but Reformed theology is not a filter for inclusion. If you want a Reformed- or conservative-only directory, MyChurchFinder or The Gospel Coalition fits better.",
+      },
+      {
+        question: "Is GospelChannel free?",
+        answer:
+          "Yes. Browsing is free for visitors, and any free-church congregation can claim and edit a profile for free. No paid tiers today. We may add optional paid promotion later, but the core directory stays free.",
+      },
+      {
+        question: "How does GospelChannel handle worship style?",
+        answer:
+          "Worship style is a primary filter alongside denomination and country. We tag churches by contemporary, gospel, charismatic, traditional, Hillsong-style, Bethel-style, and similar. Church profiles can pull in the church's own Spotify playlists and YouTube videos so you can hear the actual music before you visit — coverage is growing, and many profiles already have it. MyChurchFinder doesn't filter on worship style and doesn't surface church music at all.",
+      },
+      {
+        question: "Can my church get listed on GospelChannel for free?",
+        answer:
+          "Yes. If your church is already in our database you can claim and edit it for free at any time. If not, you can submit it via /church/suggest and we'll review and publish. We don't gate listing on a theological standard — we list across the free-church spectrum.",
+      },
+      {
+        question: "Does GospelChannel cover churches outside the United States?",
+        answer:
+          "Yes. We list 72,000+ churches across 104 countries with strong coverage across Europe, the Americas, and parts of Asia and Africa. MyChurchFinder is more US-focused, so international users typically find GospelChannel's coverage more usable abroad.",
+      },
+    ],
+
+    cta_h2: "Find a church on your terms",
+    cta_lede:
+      "Filter by what actually matters to you — worship style, language, country, denomination — and hear the music before you visit.",
   },
 };

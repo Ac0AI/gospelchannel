@@ -156,6 +156,20 @@ export default async function GuidesPage() {
               Read comparison &rarr;
             </Link>
           </article>
+          <article className="rounded-[18px] border border-rose-gold/[0.10] bg-white p-7">
+            <h3 className="font-serif text-xl font-semibold tracking-[-0.01em] text-espresso">
+              MyChurchFinder alternative
+            </h3>
+            <p className="mt-2.5 text-sm leading-[1.6] text-warm-brown">
+              The music-led, broader-spectrum alternative to MyChurchFinder&rsquo;s 45-point theological grading &ndash; you set the criteria.
+            </p>
+            <Link
+              href="/alternatives/mychurchfinder"
+              className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-rose-gold transition-colors hover:text-rose-gold-deep"
+            >
+              Read comparison &rarr;
+            </Link>
+          </article>
         </div>
       </section>
 

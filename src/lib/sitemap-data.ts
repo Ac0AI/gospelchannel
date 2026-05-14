@@ -50,6 +50,7 @@ const STATIC_ROUTE_PATHS = [
   "/european-church-tech-2026",
   "/alternatives/churchfinder",
   "/alternatives/gospel-coalition",
+  "/alternatives/mychurchfinder",
 ] as const;
 
 export type SitemapEntry = {
