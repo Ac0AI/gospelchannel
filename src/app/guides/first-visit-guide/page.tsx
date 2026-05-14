@@ -9,6 +9,7 @@ import {
   GuideTip,
   GuideWorryCard,
   GuideCTA,
+  GuideRelated,
 } from "@/components/guides";
 import { ToolPageTracker } from "@/components/tools/ToolPageTracker";
 import { buildGuideSchema } from "@/lib/seo-schema";
@@ -247,6 +248,8 @@ export default function FirstVisitGuidePage() {
           { label: "Browse churches", href: "/church" },
         ]}
       />
+
+      <GuideRelated current="first-visit-guide" />
     </article>
   );
 }

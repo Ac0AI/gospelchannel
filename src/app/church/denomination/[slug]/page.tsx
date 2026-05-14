@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ChurchCollectionPage } from "@/components/ChurchCollectionPage";
 import {
   filterChurchDirectory,
+  getCityLinks,
   getCountryLinks,
   getDenominationFilterBySlug,
   getStyleLinks,
@@ -84,6 +85,7 @@ export default async function DenominationPage({ params, searchParams }: Denomin
       ]}
       relatedSections={[
         { title: `${filter.label} by Country`, links: getCountryLinks(filtered, 12) },
+        { title: `${filter.label} by City`, links: getCityLinks(filtered, 12) },
         { title: `${filter.label} Worship Styles`, links: getStyleLinks(filtered, 8) },
       ]}
     />

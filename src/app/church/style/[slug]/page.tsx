@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import { ChurchCollectionPage } from "@/components/ChurchCollectionPage";
 import {
   filterChurchDirectory,
+  getCityLinks,
   getCountryLinks,
+  getDenominationLinks,
   getStyleFilterBySlug,
   paginateChurches,
 } from "@/lib/church-directory";
@@ -83,6 +85,8 @@ export default async function StylePage({ params, searchParams }: StylePageProps
       ]}
       relatedSections={[
         { title: `${filter.seoLabel} by Country`, links: getCountryLinks(filtered, 12) },
+        { title: `${filter.seoLabel} by City`, links: getCityLinks(filtered, 12) },
+        { title: `${filter.seoLabel} by Denomination`, links: getDenominationLinks(filtered, 8) },
       ]}
     />
   );

@@ -5,3 +5,4 @@ export { GuideQuote } from "./GuideQuote";
 export { GuideTip } from "./GuideTip";
 export { GuideWorryCard } from "./GuideWorryCard";
 export { GuideCTA } from "./GuideCTA";
+export { GuideRelated } from "./GuideRelated";

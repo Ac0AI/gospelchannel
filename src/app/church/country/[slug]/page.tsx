@@ -5,6 +5,7 @@ import {
   filterChurchDirectory,
   getCityLinks,
   getCountryLabelFromSlug,
+  getDenominationLinks,
   getStyleLinks,
   paginateChurches,
 } from "@/lib/church-directory";
@@ -83,6 +84,7 @@ export default async function CountryPage({ params, searchParams }: CountryPageP
       relatedSections={[
         { title: `Cities in ${countryLabel}`, links: getCityLinks(filtered, 12) },
         { title: `Worship Styles in ${countryLabel}`, links: getStyleLinks(filtered, 8) },
+        { title: `Denominations in ${countryLabel}`, links: getDenominationLinks(filtered, 8) },
       ]}
     />
   );

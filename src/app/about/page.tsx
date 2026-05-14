@@ -139,6 +139,30 @@ export default async function AboutPage() {
         </div>
       </section>
 
+      {/* Explore links */}
+      <section className="mx-auto mt-20 max-w-[920px] px-5 sm:px-12">
+        <p className="gc-eyebrow">Explore</p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {[
+            { href: "/church/country", label: "Browse by country" },
+            { href: "/church/style", label: "Browse by worship style" },
+            { href: "/church/denomination", label: "Browse by denomination" },
+            { href: "/church/city", label: "Browse by city" },
+            { href: "/guides", label: "Free guides" },
+            { href: "/for-churches", label: "For churches" },
+            { href: "/european-church-tech-2026", label: "European Church Tech 2026" },
+          ].map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="inline-flex rounded-full border border-rose-gold/20 bg-white px-4 py-2 text-sm font-semibold text-warm-brown transition-colors hover:border-rose-gold/40 hover:bg-rose-gold/[0.04] hover:text-espresso"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* Closing CTA + scripture */}
       <section className="mx-auto mt-24 max-w-[920px] px-5 pb-24 text-center sm:px-12 sm:mt-28 sm:pb-32">
         <h2
@@ -148,7 +172,7 @@ export default async function AboutPage() {
           Get in <em className="gc-italic">touch</em>.
         </h2>
         <p className="mx-auto mt-5 max-w-[520px] text-base leading-relaxed text-warm-brown sm:text-lg">
-          We read every email. Press, partnerships, pastors with questions, theologians with concerns &mdash; all welcome.
+          We read every email. Press, partnerships, pastors with questions, theologians with concerns &ndash; all welcome.
         </p>
         <p className="mt-8 font-serif text-2xl font-medium italic text-rose-gold sm:text-3xl lg:text-[32px]">
           hello@gospelchannel.com
@@ -170,7 +194,7 @@ export default async function AboutPage() {
         </div>
 
         <p className="mx-auto mt-14 max-w-[520px] font-serif text-base italic leading-relaxed text-muted-warm sm:text-lg">
-          &ldquo;For where two or three gather in my name, there am I with them.&rdquo; &mdash; Matthew 18:20
+          &ldquo;For where two or three gather in my name, there am I with them.&rdquo; &ndash; Matthew 18:20
         </p>
       </section>
     </>

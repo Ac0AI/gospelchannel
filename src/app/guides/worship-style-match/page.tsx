@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { GuideRelated } from "@/components/guides";
 import { ToolPageTracker } from "@/components/tools/ToolPageTracker";
 import { WorshipStyleMatchClient } from "@/components/tools/WorshipStyleMatchClient";
 import { getChurchIndexPageData } from "@/lib/church";
@@ -48,6 +49,7 @@ export default async function WorshipStyleMatchPage() {
       />
       <ToolPageTracker toolName="worship_style_match" />
       <WorshipStyleMatchClient profiles={profiles} />
+      <GuideRelated current="worship-style-match" />
     </div>
   );
 }

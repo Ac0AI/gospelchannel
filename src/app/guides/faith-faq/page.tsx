@@ -3,6 +3,7 @@ import {
   GuideHero,
   GuideWorryCard,
   GuideCTA,
+  GuideRelated,
 } from "@/components/guides";
 import { ToolPageTracker } from "@/components/tools/ToolPageTracker";
 import { buildGuideSchema } from "@/lib/seo-schema";
@@ -225,6 +226,8 @@ export default function FaithFaqPage() {
           { label: "Browse churches", href: "/church" },
         ]}
       />
+
+      <GuideRelated current="faith-faq" />
     </article>
   );
 }

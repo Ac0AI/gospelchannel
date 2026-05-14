@@ -7,6 +7,7 @@ import {
   GuideStep,
   GuideQuote,
   GuideCTA,
+  GuideRelated,
 } from "@/components/guides";
 import { ToolPageTracker } from "@/components/tools/ToolPageTracker";
 import { buildGuideSchema } from "@/lib/seo-schema";
@@ -230,6 +231,8 @@ export default function PrayerGuidePage() {
           { label: "Browse churches", href: "/church" },
         ]}
       />
+
+      <GuideRelated current="prayer-guide" />
     </article>
   );
 }

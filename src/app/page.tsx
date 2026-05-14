@@ -257,6 +257,29 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Browse-by hub links — feed the spine */}
+      <section className="mx-auto mt-16 max-w-[1280px] px-5 sm:px-12">
+        <p className="gc-eyebrow">More ways to browse</p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {[
+            { href: "/church/country", label: "By country" },
+            { href: "/church/style", label: "By worship style" },
+            { href: "/church/denomination", label: "By denomination" },
+            { href: "/church/city", label: "By city" },
+            { href: "/guides", label: "Free guides" },
+          ].map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              prefetch={false}
+              className="inline-flex rounded-full border border-rose-gold/20 bg-white px-4 py-2 text-sm font-semibold text-warm-brown transition-colors hover:border-rose-gold/40 hover:bg-rose-gold/[0.04] hover:text-espresso"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* 6. Suggest CTA */}
       <section className="mx-auto mt-20 max-w-[1280px] px-5 sm:px-12">
         <div

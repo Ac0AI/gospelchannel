@@ -327,6 +327,9 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
     primaryDenominationFilter
       ? { href: `/church/denomination/${primaryDenominationFilter.slug}`, label: `${primaryDenominationFilter.label} churches` }
       : null,
+    primaryStyleFilter
+      ? { href: "/guides/worship-style-match", label: "Match my worship style" }
+      : { href: "/guides/first-visit-guide", label: "First visit guide" },
   ].filter((link): link is { href: string; label: string } => Boolean(link));
   const videoSchemaItems = videos
     .filter((video) => Boolean(video.publishedAt && video.thumbnailUrl))
