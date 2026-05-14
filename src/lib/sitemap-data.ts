@@ -105,10 +105,16 @@ function buildStaticRoute(path: string, lastModified: Date): SitemapEntry {
   };
 }
 
-function buildChurchRoute(church: Pick<ChurchDirectorySeed, "slug">, lastModified: Date): SitemapEntry {
+function buildChurchRoute(
+  church: Pick<ChurchDirectorySeed, "slug" | "updatedAt">,
+  lastModified: Date,
+): SitemapEntry {
+  const parsed = church.updatedAt ? new Date(church.updatedAt) : null;
+  const perChurchLastModified =
+    parsed && !Number.isNaN(parsed.getTime()) ? parsed : lastModified;
   return {
     url: `${BASE_URL}/church/${church.slug}`,
-    lastModified,
+    lastModified: perChurchLastModified,
     changeFrequency: "daily",
     priority: 0.8,
   };

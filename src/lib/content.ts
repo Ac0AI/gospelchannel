@@ -44,7 +44,9 @@ const CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS = Array.from(new Set([
 export type ChurchDirectorySeed = Pick<
   ChurchConfig,
   "slug" | "name" | "country" | "location" | "musicStyle" | "denomination"
->;
+> & {
+  updatedAt?: string;
+};
 
 export type HomepageShowcaseChurch = {
   slug: string;
@@ -66,6 +68,7 @@ type ChurchDirectorySeedRow = {
   location: string | null;
   music_style: string[] | null;
   denomination: string | null;
+  updated_at: string | null;
 };
 
 type ChurchDataRow = ChurchDirectorySeedRow & {
@@ -158,6 +161,7 @@ function toChurchDirectorySeed(church: ChurchConfig): ChurchDirectorySeed {
     location: church.location,
     musicStyle: church.musicStyle,
     denomination: church.denomination,
+    updatedAt: church.verifiedAt ?? church.lastResearched,
   };
 }
 
@@ -303,6 +307,7 @@ function mapRowToChurchDirectorySeed(row: ChurchDirectorySeedRow): ChurchDirecto
     location: row.location || undefined,
     musicStyle: row.music_style || undefined,
     denomination: row.denomination || undefined,
+    updatedAt: row.updated_at ?? undefined,
   };
 }
 
@@ -468,7 +473,7 @@ async function fetchApprovedChurchDirectorySeedChunkFromDb(
       LIMIT $2
       OFFSET $3
     )
-    SELECT c.slug, c.name, c.country, c.location, c.music_style, c.denomination
+    SELECT c.slug, c.name, c.country, c.location, c.music_style, c.denomination, c.updated_at
     FROM ranked r
     JOIN churches c ON c.slug = r.slug
     ORDER BY c.name, c.slug
