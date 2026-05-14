@@ -34,6 +34,9 @@ export function HomeHero({ surpriseSlugs, churchCountLabel }: Props) {
   const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
+    // Defer rendering of slides 1-N until after hydration so the SSR'd LCP
+    // image (slide 0) stays on the critical path. See commit 6b8ea0b2.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setShowAll(true);
     const id = setInterval(() => setIdx((i) => (i + 1) % HERO_SLIDES.length), 5000);
     return () => clearInterval(id);
