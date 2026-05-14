@@ -150,6 +150,11 @@ export default function RootLayout({
             <main>{children}</main>
             <SiteFooter />
         </PostHogProvider>
+        <script
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon='{"token":"f381bf96c18d4f10b6ef85d142093fcb"}'
+        />
       </body>
     </html>
   );
