@@ -69,16 +69,16 @@ const DENOMINATIONS: Array<{
     href: "/church/denomination/non-denominational",
   },
   {
-    slug: "vineyard",
-    name: "Vineyard",
-    oneLine: "Warm, charismatic-but-grounded, born out of the 1970s Jesus movement.",
+    slug: "charismatic",
+    name: "Charismatic",
+    oneLine: "Spirit-empowered, expressive, networked rather than centrally organised.",
     shape:
-      "The Vineyard movement emerged from the broader charismatic renewal in California in the 1970s and 1980s, shaped by leaders like John Wimber. Vineyard churches hold a charismatic theology of the Spirit's gifts, an emphasis on the Kingdom of God breaking into the present, and a famously warm, low-jargon culture. The Vineyard songbook has shaped modern worship significantly.",
+      "Charismatic Christianity emerged from the mid-20th-century renewal movements and now spans many independent networks rather than a single central denomination. Key networks listed under this label include Vineyard, Hillsong Network, C3, Newfrontiers, Bethel, Every Nation, ICF, and Planetshakers. Shared distinctives: openness to the Holy Spirit's gifts (prophecy, healing, tongues), an emphasis on the Kingdom of God breaking into the present, and warm, low-jargon culture.",
     worship:
-      "Contemporary, often charismatic, with extended worship sets and intentional space for spontaneous prayer or prophecy. Less concert-feel than Hillsong-style; more emphasis on a worshipping room than a performing stage.",
+      "Contemporary and often spontaneous — extended worship sets, intentional space for prayer and prophecy, full-band music drawn from the Vineyard, Hillsong, Bethel, and Elevation songbooks. Production values range from intimate (Vineyard) to high-energy concert-feel (Hillsong-network).",
     fits:
-      "If you want charismatic substance without the high-production-value tone, or you've found big-stage Sundays distracting. Vineyard congregations tend to be unusually welcoming to people new to faith or processing church history.",
-    href: "/church/denomination/vineyard",
+      "If you want Spirit-led worship and expect prayer for healing and prophecy as normal parts of church life. The Vineyard end of the spectrum is particularly welcoming to people new to faith or processing church history; the Hillsong end skews bigger and more produced. Browse the network range to find which fits.",
+    href: "/church/denomination/charismatic",
   },
   {
     slug: "methodist",

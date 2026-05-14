@@ -490,8 +490,8 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       {
         title: "Contemporary worship",
         description:
-          "Full-band worship in the lineage of Hillsong, Bethel, Elevation, and the wider modern-worship tradition. The default sound for most 20-something free-church congregations.",
-        href: "/church/style/contemporary",
+          "Full-band modern worship — covering the Hillsong, Bethel, and Elevation lineages all in one umbrella. The default sound for most 20-something free-church congregations.",
+        href: "/church/style/contemporary-worship",
       },
       {
         title: "Gospel worship",
@@ -502,20 +502,20 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       {
         title: "Charismatic worship",
         description:
-          "Spirit-led, expressive, often spontaneous worship — overlapping but distinct from contemporary. Includes Pentecostal-tradition congregations and newer charismatic networks.",
+          "Spirit-led, expressive, often spontaneous worship — covers Vineyard, Hillsong, Bethel, and the wider charismatic networks.",
         href: "/church/style/charismatic",
       },
       {
-        title: "Hillsong-network style",
+        title: "High-energy worship",
         description:
-          "Hillsong Network churches and congregations that lean heavily on Hillsong Worship's catalog and stage culture. Tends to skew younger and big-city.",
-        href: "/church/style/hillsong",
+          "Christian rock-influenced services and the louder end of contemporary worship — driving guitars, strong build-and-release, concert-style production.",
+        href: "/church/style/rock",
       },
       {
-        title: "Bethel-influenced",
+        title: "Charismatic denominations",
         description:
-          "Churches shaped by Bethel Music's sound — spontaneous, prophetic, often charismatic. A meaningful slice of contemporary free-church worship sits here.",
-        href: "/church/style/bethel",
+          "Hillsong Network, Vineyard, C3, Newfrontiers, Bethel, and the wider charismatic networks all grouped together as a denomination filter.",
+        href: "/church/denomination/charismatic",
       },
       {
         title: "Non-denominational churches",
@@ -661,10 +661,10 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
         href: "/church/denomination/pentecostal",
       },
       {
-        title: "Vineyard churches",
+        title: "Charismatic churches",
         description:
-          "Vineyard's family culture is warm and unstuffy. Children are welcome in the room; the kids programme is solid without being slick.",
-        href: "/church/denomination/vineyard",
+          "Charismatic networks (including Vineyard) tend to be warm, unstuffy, and family-aware — children welcome in the room and a kids programme that's solid without being slick.",
+        href: "/church/denomination/charismatic",
       },
       {
         title: "Anglican churches",
@@ -676,7 +676,7 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
         title: "Contemporary worship",
         description:
           "Many family-friendly free-churches lean contemporary. Skim this style to find congregations where the music works for both adults and kids.",
-        href: "/church/style/contemporary",
+        href: "/church/style/contemporary-worship",
       },
     ],
 
@@ -828,10 +828,10 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
         href: "/church/denomination/baptist",
       },
       {
-        title: "Vineyard churches",
+        title: "Charismatic churches",
         description:
-          "Warm, low-jargon, often charismatic — Vineyard congregations tend to be unusually welcoming to people new to faith.",
-        href: "/church/denomination/vineyard",
+          "Warm, low-jargon, often Spirit-led — the wider charismatic family (including Vineyard) tends to be unusually welcoming to people new to faith.",
+        href: "/church/denomination/charismatic",
       },
     ],
 
@@ -959,10 +959,10 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
         href: "/church/denomination/anglican",
       },
       {
-        title: "Vineyard churches",
+        title: "Charismatic churches",
         description:
-          "Warm, low-jargon, charismatic-but-grounded. Vineyard congregations tend to make space for doubt and questions as part of normal church life.",
-        href: "/church/denomination/vineyard",
+          "Warm, low-jargon, Spirit-led — covers Vineyard and other charismatic networks that tend to make space for doubt and questions as part of normal church life.",
+        href: "/church/denomination/charismatic",
       },
       {
         title: "Non-denominational churches",

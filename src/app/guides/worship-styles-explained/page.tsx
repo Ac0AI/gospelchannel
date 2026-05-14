@@ -33,16 +33,16 @@ const STYLES: Array<{
   href: string;
 }> = [
   {
-    slug: "contemporary",
+    slug: "contemporary-worship",
     name: "Contemporary worship",
     oneLine: "The default sound of most younger free-church congregations today.",
     body:
-      "Full-band worship with electric guitars, drums, keys, and modern songs written in the last 20-30 years. Service tends to flow band-set → preaching → response, with screens for lyrics and a stage-and-rows seating layout. Volume varies congregation to congregation, but the sonic vocabulary is recognisable: chord progressions you've heard on the radio, song structures that build, lead singers carrying melody while the room sings along.",
+      "Full-band worship with electric guitars, drums, keys, and modern songs written in the last 20-30 years. Service tends to flow band-set → preaching → response, with screens for lyrics and a stage-and-rows seating layout. Volume varies congregation to congregation, but the sonic vocabulary is recognisable: chord progressions you've heard on the radio, song structures that build, lead singers carrying melody while the room sings along. The Hillsong, Elevation, and Bethel-style lineages all sit under this umbrella — congregations vary in how slick the production is and how much spontaneous space they leave inside the set.",
     examples:
-      "Songs from Elevation Worship, Maverick City, Hillsong, Bethel Music, Phil Wickham, Brandon Lake, and similar artists are common. Most non-denominational, Pentecostal, and many Baptist and Anglican evangelical congregations sit here.",
+      "Songs from Elevation Worship, Maverick City, Hillsong, Bethel Music, Phil Wickham, Brandon Lake, and similar artists are common. Most non-denominational, Pentecostal, and many Baptist and Anglican evangelical congregations sit here. Includes the high-production Hillsong-network style as well as more spontaneous Bethel-shaped sets.",
     fits:
       "Easiest landing point if you grew up with modern worship and want a service that sounds like the playlists you listen to all week. Also a comfortable starting point for someone new to church — the structure is uncomplicated and you don't need to know hymn melodies.",
-    href: "/church/style/contemporary",
+    href: "/church/style/contemporary-worship",
   },
   {
     slug: "gospel",
@@ -58,75 +58,75 @@ const STYLES: Array<{
   },
   {
     slug: "charismatic",
-    name: "Charismatic worship",
-    oneLine: "Spirit-led, expressive, open to the unplanned.",
+    name: "Charismatic / Spirit-led worship",
+    oneLine: "Expressive, open to the unplanned, prophetic-leaning.",
     body:
-      "Charismatic worship overlaps with contemporary musically but adds a posture: raised hands are common, time is given for spontaneous prayer or song, people may speak in tongues, and prayer for healing is normal. Services often have less rigid structure — the set list is a starting point, not a script — and the room participates in shaping where the worship goes. Volume and intensity vary widely between congregations.",
+      "Charismatic worship overlaps with contemporary musically but adds a posture: raised hands are common, time is given for spontaneous prayer or song, people may speak in tongues, and prayer for healing is normal. Services often have less rigid structure — the set list is a starting point, not a script — and the room participates in shaping where the worship goes. Volume and intensity vary widely between congregations. Pentecostal congregations broadly sit here too, since their century-old tradition shares the same expressive, Spirit-expectant posture.",
     examples:
-      "Vineyard, Pentecostal, newer charismatic networks, and many non-denominational churches. The Hillsong and Bethel sonic catalogues are deeply represented in this tradition.",
+      "Vineyard, Pentecostal, newer charismatic networks, and many non-denominational churches. The Hillsong and Bethel sonic catalogues are deeply represented here as well — many Hillsong-style churches are charismatic in practice even if the music tag reads contemporary.",
     fits:
       "Natural home if you grew up in Pentecostal or charismatic settings, or if you want a worship service that leaves room for the unexpected. Worth trying once even if you didn't grow up in it — many people who think they want contemporary actually want charismatic.",
     href: "/church/style/charismatic",
   },
   {
-    slug: "hillsong",
-    name: "Hillsong-network style",
-    oneLine: "A specific, recognisable lineage of contemporary worship.",
+    slug: "african",
+    name: "African and diaspora worship",
+    oneLine: "Rich vocal harmony, percussive rhythm, deep musical traditions across the continent and diaspora.",
     body:
-      "Churches in the Hillsong Network, or congregations heavily shaped by Hillsong Worship's catalogue and stage culture. Recognisable by a slick production value, a tight band, modern lighting, a recognisable set of songs, and a service flow that's been honed across many campuses. Skews younger and tends to cluster in big cities.",
+      "Worship rooted in African musical traditions — full vocal harmony, layered percussion, energetic praise, and an unhurried sense of time. Includes Nigerian, Ghanaian, Kenyan, Ugandan, South African township gospel, and many other regional traditions, plus the diaspora congregations carrying those traditions into the United Kingdom, the United States, the Nordics, and beyond.",
     examples:
-      "Hillsong campuses worldwide, plus many independent churches that lean on the Hillsong Worship songbook and aesthetic. Sister-network influences include Elevation Worship, Planetshakers, and similar.",
+      "Strong across African Pentecostal and Anglican congregations, as well as diaspora churches in major Western cities. The Redeemed Christian Church of God, Winners Chapel, Christ Embassy, and many independent African-led congregations are common examples internationally.",
     fits:
-      "If you grew up on Hillsong music, want a high-production-value Sunday morning, or you're new to a city and want a church experience that's polished and predictable. Easy to recommend to someone joining you for the first time.",
-    href: "/church/style/hillsong",
+      "If you're part of the African Christian diaspora and looking for a congregation that carries the sound of home, or you're an expat moving to or from Africa and want a service that bridges traditions. Also a strong fit for visitors drawn to expressive, full-voiced worship in any background.",
+    href: "/church/style/african",
   },
   {
-    slug: "bethel",
-    name: "Bethel-influenced worship",
-    oneLine: "Spontaneous, prophetic, sometimes contemplative.",
+    slug: "latin",
+    name: "Latin and Spanish worship",
+    oneLine: "Spanish-language and Latin-rooted worship across the Americas, Iberia, and the diaspora.",
     body:
-      "Churches shaped by Bethel Music's sound — extended spontaneous worship, prophetic singing, an emphasis on encountering the presence of God in the moment. Often less concert-like than Hillsong-style and more contemplative within a charismatic frame. The sermon is part of the service but the worship is often the centrepiece of the morning.",
+      "Spanish-language worship, plus Latin-rooted musical traditions — from Mexican and Central American congregational singing to Brazilian Portuguese-language worship and the wider Latin American Pentecostal traditions. Services often run in Spanish (or Portuguese) and weave traditional Christian hymnody with contemporary Latin worship songs.",
     examples:
-      "Bethel Church in Redding plus the wider network of churches and worship leaders influenced by Bethel Music — Jesus Culture, Brian and Jenn Johnson, Cory Asbury, Steffany Gretzinger, and many others.",
+      "Hispanic and Latin congregations across the United States, Latin America, Spain, and the diaspora. Includes Pentecostal, charismatic, and Catholic-rooted evangelical congregations. Artists shaping the sound include Marcos Witt, Christine D'Clario, Marcela Gandara, and many regional worship leaders.",
     fits:
-      "If you're drawn to extended worship sets, spontaneous singing, and a charismatic-prophetic posture. Also worth trying if you've been frustrated by services where worship feels like a warm-up rather than the main thing.",
-    href: "/church/style/bethel",
+      "If you speak Spanish (or Portuguese) and want a Sunday in your first language, or you're looking for a culturally Latin congregation. Also a strong fit for bilingual families wanting their children to grow up worshipping in both languages.",
+    href: "/church/style/latin",
   },
   {
-    slug: "pentecostal",
-    name: "Pentecostal worship",
-    oneLine: "Intergenerational, expressive, deep tradition.",
+    slug: "acoustic",
+    name: "Acoustic and folk-rooted worship",
+    oneLine: "Stripped-back, often acoustic-guitar-led, sometimes Celtic or Nordic in feel.",
     body:
-      "Pentecostal worship overlaps significantly with charismatic but carries its own century of tradition. Expect a strong intergenerational room — children visible alongside grandparents — expressive participation, prayer for healing, and a long Pentecostal songbook alongside contemporary songs. Sermon and altar response often anchor the service.",
+      "Worship led by acoustic guitar, piano, sometimes a small string section — smaller, quieter, and more intimate than a full-band contemporary set. Often draws from folk, Celtic, or Nordic musical traditions. Suits smaller rooms and congregations who want the lyrics carried by voices rather than amplification.",
     examples:
-      "Assemblies of God, Foursquare, Church of God (Cleveland), classical Pentecostal denominations worldwide, and many Black-church Pentecostal traditions. In Sweden, Pingst (Pingströrelsen) carries this lineage.",
+      "Many smaller free-church plants, church gatherings inside cafés or community spaces, and the Nordic Pingst tradition that often leans acoustic. Also a common style at student services and prayer meetings inside larger churches.",
     fits:
-      "If you grew up Pentecostal or you're looking for a congregation where the Spirit's work is named and expected. Also a strong fit for families looking for a church where children are present in the room rather than in a separate stream.",
-    href: "/church/style/pentecostal",
+      "If you want worship that breathes — fewer layers, more space — or you find full-band sets overwhelming. Also a good fit for visitors who want to focus on the words rather than the production. Acoustic congregations tend to feel close-knit by design.",
+    href: "/church/style/acoustic",
   },
   {
-    slug: "hymn",
-    name: "Hymn-led worship",
-    oneLine: "The classic tradition — organ or piano, sung verses, often shorter services.",
+    slug: "kids",
+    name: "Family and kids-forward worship",
+    oneLine: "Worship designed so children are present and participating, not separate.",
     body:
-      "Worship led by hymns from a denomination's hymnal, often with organ or piano accompaniment, sometimes a small choir, and limited or no band. Songs are familiar across generations and carry theological weight in their lyrics — they teach as well as worship. Services tend to follow a stable structure and end on time.",
+      "Worship shaped so that kids stay in the room — songs the whole family can sing, shorter sermons or family-friendly preaching, age-aware leadership from the stage. Distinct from churches where children are sent to a separate stream; here the kids ministry is integrated into the main service.",
     examples:
-      "Many Baptist, Methodist, Anglican, Presbyterian, and Lutheran congregations have a strong hymn-led tradition. Free-church congregations vary — some are hymn-led by default, others mix hymns with contemporary songs.",
+      "Common at family-focused free-church congregations and many smaller Pentecostal churches. Also a feature of many international and diaspora congregations where multi-generational worship is the default rather than an option.",
     fits:
-      "If you grew up singing hymns and miss them in contemporary services. Also a good fit if you want a Sunday where the music is dependable and the room sings together rather than listening to a band. Hymn-led services are deeply loved by their congregations and remain a healthy choice for any season of life.",
-    href: "/church/style/hymn",
+      "If you have young children and you'd rather worship together than split for the morning. Also a good fit for grandparents who want to bring grandchildren to a service that doesn't feel like a kids party or an adults-only event.",
+    href: "/church/style/kids",
   },
   {
-    slug: "blended",
-    name: "Blended worship",
-    oneLine: "Hymns and contemporary songs together in one service.",
+    slug: "rock",
+    name: "High-energy and Christian rock",
+    oneLine: "Loud, driving, often guitar-forward — for congregations who want Sunday to feel like a release.",
     body:
-      "Sunday morning includes both — sometimes a hymn opens the service and a contemporary song closes it, sometimes the two are woven through. Band and organ may share the stage. Many congregations land here intentionally because they have members across generations who want different things and they choose not to split the church into two services.",
+      "High-energy worship — heavier guitars, driving drums, strong build-and-release dynamics, lighting and stage culture that often borrow from secular concert design. Distinct from standard contemporary worship in intensity rather than song catalogue. Common in larger free-church plants targeting younger demographics and in congregations with a strong creative-arts ministry.",
     examples:
-      "Common in Baptist, Methodist, Anglican, and many independent evangelical congregations. Often the default when a church serves a mixed-age congregation in a smaller town or city without enough volume to run a separate contemporary service.",
+      "Christian rock-influenced congregations, many newer non-denominational plants, and the more energetic end of the Hillsong-network and Elevation Worship lineage. Christian EDM-influenced services also sit here when they exist.",
     fits:
-      "If you want some musical variety on a Sunday, or you're part of a household where different generations want different worship and you'd rather sit together than separate. Also a good landing spot for someone who doesn't know yet what fits.",
-    href: "/church/style/blended",
+      "If you want worship that runs loud and pushes hard. Also a good fit for visitors who find quieter services hard to settle into and want a Sunday that channels the same energy a great concert does.",
+    href: "/church/style/rock",
   },
 ];
 
