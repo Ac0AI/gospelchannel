@@ -8,7 +8,7 @@ export const revalidate = 86400;
 
 const META_TITLE = "Worship Styles Explained — Find Your Sunday Sound";
 const META_DESCRIPTION =
-  "A plain-spoken guide to contemporary, gospel, charismatic, Hillsong-style, Bethel-style, hymn-led, and blended worship — how each sounds and who tends to land where.";
+  "A plain-spoken guide to contemporary, gospel, charismatic, African, Latin, acoustic, and rock worship — how each sounds and who tends to land where.";
 
 export const metadata: Metadata = {
   title: META_TITLE,
@@ -105,18 +105,6 @@ const STYLES: Array<{
     href: "/church/style/acoustic",
   },
   {
-    slug: "kids",
-    name: "Family and kids-forward worship",
-    oneLine: "Worship designed so children are present and participating, not separate.",
-    body:
-      "Worship shaped so that kids stay in the room — songs the whole family can sing, shorter sermons or family-friendly preaching, age-aware leadership from the stage. Distinct from churches where children are sent to a separate stream; here the kids ministry is integrated into the main service.",
-    examples:
-      "Common at family-focused free-church congregations and many smaller Pentecostal churches. Also a feature of many international and diaspora congregations where multi-generational worship is the default rather than an option.",
-    fits:
-      "If you have young children and you'd rather worship together than split for the morning. Also a good fit for grandparents who want to bring grandchildren to a service that doesn't feel like a kids party or an adults-only event.",
-    href: "/church/style/kids",
-  },
-  {
     slug: "rock",
     name: "High-energy and Christian rock",
     oneLine: "Loud, driving, often guitar-forward — for congregations who want Sunday to feel like a release.",
@@ -148,7 +136,7 @@ export default function WorshipStylesExplainedPage() {
         eyebrow="Free guide"
         title="Worship styles,"
         titleAccent="without the jargon"
-        intro="Eight worship styles you'll meet across free-church and evangelical congregations — how each sounds, who tends to land where, and the link to every church in that style. No tradition is ranked above another. Pick the one that fits your season and start there."
+        intro="Seven worship styles you'll meet across free-church and evangelical congregations — how each sounds, who tends to land where, and the link to every church in that style. No tradition is ranked above another. Pick the one that fits your season and start there."
       />
 
       <section className="mt-12 max-w-[760px]">
