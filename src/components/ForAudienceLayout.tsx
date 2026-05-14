@@ -3,9 +3,10 @@ import type { ForAudienceData } from "@/lib/for-audience-data";
 
 type Props = {
   data: ForAudienceData;
+  siblings: Array<{ slug: string; audience_name: string }>;
 };
 
-export function ForAudienceLayout({ data }: Props) {
+export function ForAudienceLayout({ data, siblings }: Props) {
   return (
     <article className="mx-auto max-w-[1080px] px-5 pb-24 sm:px-12">
       {/* Hero */}
@@ -191,19 +192,19 @@ export function ForAudienceLayout({ data }: Props) {
               ))}
             </ul>
           </div>
-          {data.related_siblings.length > 0 && (
+          {siblings.length > 0 && (
             <div>
               <h3 className="font-serif text-base font-semibold text-espresso">
                 Other audiences
               </h3>
               <ul className="mt-2 space-y-1.5">
-                {data.related_siblings.map((link) => (
-                  <li key={link.href}>
+                {siblings.map((sibling) => (
+                  <li key={sibling.slug}>
                     <Link
-                      href={link.href}
+                      href={`/for/${sibling.slug}`}
                       className="text-sm text-warm-brown transition-colors hover:text-rose-gold"
                     >
-                      {link.label}
+                      For {sibling.audience_name.toLowerCase()}
                     </Link>
                   </li>
                 ))}

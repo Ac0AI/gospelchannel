@@ -52,6 +52,11 @@ const STATIC_ROUTE_PATHS = [
   "/alternatives/gospel-coalition",
   "/alternatives/mychurchfinder",
   "/for/expats",
+  "/for/students",
+  "/for/young-adults",
+  "/for/families",
+  "/for/new-believers",
+  "/for/deconstructing",
 ] as const;
 
 export type SitemapEntry = {

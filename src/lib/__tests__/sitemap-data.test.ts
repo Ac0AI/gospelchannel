@@ -137,7 +137,7 @@ describe("sitemap-data", () => {
   it("computes the total sitemap entry count from section counts", async () => {
     getChurchDirectorySeedCountAsyncMock.mockResolvedValue(3);
 
-    await expect(getSitemapEntryCount()).resolves.toBe(32);
+    await expect(getSitemapEntryCount()).resolves.toBe(37);
   });
 
   it("builds chunk 0 from the exact church slice without touching later DB slices", async () => {
@@ -156,9 +156,14 @@ describe("sitemap-data", () => {
     expect(entries[14]?.url).toBe("https://gospelchannel.com/alternatives/gospel-coalition");
     expect(entries[15]?.url).toBe("https://gospelchannel.com/alternatives/mychurchfinder");
     expect(entries[16]?.url).toBe("https://gospelchannel.com/for/expats");
-    expect(entries[17]?.url).toBe("https://gospelchannel.com/church/church-0");
-    expect(entries.at(-1)?.url).toBe("https://gospelchannel.com/church/church-2482");
-    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(0, 2_483);
+    expect(entries[17]?.url).toBe("https://gospelchannel.com/for/students");
+    expect(entries[18]?.url).toBe("https://gospelchannel.com/for/young-adults");
+    expect(entries[19]?.url).toBe("https://gospelchannel.com/for/families");
+    expect(entries[20]?.url).toBe("https://gospelchannel.com/for/new-believers");
+    expect(entries[21]?.url).toBe("https://gospelchannel.com/for/deconstructing");
+    expect(entries[22]?.url).toBe("https://gospelchannel.com/church/church-0");
+    expect(entries.at(-1)?.url).toBe("https://gospelchannel.com/church/church-2477");
+    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(0, 2_478);
     expect(getNetworksSliceMock).not.toHaveBeenCalled();
     expect(getPublishedCampusesSliceMock).not.toHaveBeenCalled();
   });
@@ -172,6 +177,11 @@ describe("sitemap-data", () => {
     const entries = await buildSitemapEntriesForChunk(2);
 
     expect(entries.map((entry) => entry.url)).toEqual([
+      "https://gospelchannel.com/church/church-4978",
+      "https://gospelchannel.com/church/church-4979",
+      "https://gospelchannel.com/church/church-4980",
+      "https://gospelchannel.com/church/church-4981",
+      "https://gospelchannel.com/church/church-4982",
       "https://gospelchannel.com/church/church-4983",
       "https://gospelchannel.com/church/church-4984",
       "https://gospelchannel.com/church/church-4985",
@@ -204,7 +214,7 @@ describe("sitemap-data", () => {
       "https://gospelchannel.com/prayerwall/church/prayer-1",
       "https://gospelchannel.com/prayerwall/church/prayer-2",
     ]);
-    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(4_983, 19);
+    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(4_978, 24);
     expect(getNetworksSliceMock).toHaveBeenCalledWith(0, 1);
     expect(getPublishedCampusesSliceMock).toHaveBeenCalledWith(0, 1);
   });

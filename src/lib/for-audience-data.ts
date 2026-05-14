@@ -46,7 +46,6 @@ export type ForAudienceData = {
   curated_cards: CuratedCard[];
 
   related_guides: Array<{ href: string; label: string }>;
-  related_siblings: Array<{ href: string; label: string }>;
 
   faq_h2: string;
   faqs: AudienceFAQ[];
@@ -196,7 +195,6 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       { href: "/guides/church-fit-quiz", label: "Church fit quiz" },
       { href: "/guides/worship-style-match", label: "Worship style match" },
     ],
-    related_siblings: [],
 
     faq_h2: "Expat church-finding FAQ",
     faqs: [
@@ -235,5 +233,800 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
     cta_h2: "Land softer in your new country",
     cta_lede:
       "Start with the country page, filter to English, and you'll usually have a Sunday plan inside ten minutes.",
+  },
+
+  students: {
+    slug: "students",
+    audience_name: "Students",
+
+    meta_title: "Gospel Churches Near Campus — GospelChannel for Students",
+    meta_description:
+      "Find a free-church or evangelical congregation near your university — walkable, student-friendly, with worship that fits your home church back home.",
+
+    hero_eyebrow: "For students",
+    hero_h1: "Find a gospel church near your university",
+    hero_lede:
+      "You moved for university and your home church is now eight hours away. GospelChannel helps you find a walkable free-church or evangelical congregation in your college town, with filters for worship style and language, so the Sunday you skip stops being the rule.",
+
+    pain_h2: "Why students skip church for months without meaning to",
+    pain_lede:
+      "It's almost never a faith decision. It's the friction of being new in a city, with no car, on a budget, and no idea which of the eight churches near campus actually has people your age.",
+    pains: [
+      {
+        title: "No car, no clue which church is walkable",
+        body:
+          "Most church-finders show you a 25-mile radius and call it good. You actually need somewhere you can walk or bus to on a Sunday morning when the bike's flat and it's pouring. Without filtering by city you wade through congregations 40 minutes out by car that may as well be in another country.",
+      },
+      {
+        title: "Sunday gets eaten by week-old laundry",
+        body:
+          "It's not unbelief — it's logistics. You meant to try a church the first weekend; the bin overflowed. Then it was an essay. By week six, walking into a new congregation alone feels harder than skipping. A directory that puts a clear option in front of you takes one excuse off the pile.",
+      },
+      {
+        title: "You're 19 and most of the room is 60",
+        body:
+          "You find a free-church congregation, you go once, and the youngest person is twenty years older than you. Nobody did anything wrong; it's just not your tribe. There's usually a student-heavy church in any university town — you just can't tell from the church website which one it is.",
+      },
+      {
+        title: "The worship at home doesn't translate",
+        body:
+          "You grew up with contemporary worship, gospel, or charismatic. You walk into a 15th-century stone building and there's an organ and three verses of a hymn you've never heard. There's nothing wrong with hymn services; they're just not what's keeping you connected, and you can't tell from outside which is which.",
+      },
+    ],
+
+    solution_h2: "How GospelChannel helps students find a Sunday",
+    solution_lede:
+      "Four ways the directory shrinks the surface area between you and a church that fits — fast enough that Sunday doesn't slip into Monday again.",
+    solutions: [
+      {
+        title: "Browse by city, not by radius",
+        body:
+          "Every city we cover has a dedicated page listing churches in that city specifically. Open your university town's page and you immediately see what's actually nearby — no more 30-mile suburbs cluttering the result.",
+        href: "/church/city",
+        cta: "Browse cities",
+      },
+      {
+        title: "Filter by worship style",
+        body:
+          "If you grew up with contemporary worship, gospel, charismatic, or Hillsong-style, filter on that. You'll skip the hymn-only congregations not because they're bad but because they're not your tribe — and arrive on Sunday already familiar with the sound.",
+        href: "/church/style",
+        cta: "Browse worship styles",
+      },
+      {
+        title: "Hear the music before you commit",
+        body:
+          "Church profiles can carry the church's own Spotify playlists and YouTube videos. Coverage is growing and many profiles already have it. Two clicks tells you whether the Sunday set sounds anything like what you sang at home.",
+        href: "/church",
+        cta: "Open the directory",
+      },
+      {
+        title: "Take the church fit quiz",
+        body:
+          "Seven questions, no signup, three matches at the end. Useful if you don't know what to look for or what your home church's tradition was technically called. Bring the three matches to whoever recommended you GospelChannel and ask which one to try first.",
+        href: "/guides/church-fit-quiz",
+        cta: "Take the quiz",
+      },
+    ],
+
+    curated_h2: "Strong student-and-church cities to start with",
+    curated_lede:
+      "A few college towns with well-documented student-friendly free-church scenes. Each city page lists every church there — narrow by denomination, worship style, or language from there.",
+    curated_cards: [
+      {
+        title: "Oxford",
+        subtitle: "United Kingdom",
+        description:
+          "Historic university with a long tradition of student churches — a meaningful share of which are evangelical or charismatic and very student-aware.",
+        href: "/church/city/oxford",
+      },
+      {
+        title: "Cambridge",
+        subtitle: "United Kingdom",
+        description:
+          "Similar to Oxford — strong CICCU-shaped scene with student-led evangelical congregations alongside the historic college chapels.",
+        href: "/church/city/cambridge",
+      },
+      {
+        title: "Edinburgh",
+        subtitle: "Scotland, United Kingdom",
+        description:
+          "Solid mix of Free Church of Scotland, Baptist, and contemporary evangelical communities — many with explicit student work.",
+        href: "/church/city/edinburgh",
+      },
+      {
+        title: "Berkeley",
+        subtitle: "California, United States",
+        description:
+          "UC Berkeley sits inside a rich Bay Area church scene with student-focused contemporary and charismatic congregations.",
+        href: "/church/city/berkeley",
+      },
+      {
+        title: "Boston",
+        subtitle: "Massachusetts, United States",
+        description:
+          "Dense university region — Boston, Cambridge MA, and the wider Greater Boston area together have a wide free-church offering aimed at students.",
+        href: "/church/city/boston",
+      },
+      {
+        title: "Uppsala",
+        subtitle: "Sweden",
+        description:
+          "Sweden's classic university town with growing free-church and charismatic communities, plus English-friendly options for international students.",
+        href: "/church/city/uppsala",
+      },
+      {
+        title: "Lund",
+        subtitle: "Sweden",
+        description:
+          "Lund University and the surrounding Skåne region have an active free-church and Pingst presence with student-oriented services.",
+        href: "/church/city/lund",
+      },
+      {
+        title: "Heidelberg",
+        subtitle: "Germany",
+        description:
+          "One of Europe's oldest universities sits in a city with English-speaking international fellowships alongside German free-church congregations.",
+        href: "/church/city/heidelberg",
+      },
+    ],
+
+    related_guides: [
+      { href: "/guides/church-fit-quiz", label: "Church fit quiz" },
+      { href: "/guides/first-visit-guide", label: "First visit guide" },
+      { href: "/guides/worship-style-match", label: "Worship style match" },
+    ],
+
+    faq_h2: "Student church-finding FAQ",
+    faqs: [
+      {
+        question: "How do I find a church near my university?",
+        answer:
+          "Open the city page for your university town (for example /church/city/oxford) and browse the churches listed there. You can also filter by worship style, denomination, or language to narrow further. Most user-facing pages are public and don't require signup.",
+      },
+      {
+        question: "Are there churches specifically for students?",
+        answer:
+          "Some congregations explicitly run student work or are unusually student-heavy; others are mixed-age congregations that students attend alongside everyone else. The directory doesn't have a binary student/non-student flag, but in university cities you can usually spot the student-strong churches from the profile copy and music.",
+      },
+      {
+        question: "Is GospelChannel free for students?",
+        answer:
+          "Yes. The directory is free to browse, the church fit quiz is free, and there's no paywall. You don't need to sign up to use any of it. If you're a pastor or student leader involved with a church, you can also claim and edit the profile for free.",
+      },
+      {
+        question: "What kinds of churches will I find?",
+        answer:
+          "Free-church, evangelical, charismatic, Pentecostal, non-denominational, Baptist, Vineyard, and similar gospel- and worship-oriented traditions are the focus. The wider directory also lists congregations from other traditions, but our positioning and filters lean toward the free-church segment that most evangelical students come from.",
+      },
+      {
+        question: "What if my home church's tradition doesn't exist in my college town?",
+        answer:
+          "It happens — especially in smaller university cities. The fit quiz and worship-style filter help you find the closest match. A Vineyard-style worshipper might land happily at a contemporary non-denominational church even when there's no Vineyard plant in town. Two months trying the closest match beats six months trying nothing.",
+      },
+    ],
+
+    cta_h2: "Find a Sunday before next Sunday",
+    cta_lede:
+      "Open your city page, filter to a worship style that fits, and you'll have a short list ready before tomorrow's lecture.",
+  },
+
+  "young-adults": {
+    slug: "young-adults",
+    audience_name: "Young adults",
+
+    meta_title: "Contemporary Worship for Young Adults — GospelChannel",
+    meta_description:
+      "Find a free-church or non-denominational congregation with contemporary worship, an active 20-something community, and music you actually want to sing.",
+
+    hero_eyebrow: "For young adults",
+    hero_h1: "Contemporary worship churches for the 20-something season",
+    hero_lede:
+      "Your parents' church doesn't quite fit anymore and the campus ministry shut for the summer. GospelChannel helps you find a contemporary or charismatic free-church congregation with people in your stage of life — and you can hear the worship before you commit to a Sunday.",
+
+    pain_h2: "The 20-something church gap",
+    pain_lede:
+      "There's a real life-stage gap between leaving home and settling into a family church. Most directories don't help you bridge it.",
+    pains: [
+      {
+        title: "Parents' church doesn't fit the season anymore",
+        body:
+          "The congregation that raised you is still good — it's just not yours right now. The music is the music you sang at fifteen. The community is the people your parents drink coffee with. You need somewhere that meets you where you actually live, not where you used to.",
+      },
+      {
+        title: "Most directories surface family churches first",
+        body:
+          "Generic church-finders implicitly optimize for families because that's their primary audience. The contemporary, charismatic, or young-adult-heavy congregations in your city are there too, but you have to hunt. The directory should be able to tell you where the 20-somethings actually go.",
+      },
+      {
+        title: "You don't want a hymn-only Sunday but you don't want a club either",
+        body:
+          "There's a sweet spot between a traditional service that feels like your grandparents' and a fog-and-LED experience that feels like a concert. Contemporary worship done well sits in that spot. You can't always tell from a church website which side of the line a specific congregation falls on.",
+      },
+      {
+        title: "Loneliness compounds when you keep trying and bouncing",
+        body:
+          "Trying three new churches in three weeks and not staying anywhere is harder than not going at all. Each visit you arrive alone, leave alone, and don't go back. A directory that points you at congregations with active 20-something communities saves the third strike.",
+      },
+    ],
+
+    solution_h2: "How GospelChannel helps you find your tribe",
+    solution_lede:
+      "Filter by the dimensions that actually matter at this stage — worship style first, denomination second, location third — and use the music previews to skip the visits that wouldn't have worked.",
+    solutions: [
+      {
+        title: "Filter by worship style first",
+        body:
+          "Contemporary, gospel, charismatic, Hillsong-style, Bethel-style — pick the sound that matches what you actually want to sing on Sunday morning. The denomination matters less when the worship is right.",
+        href: "/church/style",
+        cta: "Browse worship styles",
+      },
+      {
+        title: "Filter by free-church denominations",
+        body:
+          "Non-denominational, Vineyard, Pentecostal, charismatic — the traditions that tend to skew younger and have stronger contemporary worship. Useful when you already know roughly the family of churches you're looking for.",
+        href: "/church/denomination",
+        cta: "Browse denominations",
+      },
+      {
+        title: "Hear the music before you visit",
+        body:
+          "Church profiles can carry the church's own Spotify playlists and YouTube videos. Coverage is growing and many already do. Two clicks and you know whether the Sunday set is what you'd actually put on at home.",
+        href: "/church",
+        cta: "Open the directory",
+      },
+      {
+        title: "Take the fit quiz",
+        body:
+          "Seven questions, no signup, three matches at the end. Designed for people who know roughly what they want but haven't translated it into a denomination tag yet.",
+        href: "/guides/church-fit-quiz",
+        cta: "Take the quiz",
+      },
+    ],
+
+    curated_h2: "Starting points for the contemporary-worship season",
+    curated_lede:
+      "Six worship-style and denomination pages where 20-somethings tend to land. Each links to every church we have in that category — narrow by city or country from there.",
+    curated_cards: [
+      {
+        title: "Contemporary worship",
+        description:
+          "Full-band worship in the lineage of Hillsong, Bethel, Elevation, and the wider modern-worship tradition. The default sound for most 20-something free-church congregations.",
+        href: "/church/style/contemporary",
+      },
+      {
+        title: "Gospel worship",
+        description:
+          "Black-church-rooted gospel, traditional and contemporary gospel choirs, soulful expressive worship. Strong in US cities and growing internationally.",
+        href: "/church/style/gospel",
+      },
+      {
+        title: "Charismatic worship",
+        description:
+          "Spirit-led, expressive, often spontaneous worship — overlapping but distinct from contemporary. Includes Pentecostal-tradition congregations and newer charismatic networks.",
+        href: "/church/style/charismatic",
+      },
+      {
+        title: "Hillsong-network style",
+        description:
+          "Hillsong Network churches and congregations that lean heavily on Hillsong Worship's catalog and stage culture. Tends to skew younger and big-city.",
+        href: "/church/style/hillsong",
+      },
+      {
+        title: "Bethel-influenced",
+        description:
+          "Churches shaped by Bethel Music's sound — spontaneous, prophetic, often charismatic. A meaningful slice of contemporary free-church worship sits here.",
+        href: "/church/style/bethel",
+      },
+      {
+        title: "Non-denominational churches",
+        description:
+          "Free-church congregations without a formal denominational affiliation. Often skew younger and lean into contemporary worship by default.",
+        href: "/church/denomination/non-denominational",
+      },
+    ],
+
+    related_guides: [
+      { href: "/guides/worship-style-match", label: "Worship style match" },
+      { href: "/guides/church-fit-quiz", label: "Church fit quiz" },
+      { href: "/guides/first-visit-guide", label: "First visit guide" },
+    ],
+
+    faq_h2: "Young-adult church-finding FAQ",
+    faqs: [
+      {
+        question: "What's the difference between contemporary, charismatic, and Hillsong-style worship?",
+        answer:
+          "Contemporary is the broad category — full-band worship, modern songs, usually with screens and lighting. Charismatic is more about expressiveness and openness to the Spirit (raised hands, prophecy, prayer for healing) and often overlaps with contemporary musically. Hillsong-style is a specific lineage of contemporary worship with a recognizable sound and stage culture, often inside the Hillsong Network. /guides/worship-style-match walks through the differences in more detail.",
+      },
+      {
+        question: "Will I find churches that are mostly 20-somethings?",
+        answer:
+          "In big cities and university towns, yes — there are congregations where the room skews heavily 20-30 and the programming reflects that. In smaller cities the picture is more mixed-age. Filtering by worship style (contemporary, charismatic, Hillsong-style) is the best proxy for finding the congregations young adults already chose.",
+      },
+      {
+        question: "Is GospelChannel free?",
+        answer:
+          "Yes. Browsing is free, the fit quiz is free, no signup required. Pastors of free-church congregations can claim and edit profiles for free too. There are no paid tiers today.",
+      },
+      {
+        question: "Does GospelChannel only cover Reformed evangelical churches?",
+        answer:
+          "No. We cover the broad free-church segment — evangelical, charismatic, Pentecostal, non-denominational, Baptist, Vineyard, and Reformed Baptist. Reformed-only directories like The Gospel Coalition are stronger if you specifically want a confessionally vetted list.",
+      },
+      {
+        question: "What if I'm between worship styles?",
+        answer:
+          "Most young adults are, especially right after leaving a home or campus church. The fit quiz is designed for that — it surfaces a few candidate styles rather than forcing a single answer, and you can try churches across more than one style and decide as you go.",
+      },
+    ],
+
+    cta_h2: "Find a Sunday that fits the season",
+    cta_lede:
+      "Start with a worship style, narrow by city, listen before you visit. You'll know in two clicks whether a Sunday is worth trying.",
+  },
+
+  families: {
+    slug: "families",
+    audience_name: "Families",
+
+    meta_title: "Family-Friendly Evangelical Churches — GospelChannel",
+    meta_description:
+      "Find a family-friendly free-church or evangelical congregation with kids ministry, age-appropriate programs, and a welcoming community for parents.",
+
+    hero_eyebrow: "For families",
+    hero_h1: "Find a family-friendly evangelical church",
+    hero_lede:
+      "When you have kids, picking a church involves more than picking the worship. You're picking the people they'll grow up around, the kids ministry that runs in parallel to the service, and the parents you'll text on Saturday night about Sunday plans. GospelChannel helps you find a free-church or evangelical congregation that fits the whole household.",
+
+    pain_h2: "The family church-search problem",
+    pain_lede:
+      "Most directories grade churches on what works for one adult. Families need more than one adult's worth of fit — and the dimensions that matter shift with each kid added.",
+    pains: [
+      {
+        title: "The kids' programme is invisible from the website",
+        body:
+          "Some churches have a thriving kids ministry. Others list it on the website but in practice run with two volunteers and a vague theme. You can rarely tell from outside — and finding out the hard way costs you a Sunday and possibly your kid's enthusiasm for church-in-general.",
+      },
+      {
+        title: "You don't want fundamentalist undertones around your kids",
+        body:
+          "There's a difference between gospel-rooted teaching and culture-war coded teaching. Both can use similar language on the website. As a parent you don't want to gamble — you want the broad, welcoming, free-church spirit, not a sermon series that makes you re-explain things on the drive home.",
+      },
+      {
+        title: "Music for kids vs music for the rest of the room",
+        body:
+          "A toddler-friendly Sunday matters at home. A worship service that feels like a 20-minute Wiggles set doesn't always work for adults. The best family churches manage both — kids feel seen and the adult service still has musical substance. That balance is hard to spot from a directory listing.",
+      },
+      {
+        title: "Saturday-night logistics already eat your week",
+        body:
+          "Two kids' bedtimes, packing the Sunday bag, finding shoes. The last thing you need is a church-search that takes ten clicks and produces a list of congregations 40 minutes away. The directory needs to give you a usable short list before bedtime so you can actually go in the morning.",
+      },
+    ],
+
+    solution_h2: "How GospelChannel helps families pick a Sunday",
+    solution_lede:
+      "Four ways the directory makes the family-fit decision faster — without pretending the dimensions of family fit are simple.",
+    solutions: [
+      {
+        title: "Browse by city to keep the drive realistic",
+        body:
+          "Open your city's page and you'll see every church listed there. With kids in the car, walkable or short-drive matters; the city filter saves you wading through suburbs an hour out.",
+        href: "/church/city",
+        cta: "Browse cities",
+      },
+      {
+        title: "Filter by denomination for the broad shape",
+        body:
+          "Baptist, Pentecostal, non-denominational, Vineyard, and Anglican congregations all tend to have well-developed family programmes — each with a different texture. Filter to a tradition that fits your background or your kids' grandparents'.",
+        href: "/church/denomination",
+        cta: "Browse denominations",
+      },
+      {
+        title: "Read what a first visit feels like",
+        body:
+          "Many church profiles include a \"what to expect\" section written for first-time visitors — kids ministry, dress code, length of service. Useful pre-context when you're prepping kids for somewhere new on Sunday morning.",
+        href: "/guides/first-visit-guide",
+        cta: "Read the guide",
+      },
+      {
+        title: "Take the fit quiz with your partner",
+        body:
+          "Seven questions, three matches. Designed for one user, but most families run it once each and triangulate from the overlap. Useful for surfacing the two or three congregations worth visiting before kicking off a longer search.",
+        href: "/guides/church-fit-quiz",
+        cta: "Take the quiz",
+      },
+    ],
+
+    curated_h2: "Strong family-and-church traditions to start with",
+    curated_lede:
+      "Six denomination pages where family-focused congregations are common. Each lists every church in that tradition — narrow by city or country from there.",
+    curated_cards: [
+      {
+        title: "Baptist churches",
+        description:
+          "Strong family programmes are a longstanding Baptist hallmark — kids ministry, age-graded Sunday school, family events through the week.",
+        href: "/church/denomination/baptist",
+      },
+      {
+        title: "Non-denominational churches",
+        description:
+          "Free-church congregations often build the family programme from scratch, which means it usually reflects the church's actual priorities rather than a denominational template.",
+        href: "/church/denomination/non-denominational",
+      },
+      {
+        title: "Pentecostal churches",
+        description:
+          "Pentecostal congregations tend to be intergenerational by default — children visible in the main service, alongside dedicated kids work.",
+        href: "/church/denomination/pentecostal",
+      },
+      {
+        title: "Vineyard churches",
+        description:
+          "Vineyard's family culture is warm and unstuffy. Children are welcome in the room; the kids programme is solid without being slick.",
+        href: "/church/denomination/vineyard",
+      },
+      {
+        title: "Anglican churches",
+        description:
+          "Anglican parishes vary widely but family programmes are well-developed in most. Listed here for families coming from or curious about the tradition.",
+        href: "/church/denomination/anglican",
+      },
+      {
+        title: "Contemporary worship",
+        description:
+          "Many family-friendly free-churches lean contemporary. Skim this style to find congregations where the music works for both adults and kids.",
+        href: "/church/style/contemporary",
+      },
+    ],
+
+    related_guides: [
+      { href: "/guides/first-visit-guide", label: "First visit guide" },
+      { href: "/guides/church-fit-quiz", label: "Church fit quiz" },
+      { href: "/guides/faith-faq", label: "Faith FAQ" },
+    ],
+
+    faq_h2: "Family church-finding FAQ",
+    faqs: [
+      {
+        question: "How do I know if a church has a real kids ministry?",
+        answer:
+          "Read the church's profile copy and website carefully. Real kids ministries describe themselves with specifics — age groups, room locations, security policies, what happens during the main service. Vague \"we love families\" copy without specifics usually means small or under-resourced. Visiting once is the only way to be sure.",
+      },
+      {
+        question: "What denominations are most family-friendly?",
+        answer:
+          "Family-friendliness depends more on the specific congregation than the denomination. That said, Baptist, Pentecostal, non-denominational, Vineyard, and many evangelical Anglican congregations have strong family infrastructure as a default. Use denomination to narrow, then visit to confirm.",
+      },
+      {
+        question: "Does GospelChannel cover state churches like Svenska Kyrkan or Church of England?",
+        answer:
+          "Some of those congregations are listed but our positioning is the free-church / evangelical / charismatic segment. For purely state-church or liturgical-tradition family churches, a denomination-specific directory will fit better.",
+      },
+      {
+        question: "Is GospelChannel free?",
+        answer:
+          "Yes. Free for visitors to browse, free for churches to claim and edit profiles. No paid tiers today.",
+      },
+      {
+        question: "Can my kids' grandparents' church get listed?",
+        answer:
+          "If it's in the free-church spectrum, yes. Submit it via /church/suggest and we'll review and publish. If it's been claimed by the pastor or a leader, they can edit details directly.",
+      },
+    ],
+
+    cta_h2: "Pick a Sunday the whole household can live with",
+    cta_lede:
+      "Browse by city, narrow by denomination or worship style, and have a short list ready before Saturday's bedtime routine.",
+  },
+
+  "new-believers": {
+    slug: "new-believers",
+    audience_name: "New believers",
+
+    meta_title: "Welcoming Churches for New Christians — GospelChannel",
+    meta_description:
+      "Recently came to faith? Find a welcoming free-church or evangelical congregation. Plain-spoken, no jargon, no assumption you already know the rules.",
+
+    hero_eyebrow: "For new believers",
+    hero_h1: "Find a welcoming church for new Christians",
+    hero_lede:
+      "You've recently come to faith and you've never been to a church on a regular basis. Most churches will be welcoming if you walk in. The trick is picking a first one that doesn't assume you already know the words. GospelChannel helps you find a free-church or evangelical congregation that takes new believers seriously — without making it weird.",
+
+    pain_h2: "The first-time-Christian Sunday problem",
+    pain_lede:
+      "Most church directories assume you grew up in church. New believers hit a set of problems other audiences don't — and most of them are quiet, not loud.",
+    pains: [
+      {
+        title: "You don't know the unspoken rules",
+        body:
+          "When to stand, when to sit, when to say amen, whether you walk forward for communion. Established congregations forget that none of this is obvious. Walking in for the first time, every transition feels like a quiz you didn't study for, and the longer the service goes the more you're aware of it.",
+      },
+      {
+        title: "The terminology lands sideways",
+        body:
+          "Words like sanctification, atonement, doctrine, communion, intercession show up in normal sentences. You can usually piece together what they mean, but it costs concentration you'd rather spend on the actual sermon. A church that explains its own vocabulary from time to time is doing new believers a quiet favour.",
+      },
+      {
+        title: "You don't know which questions are okay to ask",
+        body:
+          "Some churches treat earnest questions about hell, judgement, the Bible, or sexual ethics as healthy. Others go quiet and steer you back to the small group. As a new believer you can't always tell which kind of room you're in until you've asked a question and watched the temperature change. A directory can help signal the difference.",
+      },
+      {
+        title: "Friend who invited you may not be there next week",
+        body:
+          "A lot of new believers come through one person — a friend, partner, colleague, family member. When that person can't make next Sunday, you're suddenly on your own in a building where everyone seems to know each other. The first congregation needs to be one you can keep showing up to when your one connection is travelling.",
+      },
+    ],
+
+    solution_h2: "How GospelChannel helps a first Sunday actually be a first Sunday",
+    solution_lede:
+      "Four practical entry points designed for someone with no prior church experience.",
+    solutions: [
+      {
+        title: "Read the first-visit guide first",
+        body:
+          "Before you pick a church, read what actually happens on a Sunday morning — the parking lot, the greeting, the music, the offering, the prayer, the dismissal. Nothing should surprise you the first time you walk in. It's the most-read piece on the site for a reason.",
+        href: "/guides/first-visit-guide",
+        cta: "Read the guide",
+      },
+      {
+        title: "Read the faith FAQ second",
+        body:
+          "Common questions about salvation, the Bible, baptism, prayer, and the Holy Spirit — answered plainly without assuming you already share the answer. Use it to fill in vocabulary gaps before your first Sunday, or as a reference afterwards.",
+        href: "/guides/faith-faq",
+        cta: "Read the FAQ",
+      },
+      {
+        title: "Take the fit quiz",
+        body:
+          "Seven questions, three matches. Designed to surface a small set of churches you can actually try this month rather than a long list to wade through. Honest answers produce better matches — there's no signup or scoring you up against anyone.",
+        href: "/guides/church-fit-quiz",
+        cta: "Take the quiz",
+      },
+      {
+        title: "Browse free-church denominations",
+        body:
+          "Non-denominational, Baptist, Vineyard, Pentecostal — traditions that often have well-developed welcome flows for new believers. Pick the one that matches the friend or context that brought you to faith, or use the quiz if you don't know.",
+        href: "/church/denomination",
+        cta: "Browse denominations",
+      },
+    ],
+
+    curated_h2: "Good first-Sunday starting points",
+    curated_lede:
+      "A short list of pages designed to take a new believer from \"I don't know where to start\" to \"I have a Sunday booked\" in fifteen minutes.",
+    curated_cards: [
+      {
+        title: "First visit guide",
+        description:
+          "Step-by-step walk-through of what actually happens on a Sunday morning at a typical free-church congregation. Read this first.",
+        href: "/guides/first-visit-guide",
+      },
+      {
+        title: "Faith FAQ",
+        description:
+          "Common questions about salvation, the Bible, baptism, the Holy Spirit, and church life — answered plainly without assuming prior background.",
+        href: "/guides/faith-faq",
+      },
+      {
+        title: "Church fit quiz",
+        description:
+          "Seven-question quiz that surfaces three churches worth trying, calibrated to your worship style and context. No signup.",
+        href: "/guides/church-fit-quiz",
+      },
+      {
+        title: "Non-denominational churches",
+        description:
+          "Free-church congregations without a formal denominational affiliation. Often have clear welcome flows for newcomers and contemporary worship.",
+        href: "/church/denomination/non-denominational",
+      },
+      {
+        title: "Baptist churches",
+        description:
+          "Strong tradition of welcoming new believers, with well-developed baptism and discipleship pathways across most congregations.",
+        href: "/church/denomination/baptist",
+      },
+      {
+        title: "Vineyard churches",
+        description:
+          "Warm, low-jargon, often charismatic — Vineyard congregations tend to be unusually welcoming to people new to faith.",
+        href: "/church/denomination/vineyard",
+      },
+    ],
+
+    related_guides: [
+      { href: "/guides/first-visit-guide", label: "First visit guide" },
+      { href: "/guides/faith-faq", label: "Faith FAQ" },
+      { href: "/guides/prayer-guide", label: "How to start praying" },
+    ],
+
+    faq_h2: "New-believer church-finding FAQ",
+    faqs: [
+      {
+        question: "Do I need to know anything before I walk into a church for the first time?",
+        answer:
+          "No. Genuinely, no. Read the first-visit guide if you want to know what to expect, but you don't need a vocabulary or a doctrinal position. Showing up curious is enough. Free-church congregations in particular tend to be used to first-time visitors and built to welcome them.",
+      },
+      {
+        question: "What's the difference between the denominations?",
+        answer:
+          "Each tradition has its own emphasis — Baptist on baptism by immersion and congregational governance, Pentecostal on the Holy Spirit, non-denominational on local autonomy, Vineyard on warm charismatic worship, and so on. The faith FAQ explains the most common ones in plain terms. For your first Sunday, the difference between traditions matters less than the difference between specific congregations.",
+      },
+      {
+        question: "Is GospelChannel free?",
+        answer:
+          "Yes. Free to browse, the quiz is free, the guides are free, no signup required.",
+      },
+      {
+        question: "I'm not sure I'm \"in\" yet — should I still go to a church?",
+        answer:
+          "Yes, if you want to. Many people walk into a free-church congregation with an honest \"I'm exploring\" posture and find it welcomed rather than treated as a problem to fix. You don't have to be sure of anything before you arrive — most pastors would rather meet you while you're working it out than miss you because you waited.",
+      },
+      {
+        question: "What if the first church I try isn't the right one?",
+        answer:
+          "Try another. The first congregation isn't a permanent commitment; it's just a first Sunday. Most people land at the third or fourth church they visit, not the first. If you're in a small town with limited options, the fit quiz and worship-style filter help maximise the chance of a fit on the first try.",
+      },
+    ],
+
+    cta_h2: "Take the first Sunday at your own pace",
+    cta_lede:
+      "Read the first-visit guide, take the fit quiz, and pick one church to try this Sunday. No more than one — keep it small.",
+  },
+
+  deconstructing: {
+    slug: "deconstructing",
+    audience_name: "Deconstructing seekers",
+
+    meta_title: "Church for Post-Evangelical Seekers — GospelChannel",
+    meta_description:
+      "Looking for a free-church or evangelical congregation that isn't fundamentalist? A broader, non-graded directory for people processing church history.",
+
+    hero_eyebrow: "For deconstructing seekers",
+    hero_h1: "A church for people processing their church history",
+    hero_lede:
+      "You grew up in church. Something cracked. Maybe a lot of things. You're not sure you can go back to where you came from, and you're not sure you want to leave entirely. GospelChannel doesn't grade churches on a fundamentalist rubric and doesn't pretend there's one right Sunday for everyone — which makes it usable when you're processing what happened.",
+
+    pain_h2: "The deconstructing-Sunday problem nobody warns you about",
+    pain_lede:
+      "Most church directories implicitly serve people who never left. Their filters, their language, their assumed audience. Deconstructing seekers hit a different set of problems — quieter than active deconversion, harder to explain than just \"shopping for a new church.\"",
+    pains: [
+      {
+        title: "Triggers fire faster than discernment",
+        body:
+          "You walk in. The pastor uses a phrase your home pastor used. Your shoulders go up. Half an hour in you're tracking everything against an old grid: would this congregation have hurt the friend who got hurt at the old place? You can't tell whether the answer is yes or no, and the suspicion is doing all the work the worship was supposed to.",
+      },
+      {
+        title: "You're not interested in being scored",
+        body:
+          "Directories that grade churches on a 45-point theological rubric assume there's an obvious right answer. After what you've seen, there isn't. The scoring itself is part of what made you tired. A list that doesn't pretend to settle anything for you is more useful than one that ranks congregations on someone else's confidence.",
+      },
+      {
+        title: "You want community without ideology in the water",
+        body:
+          "You still want Sunday singing, the lifelong-friend vibe, communion, prayer. You don't want a sermon that doubles as a political position paper. The line between formative theology and culture-war coding is real and it's hard to spot from a website. You need a directory that doesn't assume the latter is fine.",
+      },
+      {
+        title: "Going alone feels safer than going wrong",
+        body:
+          "After a bad-fit congregation, going by yourself feels manageable. Going with friends doubles the stakes — you don't want to lead someone else into a Sunday that hurts them or that you have to explain afterwards. Months pass. The not-going hardens into a pattern that wasn't actually what you wanted.",
+      },
+    ],
+
+    solution_h2: "How GospelChannel works for someone still working it out",
+    solution_lede:
+      "Four ways the directory is shaped to be usable when you're processing rather than shopping.",
+    solutions: [
+      {
+        title: "No theological grading on our side",
+        body:
+          "We list churches across the free-church spectrum without confessional gates. You decide what's a deal-breaker. No score, no ranking, no implicit \"approved.\" That makes the directory broader than some, which is exactly the point when you're calibrating from scratch.",
+        href: "/church",
+        cta: "Open the directory",
+      },
+      {
+        title: "Filter by tradition you already trust",
+        body:
+          "If your old church hurt you but the wider Vineyard tradition didn't, browse Vineyard. If you're easier with Anglican texture than Pentecostal intensity right now, that's an honest filter. Use what works; revisit later when other things stop being tender.",
+        href: "/church/denomination",
+        cta: "Browse denominations",
+      },
+      {
+        title: "Hear the music first",
+        body:
+          "For some deconstructing seekers, the worship is the safest entry point — it lets you sit with the room before words land. Profiles with Spotify or YouTube give you a preview. If a track sets your teeth on edge in your own kitchen, you know to skip the Sunday.",
+        href: "/church",
+        cta: "Browse the directory",
+      },
+      {
+        title: "Pray on the prayer wall, even before you visit anywhere",
+        body:
+          "The prayer wall is anonymous, public-or-private, and doesn't require a church. Some seekers reconnect through prayer before reconnecting through any specific congregation. It's there if you want it.",
+        href: "/prayerwall",
+        cta: "Open the prayer wall",
+      },
+    ],
+
+    curated_h2: "Lower-friction starting points",
+    curated_lede:
+      "Six pages chosen because they tend to host congregations that handle questions, doubt, and church history with less reactivity. Each links to every church in that bucket.",
+    curated_cards: [
+      {
+        title: "Anglican churches",
+        description:
+          "Anglican congregations vary widely but the tradition itself sits comfortably with questions and intellectual breadth. A common landing point for deconstructing evangelicals.",
+        href: "/church/denomination/anglican",
+      },
+      {
+        title: "Vineyard churches",
+        description:
+          "Warm, low-jargon, charismatic-but-not-shouty. Vineyard tends to handle doubt without panic.",
+        href: "/church/denomination/vineyard",
+      },
+      {
+        title: "Non-denominational churches",
+        description:
+          "Each non-denominational congregation is its own thing. That means some will fit and some won't — but it also means the tradition itself doesn't carry baggage you might be done with.",
+        href: "/church/denomination/non-denominational",
+      },
+      {
+        title: "Prayer wall",
+        description:
+          "Anonymous space to pray and be prayed for, with or without a church attached. Sometimes the right next step.",
+        href: "/prayerwall",
+      },
+      {
+        title: "Faith FAQ",
+        description:
+          "Plain-spoken answers to common questions about salvation, baptism, the Holy Spirit, and church — without the loaded framing.",
+        href: "/guides/faith-faq",
+      },
+      {
+        title: "How to start praying",
+        description:
+          "If prayer itself has gotten complicated, this guide is the shortest path back into it. No jargon. No pressure.",
+        href: "/guides/prayer-guide",
+      },
+    ],
+
+    related_guides: [
+      { href: "/guides/faith-faq", label: "Faith FAQ" },
+      { href: "/guides/prayer-guide", label: "How to start praying" },
+      { href: "/guides/first-visit-guide", label: "First visit guide" },
+    ],
+
+    faq_h2: "Deconstructing-seeker FAQ",
+    faqs: [
+      {
+        question: "Is GospelChannel a deconstruction-friendly directory?",
+        answer:
+          "We're broad rather than aligned. We don't grade churches against a confessional rubric, we don't assume everyone has the same theology, and we cover the wider free-church spectrum from charismatic to Reformed Baptist. That makes the directory usable when you're processing church history, even though we're not specifically a deconstruction project.",
+      },
+      {
+        question: "Will I just end up at a church that looks like the one that hurt me?",
+        answer:
+          "You might if you don't filter carefully. The denomination filter, the worship-style filter, and the church's own profile copy are the main tools. If the original wound was specifically high-control fundamentalism, browse Anglican, Vineyard, or broader non-denominational congregations first — those tend to handle questions and dissent better. Visiting and leaving after one Sunday is a fine response if something feels off.",
+      },
+      {
+        question: "Do I have to be sure of what I believe to use the directory?",
+        answer:
+          "No. The directory doesn't ask. It lists churches and lets you decide. Many people use it during a deconstructing season specifically because there isn't an account, a profile, or a position-paper you have to fill in to use it.",
+      },
+      {
+        question: "Is the prayer wall a substitute for going to a church?",
+        answer:
+          "It can be a bridge rather than a substitute. Some seekers use it to keep a thread of prayer alive while they're not attending anywhere. Others use it alongside a church they're starting to try again. It's not a replacement and we don't pitch it as one; it's a separate, lower-friction surface.",
+      },
+      {
+        question: "What if I don't want to go back to church at all right now?",
+        answer:
+          "That's a legitimate place to be and the directory doesn't push you out of it. Many deconstructing seekers spend months on the prayer wall, the faith FAQ, and the guides without ever visiting a congregation. There's no clock. We're not trying to convert your season into someone else's.",
+      },
+    ],
+
+    cta_h2: "Take the next step at your own pace",
+    cta_lede:
+      "Use the directory, the prayer wall, or the guides at whatever depth you want. None of them require an account or push you somewhere you're not ready to be.",
   },
 };

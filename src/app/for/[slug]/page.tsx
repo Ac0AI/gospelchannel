@@ -47,6 +47,9 @@ export default async function ForAudiencePage({
   }
 
   const url = `${SITE_URL}/for/${data.slug}`;
+  const siblings = Object.values(FOR_AUDIENCE)
+    .filter((audience) => audience.slug !== data.slug)
+    .map((audience) => ({ slug: audience.slug, audience_name: audience.audience_name }));
 
   const schema = [
     buildArticleSchema({
@@ -76,7 +79,7 @@ export default async function ForAudiencePage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
-      <ForAudienceLayout data={data} />
+      <ForAudienceLayout data={data} siblings={siblings} />
     </>
   );
 }
