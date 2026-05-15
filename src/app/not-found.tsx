@@ -8,6 +8,11 @@ export const metadata: Metadata = {
   description:
     "This page does not exist. Head back to the homepage, search the directory, or take the church fit quiz.",
   robots: { index: false, follow: true },
+  // Sentinel for worker.ts: OpenNext on Cloudflare currently returns 200
+  // even when Next.js notFound() triggers from inside server components.
+  // The worker matches this meta tag in the rendered HTML and rewrites
+  // the status to 404 so search engines see the correct signal.
+  other: { "x-gc-status": "404" },
 };
 
 export default function NotFound() {

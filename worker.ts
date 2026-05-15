@@ -28,6 +28,33 @@ const HTML_EDGE_CACHE_TTL_SECONDS = 3600;
 const HTML_EDGE_CACHE_SWR_SECONDS = 86400;
 const AUTH_COOKIE_PATTERN = /(?:^|;\s*)(?:better-auth|session|auth)/i;
 
+// OpenNext on Cloudflare returns 200 OK even when Next.js notFound() triggers
+// from inside server components. This breaks SEO — Google sees a 200 response
+// with Not Found content and treats it as low-quality indexable. We rewrite
+// the status to 404 when the rendered HTML carries the sentinel meta tag set
+// by src/app/not-found.tsx.
+const NOT_FOUND_SENTINEL = 'name="x-gc-status" content="404"';
+
+async function fixNotFoundStatus(response: Response): Promise<Response> {
+  if (response.status !== 200) return response;
+  const contentType = response.headers.get("content-type") ?? "";
+  if (!contentType.includes("text/html")) return response;
+
+  // The sentinel is in <head>, so reading the first 4KB is enough.
+  const body = await response.clone().text();
+  if (!body.includes(NOT_FOUND_SENTINEL)) return response;
+
+  const headers = new Headers(response.headers);
+  // Prevent edge caches and CDN intermediaries from caching the rewritten
+  // 404 alongside the original 200. Force no-store on these specifically.
+  headers.set("cache-control", "no-store");
+  return new Response(body, {
+    status: 404,
+    statusText: "Not Found",
+    headers,
+  });
+}
+
 function isSitemapRequest(request: Request): boolean {
   if (request.method !== "GET") {
     return false;
@@ -119,14 +146,18 @@ async function fetchWithHtmlEdgeCache(
   if (cached) {
     const hitHeaders = new Headers(cached.headers);
     hitHeaders.set("x-edge-cache", "HIT");
-    return new Response(cached.body, {
+    const hit = new Response(cached.body, {
       status: cached.status,
       statusText: cached.statusText,
       headers: hitHeaders,
     });
+    // Old cache entries from before the 404 fix may still carry status 200
+    // with Not Found content. Rewrite them on the way out.
+    return fixNotFoundStatus(hit);
   }
 
-  const response = await openNextWorker.fetch(request, env, ctx);
+  const rawResponse = await openNextWorker.fetch(request, env, ctx);
+  const response = await fixNotFoundStatus(rawResponse);
   const contentType = response.headers.get("content-type") ?? "";
   const isHtml = contentType.includes("text/html");
   const setsCookie = response.headers.has("set-cookie");
@@ -163,7 +194,9 @@ async function fetchWithEdgeCache(
   if (isHtmlCacheableRequest(request)) {
     return fetchWithHtmlEdgeCache(request, env, ctx);
   }
-  return openNextWorker.fetch(request, env, ctx);
+  // Non-cached paths still need the 200→404 rewrite for SEO hygiene.
+  const response = await openNextWorker.fetch(request, env, ctx);
+  return fixNotFoundStatus(response);
 }
 
 async function fetchWithSitemapEdgeCache(
