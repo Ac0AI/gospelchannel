@@ -13,12 +13,6 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <section className="flex min-h-[70vh] items-center justify-center px-5 py-24 sm:px-12">
-      {/*
-        Sentinel for worker.ts. OpenNext on Cloudflare returns 200 even when
-        notFound() triggers inside server components — the worker matches
-        this element in the rendered HTML and rewrites the status to 404.
-      */}
-      <span data-gc-not-found="1" hidden aria-hidden="true" />
       <div className="relative mx-auto max-w-[920px] text-center">
         {/* Giant ghost 404 */}
         <div

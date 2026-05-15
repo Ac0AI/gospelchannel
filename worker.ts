@@ -37,11 +37,15 @@ const AUTH_COOKIE_PATTERN = /(?:^|;\s*)(?:better-auth|session|auth)/i;
 // We only inspect bodies of GET responses with text/html content-type, and
 // only the first 16KB — the sentinel sits in the <body> right after <main>'s
 // opening container, well within that budget.
-// Match the attribute name only. Next 16 RSC payloads serialise JSX props as
-// JSON (data-gc-not-found\":\"1\") rather than as plain HTML attributes
-// (data-gc-not-found="1"), so we drop the value from the match to catch both.
-// The attribute name is specific enough that only not-found.tsx emits it.
-const NOT_FOUND_SENTINEL = "data-gc-not-found";
+// Next.js writes its own internal error digest into the streamed RSC payload
+// when a 404 fallback is actually being rendered (as opposed to merely
+// referenced). This marker is specific to active 404 renders — valid pages
+// don't ship it, even if they import notFound() — so it's a reliable signal
+// for rewriting the status. Sentinel-based approaches based on our own
+// not-found.tsx element fail here because Next streams not-found.tsx
+// content as a possible fallback target for many routes regardless of
+// whether the page actually triggered notFound().
+const NOT_FOUND_SENTINEL = "NEXT_HTTP_ERROR_FALLBACK;404";
 const SENTINEL_SCAN_BYTES = 32768;
 
 async function fixNotFoundStatus(request: Request, response: Response): Promise<Response> {
