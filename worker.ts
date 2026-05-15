@@ -42,36 +42,30 @@ const NOT_FOUND_TITLE_OURS = "<title>Page not found";
 const NOINDEX_META = '<meta name="robots" content="noindex"';
 
 async function fixNotFoundStatus(response: Response): Promise<Response> {
-  if (response.status !== 200) {
-    const h = new Headers(response.headers);
-    h.set("x-gc-404fix", "skip-nonok");
-    return new Response(response.body, { status: response.status, statusText: response.statusText, headers: h });
-  }
+  if (response.status !== 200) return response;
   const contentType = response.headers.get("content-type") ?? "";
-  if (!contentType.includes("text/html")) {
-    const h = new Headers(response.headers);
-    h.set("x-gc-404fix", "skip-nonhtml");
-    return new Response(response.body, { status: response.status, statusText: response.statusText, headers: h });
-  }
+  if (!contentType.includes("text/html")) return response;
 
-  const body = await response.clone().text();
+  // Consume body directly. Cloning + .text() on Cloudflare Workers can return
+  // empty for compressed responses, so we materialise the body once and
+  // either rebuild a fresh 200 or return a 404 based on what we see.
+  const body = await response.text();
   const hasTitle = body.includes(NOT_FOUND_TITLE) || body.includes(NOT_FOUND_TITLE_OURS);
   const hasNoindex = body.includes(NOINDEX_META);
 
+  const headers = new Headers(response.headers);
+  // Compression hop is consumed; downstream must re-evaluate or use uncompressed.
+  headers.delete("content-encoding");
+  headers.delete("content-length");
+
   if (!(hasTitle && hasNoindex)) {
-    const h = new Headers(response.headers);
-    h.set("x-gc-404fix", `skip-nomatch t=${hasTitle ? 1 : 0} n=${hasNoindex ? 1 : 0}`);
-    return new Response(body, { status: response.status, statusText: response.statusText, headers: h });
+    headers.set("x-gc-404fix", `skip-nomatch t=${hasTitle ? 1 : 0} n=${hasNoindex ? 1 : 0} len=${body.length}`);
+    return new Response(body, { status: 200, statusText: response.statusText, headers });
   }
 
-  const headers = new Headers(response.headers);
   headers.set("cache-control", "no-store");
   headers.set("x-gc-404fix", "rewrote-to-404");
-  return new Response(body, {
-    status: 404,
-    statusText: "Not Found",
-    headers,
-  });
+  return new Response(body, { status: 404, statusText: "Not Found", headers });
 }
 
 function isSitemapRequest(request: Request): boolean {
