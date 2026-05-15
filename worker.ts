@@ -29,43 +29,63 @@ const HTML_EDGE_CACHE_SWR_SECONDS = 86400;
 const AUTH_COOKIE_PATTERN = /(?:^|;\s*)(?:better-auth|session|auth)/i;
 
 // OpenNext on Cloudflare returns 200 OK even when Next.js notFound() triggers
-// from inside server components — the rendered HTML is a Not Found page but
-// the status line stays 200, which Google reads as low-quality indexable.
+// from inside server components. The rendered HTML carries the not-found.tsx
+// content but the status line stays 200, which Google reads as low-quality
+// indexable. We sniff the rendered HTML for a sentinel element placed in
+// src/app/not-found.tsx and rewrite the status to 404 when present.
 //
-// Next.js's metadata.other on src/app/not-found.tsx does not propagate when
-// notFound() bubbles up from a [slug]/page.tsx (Next falls back to a default
-// internal "Not Found" page rather than our route-level component). The most
-// reliable sentinel is the rendered <title> + noindex meta combo, both of
-// which the default Not Found page emits and no valid page on this site does.
-const NOT_FOUND_TITLE = "<title>Not Found";
-const NOT_FOUND_TITLE_OURS = "<title>Page not found";
-const NOINDEX_META = '<meta name="robots" content="noindex"';
+// We only inspect bodies of GET responses with text/html content-type, and
+// only the first 16KB — the sentinel sits in the <body> right after <main>'s
+// opening container, well within that budget.
+const NOT_FOUND_SENTINEL = 'data-gc-not-found="1"';
+const SENTINEL_SCAN_BYTES = 16384;
 
-async function fixNotFoundStatus(response: Response): Promise<Response> {
+async function fixNotFoundStatus(request: Request, response: Response): Promise<Response> {
+  if (request.method !== "GET") return response;
   if (response.status !== 200) return response;
   const contentType = response.headers.get("content-type") ?? "";
   if (!contentType.includes("text/html")) return response;
+  if (!response.body) return response;
 
-  // Consume body directly. Cloning + .text() on Cloudflare Workers can return
-  // empty for compressed responses, so we materialise the body once and
-  // either rebuild a fresh 200 or return a 404 based on what we see.
-  const body = await response.text();
-  const hasTitle = body.includes(NOT_FOUND_TITLE) || body.includes(NOT_FOUND_TITLE_OURS);
-  const hasNoindex = body.includes(NOINDEX_META);
+  // Reads body from the stream and rebuilds a Response. Skipping clone() —
+  // on Workers a cloned body can come back empty for streamed responses.
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  let scanBuffer = "";
+  let found = false;
+  const decoder = new TextDecoder("utf-8", { fatal: false });
+
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    chunks.push(value);
+    total += value.byteLength;
+    if (!found && scanBuffer.length < SENTINEL_SCAN_BYTES) {
+      scanBuffer += decoder.decode(value, { stream: true });
+      if (scanBuffer.includes(NOT_FOUND_SENTINEL)) {
+        found = true;
+      }
+    }
+  }
+
+  const merged = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    merged.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
 
   const headers = new Headers(response.headers);
-  // Compression hop is consumed; downstream must re-evaluate or use uncompressed.
   headers.delete("content-encoding");
   headers.delete("content-length");
 
-  if (!(hasTitle && hasNoindex)) {
-    headers.set("x-gc-404fix", `skip-nomatch t=${hasTitle ? 1 : 0} n=${hasNoindex ? 1 : 0} len=${body.length}`);
-    return new Response(body, { status: 200, statusText: response.statusText, headers });
+  if (!found) {
+    return new Response(merged, { status: 200, statusText: response.statusText, headers });
   }
 
   headers.set("cache-control", "no-store");
-  headers.set("x-gc-404fix", "rewrote-to-404");
-  return new Response(body, { status: 404, statusText: "Not Found", headers });
+  return new Response(merged, { status: 404, statusText: "Not Found", headers });
 }
 
 function isSitemapRequest(request: Request): boolean {
@@ -166,11 +186,11 @@ async function fetchWithHtmlEdgeCache(
     });
     // Old cache entries from before the 404 fix may still carry status 200
     // with Not Found content. Rewrite them on the way out.
-    return fixNotFoundStatus(hit);
+    return fixNotFoundStatus(request, hit);
   }
 
   const rawResponse = await openNextWorker.fetch(request, env, ctx);
-  const response = await fixNotFoundStatus(rawResponse);
+  const response = await fixNotFoundStatus(request, rawResponse);
   const contentType = response.headers.get("content-type") ?? "";
   const isHtml = contentType.includes("text/html");
   const setsCookie = response.headers.has("set-cookie");
@@ -209,7 +229,7 @@ async function fetchWithEdgeCache(
   }
   // Non-cached paths still need the 200→404 rewrite for SEO hygiene.
   const response = await openNextWorker.fetch(request, env, ctx);
-  return fixNotFoundStatus(response);
+  return fixNotFoundStatus(request, response);
 }
 
 async function fetchWithSitemapEdgeCache(
