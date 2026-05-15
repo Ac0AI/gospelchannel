@@ -42,18 +42,31 @@ const NOT_FOUND_TITLE_OURS = "<title>Page not found";
 const NOINDEX_META = '<meta name="robots" content="noindex"';
 
 async function fixNotFoundStatus(response: Response): Promise<Response> {
-  if (response.status !== 200) return response;
+  if (response.status !== 200) {
+    const h = new Headers(response.headers);
+    h.set("x-gc-404fix", "skip-nonok");
+    return new Response(response.body, { status: response.status, statusText: response.statusText, headers: h });
+  }
   const contentType = response.headers.get("content-type") ?? "";
-  if (!contentType.includes("text/html")) return response;
+  if (!contentType.includes("text/html")) {
+    const h = new Headers(response.headers);
+    h.set("x-gc-404fix", "skip-nonhtml");
+    return new Response(response.body, { status: response.status, statusText: response.statusText, headers: h });
+  }
 
   const body = await response.clone().text();
-  const looksLikeNotFound =
-    (body.includes(NOT_FOUND_TITLE) || body.includes(NOT_FOUND_TITLE_OURS)) &&
-    body.includes(NOINDEX_META);
-  if (!looksLikeNotFound) return response;
+  const hasTitle = body.includes(NOT_FOUND_TITLE) || body.includes(NOT_FOUND_TITLE_OURS);
+  const hasNoindex = body.includes(NOINDEX_META);
+
+  if (!(hasTitle && hasNoindex)) {
+    const h = new Headers(response.headers);
+    h.set("x-gc-404fix", `skip-nomatch t=${hasTitle ? 1 : 0} n=${hasNoindex ? 1 : 0}`);
+    return new Response(body, { status: response.status, statusText: response.statusText, headers: h });
+  }
 
   const headers = new Headers(response.headers);
   headers.set("cache-control", "no-store");
+  headers.set("x-gc-404fix", "rewrote-to-404");
   return new Response(body, {
     status: 404,
     statusText: "Not Found",
