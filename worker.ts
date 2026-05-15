@@ -37,8 +37,12 @@ const AUTH_COOKIE_PATTERN = /(?:^|;\s*)(?:better-auth|session|auth)/i;
 // We only inspect bodies of GET responses with text/html content-type, and
 // only the first 16KB — the sentinel sits in the <body> right after <main>'s
 // opening container, well within that budget.
-const NOT_FOUND_SENTINEL = 'data-gc-not-found="1"';
-const SENTINEL_SCAN_BYTES = 16384;
+// Match the attribute name only. Next 16 RSC payloads serialise JSX props as
+// JSON (data-gc-not-found\":\"1\") rather than as plain HTML attributes
+// (data-gc-not-found="1"), so we drop the value from the match to catch both.
+// The attribute name is specific enough that only not-found.tsx emits it.
+const NOT_FOUND_SENTINEL = "data-gc-not-found";
+const SENTINEL_SCAN_BYTES = 32768;
 
 async function fixNotFoundStatus(request: Request, response: Response): Promise<Response> {
   if (request.method !== "GET") return response;
