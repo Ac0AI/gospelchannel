@@ -20,6 +20,16 @@ if (typeof window !== "undefined" && POSTHOG_KEY) {
     disable_surveys: true,
     disable_scroll_properties: true,
     advanced_disable_decide: true,
+    // Real-user Core Web Vitals (LCP/CLS/INP) — the metrics Google ranks on.
+    // Must be set explicitly client-side: advanced_disable_decide blocks the
+    // remote config that would otherwise toggle this. network_timing stays
+    // off to keep the cookieless/minimal posture (web vitals only, no
+    // per-resource timing payloads).
+    capture_performance: {
+      web_vitals: true,
+      network_timing: false,
+      web_vitals_allowed_metrics: ["LCP", "CLS", "INP"],
+    },
     on_xhr_error: () => {},
   });
   posthog.analyticsDefaultEndpoint = "/e";
