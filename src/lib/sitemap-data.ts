@@ -6,6 +6,8 @@ import {
   CHURCH_INDEX_TAG,
   getChurchDirectorySeedCountAsync,
   getChurchDirectorySeedSliceAsync,
+  getChurchDirectorySeedsBySlugs,
+  getApprovedChurchCountries,
   type ChurchDirectorySeed,
 } from "@/lib/content";
 import { type FacetLink } from "@/lib/church-directory";
@@ -15,8 +17,9 @@ import {
   getNetworksSlice,
   getPublishedCampusCount,
   getPublishedCampusesSlice,
+  getAllPublishedCampuses,
 } from "@/lib/church-networks";
-import { getPrayerFilterIndex, type FilterOption } from "@/lib/prayer-filters";
+import { buildPrayerFilterIndex, buildKnownCountrySlugs, type FilterOption } from "@/lib/prayer-filters";
 import { getChurchSlugsWithPrayers } from "@/lib/prayer";
 import { getCompareGuideSlugs } from "@/lib/tooling";
 import { CONTENT_UPDATED_AT } from "@/lib/utils";
@@ -235,8 +238,8 @@ function getSitemapEntryCountFromSections(data: SitemapSectionCounts): number {
 // limits). Removes the old full directory-seed pull that OOM'd the Worker on
 // cold sitemap chunks; the aggregate result is small so unstable_cache
 // actually stores it (>2 MB silent-skip no longer applies). Zero-drift with
-// the facet pages by construction. NOTE: prayer sitemap still uses
-// getPrayerFilterIndex() — known follow-up, not fixed here.
+// the facet pages by construction. (Prayer sitemap is now also windowed —
+// see getSitemapPrayerDataCached.)
 const getSitemapFacetDataCached = unstable_cache(
   async (): Promise<SitemapFacetData> => {
     const links = await fetchFacetRelatedLinks({});
@@ -251,15 +254,45 @@ const getSitemapFacetDataCached = unstable_cache(
   { revalidate: 3600, tags: [CHURCH_INDEX_TAG] },
 );
 
-const getSitemapPrayerDataCached = unstable_cache(
-  async (): Promise<SitemapPrayerData> => {
+// Exported non-cached for the parity gate (prayer-sitemap-parity.test.ts):
+// compared byte-for-byte against the old getPrayerFilterIndex-derived path.
+export async function buildSitemapPrayerData(): Promise<SitemapPrayerData> {
     // Only emit sitemap entries for filter pages that have at least one
     // prayer. Empty filter pages share the same shell and triggered "Duplicate
     // without user-selected canonical" issues for ~1.6k URLs in GSC.
-    const [index, prayerSlugs] = await Promise.all([
-      getPrayerFilterIndex(),
-      getChurchSlugsWithPrayers(),
+    //
+    // Prayer-sitemap windowing: build the index over ONLY the prayer-relevant
+    // churches+campuses (~723) instead of getPrayerFilterIndex()'s ~56 MB
+    // all-entity structure that OOM'd the Worker and 503'd every sitemap
+    // chunk. Same buildPrayerFilterIndex, prayer-scoped input → byte-for-byte
+    // the same countryOptions/cityOptions/populatedChurchSlugs (the old
+    // populated-filter becomes a no-op because the input IS the populated
+    // set). prayerwall pages keep their own getPrayerFilterIndex() — untouched.
+    const prayerSlugs = await getChurchSlugsWithPrayers();
+    const slugArr = [...prayerSlugs];
+    const [churches, churchCountries, allCampuses] = await Promise.all([
+      getChurchDirectorySeedsBySlugs(slugArr),
+      getApprovedChurchCountries(),
+      getAllPublishedCampuses().catch(() => []),
     ]);
+    // Full approved-church+campus known-country set so extractPrayerCity
+    // rejects the same "city looks like a country" entries the old
+    // full-index path did (parity — DISTINCT countries == full set, it's a Set).
+    const knownCountrySlugs = buildKnownCountrySlugs([
+      ...churchCountries.map((country) => ({ country })),
+      ...allCampuses.map((c) => ({ country: c.country })),
+    ]);
+    const foundSlugs = new Set(churches.map((c) => c.slug));
+    const orphanSet = new Set(slugArr.filter((s) => !foundSlugs.has(s)));
+    // Prayer slugs absent from churches are campus slugs — buildPrayerFilterIndex
+    // registers campuses too (registerEntity). Same source it uses.
+    const campusSeeds: Array<{ slug: string; name: string; city?: string; country?: string }> =
+      orphanSet.size > 0
+        ? allCampuses
+            .filter((c) => orphanSet.has(c.slug))
+            .map((c) => ({ slug: c.slug, name: c.name, city: c.city, country: c.country }))
+        : [];
+    const index = buildPrayerFilterIndex(churches, campusSeeds, knownCountrySlugs);
 
     const populatedChurchSlugs = new Set<string>();
     const populatedCountrySlugs = new Set<string>();
@@ -287,8 +320,11 @@ const getSitemapPrayerDataCached = unstable_cache(
       prayerChurchCount: populatedChurchSlugs.size,
       populatedChurchSlugs: [...populatedChurchSlugs].sort(),
     };
-  },
-  ["sitemap-prayer-v3"],
+}
+
+const getSitemapPrayerDataCached = unstable_cache(
+  buildSitemapPrayerData,
+  ["sitemap-prayer-v4"],
   { revalidate: 3600, tags: [CHURCH_INDEX_TAG] },
 );
 

@@ -12,7 +12,11 @@ const {
   getNetworksSliceMock,
   getPublishedCampusCountMock,
   getPublishedCampusesSliceMock,
-  getPrayerFilterIndexMock,
+  buildPrayerFilterIndexMock,
+  buildKnownCountrySlugsMock,
+  getChurchDirectorySeedsBySlugsMock,
+  getApprovedChurchCountriesMock,
+  getAllPublishedCampusesMock,
   getCompareGuideSlugsMock,
   getChurchSlugsWithPrayersMock,
   fetchFacetRelatedLinksMock,
@@ -28,7 +32,11 @@ const {
   getNetworksSliceMock: vi.fn(),
   getPublishedCampusCountMock: vi.fn(),
   getPublishedCampusesSliceMock: vi.fn(),
-  getPrayerFilterIndexMock: vi.fn(),
+  buildPrayerFilterIndexMock: vi.fn(),
+  buildKnownCountrySlugsMock: vi.fn(),
+  getChurchDirectorySeedsBySlugsMock: vi.fn(),
+  getApprovedChurchCountriesMock: vi.fn(),
+  getAllPublishedCampusesMock: vi.fn(),
   getCompareGuideSlugsMock: vi.fn(),
   getChurchSlugsWithPrayersMock: vi.fn(),
   fetchFacetRelatedLinksMock: vi.fn(),
@@ -43,6 +51,8 @@ vi.mock("@/lib/content", () => ({
   getChurchDirectorySeedAsync: getChurchDirectorySeedAsyncMock,
   getChurchDirectorySeedCountAsync: getChurchDirectorySeedCountAsyncMock,
   getChurchDirectorySeedSliceAsync: getChurchDirectorySeedSliceAsyncMock,
+  getChurchDirectorySeedsBySlugs: getChurchDirectorySeedsBySlugsMock,
+  getApprovedChurchCountries: getApprovedChurchCountriesMock,
 }));
 
 vi.mock("@/lib/church-directory", () => ({
@@ -61,10 +71,12 @@ vi.mock("@/lib/church-networks", () => ({
   getNetworksSlice: getNetworksSliceMock,
   getPublishedCampusCount: getPublishedCampusCountMock,
   getPublishedCampusesSlice: getPublishedCampusesSliceMock,
+  getAllPublishedCampuses: getAllPublishedCampusesMock,
 }));
 
 vi.mock("@/lib/prayer-filters", () => ({
-  getPrayerFilterIndex: getPrayerFilterIndexMock,
+  buildPrayerFilterIndex: buildPrayerFilterIndexMock,
+  buildKnownCountrySlugs: buildKnownCountrySlugsMock,
 }));
 
 vi.mock("@/lib/prayer", () => ({
@@ -110,7 +122,13 @@ describe("sitemap-data", () => {
     getPublishedCampusesSliceMock.mockResolvedValue([
       { slug: "campus-1", updatedAt: "2026-04-20T00:00:00.000Z" },
     ]);
-    getPrayerFilterIndexMock.mockResolvedValue({
+    buildKnownCountrySlugsMock.mockReturnValue(new Set<string>());
+    getChurchDirectorySeedsBySlugsMock.mockResolvedValue([]);
+    getApprovedChurchCountriesMock.mockResolvedValue([]);
+    getAllPublishedCampusesMock.mockResolvedValue([]);
+    // buildPrayerFilterIndex is sync; same index shape → same downstream
+    // countryOptions/cityOptions/prayerChurchCount as before the windowing.
+    buildPrayerFilterIndexMock.mockReturnValue({
       countryOptions: [{ slug: "sweden", label: "Sweden" }],
       allCityOptions: [{ slug: "stockholm", label: "Stockholm" }],
       allChurchOptions: [

@@ -43,7 +43,7 @@ export function getNormalizedCountrySlug(country?: string): string | undefined {
   return label ? slugify(label) : undefined;
 }
 
-function buildKnownCountrySlugs(sources: Array<{ country?: string }>): Set<string> {
+export function buildKnownCountrySlugs(sources: Array<{ country?: string }>): Set<string> {
   return new Set(
     sources
       .map((source) => getNormalizedCountrySlug(source.country))
@@ -139,8 +139,16 @@ function mapToSortedSlugRecord(store: Map<string, Set<string>>): Record<string, 
 export function buildPrayerFilterIndex(
   churches: ChurchDirectorySeed[],
   campuses: CampusSeed[],
+  // Optional override for the country-name set extractPrayerCity uses to
+  // reject city names that are actually countries. Defaults to the input
+  // population (unchanged for prayerwall). The prayer-sitemap windowing path
+  // passes the FULL approved-church+campus country set so a prayer-scoped
+  // input still rejects the same "city looks like a country" entries the old
+  // full-index path did (parity — see prayer-sitemap-parity.test.ts).
+  knownCountrySlugsOverride?: Set<string>,
 ): PrayerFilterIndex {
-  const knownCountrySlugs = buildKnownCountrySlugs([...churches, ...campuses]);
+  const knownCountrySlugs =
+    knownCountrySlugsOverride ?? buildKnownCountrySlugs([...churches, ...campuses]);
   const countryLabelBySlug = new Map<string, string>();
   const cityLabelBySlug = new Map<string, string>();
   const churchNameBySlug = new Map<string, string>();

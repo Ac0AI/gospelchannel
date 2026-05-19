@@ -488,6 +488,39 @@ async function fetchApprovedChurchDirectorySeedChunkFromDb(
   return rawRows.map(mapRowToChurchDirectorySeed);
 }
 
+// Distinct approved-church countries. buildKnownCountrySlugs collapses to a
+// Set anyway, so DISTINCT yields the identical known-country-slug set as
+// scanning every church — at ~200 rows instead of ~73k (prayer-sitemap
+// windowing parity for extractPrayerCity's country-name rejection).
+export async function getApprovedChurchCountries(): Promise<string[]> {
+  const sql = getSql();
+  const rows = (await sql.query(`
+    SELECT DISTINCT country FROM churches
+    WHERE status = 'approved' AND coalesce(country, '') <> ''
+  `)) as Array<{ country: string }>;
+  return rows.map((r) => r.country);
+}
+
+// Lean directory-seed fetch for a specific slug set (prayer-sitemap windowing
+// — see getSitemapPrayerDataCached). Same columns/mapping/exclusions as the
+// chunk fetch, so the prayer-scoped buildPrayerFilterIndex input is identical
+// to what the full getChurchDirectorySeedAsync would have yielded for these
+// slugs (zero-drift). No DB pull beyond the ~723 prayer churches.
+export async function getChurchDirectorySeedsBySlugs(
+  slugs: string[],
+): Promise<ChurchDirectorySeed[]> {
+  if (slugs.length === 0) return [];
+  const sql = getSql();
+  const rawRows = (await sql.query(`
+    SELECT c.slug, c.name, c.country, c.location, c.music_style, c.denomination, c.updated_at
+    FROM churches c
+    WHERE c.status = 'approved'
+      AND c.slug = ANY($1::text[])
+      AND NOT (c.slug = ANY($2::text[]))
+  `, [slugs, CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS])) as ChurchDirectorySeedRow[];
+  return rawRows.map(mapRowToChurchDirectorySeed);
+}
+
 function formatChurchCountLabel(count: number): string {
   const rounded = Math.floor(count / 100) * 100;
   return `${rounded.toLocaleString("en-US")}+`;
