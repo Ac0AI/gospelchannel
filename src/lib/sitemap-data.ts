@@ -4,8 +4,8 @@
 import { unstable_cache } from "next/cache";
 import {
   CHURCH_INDEX_TAG,
-  getChurchDirectorySeedCountAsync,
-  getChurchDirectorySeedSliceAsync,
+  getSitemapChurchSeedCountAsync,
+  getSitemapChurchSeedSliceAsync,
   getChurchDirectorySeedsBySlugs,
   getApprovedChurchCountries,
   type ChurchDirectorySeed,
@@ -331,7 +331,7 @@ const getSitemapPrayerDataCached = unstable_cache(
 const getSitemapSectionCountsCached = unstable_cache(
   async (): Promise<SitemapSectionCounts> => {
     const [churchCount, facetData, prayerData, networkCount, campusCount] = await Promise.all([
-      getChurchDirectorySeedCountAsync(),
+      getSitemapChurchSeedCountAsync(),
       getSitemapFacetDataCached(),
       getSitemapPrayerDataCached(),
       getNetworkCount(),
@@ -384,7 +384,7 @@ export async function buildSitemapEntriesForChunk(id: number): Promise<SitemapEn
 
   const churchWindow = getSectionWindow(rangeStart, rangeEndExclusive, cursor, counts.churchCount);
   if (churchWindow) {
-    const churches = await getChurchDirectorySeedSliceAsync(churchWindow.offset, churchWindow.limit);
+    const churches = await getSitemapChurchSeedSliceAsync(churchWindow.offset, churchWindow.limit);
     entries.push(...churches.map((church) => buildChurchRoute(church, lastModified)));
   }
   cursor += counts.churchCount;

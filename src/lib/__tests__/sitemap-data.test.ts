@@ -51,6 +51,8 @@ vi.mock("@/lib/content", () => ({
   getChurchDirectorySeedAsync: getChurchDirectorySeedAsyncMock,
   getChurchDirectorySeedCountAsync: getChurchDirectorySeedCountAsyncMock,
   getChurchDirectorySeedSliceAsync: getChurchDirectorySeedSliceAsyncMock,
+  getSitemapChurchSeedCountAsync: getChurchDirectorySeedCountAsyncMock,
+  getSitemapChurchSeedSliceAsync: getChurchDirectorySeedSliceAsyncMock,
   getChurchDirectorySeedsBySlugs: getChurchDirectorySeedsBySlugsMock,
   getApprovedChurchCountries: getApprovedChurchCountriesMock,
 }));

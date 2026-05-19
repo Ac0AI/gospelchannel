@@ -13,7 +13,14 @@ import {
   isGeneratedChurchDescription,
   isPlayableSpotifyUrl,
   normalizeDisplayText,
+  INDEXABLE_DISPLAY_SCORE_MIN,
 } from "@/lib/content-quality";
+
+// Sitemap church section lists ONLY indexable churches — mirrors
+// isIndexableChurch (null score, or >= threshold). A noindex page in the
+// sitemap is the "Submitted URL marked noindex" GSC anti-pattern: telling
+// Google to crawl pages we then tell it not to index wastes crawl budget.
+// Sitemap-seed count + chunk are the ONLY consumers of these two queries.
 import {
   filterCanonicalChurchSlugRecords,
   getChurchSlugRedirectAliases,
@@ -422,14 +429,19 @@ async function fetchSingleChurchBySlug(slug: string): Promise<ChurchConfig | und
   return isExplicitNonChurchSlug(church.slug) ? undefined : church;
 }
 
-async function fetchApprovedChurchDirectorySeedCountFromDb(): Promise<number> {
+async function fetchApprovedChurchDirectorySeedCountFromDb(
+  indexableOnly = false,
+): Promise<number> {
   const sql = getSql();
   const rawRows = (await sql.query(`
     SELECT COUNT(*)::int AS count
     FROM churches
     WHERE status = 'approved'
       AND NOT (slug = ANY($1::text[]))
-  `, [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS])) as Array<{ count: number | string }>;
+      ${indexableOnly ? "AND (display_score IS NULL OR display_score >= $2)" : ""}
+  `, indexableOnly
+    ? [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS, INDEXABLE_DISPLAY_SCORE_MIN]
+    : [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS])) as Array<{ count: number | string }>;
 
   return Number(rawRows[0]?.count ?? 0);
 }
@@ -459,6 +471,7 @@ async function fetchApprovedChurchStatsFromDb(): Promise<{
 
 async function fetchApprovedChurchDirectorySeedChunkFromDb(
   chunkIndex: number,
+  indexableOnly = false,
 ): Promise<ChurchDirectorySeed[]> {
   const sql = getSql();
   const offset = chunkIndex * CHURCH_DIRECTORY_SEED_CHUNK_SIZE;
@@ -471,6 +484,7 @@ async function fetchApprovedChurchDirectorySeedChunkFromDb(
       FROM churches
       WHERE status = 'approved'
         AND NOT (slug = ANY($1::text[]))
+        ${indexableOnly ? "AND (display_score IS NULL OR display_score >= $4)" : ""}
       ORDER BY name, slug
       LIMIT $2
       OFFSET $3
@@ -479,11 +493,9 @@ async function fetchApprovedChurchDirectorySeedChunkFromDb(
     FROM ranked r
     JOIN churches c ON c.slug = r.slug
     ORDER BY c.name, c.slug
-  `, [
-    CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS,
-    CHURCH_DIRECTORY_SEED_CHUNK_SIZE,
-    offset,
-  ])) as ChurchDirectorySeedRow[];
+  `, indexableOnly
+    ? [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS, CHURCH_DIRECTORY_SEED_CHUNK_SIZE, offset, INDEXABLE_DISPLAY_SCORE_MIN]
+    : [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS, CHURCH_DIRECTORY_SEED_CHUNK_SIZE, offset])) as ChurchDirectorySeedRow[];
 
   return rawRows.map(mapRowToChurchDirectorySeed);
 }
@@ -549,6 +561,36 @@ const getApprovedChurchDirectorySeedChunkCached = unstable_cache(
     return fetchApprovedChurchDirectorySeedChunkFromDb(chunkIndex);
   },
   ["approved-church-directory-seed-chunk-v1"],
+  { revalidate: 3600, tags: [CHURCH_CONTENT_TAG, CHURCH_INDEX_TAG] }
+);
+
+// Sitemap-ONLY church seed: same query + the isIndexableChurch filter
+// (display_score NULL or >= threshold). SEPARATE cache keys so the shared
+// full directory seed (getChurchDirectorySeedAsync → prayer-filters /
+// prayerwall) stays UNFILTERED — filtering the shared path regressed prayer
+// sitemap parity (the gate caught it). count + chunk carry the SAME filter
+// so sitemap pagination stays consistent.
+const getSitemapChurchSeedCountCached = unstable_cache(
+  async (): Promise<number> => {
+    if (isOfflinePublicBuild() || !hasServiceConfig()) {
+      return getFallbackChurchDirectorySeed().length;
+    }
+    return fetchApprovedChurchDirectorySeedCountFromDb(true);
+  },
+  ["sitemap-church-seed-count-v1-indexable"],
+  { revalidate: 3600, tags: [CHURCH_CONTENT_TAG, CHURCH_INDEX_TAG] }
+);
+
+const getSitemapChurchSeedChunkCached = unstable_cache(
+  async (chunkIndex: number): Promise<ChurchDirectorySeed[]> => {
+    if (isOfflinePublicBuild() || !hasServiceConfig()) {
+      const snapshot = getFallbackChurchDirectorySeed();
+      const offset = chunkIndex * CHURCH_DIRECTORY_SEED_CHUNK_SIZE;
+      return snapshot.slice(offset, offset + CHURCH_DIRECTORY_SEED_CHUNK_SIZE);
+    }
+    return fetchApprovedChurchDirectorySeedChunkFromDb(chunkIndex, true);
+  },
+  ["sitemap-church-seed-chunk-v1-indexable"],
   { revalidate: 3600, tags: [CHURCH_CONTENT_TAG, CHURCH_INDEX_TAG] }
 );
 
@@ -685,6 +727,39 @@ export async function getChurchDirectorySeedSliceAsync(
 
 export async function getChurchDirectorySeedCountAsync(): Promise<number> {
   return getApprovedChurchDirectorySeedCountCached();
+}
+
+// Sitemap-ONLY: indexable-filtered church seed (count + slice carry the SAME
+// filter so chunk pagination is consistent). The shared
+// getChurchDirectorySeed{Count,Slice}Async above stay UNFILTERED for
+// prayer-filters / prayerwall — do not swap these.
+export async function getSitemapChurchSeedCountAsync(): Promise<number> {
+  return getSitemapChurchSeedCountCached();
+}
+
+export async function getSitemapChurchSeedSliceAsync(
+  offset: number,
+  limit: number,
+): Promise<ChurchDirectorySeed[]> {
+  const safeOffset = Number.isFinite(offset) ? Math.max(0, Math.floor(offset)) : 0;
+  const safeLimit = Number.isFinite(limit) ? Math.max(0, Math.floor(limit)) : 0;
+  if (safeLimit <= 0) return [];
+  if (isOfflinePublicBuild() || !hasServiceConfig()) {
+    return getFallbackChurchDirectorySeed().slice(safeOffset, safeOffset + safeLimit);
+  }
+  const firstChunkIndex = Math.floor(safeOffset / CHURCH_DIRECTORY_SEED_CHUNK_SIZE);
+  const lastChunkIndex = Math.floor((safeOffset + safeLimit - 1) / CHURCH_DIRECTORY_SEED_CHUNK_SIZE);
+  const chunkIndexes = Array.from(
+    { length: lastChunkIndex - firstChunkIndex + 1 },
+    (_, index) => firstChunkIndex + index,
+  );
+  const rows = await Promise.all(
+    chunkIndexes.map((chunkIndex) => getSitemapChurchSeedChunkCached(chunkIndex)),
+  );
+  const flattened = rows.flat();
+  const chunkStartOffset = firstChunkIndex * CHURCH_DIRECTORY_SEED_CHUNK_SIZE;
+  const localOffset = safeOffset - chunkStartOffset;
+  return flattened.slice(localOffset, localOffset + safeLimit);
 }
 
 export async function getChurchNamesBySlugsAsync(slugs: string[]): Promise<Record<string, string>> {
