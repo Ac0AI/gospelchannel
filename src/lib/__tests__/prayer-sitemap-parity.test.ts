@@ -11,6 +11,9 @@
  * the DB. Scope: prayer sitemap only — prayerwall pages keep their own
  * getPrayerFilterIndex() and are intentionally not exercised here.
  */
+/* eslint-disable @typescript-eslint/no-explicit-any -- integration-test
+   harness: bridges dynamically-imported, loosely-typed legacy modules at the
+   test boundary; precise typing of the dynamic-import shims is noise here. */
 import { describe, it, expect, beforeAll, vi } from "vitest";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";

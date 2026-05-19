@@ -273,7 +273,6 @@ export async function buildSitemapPrayerData(): Promise<SitemapPrayerData> {
 
     const populatedChurchSlugs = new Set<string>();
     const populatedCountrySlugs = new Set<string>();
-    const populatedCitySlugs = new Set<string>();
     for (const churchSlug of prayerSlugs) {
       populatedChurchSlugs.add(churchSlug);
       const country = index.countrySlugByChurchSlug[churchSlug];

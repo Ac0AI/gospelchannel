@@ -13,6 +13,10 @@
  * paths execute against the live DB. Scope: church facets only — prayer
  * sitemap is a known follow-up and is intentionally not covered.
  */
+/* eslint-disable @typescript-eslint/no-explicit-any -- integration-test
+   harness: bridges dynamically-imported, loosely-typed legacy modules
+   (getChurchIndexData / church-directory) at the test boundary; precise
+   typing of the dynamic-import shims here is noise, not safety. */
 import { describe, it, expect, beforeAll, vi } from "vitest";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";

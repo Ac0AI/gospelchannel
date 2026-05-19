@@ -15,7 +15,7 @@
  * rows crosses the wire.
  */
 import { slugify } from "@/lib/slugify";
-import { extractCity, getDirectoryScore } from "@/lib/church-directory";
+import { extractCity } from "@/lib/church-directory";
 
 /**
  * `churches.city_slug`. Mirrors the old in-memory city facet predicate
