@@ -33,6 +33,18 @@ export function slugify(value: string): string {
     .replace(/^-|-$/g, "");
 }
 
+// City label = first-seen church city string, which is arbitrary (depends on
+// iteration order) and was inconsistent (e.g. "JÖNKÖPING"). Title-case
+// obviously ALL-CAPS entries so the prayerwall title/breadcrumb is
+// deterministic and clean regardless of which church is "first"; leave
+// already-cased names ("São Paulo", "iglesia x") untouched.
+function normalizeCityLabel(city: string): string {
+  if (city !== city.toUpperCase()) return city; // has lowercase → keep as-is
+  return city
+    .toLowerCase()
+    .replace(/(^|[\s\-/])(\p{L})/gu, (_m, sep: string, ch: string) => sep + ch.toUpperCase());
+}
+
 export function getNormalizedCountryLabel(country?: string): string | undefined {
   if (!country) return undefined;
   return COUNTRY_ALIASES[slugify(country)] || country;
@@ -190,8 +202,9 @@ export function buildPrayerFilterIndex(
       return;
     }
 
-    setLabel(cityLabelBySlug, citySlug, input.city);
-    allCityOptions.set(citySlug, { slug: citySlug, label: input.city });
+    const cityLabel = normalizeCityLabel(input.city);
+    setLabel(cityLabelBySlug, citySlug, cityLabel);
+    allCityOptions.set(citySlug, { slug: citySlug, label: cityLabel });
     addSlug(churchSlugsByCity, citySlug, input.slug);
     addOption(churchOptionsByCountryAndCity, getCountryCityKey(undefined, citySlug), {
       slug: input.slug,
@@ -202,7 +215,7 @@ export function buildPrayerFilterIndex(
       return;
     }
 
-    addOption(citiesByCountry, countrySlug, { slug: citySlug, label: input.city });
+    addOption(citiesByCountry, countrySlug, { slug: citySlug, label: cityLabel });
     addOption(churchOptionsByCountryAndCity, getCountryCityKey(countrySlug, citySlug), {
       slug: input.slug,
       label: input.name,

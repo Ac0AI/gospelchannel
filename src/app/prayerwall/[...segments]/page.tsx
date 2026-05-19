@@ -11,10 +11,10 @@ import {
   getChurchNamesBySlugs,
   getAvailableCities,
   getAvailableChurches,
-  getPrayerFilterIndex,
   type PrayerFilterIndex,
   getNormalizedCountrySlug,
 } from "@/lib/prayer-filters";
+import { getPrayerNavIndex } from "@/lib/prayer-scoped-index";
 export const dynamicParams = true;
 
 type FilterState = {
@@ -65,7 +65,7 @@ export async function generateMetadata({
   params: Promise<{ segments: string[] }>;
 }): Promise<Metadata> {
   const { segments } = await params;
-  const filterIndex = await getPrayerFilterIndex();
+  const filterIndex = await getPrayerNavIndex();
   const filter = parseSegments(segments, filterIndex);
   if (!filter) return { title: "Not Found" };
 
@@ -115,7 +115,7 @@ export default async function FilteredPrayerWallPage({
   params: Promise<{ segments: string[] }>;
 }) {
   const { segments } = await params;
-  const filterIndex = await getPrayerFilterIndex();
+  const filterIndex = await getPrayerNavIndex();
   const filter = parseSegments(segments, filterIndex);
   if (!filter) notFound();
   const shouldLoadChurchOptions = filter.type === "city";

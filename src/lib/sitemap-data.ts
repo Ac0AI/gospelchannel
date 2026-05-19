@@ -6,8 +6,6 @@ import {
   CHURCH_INDEX_TAG,
   getSitemapChurchSeedCountAsync,
   getSitemapChurchSeedSliceAsync,
-  getChurchDirectorySeedsBySlugs,
-  getApprovedChurchCountries,
   type ChurchDirectorySeed,
 } from "@/lib/content";
 import { type FacetLink } from "@/lib/church-directory";
@@ -17,10 +15,10 @@ import {
   getNetworksSlice,
   getPublishedCampusCount,
   getPublishedCampusesSlice,
-  getAllPublishedCampuses,
 } from "@/lib/church-networks";
-import { buildPrayerFilterIndex, buildKnownCountrySlugs, type FilterOption } from "@/lib/prayer-filters";
+import { type FilterOption } from "@/lib/prayer-filters";
 import { getChurchSlugsWithPrayers } from "@/lib/prayer";
+import { buildScopedPrayerIndex } from "@/lib/prayer-scoped-index";
 import { getCompareGuideSlugs } from "@/lib/tooling";
 import { CONTENT_UPDATED_AT } from "@/lib/utils";
 
@@ -268,31 +266,10 @@ export async function buildSitemapPrayerData(): Promise<SitemapPrayerData> {
     // the same countryOptions/cityOptions/populatedChurchSlugs (the old
     // populated-filter becomes a no-op because the input IS the populated
     // set). prayerwall pages keep their own getPrayerFilterIndex() — untouched.
+    // One shared prayer-scoped index (also serves the prayerwall pages).
+    // prayerSlugs is still needed locally for the populated-filter below.
     const prayerSlugs = await getChurchSlugsWithPrayers();
-    const slugArr = [...prayerSlugs];
-    const [churches, churchCountries, allCampuses] = await Promise.all([
-      getChurchDirectorySeedsBySlugs(slugArr),
-      getApprovedChurchCountries(),
-      getAllPublishedCampuses().catch(() => []),
-    ]);
-    // Full approved-church+campus known-country set so extractPrayerCity
-    // rejects the same "city looks like a country" entries the old
-    // full-index path did (parity — DISTINCT countries == full set, it's a Set).
-    const knownCountrySlugs = buildKnownCountrySlugs([
-      ...churchCountries.map((country) => ({ country })),
-      ...allCampuses.map((c) => ({ country: c.country })),
-    ]);
-    const foundSlugs = new Set(churches.map((c) => c.slug));
-    const orphanSet = new Set(slugArr.filter((s) => !foundSlugs.has(s)));
-    // Prayer slugs absent from churches are campus slugs — buildPrayerFilterIndex
-    // registers campuses too (registerEntity). Same source it uses.
-    const campusSeeds: Array<{ slug: string; name: string; city?: string; country?: string }> =
-      orphanSet.size > 0
-        ? allCampuses
-            .filter((c) => orphanSet.has(c.slug))
-            .map((c) => ({ slug: c.slug, name: c.name, city: c.city, country: c.country }))
-        : [];
-    const index = buildPrayerFilterIndex(churches, campusSeeds, knownCountrySlugs);
+    const index = await buildScopedPrayerIndex();
 
     const populatedChurchSlugs = new Set<string>();
     const populatedCountrySlugs = new Set<string>();
