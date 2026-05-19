@@ -1,15 +1,8 @@
+import { cache } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ChurchCollectionPage } from "@/components/ChurchCollectionPage";
-import {
-  filterChurchDirectory,
-  getCityLinks,
-  getCountryLinks,
-  getDenominationLinks,
-  getStyleFilterBySlug,
-  paginateChurches,
-} from "@/lib/church-directory";
-import { getChurchIndexData } from "@/lib/church";
+import { getChurchFacetPageData } from "@/lib/church";
 
 export const revalidate = 3600;
 
@@ -26,19 +19,19 @@ function readPositivePage(value: string | string[] | undefined): number {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
 }
 
+const loadStyle = cache((slug: string, page: number) =>
+  getChurchFacetPageData({ kind: "style", slug, page, pageSize: PAGE_SIZE }),
+);
+
 export async function generateMetadata({ params, searchParams }: StylePageProps): Promise<Metadata> {
   const [{ slug }, qs] = await Promise.all([params, searchParams]);
-  const filter = getStyleFilterBySlug(slug);
-  if (!filter) return { title: "Not Found" };
-
-  const churches = await getChurchIndexData();
-  const matches = filterChurchDirectory(churches, { styleSlug: slug });
-  if (matches.length === 0) return { title: "Not Found" };
-
   const page = readPositivePage(qs?.page);
+  const data = await loadStyle(slug, page);
+  if (!data) return { title: "Not Found" };
+
   const basePath = `https://gospelchannel.com/church/style/${slug}`;
-  const title = `${filter.seoLabel} Churches, Playlists & Videos`;
-  const description = `Explore ${matches.length.toLocaleString("en-US")} ${filter.seoLabel.toLowerCase()} churches. Browse worship playlists, live videos, service times, and community pages on GospelChannel.`;
+  const title = `${data.label} Churches, Playlists & Videos`;
+  const description = `Explore ${data.totalCount.toLocaleString("en-US")} ${data.label.toLowerCase()} churches. Browse worship playlists, live videos, service times, and community pages on GospelChannel.`;
 
   return {
     title,
@@ -58,21 +51,17 @@ export async function generateMetadata({ params, searchParams }: StylePageProps)
 export default async function StylePage({ params, searchParams }: StylePageProps) {
   const [{ slug }, qs] = await Promise.all([params, searchParams]);
   const page = readPositivePage(qs?.page);
-  const filter = getStyleFilterBySlug(slug);
-  if (!filter) notFound();
+  const data = await loadStyle(slug, page);
+  if (!data) notFound();
 
-  const churches = await getChurchIndexData();
-  const filtered = filterChurchDirectory(churches, { styleSlug: slug });
-  if (filtered.length === 0) notFound();
-
-  const { currentPage, totalCount, totalPages, pageItems } = paginateChurches(filtered, page, PAGE_SIZE);
+  const { currentPage, totalCount, totalPages, pageItems, label, relatedLinks } = data;
   const basePath = `/church/style/${slug}`;
 
   return (
     <ChurchCollectionPage
       eyebrow="Browse by Worship Style"
-      title={`${filter.seoLabel} Churches`}
-      description={`Explore churches whose pages reflect ${filter.seoLabel.toLowerCase()} music, playlists, service times, and community.`}
+      title={`${label} Churches`}
+      description={`Explore churches whose pages reflect ${label.toLowerCase()} music, playlists, service times, and community.`}
       basePath={basePath}
       currentPage={currentPage}
       totalPages={totalPages}
@@ -81,12 +70,12 @@ export default async function StylePage({ params, searchParams }: StylePageProps
       churches={pageItems}
       breadcrumbs={[
         { href: "/church", label: "Churches" },
-        { href: basePath, label: filter.seoLabel },
+        { href: basePath, label },
       ]}
       relatedSections={[
-        { title: `${filter.seoLabel} by Country`, links: getCountryLinks(filtered, 12) },
-        { title: `${filter.seoLabel} by City`, links: getCityLinks(filtered, 12) },
-        { title: `${filter.seoLabel} by Denomination`, links: getDenominationLinks(filtered, 8) },
+        { title: `${label} by Country`, links: relatedLinks.country },
+        { title: `${label} by City`, links: relatedLinks.city },
+        { title: `${label} by Denomination`, links: relatedLinks.denomination },
       ]}
     />
   );

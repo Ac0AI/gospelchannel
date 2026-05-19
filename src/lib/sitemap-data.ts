@@ -6,16 +6,10 @@ import {
   CHURCH_INDEX_TAG,
   getChurchDirectorySeedCountAsync,
   getChurchDirectorySeedSliceAsync,
-  getChurchDirectorySeedAsync,
   type ChurchDirectorySeed,
 } from "@/lib/content";
-import {
-  getCityLinks,
-  getCountryLinks,
-  getDenominationLinks,
-  getStyleLinks,
-  type FacetLink,
-} from "@/lib/church-directory";
+import { type FacetLink } from "@/lib/church-directory";
+import { fetchFacetRelatedLinks } from "@/lib/church";
 import {
   getNetworkCount,
   getNetworksSlice,
@@ -236,17 +230,24 @@ function getSitemapEntryCountFromSections(data: SitemapSectionCounts): number {
     + data.prayerChurchCount;
 }
 
+// Facet sitemap links from the SAME SQL aggregate the facet pages use
+// (fetchFacetRelatedLinks with no filter = whole approved browse set, no
+// limits). Removes the old full directory-seed pull that OOM'd the Worker on
+// cold sitemap chunks; the aggregate result is small so unstable_cache
+// actually stores it (>2 MB silent-skip no longer applies). Zero-drift with
+// the facet pages by construction. NOTE: prayer sitemap still uses
+// getPrayerFilterIndex() — known follow-up, not fixed here.
 const getSitemapFacetDataCached = unstable_cache(
   async (): Promise<SitemapFacetData> => {
-    const churches = await getChurchDirectorySeedAsync();
+    const links = await fetchFacetRelatedLinks({});
     return {
-      countryLinks: getCountryLinks(churches),
-      cityLinks: getCityLinks(churches),
-      styleLinks: getStyleLinks(churches),
-      denominationLinks: getDenominationLinks(churches),
+      countryLinks: links.country,
+      cityLinks: links.city,
+      styleLinks: links.style,
+      denominationLinks: links.denomination,
     };
   },
-  ["sitemap-facets-v1"],
+  ["sitemap-facets-v2"],
   { revalidate: 3600, tags: [CHURCH_INDEX_TAG] },
 );
 

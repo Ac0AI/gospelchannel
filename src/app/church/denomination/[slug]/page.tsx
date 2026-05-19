@@ -1,15 +1,8 @@
+import { cache } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ChurchCollectionPage } from "@/components/ChurchCollectionPage";
-import {
-  filterChurchDirectory,
-  getCityLinks,
-  getCountryLinks,
-  getDenominationFilterBySlug,
-  getStyleLinks,
-  paginateChurches,
-} from "@/lib/church-directory";
-import { getChurchIndexData } from "@/lib/church";
+import { getChurchFacetPageData } from "@/lib/church";
 
 export const revalidate = 3600;
 
@@ -26,19 +19,19 @@ function readPositivePage(value: string | string[] | undefined): number {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
 }
 
+const loadDenomination = cache((slug: string, page: number) =>
+  getChurchFacetPageData({ kind: "denomination", slug, page, pageSize: PAGE_SIZE }),
+);
+
 export async function generateMetadata({ params, searchParams }: DenominationPageProps): Promise<Metadata> {
   const [{ slug }, qs] = await Promise.all([params, searchParams]);
-  const filter = getDenominationFilterBySlug(slug);
-  if (!filter) return { title: "Not Found" };
-
-  const churches = await getChurchIndexData();
-  const matches = filterChurchDirectory(churches, { denominationSlug: slug });
-  if (matches.length === 0) return { title: "Not Found" };
-
   const page = readPositivePage(qs?.page);
+  const data = await loadDenomination(slug, page);
+  if (!data) return { title: "Not Found" };
+
   const basePath = `https://gospelchannel.com/church/denomination/${slug}`;
-  const title = `${filter.label} Churches, Playlists & Service Times`;
-  const description = `Explore ${matches.length.toLocaleString("en-US")} ${filter.label.toLowerCase()} churches. Browse worship playlists, live videos, service times, and community pages on GospelChannel.`;
+  const title = `${data.label} Churches, Playlists & Service Times`;
+  const description = `Explore ${data.totalCount.toLocaleString("en-US")} ${data.label.toLowerCase()} churches. Browse worship playlists, live videos, service times, and community pages on GospelChannel.`;
 
   return {
     title,
@@ -58,21 +51,17 @@ export async function generateMetadata({ params, searchParams }: DenominationPag
 export default async function DenominationPage({ params, searchParams }: DenominationPageProps) {
   const [{ slug }, qs] = await Promise.all([params, searchParams]);
   const page = readPositivePage(qs?.page);
-  const filter = getDenominationFilterBySlug(slug);
-  if (!filter) notFound();
+  const data = await loadDenomination(slug, page);
+  if (!data) notFound();
 
-  const churches = await getChurchIndexData();
-  const filtered = filterChurchDirectory(churches, { denominationSlug: slug });
-  if (filtered.length === 0) notFound();
-
-  const { currentPage, totalCount, totalPages, pageItems } = paginateChurches(filtered, page, PAGE_SIZE);
+  const { currentPage, totalCount, totalPages, pageItems, label, relatedLinks } = data;
   const basePath = `/church/denomination/${slug}`;
 
   return (
     <ChurchCollectionPage
       eyebrow="Browse by Tradition"
-      title={`${filter.label} Churches`}
-      description={`Explore churches with ${filter.label.toLowerCase()} roots, playlists, service times, and community pages.`}
+      title={`${label} Churches`}
+      description={`Explore churches with ${label.toLowerCase()} roots, playlists, service times, and community pages.`}
       basePath={basePath}
       currentPage={currentPage}
       totalPages={totalPages}
@@ -81,12 +70,12 @@ export default async function DenominationPage({ params, searchParams }: Denomin
       churches={pageItems}
       breadcrumbs={[
         { href: "/church", label: "Churches" },
-        { href: basePath, label: filter.label },
+        { href: basePath, label },
       ]}
       relatedSections={[
-        { title: `${filter.label} by Country`, links: getCountryLinks(filtered, 12) },
-        { title: `${filter.label} by City`, links: getCityLinks(filtered, 12) },
-        { title: `${filter.label} Worship Styles`, links: getStyleLinks(filtered, 8) },
+        { title: `${label} by Country`, links: relatedLinks.country },
+        { title: `${label} by City`, links: relatedLinks.city },
+        { title: `${label} Worship Styles`, links: relatedLinks.style },
       ]}
     />
   );

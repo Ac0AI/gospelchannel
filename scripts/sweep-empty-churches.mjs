@@ -97,6 +97,15 @@ async function main() {
     console.log(`  Batch ${batchNo} done. crossed→indexable this batch: ${nowIdx}  cumulative: ${cumIndexable}`);
   }
 
+  // Post-import facet reconcile: this sweep bulk-mutates churches, so the
+  // materialized facet snapshot (city_slug/directory_score/directory_ready/
+  // directory_rank) is stale. directory_rank is GLOBAL, so reconcile once
+  // over the whole set after the sweep (not per-batch). Runs as a Node job
+  // (NOT in the Worker — the global rank pass pulls the full index, which is
+  // exactly the OOM we removed from the Worker).
+  console.log("\nReconciling facet columns (global snapshot) ...");
+  run("npx tsx scripts/backfill-facet-columns.ts");
+
   const finalIdx = (await sql`SELECT count(*) n FROM churches WHERE status='approved' AND display_score >= 45`)[0].n;
   console.log(`\nSWEEP COMPLETE. Total approved indexable now: ${finalIdx}`);
 }

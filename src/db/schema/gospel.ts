@@ -57,6 +57,25 @@ export const churches = pgTable(
     // kept as display_score (already migrated); JS name avoids colliding with
     // the spread `...display` displayScore field on the church page object.
     indexScore: integer("display_score"),
+    // Persisted JS-derived facet values (mirror the display_score pattern).
+    // city_slug = slugify(extractCity(location)); directory_score =
+    // computeDirectoryScore(...) — see src/lib/facet-scoring.ts. Materialized
+    // so facet/browse pages query+sort in the DB instead of pulling the full
+    // ~56 MB index into the Worker isolate. real (not integer): the score
+    // formula has dataRichnessScore * 0.5.
+    citySlug: text("city_slug"),
+    directoryScore: real("directory_score"),
+    // Materialized displayReady (deriveDisplayAssessment) — a *filter*, not a
+    // sort weight, so directory_score can't replace it. Browse/facet excludes
+    // directory_ready = false (search shows all, as before).
+    directoryReady: boolean("directory_ready"),
+    // Global snapshot rank from the exact JS browse comparator
+    // (compareDirectoryEntries). The ONLY browse/facet sort key:
+    // ORDER BY directory_rank ASC NULLS LAST. Preserves old in-memory order
+    // byte-for-byte without SQL collation drift. Reconciled after
+    // imports/bulk-approve + nightly — may be briefly stale (affects order
+    // only, never which churches list/count).
+    directoryRank: integer("directory_rank"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
@@ -65,6 +84,18 @@ export const churches = pgTable(
     indexScoreIndex: index("idx_churches_display_score").on(
       table.status,
       table.indexScore,
+    ),
+    citySlugIndex: index("idx_churches_status_city_slug").on(
+      table.status,
+      table.citySlug,
+    ),
+    directoryScoreIndex: index("idx_churches_status_directory_score").on(
+      table.status,
+      table.directoryScore,
+    ),
+    directoryRankIndex: index("idx_churches_status_directory_rank").on(
+      table.status,
+      table.directoryRank,
     ),
     statusNameSlugIndex: index("churches_status_name_slug_idx").on(
       table.status,

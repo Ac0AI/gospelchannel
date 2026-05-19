@@ -19,6 +19,7 @@ import {
   resolveCanonicalChurchSlug,
 } from "@/lib/church-slugs";
 import { filterExplicitNonChurchRows, getExplicitNonChurchSlugs } from "@/lib/non-church-slugs";
+import { computeDataRichnessScore } from "@/lib/enrichment-richness";
 import {
   deriveDisplayAssessment,
   getFirstServiceTimeLabel,
@@ -32,9 +33,14 @@ import {
   getDenominationFilterBySlug,
   getStyleFilterBySlug,
   paginateChurches,
+  extractCity,
+  STYLE_FILTERS,
+  DENOMINATION_FILTERS,
   type ChurchDirectoryEntry,
   type ChurchDirectoryFilters,
+  type FacetLink,
 } from "@/lib/church-directory";
+import { slugify } from "@/lib/slugify";
 
 type CachedVideo = {
   videoId: string;
@@ -1079,7 +1085,7 @@ export type EnrichmentHint = {
   dataRichnessScore: number;
 };
 
-type ChurchIndexRow = {
+export type ChurchIndexRow = {
   slug: string;
   name: string;
   description: string | null;
@@ -1101,7 +1107,7 @@ type ChurchIndexRow = {
   source_kind: ChurchConfig["sourceKind"] | null;
 };
 
-type IndexEnrichmentHint = EnrichmentHint & {
+export type IndexEnrichmentHint = EnrichmentHint & {
   coverImageUrl?: string;
   logoImageUrl?: string;
 };
@@ -1144,11 +1150,12 @@ async function getEnrichmentMeta(): Promise<Map<string, IndexEnrichmentHint>> {
     const summaryLength = (row.summary ?? "").length;
     const hasSocial = !!(row.instagram_url || row.facebook_url || row.youtube_url);
     const serviceTimes = getFirstServiceTimeLabel((row.service_times as Array<{ day: string; time: string }> | null) ?? []);
-    let score = 0;
-    if (summaryLength >= 80) score += 40;
-    if ((row.service_times as unknown[])?.length) score += 30;
-    if (row.street_address) score += 20;
-    if (hasSocial) score += 10;
+    const score = computeDataRichnessScore({
+      summaryLength,
+      hasServiceTimes: Boolean((row.service_times as unknown[])?.length),
+      hasStreetAddress: Boolean(row.street_address),
+      hasSocial,
+    });
     const hint: IndexEnrichmentHint = {
       summary: summaryLength >= 40 ? normalizeDisplayText(row.summary as string) : undefined,
       summaryLength,
@@ -1170,7 +1177,7 @@ async function getEnrichmentMeta(): Promise<Map<string, IndexEnrichmentHint>> {
   return map;
 }
 
-function mapEnrichmentMetaRow(row: {
+export function mapEnrichmentMetaRow(row: {
   church_slug: string | null;
   summary: string | null;
   service_times: Array<{ day: string; time: string }> | null;
@@ -1187,11 +1194,12 @@ function mapEnrichmentMetaRow(row: {
   const summaryLength = (row.summary ?? "").length;
   const hasSocial = !!(row.instagram_url || row.facebook_url || row.youtube_url);
   const serviceTimes = getFirstServiceTimeLabel((row.service_times as Array<{ day: string; time: string }> | null) ?? []);
-  let score = 0;
-  if (summaryLength >= 80) score += 40;
-  if ((row.service_times as unknown[])?.length) score += 30;
-  if (row.street_address) score += 20;
-  if (hasSocial) score += 10;
+  const score = computeDataRichnessScore({
+    summaryLength,
+    hasServiceTimes: Boolean((row.service_times as unknown[])?.length),
+    hasStreetAddress: Boolean(row.street_address),
+    hasSocial,
+  });
 
   return {
     slug: canonicalSlug,
@@ -1257,7 +1265,10 @@ async function getChurchIndexRows(): Promise<ChurchIndexRow[]> {
   return filterExplicitNonChurchRows(rows);
 }
 
-function mapChurchToIndexRecord(church: ChurchConfig, enrichmentHint?: IndexEnrichmentHint) {
+// Exported for scripts/backfill-facet-columns.ts: the backfill builds index
+// records via this exact function so the materialized directory_score equals
+// the runtime getDirectoryScore input (zero-drift).
+export function mapChurchToIndexRecord(church: ChurchConfig, enrichmentHint?: IndexEnrichmentHint) {
   const normalizedChurch: ChurchConfig = {
     ...church,
     logo: rewriteLegacyMediaUrl(church.logo) || "",
@@ -1305,7 +1316,7 @@ function mapChurchToIndexRecord(church: ChurchConfig, enrichmentHint?: IndexEnri
   };
 }
 
-function mapChurchIndexRowToConfig(row: ChurchIndexRow, enrichmentHint?: IndexEnrichmentHint): ChurchConfig {
+export function mapChurchIndexRowToConfig(row: ChurchIndexRow, enrichmentHint?: IndexEnrichmentHint): ChurchConfig {
   return {
     slug: row.slug,
     name: row.name,
@@ -1406,6 +1417,26 @@ function buildChurchIndexWhereClause(filters: ChurchDirectoryFilters) {
     }
   }
 
+  if (filters.citySlug) {
+    params.push(filters.citySlug);
+    clauses.push(`city_slug = $${params.length}`);
+  }
+
+  // Country facet: the facade resolves countrySlug → exact country string via
+  // the SAME slugify over the small distinct-country set (zero-drift, no
+  // country_slug column needed — only ~200 distinct countries).
+  if (filters.country) {
+    params.push(filters.country);
+    clauses.push(`country = $${params.length}`);
+  }
+
+  // Browse parity: the old in-memory filterChurchDirectory hides
+  // displayReady === false when there is no search query ("When browsing, hide
+  // churches that aren't display-ready"). Search mode shows all, as before.
+  if (!trimmedQuery) {
+    clauses.push("directory_ready IS NOT FALSE");
+  }
+
   if (filters.language) {
     params.push(`%${filters.language.trim()}%`);
     const index = params.length;
@@ -1502,16 +1533,13 @@ async function fetchChurchIndexPageRows(filters: ChurchDirectoryFilters, current
       aliases, language, source_kind
     FROM churches
     WHERE ${where.sql}
-    ORDER BY
-      CASE
-        WHEN coalesce(cardinality(spotify_playlist_ids), 0) + coalesce(cardinality(additional_playlists), 0) > 0
-          OR coalesce(spotify_url, '') <> ''
-        THEN 1 ELSE 0
-      END DESC,
-      CASE WHEN coalesce(header_image, '') <> '' OR coalesce(logo, '') <> '' THEN 1 ELSE 0 END DESC,
-      CASE WHEN coalesce(cardinality(music_style), 0) > 0 THEN 1 ELSE 0 END DESC,
-      verified_at DESC NULLS LAST,
-      name ASC
+    -- Browse parity (locked): directory_rank is the global snapshot rank
+    -- assigned by the EXACT JS browse comparator (compareDirectoryEntries) in
+    -- scripts/backfill-facet-columns.ts. Ordering by it reproduces the old
+    -- in-memory order byte-for-byte with zero SQL-collation / playlistCount
+    -- drift. NULL rank (un-reconciled new row) sinks last — no name-sort
+    -- fallback that would re-introduce the collation mismatch.
+    ORDER BY directory_rank ASC NULLS LAST
     LIMIT $${where.params.length + 1}
     OFFSET $${where.params.length + 2}
   `, [...where.params, pageSize, offset])) as ChurchIndexQueryRow[];
@@ -1527,6 +1555,157 @@ async function fetchChurchIndexTotalCount(filters: ChurchDirectoryFilters): Prom
     WHERE ${where.sql}
   `, where.params)) as Array<{ count: number | string | bigint }>;
   return toCount(rows[0]?.count);
+}
+
+/**
+ * Related-link facets over a facet subset, computed in SQL instead of by
+ * pulling the full index and running getCountryLinks/getStyleLinks/
+ * getDenominationLinks in JS. Parity is byte-for-byte:
+ *
+ *  - style/denom: ONE aggregate scan of the subset, one count(*) FILTER per
+ *    STYLE_FILTERS / DENOMINATION_FILTERS entry. The FILTER predicate is the
+ *    exact matchesStyle / matchesDenomination logic (`value.toLowerCase()
+ *    .includes(candidate)` → `position(candidate in lower(value)) > 0`,
+ *    candidates already lowercase). The .filter(count>0).sort(count DESC ||
+ *    label.localeCompare).slice(limit) tail mirrors the JS builders exactly.
+ *  - country: GROUP BY country over the subset, then slugify in JS (same
+ *    slugify) and merge — distinct country strings collapsing to one slug is
+ *    effectively impossible in clean data; on collision the higher-count /
+ *    alphabetically-first country wins (deterministic; parity test guards).
+ *
+ * `filters` is the facet predicate in BROWSE mode (no query) so the
+ * directory_ready exclusion applies, matching the page's own list.
+ */
+export type FacetRelatedLinks = {
+  country: FacetLink[];
+  city: FacetLink[];
+  style: FacetLink[];
+  denomination: FacetLink[];
+};
+
+function sortFacetLinks(links: FacetLink[]): FacetLink[] {
+  return [...links].sort((a, b) => (b.count - a.count) || a.label.localeCompare(b.label));
+}
+
+export async function fetchFacetRelatedLinks(
+  filters: ChurchDirectoryFilters,
+  limits?: { country?: number; city?: number; style?: number; denomination?: number },
+): Promise<FacetRelatedLinks> {
+  const sql = getSql();
+  const where = buildChurchIndexWhereClause(filters);
+  const params: unknown[] = [...where.params];
+
+  const styleExprs = STYLE_FILTERS.map((f) => {
+    const ors = f.match.map((cand) => {
+      params.push(cand.toLowerCase());
+      return `position($${params.length} in lower(ms)) > 0`;
+    });
+    return `count(*) FILTER (WHERE EXISTS (
+      SELECT 1 FROM unnest(coalesce(music_style, '{}'::text[])) ms
+      WHERE ${ors.join(" OR ")}
+    ))::int`;
+  });
+  const denomExprs = DENOMINATION_FILTERS.map((f) => {
+    const ors = f.match.map((cand) => {
+      params.push(cand.toLowerCase());
+      return `position($${params.length} in lower(denomination)) > 0`;
+    });
+    return `count(*) FILTER (WHERE denomination IS NOT NULL AND (${ors.join(" OR ")}))::int`;
+  });
+
+  const aggSelect = [
+    ...styleExprs.map((e, i) => `${e} AS s${i}`),
+    ...denomExprs.map((e, i) => `${e} AS d${i}`),
+  ].join(",\n    ");
+
+  const [aggRow] = (await sql.query(
+    `SELECT ${aggSelect} FROM churches WHERE ${where.sql}`,
+    params,
+  )) as Array<Record<string, number>>;
+
+  const style = sortFacetLinks(
+    STYLE_FILTERS.map((f, i) => ({
+      slug: f.slug,
+      label: f.seoLabel,
+      href: `/church/style/${f.slug}`,
+      count: aggRow?.[`s${i}`] ?? 0,
+    })).filter((l) => l.count > 0),
+  );
+  const denomination = sortFacetLinks(
+    DENOMINATION_FILTERS.map((f, i) => ({
+      slug: f.slug,
+      label: f.label,
+      href: `/church/denomination/${f.slug}`,
+      count: aggRow?.[`d${i}`] ?? 0,
+    })).filter((l) => l.count > 0),
+  );
+
+  const countryRows = (await sql.query(
+    `SELECT country, count(*)::int AS count
+     FROM churches
+     WHERE ${where.sql} AND coalesce(country, '') <> ''
+     GROUP BY country`,
+    where.params,
+  )) as Array<{ country: string; count: number }>;
+  const bySlug = new Map<string, { label: string; count: number; topCountry: string; topCount: number }>();
+  for (const r of countryRows) {
+    const slug = slugify(r.country);
+    if (!slug) continue;
+    const entry = bySlug.get(slug);
+    if (!entry) {
+      bySlug.set(slug, { label: r.country, count: r.count, topCountry: r.country, topCount: r.count });
+    } else {
+      entry.count += r.count;
+      // Collision-only determinism: highest-count country wins the label,
+      // alphabetical on tie. No-collision case → label === r.country (= JS).
+      if (r.count > entry.topCount || (r.count === entry.topCount && r.country < entry.topCountry)) {
+        entry.topCount = r.count;
+        entry.topCountry = r.country;
+        entry.label = r.country;
+      }
+    }
+  }
+  const country = sortFacetLinks(
+    [...bySlug.entries()].map(([slug, v]) => ({
+      slug,
+      label: v.label,
+      href: `/church/country/${slug}`,
+      count: v.count,
+    })),
+  );
+
+  // City links: city_slug is materialized; the label is extractCity(location)
+  // of a representative row (deterministic via ORDER BY slug in array_agg),
+  // mirroring getCityLinks (which keys by slugify(extractCity(location)) and
+  // labels with the first-seen extracted city).
+  const cityRows = (await sql.query(
+    `SELECT city_slug,
+            count(*)::int AS count,
+            (array_agg(location ORDER BY slug))[1] AS sample_location
+     FROM churches
+     WHERE ${where.sql} AND city_slug IS NOT NULL AND city_slug <> ''
+     GROUP BY city_slug`,
+    where.params,
+  )) as Array<{ city_slug: string; count: number; sample_location: string | null }>;
+  const city = sortFacetLinks(
+    cityRows
+      .map((r) => ({
+        slug: r.city_slug,
+        label: extractCity(r.sample_location ?? undefined) ?? "",
+        href: `/church/city/${r.city_slug}`,
+        count: r.count,
+      }))
+      .filter((l) => l.label),
+  );
+
+  const cap = (links: FacetLink[], n?: number) =>
+    typeof n === "number" ? links.slice(0, n) : links;
+  return {
+    country: cap(country, limits?.country),
+    city: cap(city, limits?.city),
+    style: cap(style, limits?.style),
+    denomination: cap(denomination, limits?.denomination),
+  };
 }
 
 /**
@@ -1589,7 +1768,113 @@ export async function getChurchIndexPageData(input: {
   }
 }
 
-async function _getChurchIndexData() {
+// Distinct approved countries (~200 rows, well under 2 MB) cached cross-isolate
+// so countrySlug → exact country resolves without scanning the full index.
+// SAME slugify as the old getCountryLabelFromSlug, so zero-drift.
+const _getDistinctCountries = unstable_cache(
+  async (): Promise<string[]> => {
+    const sql = getSql();
+    const rows = (await sql.query(
+      `SELECT DISTINCT country FROM churches
+       WHERE status = 'approved' AND coalesce(country, '') <> ''`,
+    )) as Array<{ country: string }>;
+    return rows.map((r) => r.country);
+  },
+  ["distinct-countries-v1"],
+  { revalidate: CHURCH_INDEX_CACHE_SECONDS, tags: [CHURCH_INDEX_TAG] },
+);
+
+async function resolveCountryFromSlug(countrySlug: string): Promise<string | undefined> {
+  const countries = await _getDistinctCountries();
+  return countries.find((c) => slugify(c) === countrySlug);
+}
+
+async function resolveCityLabelFromSlug(citySlug: string): Promise<string | undefined> {
+  const sql = getSql();
+  const rows = (await sql.query(
+    `SELECT location FROM churches
+     WHERE status = 'approved' AND city_slug = $1 AND directory_ready IS NOT FALSE
+     LIMIT 1`,
+    [citySlug],
+  )) as Array<{ location: string | null }>;
+  if (rows.length === 0) return undefined;
+  return extractCity(rows[0]?.location ?? undefined);
+}
+
+export type FacetKind = "city" | "country" | "style" | "denomination";
+
+export type ChurchFacetPageData = {
+  pageItems: ChurchDirectoryEntry[];
+  currentPage: number;
+  totalCount: number;
+  totalPages: number;
+  label: string;
+  relatedLinks: FacetRelatedLinks;
+  breadcrumbCountry: FacetLink | null;
+};
+
+// Single public entry point for the four facet pages. Encapsulates the
+// filter/label resolution, the (reused, parity-proven) paginated index path,
+// and the SQL related-links — so pages never touch SQL internals or pull the
+// full index. Returns null when the slug doesn't resolve → page calls
+// notFound() FAST (no slow full-scan path → no 503).
+export async function getChurchFacetPageData(input: {
+  kind: FacetKind;
+  slug: string;
+  page: number;
+  pageSize: number;
+}): Promise<ChurchFacetPageData | null> {
+  const { kind, slug } = input;
+  let filters: ChurchDirectoryFilters;
+  let label: string;
+
+  if (kind === "city") {
+    const cityLabel = await resolveCityLabelFromSlug(slug);
+    if (!cityLabel) return null;
+    filters = { citySlug: slug };
+    label = cityLabel;
+  } else if (kind === "country") {
+    const country = await resolveCountryFromSlug(slug);
+    if (!country) return null;
+    filters = { country };
+    label = country;
+  } else if (kind === "style") {
+    const filter = getStyleFilterBySlug(slug);
+    if (!filter) return null;
+    filters = { styleSlug: slug };
+    label = filter.seoLabel;
+  } else {
+    const filter = getDenominationFilterBySlug(slug);
+    if (!filter) return null;
+    filters = { denominationSlug: slug };
+    label = filter.label;
+  }
+
+  // Per-kind related-link limits, matching what each page rendered before.
+  const limits: Record<FacetKind, { country?: number; city?: number; style?: number; denomination?: number }> = {
+    city: { country: 12, style: 8, denomination: 8 },
+    country: { city: 12, style: 8, denomination: 8 },
+    style: { country: 12, city: 12, denomination: 8 },
+    denomination: { country: 12, city: 12, style: 8 },
+  };
+
+  const [pageData, relatedLinks] = await Promise.all([
+    getChurchIndexPageData({ filters, page: input.page, pageSize: input.pageSize }),
+    fetchFacetRelatedLinks(filters, limits[kind]),
+  ]);
+
+  if (pageData.totalCount === 0) return null;
+
+  const breadcrumbCountry =
+    kind === "city" && relatedLinks.country.length === 1 ? relatedLinks.country[0] : null;
+
+  return { ...pageData, label, relatedLinks, breadcrumbCountry };
+}
+
+// Exported for scripts/backfill-facet-columns.ts: the backfill ranks the
+// EXACT array this returns (same enrichment-meta dedup, same mappers) so
+// directory_rank/score/city_slug cannot drift from the runtime old path.
+export async function _getChurchIndexData() {
   if (isOfflinePublicBuild() || !hasServiceConfig()) {
     return filterCanonicalChurchSlugRecords(getLocalChurchSnapshot()).map((church) => mapChurchToIndexRecord(church));
   }
@@ -1644,6 +1929,10 @@ function buildChurchIndexSummaryLookup(
 // module-level cache below only lives in a single isolate's memory. Egress
 // blew up to 1.5 TB/month before this was added. Invalidated by
 // revalidateTag(CHURCH_INDEX_TAG) (cron sync + admin actions).
+//
+// NOTE: facet/sitemap hot paths no longer call this — they use the
+// materialized city_slug/directory_score columns + paginated queries. This
+// remains for the search path; the prior module-cache revert was discarded.
 const _getChurchIndexDataFromBackend = unstable_cache(
   async () => _getChurchIndexData(),
   ["church-index-data-v1"],

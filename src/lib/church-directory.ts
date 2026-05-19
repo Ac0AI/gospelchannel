@@ -38,6 +38,11 @@ export type ChurchDirectoryEntry = {
 export type ChurchDirectoryFilters = {
   query?: string;
   countrySlug?: string;
+  // Exact country string, resolved from countrySlug via the SAME slugify over
+  // the small distinct-country set. Used only by the SQL facet path (the
+  // in-memory filterChurchDirectory continues to use countrySlug). Avoids a
+  // country_slug column while staying zero-drift.
+  country?: string;
   citySlug?: string;
   styleSlug?: string;
   denominationSlug?: string;
@@ -131,7 +136,7 @@ export function extractCity(location?: string): string | undefined {
   return city;
 }
 
-function getPlaylistCount(church: Pick<ChurchDirectoryEntry, "playlistCount" | "spotifyPlaylistIds" | "additionalPlaylists">): number {
+export function getPlaylistCount(church: Pick<ChurchDirectoryEntry, "playlistCount" | "spotifyPlaylistIds" | "additionalPlaylists">): number {
   if (typeof church.playlistCount === "number" && church.playlistCount > 0) {
     return church.playlistCount;
   }
@@ -198,13 +203,35 @@ function getTextMatchScore(church: ChurchDirectoryEntry, query: string): number 
   return score;
 }
 
-function getDirectoryScore(church: ChurchDirectoryEntry): number {
+export function getDirectoryScore(church: ChurchDirectoryEntry): number {
   const playlistCount = getPlaylistCount(church);
   const richness = church.enrichmentHint?.dataRichnessScore ?? 0;
   const quality = church.qualityScore ?? 0;
   const display = church.displayScore ?? 0;
   const promotion = church.promotionTier === "promotable" ? 24 : 0;
   return promotion + display + quality + richness * 0.5 + playlistCount * 10;
+}
+
+// The exact browse-list comparator. Single source of truth: filterChurchDirectory
+// (no-query branch) sorts with this, AND scripts/backfill-facet-columns.ts
+// assigns the global churches.directory_rank with this. That makes the
+// DB-paginated facet order (ORDER BY directory_rank) byte-for-byte equal to
+// the old in-memory order by construction — no SQL collation / playlistCount
+// drift. directory_rank is a global snapshot rank for browse parity, NOT a
+// live-computed truth (reconciled after imports/bulk-approve + nightly).
+export function compareDirectoryEntries(a: ChurchDirectoryEntry, b: ChurchDirectoryEntry): number {
+  // slug is ONLY a deterministic final tiebreak for entries identical on
+  // every meaningful signal (directoryScore + playlistCount + name). It makes
+  // the comparator a TOTAL order so the materialized directory_rank is stable
+  // across environments and the parity gate is exact. This is a conscious,
+  // low-risk ordering change vs the old incidental stable-sort order (which
+  // depended on arbitrary input-array/query order, not product logic).
+  return (
+    getDirectoryScore(b) - getDirectoryScore(a) ||
+    getPlaylistCount(b) - getPlaylistCount(a) ||
+    a.name.localeCompare(b.name) ||
+    a.slug.localeCompare(b.slug)
+  );
 }
 
 export function matchesStyle(musicStyle: string[] | undefined, styleSlug: string): boolean {
@@ -354,15 +381,7 @@ export function filterChurchDirectory(
       .map((item) => item.church);
   }
 
-  return [...filtered].sort((a, b) => {
-    const directoryDiff = getDirectoryScore(b) - getDirectoryScore(a);
-    if (directoryDiff !== 0) return directoryDiff;
-
-    const playlistDiff = getPlaylistCount(b) - getPlaylistCount(a);
-    if (playlistDiff !== 0) return playlistDiff;
-
-    return a.name.localeCompare(b.name);
-  });
+  return [...filtered].sort(compareDirectoryEntries);
 }
 
 export function paginateChurches(churches: ChurchDirectoryEntry[], page: number, pageSize: number) {

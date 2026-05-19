@@ -37,6 +37,7 @@
     "backfill:website-playlists": "node scripts/backfill-website-playlists.mjs",
     "descriptions:rewrite": "node scripts/rewrite-generated-church-descriptions.mjs",
     "backfill:social": "node scripts/backfill-social-fallbacks.mjs",
+    "reconcile:facets": "tsx scripts/backfill-facet-columns.ts",
     "refresh:video-backlog": "node scripts/refresh-church-video-backlog.mjs",
     "profile:church-page": "node scripts/profile-church-page.mjs",
     "research": "node scripts/research-churches.mjs",

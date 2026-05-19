@@ -15,6 +15,7 @@ const {
   getPrayerFilterIndexMock,
   getCompareGuideSlugsMock,
   getChurchSlugsWithPrayersMock,
+  fetchFacetRelatedLinksMock,
 } = vi.hoisted(() => ({
   getChurchDirectorySeedAsyncMock: vi.fn(),
   getChurchDirectorySeedCountAsyncMock: vi.fn(),
@@ -30,6 +31,7 @@ const {
   getPrayerFilterIndexMock: vi.fn(),
   getCompareGuideSlugsMock: vi.fn(),
   getChurchSlugsWithPrayersMock: vi.fn(),
+  fetchFacetRelatedLinksMock: vi.fn(),
 }));
 
 vi.mock("next/cache", () => ({
@@ -48,6 +50,10 @@ vi.mock("@/lib/church-directory", () => ({
   getCityLinks: getCityLinksMock,
   getStyleLinks: getStyleLinksMock,
   getDenominationLinks: getDenominationLinksMock,
+}));
+
+vi.mock("@/lib/church", () => ({
+  fetchFacetRelatedLinks: fetchFacetRelatedLinksMock,
 }));
 
 vi.mock("@/lib/church-networks", () => ({
@@ -86,18 +92,14 @@ describe("sitemap-data", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    getCountryLinksMock.mockReturnValue([
-      { slug: "sweden", label: "Sweden", href: "/church/country/sweden", count: 12 },
-    ]);
-    getCityLinksMock.mockReturnValue([
-      { slug: "stockholm", label: "Stockholm", href: "/church/city/stockholm", count: 8 },
-    ]);
-    getStyleLinksMock.mockReturnValue([
-      { slug: "gospel", label: "Gospel", href: "/church/style/gospel", count: 4 },
-    ]);
-    getDenominationLinksMock.mockReturnValue([
-      { slug: "pentecostal", label: "Pentecostal", href: "/church/denomination/pentecostal", count: 3 },
-    ]);
+    // Sitemap facet links now come from fetchFacetRelatedLinks({}) (1 each →
+    // section counts country=1, city=1, style=1, denom=1, unchanged).
+    fetchFacetRelatedLinksMock.mockResolvedValue({
+      country: [{ slug: "sweden", label: "Sweden", href: "/church/country/sweden", count: 12 }],
+      city: [{ slug: "stockholm", label: "Stockholm", href: "/church/city/stockholm", count: 8 }],
+      style: [{ slug: "gospel", label: "Gospel", href: "/church/style/gospel", count: 4 }],
+      denomination: [{ slug: "pentecostal", label: "Pentecostal", href: "/church/denomination/pentecostal", count: 3 }],
+    });
 
     getChurchDirectorySeedAsyncMock.mockResolvedValue([makeChurch("church-0")]);
     getNetworkCountMock.mockResolvedValue(1);
