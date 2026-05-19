@@ -48,6 +48,16 @@ type Mods = {
 const m = {} as Mods;
 let all: any[] = [];
 
+// Live-Neon integration gate: requires a real DB (it IS the pre-deploy
+// gate, run locally with .env.local). CI runs vitest without DB creds →
+// SKIP there rather than fail.
+const _here = dirname(fileURLToPath(import.meta.url));
+try {
+  const { loadLocalEnv } = await import(resolve(_here, "../../../scripts/lib/local-env.mjs") as string);
+  loadLocalEnv(resolve(_here, "../../.."));
+} catch { /* no .env.local (CI) → suite skips */ }
+const hasDb = Boolean(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+
 beforeAll(async () => {
   const here = dirname(fileURLToPath(import.meta.url));
   const { loadLocalEnv } = await import(resolve(here, "../../../scripts/lib/local-env.mjs") as string);
@@ -108,7 +118,7 @@ async function assertParity(kind: string, slug: string, filter: any) {
   if (kind !== "denomination") expect(linksEqual(next.relatedLinks.denomination, m.getDenominationLinks(filtered, 8))).toBe(true);
 }
 
-describe("facet parity: old in-memory path vs new SQL path", () => {
+describe.skipIf(!hasDb)("facet parity: old in-memory path vs new SQL path", () => {
   it("city facets (top 20 by size)", async () => {
     const rows = (await m.sql`
       SELECT city_slug FROM churches

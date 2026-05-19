@@ -38,6 +38,16 @@ const m = {} as {
   getChurchSlugsWithPrayers: () => Promise<Set<string>>;
 };
 
+// Live-Neon integration gate: requires a real DB (it IS the pre-deploy
+// gate, run locally with .env.local). CI runs vitest without DB creds →
+// SKIP there rather than fail.
+const _here = dirname(fileURLToPath(import.meta.url));
+try {
+  const { loadLocalEnv } = await import(resolve(_here, "../../../scripts/lib/local-env.mjs") as string);
+  loadLocalEnv(resolve(_here, "../../.."));
+} catch { /* no .env.local (CI) → suite skips */ }
+const hasDb = Boolean(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+
 // OLD path, reconstructed exactly: full getPrayerFilterIndex() + the same
 // populated-filter logic getSitemapPrayerDataCached used before windowing.
 async function oldPrayerData(): Promise<PrayerData> {
@@ -90,7 +100,7 @@ beforeAll(async () => {
 // byte-equality would test cosmetic internal metadata, not the actual output.
 const slugSet = (a: FilterOption[]) => [...new Set(a.map((o) => o.slug))].sort();
 
-describe("prayer-sitemap parity: old getPrayerFilterIndex path vs new windowed", () => {
+describe.skipIf(!hasDb)("prayer-sitemap parity: old getPrayerFilterIndex path vs new windowed", () => {
   it("URL set (country/city/church slugs) + count unchanged", async () => {
     const [oldD, newD] = await Promise.all([oldPrayerData(), m.buildSitemapPrayerData()]);
     expect(newD.prayerChurchCount).toBe(oldD.prayerChurchCount);

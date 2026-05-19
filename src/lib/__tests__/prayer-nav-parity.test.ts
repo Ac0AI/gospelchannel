@@ -37,6 +37,16 @@ const m = {} as {
   getChurchSlugsWithPrayers: () => Promise<Set<string>>;
 };
 
+// Live-Neon integration gate: requires a real DB. Loaded from .env.local
+// locally (it IS the pre-deploy gate); CI runs vitest WITHOUT DB creds
+// (prod creds must not live in CI), so SKIP there rather than fail.
+const _here = dirname(fileURLToPath(import.meta.url));
+try {
+  const { loadLocalEnv } = await import(resolve(_here, "../../../scripts/lib/local-env.mjs") as string);
+  loadLocalEnv(resolve(_here, "../../.."));
+} catch { /* no .env.local (CI) → hasDb stays false → suite skips */ }
+const hasDb = Boolean(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+
 beforeAll(async () => {
   const here = dirname(fileURLToPath(import.meta.url));
   const { loadLocalEnv } = await import(resolve(here, "../../../scripts/lib/local-env.mjs") as string);
@@ -51,7 +61,7 @@ beforeAll(async () => {
   });
 }, 180_000);
 
-describe("prayer-nav parity: scoped index vs old getPrayerFilterIndex", () => {
+describe.skipIf(!hasDb)("prayer-nav parity: scoped index vs old getPrayerFilterIndex", () => {
   it("every prayer-having slug resolves identically; countryOptions = prayer subset", async () => {
     const [oldI, newI, prayerSlugSet] = await Promise.all([
       m.getPrayerFilterIndex(),
