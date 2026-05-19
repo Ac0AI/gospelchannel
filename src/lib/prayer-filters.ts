@@ -1,7 +1,6 @@
 import { unstable_cache } from "next/cache";
-import { CHURCH_INDEX_TAG, getChurchDirectorySeedAsync, type ChurchDirectorySeed } from "@/lib/content";
+import { CHURCH_INDEX_TAG, type ChurchDirectorySeed } from "@/lib/content";
 import {
-  getAllPublishedCampuses,
   getNetworkForWorshipChurch,
   getNetworkCampuses,
 } from "@/lib/church-networks";
@@ -259,12 +258,14 @@ export function buildPrayerFilterIndex(
 }
 
 async function buildPrayerFilterIndexFromSource(): Promise<PrayerFilterIndex> {
-  const [churches, campuses] = await Promise.all([
-    getChurchDirectorySeedAsync(),
-    getAllPublishedCampuses().catch(() => []),
-  ]);
-
-  return buildPrayerFilterIndex(churches, campuses);
+  // Scoped to the ~723 prayer-relevant churches/campuses (not the full ~73k
+  // getChurchDirectorySeedAsync) — the 56 MB structure OOM'd the 128 MB
+  // Worker. ONE implementation in prayer-scoped-index.ts; getPrayerFilterIndex
+  // just caches it, so all 8 prayer-nav helpers get the small index too.
+  // Dynamic import breaks the prayer-filters ↔ prayer-scoped-index static
+  // cycle (the module imports buildPrayerFilterIndex back from here).
+  const { buildScopedPrayerIndex } = await import("@/lib/prayer-scoped-index");
+  return buildScopedPrayerIndex();
 }
 
 async function expandChurchSlugsForNetwork(churchSlug: string): Promise<string[]> {
