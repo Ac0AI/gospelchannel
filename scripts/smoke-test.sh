@@ -12,8 +12,29 @@ cleanup() {
     kill "$DEV_PID" 2>/dev/null || true
     wait "$DEV_PID" 2>/dev/null || true
   fi
+  for file in "${SMOKE_TMP_FILES[@]:-}"; do
+    rm -f "$file"
+  done
 }
 trap cleanup EXIT
+
+SMOKE_TMP_FILES=()
+
+fetch_page() {
+  local path="$1"
+  local file
+  file="$(mktemp)"
+  SMOKE_TMP_FILES+=("$file")
+
+  curl -fsS "$BASE_URL$path" -o "$file"
+
+  if grep -Eiq '<meta name="next-error" content="not-found"|NEXT_HTTP_ERROR_FALLBACK;404|<title>Church Not Found' "$file"; then
+    echo "[smoke] Page rendered a not-found state: $path"
+    exit 1
+  fi
+}
+
+CHURCH_SLUG="${CHURCH_SLUG:-$(node -e "const churches=require('./src/data/churches.json'); const church=churches.find((item) => item && item.slug); if (!church) process.exit(1); process.stdout.write(church.slug);")}"
 
 echo "[smoke] Starting Next.js dev server on port ${PORT}"
 PORT="$PORT" npm run dev > /tmp/gospel-smoke-dev.log 2>&1 &
@@ -32,13 +53,13 @@ for i in {1..40}; do
 done
 
 echo "[smoke] Checking pages"
-curl -fsS "$BASE_URL/" >/dev/null
-curl -fsS "$BASE_URL/church" >/dev/null
-curl -fsS "$BASE_URL/church/hillsong-worship" >/dev/null
-curl -fsS "$BASE_URL/prayerwall" >/dev/null
+fetch_page "/"
+fetch_page "/church"
+fetch_page "/church/${CHURCH_SLUG}"
+fetch_page "/prayerwall"
 
 echo "[smoke] Checking APIs"
-curl -fsS "$BASE_URL/api/church/vote?slugs=hillsong-worship" >/dev/null
+curl -fsS "$BASE_URL/api/church/vote?slugs=${CHURCH_SLUG}" >/dev/null
 curl -fsS "$BASE_URL/api/church/vote/top?period=30d&limit=8" >/dev/null
 
 if [[ "${SMOKE_WITH_CRON:-0}" == "1" ]] && grep -Eq "^CRON_SECRET=.+" .env.local 2>/dev/null; then

@@ -28,6 +28,7 @@ import { buildChurchAliases, checkChurchClaimed, getChurchPublicPageData, resolv
 import {
   getFirstServiceTimeLabel,
   getPublicHostLabel,
+  isIndexableChurch,
   isPlayableSpotifyUrl,
   isValidPublicEmail,
   isValidOfficialWebsiteUrl,
@@ -149,11 +150,18 @@ export async function generateMetadata({ params }: ChurchPageProps): Promise<Met
 
   const pageUrl = `https://gospelchannel.com/church/${church.slug}`;
 
+  // Gate genuinely empty stubs out of the index (no real text/media/music).
+  // follow:true so internal link equity still flows to facet/hub pages.
+  // Self-healing: enrichment lifts indexScore past the threshold and the page
+  // flips back to indexable on the next revalidate.
+  const indexable = isIndexableChurch(church.indexScore);
+
   return {
     title,
     description: seoDesc,
     keywords: Array.from(keywordSet).slice(0, 20),
     alternates: { canonical: pageUrl },
+    robots: indexable ? undefined : { index: false, follow: true },
     openGraph: { title, description: seoDesc, type: "website", url: pageUrl, siteName: "GospelChannel" },
     twitter: { card: "summary_large_image", title, description: seoDesc },
   };
@@ -335,6 +343,52 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
     .filter((video) => Boolean(video.publishedAt && video.thumbnailUrl))
     .slice(0, 20);
 
+  // FAQ schema is built conditionally: only assert Spotify playlists when the
+  // church actually has them (the old unconditional Q1 + a "has 0 playlists"
+  // Q3 produced self-contradictory markup on every playlist-less page), and
+  // only answer "what music" when there's a real style/artist signal rather
+  // than padding with generic description text. Empty FAQPage is omitted
+  // entirely — invalid/penalisable markup otherwise.
+  const faqMainEntity = [
+    ...(allPlaylists.length > 0
+      ? [
+          {
+            "@type": "Question" as const,
+            name: `Where can I find ${church.name} worship playlist?`,
+            acceptedAnswer: {
+              "@type": "Answer" as const,
+              text: `You can stream the official ${church.name} worship playlist on GospelChannel at gospelchannel.com/church/${church.slug}. The page includes ${allPlaylists.length} curated Spotify ${allPlaylists.length === 1 ? "playlist" : "playlists"}${videos.length > 0 ? `, ${videos.length} worship videos` : ""}, and links to all major streaming platforms.`,
+            },
+          },
+          {
+            "@type": "Question" as const,
+            name: `How can I listen to ${church.name} songs on Spotify?`,
+            acceptedAnswer: {
+              "@type": "Answer" as const,
+              text: `${church.name} has ${allPlaylists.length} curated Spotify ${allPlaylists.length === 1 ? "playlist" : "playlists"} available on GospelChannel. You can listen directly on the page or open the playlist in Spotify. Visit gospelchannel.com/church/${church.slug} to start streaming.`,
+            },
+          },
+        ]
+      : []),
+    ...(styles.length > 0 || topArtists.length > 0
+      ? [
+          {
+            "@type": "Question" as const,
+            name: `What kind of music does ${church.name} play?`,
+            acceptedAnswer: {
+              "@type": "Answer" as const,
+              text: `${church.name} is known for ${styles.length > 0 ? styles.join(", ") : "worship music"}.${topArtists.length > 0 ? ` Notable artists include ${topArtists.join(", ")}.` : ""}`,
+            },
+          },
+        ]
+      : []),
+    ...(visitorFaq ?? []).map((faqItem) => ({
+      "@type": "Question" as const,
+      name: faqItem.question,
+      acceptedAnswer: { "@type": "Answer" as const, text: faqItem.answer },
+    })),
+  ];
+
   const jsonLd = [
     {
       "@context": "https://schema.org",
@@ -416,41 +470,13 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
         { "@type": "ListItem", position: 2, name: church.name, item: pageUrl },
       ],
     },
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: `Where can I find ${church.name} worship playlist?`,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: `You can stream the official ${church.name} worship playlist on GospelChannel at gospelchannel.com/church/${church.slug}. The page includes curated Spotify playlists${videos.length > 0 ? `, ${videos.length} worship videos` : ""}, and links to all major streaming platforms.`,
-          },
-        },
-        {
-          "@type": "Question",
-          name: `What kind of music does ${church.name} play?`,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: `${church.name} is known for ${styles.length > 0 ? styles.join(", ") : "worship music"}. ${topArtists.length > 0 ? `Notable artists include ${topArtists.join(", ")}.` : ""} ${church.description.slice(0, 150)}`,
-          },
-        },
-        {
-          "@type": "Question",
-          name: `How can I listen to ${church.name} songs on Spotify?`,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: `${church.name} has ${allPlaylists.length} curated Spotify ${allPlaylists.length === 1 ? "playlist" : "playlists"} available on GospelChannel. You can listen directly on the page or open the playlist in Spotify. Visit gospelchannel.com/church/${church.slug} to start streaming.`,
-          },
-        },
-        ...(visitorFaq ?? []).map((faqItem) => ({
-          "@type": "Question" as const,
-          name: faqItem.question,
-          acceptedAnswer: { "@type": "Answer" as const, text: faqItem.answer },
-        })),
-      ],
-    },
+    ...(faqMainEntity.length > 0
+      ? [{
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqMainEntity,
+        }]
+      : []),
   ];
 
   return (

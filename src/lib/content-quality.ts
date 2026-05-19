@@ -159,6 +159,7 @@ export function sanitizeServiceTimes(times: ServiceTime[] | null | undefined): S
   if (!Array.isArray(times)) return [];
 
   return times.flatMap((slot) => {
+    if (!slot) return [];
     const day = normalizeDay(slot.day);
     const time = normalizeTime(slot.time);
     if (!day || !time) return [];
@@ -245,6 +246,23 @@ export function hasPlayableMusicSource(input: {
 
 export function isCriticalDisplayFlag(flag: string): boolean {
   return flag.startsWith("critical_");
+}
+
+// Minimum displayScore (see deriveDisplayAssessment) for a church detail page
+// to be indexed by search engines and emitted in the sitemap. Balanced gate:
+// 20 (displayReady) + at least one substance signal — real non-generated text
+// (35) or playable music/video (25). Pure name+address stubs score 20 and are
+// excluded until enrichment lifts them. Single source of truth: both the
+// detail-page robots meta and the sitemap seed read this.
+export const INDEXABLE_DISPLAY_SCORE_MIN = 45;
+
+export function isIndexableChurch(
+  displayScore: number | null | undefined,
+): boolean {
+  // Unknown score (pre-backfill row) defaults to indexable so a stale/missing
+  // value never silently deindexes a real page.
+  if (displayScore == null) return true;
+  return displayScore >= INDEXABLE_DISPLAY_SCORE_MIN;
 }
 
 export function deriveDisplayAssessment(input: DisplayAssessmentInput): {

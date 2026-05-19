@@ -51,11 +51,21 @@ export const churches = pgTable(
     lastResearched: timestamp("last_researched", { withTimezone: true }),
     verifiedAt: timestamp("verified_at", { withTimezone: true }),
     showEmailPublicly: boolean("show_email_publicly").notNull().default(false),
+    // Persisted search-index substance score (see scripts/backfill-display-score.ts
+    // and isIndexableChurch). Distinct from the runtime display-readiness score
+    // in church.ts — answers index-worthiness, fed by RAW description. DB column
+    // kept as display_score (already migrated); JS name avoids colliding with
+    // the spread `...display` displayScore field on the church page object.
+    indexScore: integer("display_score"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => ({
     statusIndex: index("idx_churches_status").on(table.status),
+    indexScoreIndex: index("idx_churches_display_score").on(
+      table.status,
+      table.indexScore,
+    ),
     statusNameSlugIndex: index("churches_status_name_slug_idx").on(
       table.status,
       table.name,

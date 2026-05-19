@@ -7,6 +7,8 @@ import {
   getValidServiceTimeLabel,
   isGeneratedChurchDescription,
   isCriticalDisplayFlag,
+  isIndexableChurch,
+  INDEXABLE_DISPLAY_SCORE_MIN,
   isValidOfficialWebsiteUrl,
   sanitizeServiceTimes,
 } from "../content-quality";
@@ -72,6 +74,7 @@ describe("content-quality", () => {
     expect(
       sanitizeServiceTimes([
         { day: "Sundays", time: "10:00" },
+        null as never,
         { day: "Sunday", time: "null" },
       ]),
     ).toEqual([{ day: "Sunday", time: "10:00" }]);
@@ -109,5 +112,35 @@ describe("content-quality", () => {
     expect(isValidOfficialWebsiteUrl("https://www.eniro.se/")).toBe(false);
     expect(isValidOfficialWebsiteUrl("https://www.facebook.com/examplechurch")).toBe(false);
     expect(isValidOfficialWebsiteUrl("https://www.filadelfiakyrkan.se")).toBe(true);
+  });
+
+  // Gate that drives robots noindex + sitemap inclusion on ~7,400 thin
+  // church pages. A flipped null-default or off-by-one on the threshold
+  // silently deindexes real pages or leaves empty stubs indexed, only
+  // visible in GSC days later — hence explicit boundary coverage.
+  describe("isIndexableChurch", () => {
+    it("null score → indexable (safe default: never silently deindex a pre-backfill row)", () => {
+      expect(isIndexableChurch(null)).toBe(true);
+    });
+
+    it("undefined score → indexable (same safe default)", () => {
+      expect(isIndexableChurch(undefined)).toBe(true);
+    });
+
+    it("just below threshold → not indexable", () => {
+      expect(isIndexableChurch(INDEXABLE_DISPLAY_SCORE_MIN - 1)).toBe(false);
+    });
+
+    it("exactly at threshold → indexable (boundary is inclusive)", () => {
+      expect(isIndexableChurch(INDEXABLE_DISPLAY_SCORE_MIN)).toBe(true);
+    });
+
+    it("above threshold → indexable", () => {
+      expect(isIndexableChurch(INDEXABLE_DISPLAY_SCORE_MIN + 1)).toBe(true);
+    });
+
+    it("zero → not indexable (empty stub)", () => {
+      expect(isIndexableChurch(0)).toBe(false);
+    });
   });
 });

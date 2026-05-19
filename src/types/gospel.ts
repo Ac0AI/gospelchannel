@@ -52,6 +52,10 @@ export type ChurchConfig = {
   displayReady?: boolean;
   displayScore?: number;
   displayFlags?: string[];
+  // Persisted search-index substance score (churches.display_score column),
+  // distinct from the runtime displayScore above. Drives robots noindex +
+  // sitemap inclusion. See isIndexableChurch / backfill-display-score.ts.
+  indexScore?: number;
   language?: string;
   sourceKind?: "manual" | "suggested" | "discovered" | "claimed";
 };

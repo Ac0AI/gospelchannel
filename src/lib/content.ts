@@ -96,6 +96,7 @@ type ChurchDataRow = ChurchDirectorySeedRow & {
   language: string | null;
   source_kind: ChurchConfig["sourceKind"] | null;
   youtube_videos?: ChurchConfig["youtubeVideos"] | null;
+  display_score?: number | null;
 };
 
 type ChurchStatsRow = {
@@ -345,6 +346,7 @@ function mapRowToChurchConfig(row: ChurchDataRow, enrichment?: Record<string, un
     aliases: row.aliases || undefined,
     language: row.language || undefined,
     sourceKind: row.source_kind || undefined,
+    indexScore: typeof row.display_score === "number" ? row.display_score : undefined,
     // Map youtube_videos JSONB back
     ...(row.youtube_videos ? { youtubeVideos: row.youtube_videos } : {}),
   });
