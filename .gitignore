@@ -27,6 +27,10 @@ tmp/
 .DS_Store
 *.pem
 
+# data archives — public repo, never commit raw church-data dumps
+*.zip
+*.tar.gz
+
 # debug
 npm-debug.log*
 yarn-debug.log*
