@@ -143,4 +143,64 @@ describe("content-quality", () => {
       expect(isIndexableChurch(0)).toBe(false);
     });
   });
+
+  // Orphan-pages plan, deploy 1 (2026-05-20). Prayer wall as the 4th content
+  // signal. Monotonic + deterministic: only-gains, never-losses, exactly +25
+  // when present. Single source of truth for the gate (no parallel boolean
+  // predicate — see [[parity-gate-shared-comparator]] / DRY).
+  describe("hasPrayers input (deploy 1)", () => {
+    const thinMetadataOnly = {
+      country: "Sweden",
+      location: "Stockholm",
+      // No description, no enrichment summary, no music, no images.
+    };
+
+    it("prayer-only church with valid metadata lands exactly at threshold", () => {
+      const result = deriveDisplayAssessment({ ...thinMetadataOnly, hasPrayers: true });
+      // displayReady (no critical flags) +20 + prayers +25 = 45 = threshold.
+      expect(result.displayScore).toBe(45);
+      expect(isIndexableChurch(result.displayScore)).toBe(true);
+    });
+
+    it("no-prayers thin church stays below threshold (unchanged behaviour)", () => {
+      const result = deriveDisplayAssessment({ ...thinMetadataOnly });
+      expect(result.displayScore).toBe(20); // displayReady only
+      expect(isIndexableChurch(result.displayScore)).toBe(false);
+    });
+
+    it("prayers boost is exactly +25 (matches hasMusic, deterministic)", () => {
+      const withoutPrayers = deriveDisplayAssessment({ ...thinMetadataOnly });
+      const withPrayers = deriveDisplayAssessment({ ...thinMetadataOnly, hasPrayers: true });
+      expect(withPrayers.displayScore - withoutPrayers.displayScore).toBe(25);
+    });
+
+    it("monotonic: prayers never LOWERS the score (any church)", () => {
+      // A church that already passes everything: prayers should still only add.
+      const strongInputs = {
+        description:
+          "A welcoming church with vibrant congregational worship, clear Sunday gatherings, and a strong local community presence for new visitors.",
+        country: "Sweden",
+        spotifyUrl: "https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M",
+        thumbnailUrl: "/churches/default-church.svg",
+      };
+      const without = deriveDisplayAssessment(strongInputs);
+      const withp = deriveDisplayAssessment({ ...strongInputs, hasPrayers: true });
+      expect(withp.displayScore).toBeGreaterThanOrEqual(without.displayScore);
+      expect(withp.displayScore - without.displayScore).toBe(25);
+    });
+
+    it("hasPrayers=false is equivalent to omitted (no flag, no perturbation)", () => {
+      const omitted = deriveDisplayAssessment({ ...thinMetadataOnly });
+      const explicit = deriveDisplayAssessment({ ...thinMetadataOnly, hasPrayers: false });
+      expect(explicit.displayScore).toBe(omitted.displayScore);
+      expect(explicit.displayFlags).toEqual(omitted.displayFlags);
+    });
+
+    it("does not introduce a 'missing_prayers' flag (absence is not a quality issue)", () => {
+      const result = deriveDisplayAssessment({ ...thinMetadataOnly });
+      for (const flag of result.displayFlags) {
+        expect(flag.toLowerCase()).not.toContain("prayer");
+      }
+    });
+  });
 });
