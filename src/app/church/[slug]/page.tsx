@@ -1207,11 +1207,13 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
         )}
 
         <Suspense fallback={null}>
-          <NearbyChurchesSection
-            churchSlug={church.slug}
-            latitude={enrichment?.latitude}
-            longitude={enrichment?.longitude}
-          />
+          {/*
+            Deploy 1 (2026-05-20): reads the precomputed related_church_slugs
+            column (city → country → style/denom backfill ladder, reciprocity
+            guarantee). No coord gating — the previous lat/long requirement
+            was the root cause of mass orphan pages at 66k scale.
+          */}
+          <NearbyChurchesSection churchSlug={church.slug} />
         </Suspense>
 
         {/* Prayer card */}

@@ -4,7 +4,13 @@ import { getNearbyChurchPlaceLabel } from "@/lib/content-quality";
 type NearbyChurch = {
   slug: string;
   name: string;
-  distance: number;
+  /**
+   * Geo distance in km from the source church. Optional since the
+   * related-churches data path (deploy 1, 2026-05-20) uses backfill-time
+   * geo as a ranking tiebreak, not a render concern. The km badge only
+   * renders when `distance` is present.
+   */
+  distance?: number;
   country: string;
   location?: string;
 };
@@ -60,9 +66,11 @@ export function NearbyChurches({ churches }: { churches: NearbyChurch[] }) {
                   <p className="mt-0.5 text-xs text-muted-warm">{placeLabel}</p>
                 ) : null}
               </div>
-              <span className="shrink-0 text-xs text-muted-warm">
-                {c.distance < 1 ? "<1" : Math.round(c.distance)} km
-              </span>
+              {typeof c.distance === "number" ? (
+                <span className="shrink-0 text-xs text-muted-warm">
+                  {c.distance < 1 ? "<1" : Math.round(c.distance)} km
+                </span>
+              ) : null}
             </Link>
           );
         })}
