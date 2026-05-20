@@ -44,6 +44,20 @@ const DATABASE_URL = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOL
 if (!DATABASE_URL) throw new Error("Missing DATABASE_URL");
 const sql = neon(DATABASE_URL);
 
+/**
+ * Load every church_slug that has >=1 prayer in one query. The set lives in
+ * memory for the duration of the backfill — small (hundreds-low-thousands),
+ * far cheaper than per-row lookups. Mirrors src/lib/prayer.ts's
+ * getChurchSlugsWithPrayersCached but reads through @neondatabase/serverless
+ * to avoid pulling the Worker cache machinery into a Node backfill.
+ */
+async function loadPrayerSlugs(): Promise<Set<string>> {
+  const rows = (await sql.query(
+    `SELECT DISTINCT church_slug FROM prayers WHERE church_slug IS NOT NULL`,
+  )) as Array<{ church_slug: string }>;
+  return new Set(rows.map((r) => r.church_slug).filter(Boolean));
+}
+
 const DRY_RUN = process.argv.includes("--dry-run");
 const LIMIT = Number.parseInt(
   process.argv.find((a) => a.startsWith("--limit="))?.slice(8) ?? "0",
@@ -88,7 +102,7 @@ type Row = {
   e_official_name: string | null;
 };
 
-function scoreRow(r: Row): number {
+function scoreRow(r: Row, hasPrayers: boolean): number {
   // Mirror _getChurchPublicPageData's input assembly (src/lib/church.ts ~640).
   const church = {
     name: r.name,
@@ -171,6 +185,11 @@ function scoreRow(r: Row): number {
     }),
     logoUrl: church.logo || enrichment.logoImageUrl,
     headerImage: church.headerImage,
+    // Deploy 1 (2026-05-20): prayer wall as the 4th content signal. Monotonic
+    // — no church loses indexability from this change; only prayer-having
+    // churches near the threshold can gain it. Old vs new delta reported in
+    // dry-run mode.
+    hasPrayers,
   });
   return displayScore;
 }
@@ -179,9 +198,21 @@ async function main() {
   console.log(
     `backfill-display-score  threshold=${INDEXABLE_DISPLAY_SCORE_MIN}  ${DRY_RUN ? "DRY-RUN" : "WRITE"}${LIMIT ? `  limit=${LIMIT}` : ""}`,
   );
+
+  // Deploy 1 (2026-05-20): load the prayer-slug set ONCE upfront. The set is
+  // small (low-thousands) and lookup is O(1) per row vs N queries to prayers.
+  const prayerSlugs = await loadPrayerSlugs();
+  console.log(`  prayer churches loaded: ${prayerSlugs.size}`);
+
   let cursor = "";
   let processed = 0;
   let indexable = 0;
+  // Deploy-1 attributable delta: in dry-run we ALSO compute the old score
+  // (no prayers input) so we can report the bounded "newly indexable due to
+  // prayers" count BEFORE applying. Invariant: oldIndexable subset of
+  // newIndexable (monotonic — no losses).
+  let oldIndexable = 0;
+  let newlyIndexableFromPrayers = 0;
   const hist = new Map<number, number>();
 
   const SELECT_COLS = `c.slug, c.name, c.description, c.country, c.location, c.denomination,
@@ -218,10 +249,26 @@ async function main() {
 
     const updates: Array<{ slug: string; score: number }> = [];
     for (const r of rows) {
-      const score = scoreRow(r);
+      const hasPrayers = prayerSlugs.has(r.slug);
+      const score = scoreRow(r, hasPrayers);
       updates.push({ slug: r.slug, score });
       hist.set(score, (hist.get(score) ?? 0) + 1);
-      if (isIndexableChurch(score)) indexable += 1;
+      const nowIndexable = isIndexableChurch(score);
+      if (nowIndexable) indexable += 1;
+      // Deploy-1 attribution: compute the OLD score (no prayers input) for
+      // every prayer-having row so we can prove the delta is monotonic
+      // (no losses) and bounded (count of newly-indexable, all from prayers).
+      // Non-prayer rows are score-identical between old/new — no need to
+      // recompute them.
+      if (DRY_RUN && hasPrayers) {
+        const oldScore = scoreRow(r, false);
+        const wasIndexable = isIndexableChurch(oldScore);
+        if (wasIndexable) oldIndexable += 1;
+        if (!wasIndexable && nowIndexable) newlyIndexableFromPrayers += 1;
+      } else if (DRY_RUN) {
+        // Non-prayer row: old == new.
+        if (nowIndexable) oldIndexable += 1;
+      }
     }
 
     if (!DRY_RUN) {
@@ -250,7 +297,36 @@ async function main() {
   console.log(
     `\nIndexable (>= ${INDEXABLE_DISPLAY_SCORE_MIN}): ${indexable} / ${processed} (${pct}%)  -> ${processed - indexable} deindexed`,
   );
-  if (DRY_RUN) console.log("DRY-RUN: no rows written.");
+
+  // Deploy-1 attribution: prove the change is monotonic and bounded BEFORE
+  // applying. If oldIndexable > newIndexable the change is unsafe and must
+  // not ship; if newlyIndexableFromPrayers is unexpectedly large the prayers
+  // weight needs review. Only meaningful in dry-run (we compute old scores
+  // there).
+  if (DRY_RUN) {
+    const delta = indexable - oldIndexable;
+    console.log(`\nDeploy-1 attribution (prayers-in-score, N=${INDEXABLE_DISPLAY_SCORE_MIN} unchanged):`);
+    console.log(`  prayer churches in pass:       ${[...prayerSlugs].filter((s) => s).length} loaded`);
+    console.log(`  old indexable (no prayers):    ${oldIndexable}`);
+    console.log(`  new indexable (with prayers):  ${indexable}`);
+    console.log(`  net delta:                     ${delta >= 0 ? "+" : ""}${delta}`);
+    console.log(`  newly indexable FROM prayers:  ${newlyIndexableFromPrayers}`);
+    if (delta < 0) {
+      console.log(
+        "\nUNSAFE: net delta negative — prayers input caused churches to LOSE indexability. Block deploy.",
+      );
+      process.exit(2);
+    }
+    if (delta !== newlyIndexableFromPrayers) {
+      console.log(
+        `\nUNEXPECTED: net delta (${delta}) != newlyIndexableFromPrayers (${newlyIndexableFromPrayers}). Investigate before deploy.`,
+      );
+      process.exit(2);
+    }
+    console.log("\nMonotonic + attributable: net delta == newlyIndexableFromPrayers. Safe to apply.");
+  }
+
+  if (DRY_RUN) console.log("\nDRY-RUN: no rows written.");
 }
 
 main().catch((e) => {

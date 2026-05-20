@@ -16,6 +16,16 @@ type DisplayAssessmentInput = {
   thumbnailUrl?: string;
   logoUrl?: string;
   headerImage?: string;
+  /**
+   * Active prayer wall on this church (>=1 prayer in DB). The 4th content
+   * signal alongside hasMusic / hasLongText / hasVisualAsset — added 2026-05-20
+   * (orphan-pages plan, deploy 1). Score weight +25 matches hasMusic, so a
+   * church whose ONLY differentiator is an active prayer wall lands exactly
+   * at the indexability threshold (45) when its metadata is otherwise valid
+   * (displayReady = +20). Source: getChurchSlugsWithPrayers (prayer.ts).
+   * Lack of prayers is NOT a quality flag — only presence boosts.
+   */
+  hasPrayers?: boolean;
 };
 
 const PLACEHOLDER_PATTERN = /^(?:null|undefined|n\/a|na|none|unknown|tbd)$/i;
@@ -328,6 +338,10 @@ export function deriveDisplayAssessment(input: DisplayAssessmentInput): {
   if (hasLongText) displayScore += 35;
   if (hasVisualAsset) displayScore += 20;
   if (hasMusic) displayScore += 25;
+  // Prayer wall is the 4th content signal (deploy 1, 2026-05-20). Monotonic
+  // boost only — no church loses indexability from this change. A prayer-only
+  // church with valid metadata lands at displayReady+prayers = 45 = threshold.
+  if (input.hasPrayers) displayScore += 25;
 
   return {
     promotionTier,

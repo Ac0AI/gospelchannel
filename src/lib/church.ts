@@ -976,82 +976,80 @@ export const getChurchPublicPageData = unstable_cache(
   { revalidate: 3600, tags: ["church-page-public"] }
 );
 
-export async function getNearbyChurches(
+/**
+ * Read the precomputed reciprocal related-church assignment for a church and
+ * hydrate the K slugs to name/country/location in ONE batched query.
+ *
+ * Orphan-pages plan, deploy 1 (2026-05-20). Replaces the lat/long-gated
+ * getNearbyChurches — that function gated on coords, so most churches got
+ * `null` and stayed orphaned. The new path reads `churches.related_church_slugs`
+ * (filled by scripts/backfill-related-churches.ts) with two guarantees baked
+ * into the backfill: every indexable church emits K and receives >=1.
+ *
+ * Read path: 1 SELECT for the column + 1 batched `WHERE slug IN (...)` for
+ * names/locations (mirrors the proven churchMap hydration pattern). Never
+ * pulls the full church index ([[unstable-cache-2mb-oom]]). NULL column
+ * (church not yet backfilled) → returns [] gracefully, page renders nothing.
+ *
+ * Live noindex guard: the hydration query filters `status='approved'`. Any
+ * slug whose church has been deleted/rejected/archived since the nightly
+ * backfill is dropped silently — block may show <K but never a broken link.
+ * The same query does NOT re-check `isIndexableChurch` per-render (the
+ * equity-leak residual is the accepted P3 TODO, eng-review Issue 2).
+ *
+ * Return shape matches what NearbyChurches.tsx renders. `distance` is
+ * intentionally omitted — coords are a backfill-time tiebreak, not a render
+ * concern; the presentational component now treats distance as optional.
+ */
+export async function getRelatedChurches(
   slug: string,
-  lat: number,
-  lng: number,
-  limit = 4
-): Promise<Array<{ slug: string; name: string; distance: number; country: string; location?: string }>> {
-  if (!hasServiceConfig()) return [];
-  const sb = createAdminClient();
+): Promise<Array<{ slug: string; name: string; country: string; location?: string }>> {
+  const sqlClient = getSql();
   const canonicalSlug = resolveCanonicalChurchSlug(slug);
-  type NearbyChurchRow = {
-    church_slug: string;
-    latitude: number;
-    longitude: number;
-  };
-  // Fetch all enrichments with coordinates — bounding box pre-filter (~200km)
-  const MAX_RADIUS_KM = 200;
-  const latDelta = MAX_RADIUS_KM / 111;
-  const lngDelta = MAX_RADIUS_KM / (111 * Math.cos((lat * Math.PI) / 180));
 
-  const { data } = await sb
-    .from("church_enrichments")
-    .select("church_slug, latitude, longitude")
-    .not("latitude", "is", null)
-    .eq("enrichment_status", "complete")
-    .gte("latitude", lat - latDelta)
-    .lte("latitude", lat + latDelta)
-    .gte("longitude", lng - lngDelta)
-    .lte("longitude", lng + lngDelta);
-  const nearbyRows = (data as NearbyChurchRow[] | null) ?? [];
-  if (nearbyRows.length === 0) return [];
+  // 1. Read the precomputed slug list. NULL → not yet backfilled, render nothing.
+  const rows = (await sqlClient`
+    SELECT related_church_slugs
+      FROM churches
+     WHERE slug = ${canonicalSlug}
+       AND status = 'approved'
+     LIMIT 1
+  `) as Array<{ related_church_slugs: string[] | null }>;
+  const related = rows[0]?.related_church_slugs ?? null;
+  if (!related || related.length === 0) return [];
 
-  const nearbyByCanonicalSlug = new Map<string, number>();
-  for (const row of nearbyRows) {
-    const nearbyCanonicalSlug = resolveCanonicalChurchSlug(row.church_slug);
-    if (nearbyCanonicalSlug === canonicalSlug) continue;
+  // 2. Hydrate to {name, country, location} in ONE batched query. Same shape
+  // and ordering discipline as the old getNearbyChurches churchMap path —
+  // keep slug ordering from the column (already worship-relevant per the
+  // backfill's city → country → style/denomination ladder).
+  const hydrated = (await sqlClient`
+    SELECT slug, name, country, location
+      FROM churches
+     WHERE slug = ANY(${related}::text[])
+       AND status = 'approved'
+  `) as Array<{ slug: string; name: string; country: string | null; location: string | null }>;
 
-    const dlat = (row.latitude - lat) * 111;
-    const dlng = (row.longitude - lng) * 111 * Math.cos((lat * Math.PI) / 180);
-    const distance = Math.sqrt(dlat * dlat + dlng * dlng);
-    if (distance > MAX_RADIUS_KM) continue;
-
-    const existingDistance = nearbyByCanonicalSlug.get(nearbyCanonicalSlug);
-    if (typeof existingDistance !== "number" || distance < existingDistance) {
-      nearbyByCanonicalSlug.set(nearbyCanonicalSlug, distance);
-    }
-  }
-
-  const matchedSlugs = Array.from(nearbyByCanonicalSlug.keys());
-  if (matchedSlugs.length === 0) return [];
-  const { data: churchRows } = await sb
-    .from("churches")
-    .select("slug,name,country,location")
-    .in("slug", matchedSlugs)
-    .eq("status", "approved");
-
-  const churchMap = new Map(
-    ((churchRows as Array<{ slug: string; name: string; country: string | null; location: string | null }>) ?? []).map(
-      (row) => [row.slug, { slug: row.slug, name: row.name, country: row.country || "", location: row.location || undefined }]
-    )
+  type RelatedChurchRow = { slug: string; name: string; country: string; location?: string };
+  const bySlug = new Map<string, RelatedChurchRow>(
+    hydrated.map((r): [string, RelatedChurchRow] => [
+      r.slug,
+      {
+        slug: r.slug,
+        name: r.name,
+        country: r.country || "",
+        ...(r.location ? { location: r.location } : {}),
+      },
+    ]),
   );
 
-  return matchedSlugs
-    .map((matchedSlug): { slug: string; name: string; distance: number; country: string; location?: string } | null => {
-      const church = churchMap.get(matchedSlug);
-      const distance = nearbyByCanonicalSlug.get(matchedSlug);
-      if (!church || typeof distance !== "number") return null;
-      return { slug: matchedSlug, name: church.name, distance, country: church.country, location: church.location };
-    })
-    .filter((c): c is { slug: string; name: string; distance: number; country: string; location?: string } => c !== null)
-    .sort(
-      (
-        a: { slug: string; name: string; distance: number; country: string; location?: string },
-        b: { slug: string; name: string; distance: number; country: string; location?: string }
-      ) => a.distance - b.distance
-    )
-    .slice(0, limit);
+  // Preserve the backfill's ordering; drop any slug whose church is no
+  // longer approved (rare race: nightly backfill vs admin reject).
+  const out: RelatedChurchRow[] = [];
+  for (const s of related) {
+    const row = bySlug.get(s);
+    if (row) out.push(row);
+  }
+  return out;
 }
 
 /**
