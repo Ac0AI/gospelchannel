@@ -26,6 +26,7 @@ import {
   getCompactLocationLabel,
   isGeneratedChurchDescription,
   normalizeDisplayText,
+  INDEXABLE_DISPLAY_SCORE_MIN,
 } from "@/lib/content-quality";
 import {
   buildChurchMatchReasons,
@@ -991,11 +992,12 @@ export const getChurchPublicPageData = unstable_cache(
  * pulls the full church index ([[unstable-cache-2mb-oom]]). NULL column
  * (church not yet backfilled) → returns [] gracefully, page renders nothing.
  *
- * Live noindex guard: the hydration query filters `status='approved'`. Any
- * slug whose church has been deleted/rejected/archived since the nightly
- * backfill is dropped silently — block may show <K but never a broken link.
- * The same query does NOT re-check `isIndexableChurch` per-render (the
- * equity-leak residual is the accepted P3 TODO, eng-review Issue 2).
+ * Live noindex guard (T9, 2026-05-20): the hydration query filters both
+ * `status='approved'` AND `display_score >= INDEXABLE_DISPLAY_SCORE_MIN`,
+ * so the block never serves a link to a noindexed church regardless of
+ * how stale the precomputed column is. The block may show <K when a
+ * sibling was demoted since the nightly reconcile, never a broken
+ * (equity-leaking) link. Closes the eng-review Issue 2 residual.
  *
  * Return shape matches what NearbyChurches.tsx renders. `distance` is
  * intentionally omitted — coords are a backfill-time tiebreak, not a render
@@ -1022,11 +1024,21 @@ export async function getRelatedChurches(
   // and ordering discipline as the old getNearbyChurches churchMap path —
   // keep slug ordering from the column (already worship-relevant per the
   // backfill's city → country → style/denomination ladder).
+  //
+  // Render-time noindex guard (T9, 2026-05-20): also filter on
+  // display_score >= INDEXABLE_DISPLAY_SCORE_MIN so the block never serves
+  // a link to a now-noindexed church. The nightly reconcile recomputes
+  // related_church_slugs but until it runs a demoted church still appears
+  // in others' lists — the equity-leak residual the eng-review accepted.
+  // This SQL guard closes that half of the residual with one extra
+  // predicate: no DDL, no parity gate, monotonic (always a subset of the
+  // previous result set).
   const hydrated = (await sqlClient`
     SELECT slug, name, country, location
       FROM churches
      WHERE slug = ANY(${related}::text[])
        AND status = 'approved'
+       AND (display_score IS NULL OR display_score >= ${INDEXABLE_DISPLAY_SCORE_MIN})
   `) as Array<{ slug: string; name: string; country: string | null; location: string | null }>;
 
   type RelatedChurchRow = { slug: string; name: string; country: string; location?: string };
