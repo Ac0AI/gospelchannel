@@ -75,6 +75,28 @@ async function main() {
       );
       process.stdout.write(`\r  written ${Math.min(i + BATCH, updates.length)}/${updates.length}`);
     }
+
+    const indexedSlugs = updates.map((u) => u.slug);
+    const cleared = await sql.query(
+      `UPDATE churches
+          SET city_slug = NULL,
+              directory_score = NULL,
+              directory_ready = FALSE,
+              directory_rank = NULL
+        WHERE status = 'approved'
+          AND NOT (slug = ANY($1::text[]))
+          AND (
+            city_slug IS NOT NULL
+            OR directory_score IS NOT NULL
+            OR directory_ready IS DISTINCT FROM FALSE
+            OR directory_rank IS NOT NULL
+          )
+        RETURNING slug`,
+      [indexedSlugs],
+    );
+    if (cleared.length > 0) {
+      console.log(`\n  cleared ${cleared.length} approved rows outside the canonical index`);
+    }
   }
 
   console.log(

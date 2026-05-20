@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useCallback, useState } from "react";
 
-const STORAGE_KEY = "gospel_prayed_ids";
+const STORAGE_KEY = "gospel_prayed_ids_v2";
 
 function getPrayedIds(): Set<string> {
   if (typeof window === "undefined") return new Set();

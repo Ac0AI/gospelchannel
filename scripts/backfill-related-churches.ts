@@ -49,6 +49,7 @@ const sql = neon(DATABASE_URL);
 const DRY_RUN = process.argv.includes("--dry-run");
 const K = Number.parseInt(process.argv.find((a) => a.startsWith("--k="))?.slice(4) ?? "8", 10);
 const K_ABSORB_CAP = K + 2; // reciprocity-pass growth allowance per receiver
+const GEO_RERANK_MAX_CANDIDATES = 2000;
 const BATCH = 2500;
 
 type Row = {
@@ -185,10 +186,19 @@ async function main() {
     ): number => {
       if (out.length >= K) return 0;
       let pool = candidates;
-      if (rerankByGeo && src.latitude != null && src.longitude != null) {
+      if (
+        rerankByGeo
+        && src.latitude != null
+        && src.longitude != null
+        && candidates.length <= GEO_RERANK_MAX_CANDIDATES
+      ) {
         // Stable sort with geo tiebreak: distance asc when candidate has
         // coords, else fall back to rank position. Source must have coords;
         // candidates without coords retain their rank ordering at the tail.
+        // Avoid per-source geo sorting for very large countries (for example
+        // the US import set). Those clusters are already sorted by
+        // directory_rank; per-row full-country distance sorts turn the job
+        // into O(n^2 log n) with no meaningful product gain.
         const withCoords: Entry[] = [];
         const withoutCoords: Entry[] = [];
         for (const c of candidates) {
@@ -250,34 +260,58 @@ async function main() {
   console.log(`  emit pass:  orphans (0 inlinks) = ${orphans.length}`);
 
   let absorbed = 0;
+  const absorberCursor = new Map<Entry[], number>();
+
+  const findAbsorber = (lists: Array<Entry[] | undefined>, orphanSlug: string): Entry | undefined => {
+    for (const list of lists) {
+      if (!list || list.length === 0) continue;
+
+      let cursor = absorberCursor.get(list) ?? 0;
+      for (let i = cursor; i < list.length; i += 1) {
+        const c = list[i];
+        if (c.slug === orphanSlug) continue;
+
+        const candidateList = emit.get(c.slug) ?? [];
+        if (candidateList.length >= K_ABSORB_CAP) {
+          if (i === cursor) {
+            cursor = i + 1;
+            absorberCursor.set(list, cursor);
+          }
+          continue;
+        }
+        if (candidateList.includes(orphanSlug)) continue;
+
+        absorberCursor.set(list, i);
+        return c;
+      }
+
+      absorberCursor.set(list, list.length);
+    }
+
+    return undefined;
+  };
+
   for (const orphanSlug of orphans) {
     const orphan = bySlug.get(orphanSlug);
     if (!orphan) continue;
 
     // Find an absorber: highest-ranked sibling in the same cluster ladder
     // whose list is below K_ABSORB_CAP. City > country > style > denom > any.
-    const absorberCandidates: Entry[] = [];
-    const push = (list: Entry[] | undefined) => {
-      if (list) for (const c of list) absorberCandidates.push(c);
-    };
-    if (orphan.city_slug) push(byCity.get(orphan.city_slug));
-    if (orphan.country) push(byCountry.get(orphan.country));
-    if (orphan.styleKey) push(byStyle.get(orphan.styleKey));
-    if (orphan.denomKey) push(byDenom.get(orphan.denomKey));
-    // Global tier: required for orphans whose clusters are all singletons.
-    // The high-rank churches absorbing here will swallow the orphan even
-    // when no cluster match exists. Bounded by K_ABSORB_CAP per absorber.
-    push(globalRanked);
-
-    let absorber: Entry | undefined;
-    for (const c of absorberCandidates) {
-      if (c.slug === orphan.slug) continue;
-      const list = emit.get(c.slug) ?? [];
-      if (list.length >= K_ABSORB_CAP) continue;
-      if (list.includes(orphan.slug)) continue;
-      absorber = c;
-      break;
-    }
+    // Cursor per cluster list avoids re-scanning already-full high-rank
+    // absorbers for tens of thousands of orphans after large imports.
+    const absorber = findAbsorber(
+      [
+        orphan.city_slug ? byCity.get(orphan.city_slug) : undefined,
+        orphan.country ? byCountry.get(orphan.country) : undefined,
+        orphan.styleKey ? byStyle.get(orphan.styleKey) : undefined,
+        orphan.denomKey ? byDenom.get(orphan.denomKey) : undefined,
+        // Global tier: required for orphans whose clusters are all singletons.
+        // The high-rank churches absorbing here will swallow the orphan even
+        // when no cluster match exists. Bounded by K_ABSORB_CAP per absorber.
+        globalRanked,
+      ],
+      orphan.slug,
+    );
     if (!absorber) continue; // Fully isolated — extremely rare; logged below.
     const list = emit.get(absorber.slug) ?? [];
     list.push(orphan.slug);

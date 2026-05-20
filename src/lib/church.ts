@@ -1547,9 +1547,9 @@ async function fetchChurchIndexPageRows(filters: ChurchDirectoryFilters, current
     -- assigned by the EXACT JS browse comparator (compareDirectoryEntries) in
     -- scripts/backfill-facet-columns.ts. Ordering by it reproduces the old
     -- in-memory order byte-for-byte with zero SQL-collation / playlistCount
-    -- drift. NULL rank (un-reconciled new row) sinks last — no name-sort
-    -- fallback that would re-introduce the collation mismatch.
-    ORDER BY directory_rank ASC NULLS LAST
+    -- drift. NULL rank (un-reconciled new row) sinks last. slug is only a
+    -- deterministic tiebreak for rare stale/duplicate ranks.
+    ORDER BY directory_rank ASC NULLS LAST, slug ASC
     LIMIT $${where.params.length + 1}
     OFFSET $${where.params.length + 2}
   `, [...where.params, pageSize, offset])) as ChurchIndexQueryRow[];

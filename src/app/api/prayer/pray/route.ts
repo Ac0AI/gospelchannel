@@ -13,13 +13,17 @@ export async function POST(request: NextRequest) {
 
     // Rate limit: 1 pray per prayer per IP (24h)
     const ip = request.headers.get("x-forwarded-for") || "unknown";
-    const rateLimitKey = `prayer:prayed:${prayerId}:${ip}`;
+    const rateLimitKey = `prayer:prayed:v2:${prayerId}:${ip}`;
     if (await hasKvRateLimit(rateLimitKey)) {
       return NextResponse.json({ error: "Already prayed" }, { status: 429 });
     }
+    const count = await incrementPrayedCount(prayerId);
+    if (count == null) {
+      return NextResponse.json({ error: "Prayer not found" }, { status: 404 });
+    }
+
     await setKvRateLimit(rateLimitKey, 86400);
 
-    const count = await incrementPrayedCount(prayerId);
     getPostHogClient().capture({
       distinctId: ip,
       event: "prayer_prayed",

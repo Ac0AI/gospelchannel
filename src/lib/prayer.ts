@@ -78,7 +78,29 @@ function getMemoryPrayers(options: {
 }
 
 function revalidatePrayers(): void {
-  revalidateTag(PRAYERS_CACHE_TAG, "max");
+  revalidateTag(PRAYERS_CACHE_TAG, { expire: 0 });
+}
+
+async function hydrateFreshPrayedCounts<T extends Prayer>(prayers: T[]): Promise<T[]> {
+  if (prayers.length === 0 || !isPrayerStoreEnabled()) return prayers;
+
+  try {
+    const ids = [...new Set(prayers.map((prayer) => prayer.id))];
+    const sql = getSql();
+    const rows = (await sql`
+      SELECT id, prayed_count
+      FROM prayers
+      WHERE id = ANY(${ids})
+    `) as Array<{ id: string; prayed_count: number }>;
+    const countById = new Map(rows.map((row) => [row.id, row.prayed_count]));
+
+    return prayers.map((prayer) => {
+      const prayedCount = countById.get(prayer.id);
+      return typeof prayedCount === "number" ? { ...prayer, prayedCount } : prayer;
+    });
+  } catch {
+    return prayers;
+  }
 }
 
 // Slugs of churches that have at least one prayer. Used by the sitemap and
@@ -327,7 +349,7 @@ export async function submitPrayer(
 
 export type PrayerWithChurch = Prayer & { churchName: string };
 
-export const getLatestPrayersWithChurch = unstable_cache(
+const getLatestPrayersWithChurchCached = unstable_cache(
   async (limit: number): Promise<PrayerWithChurch[]> => {
     if (!isPrayerStoreEnabled()) {
       return listMemoryPrayers().slice(0, limit).map((p) => ({ ...p, churchName: p.churchSlug }));
@@ -355,6 +377,10 @@ export const getLatestPrayersWithChurch = unstable_cache(
   ["prayers-with-church-v1"],
   { revalidate: PRAYERS_CACHE_SECONDS, tags: [PRAYERS_CACHE_TAG] }
 );
+
+export async function getLatestPrayersWithChurch(limit: number): Promise<PrayerWithChurch[]> {
+  return hydrateFreshPrayedCounts(await getLatestPrayersWithChurchCached(limit));
+}
 
 // Distinct countries that actually have at least one prayer. Used by the
 // /prayerwall filter dropdown. ~50 rows max — far cheaper than building the
@@ -416,7 +442,7 @@ export async function getPrayers(options: {
 }): Promise<Prayer[]> {
   const limit = options.limit || 20;
   const offset = options.offset || 0;
-  return getPrayersCached(options.churchSlug ?? null, limit, offset);
+  return hydrateFreshPrayedCounts(await getPrayersCached(options.churchSlug ?? null, limit, offset));
 }
 
 export type PrayerFilterOptions = {
@@ -430,33 +456,40 @@ export type PrayerFilterOptions = {
 export async function getPrayersFiltered(options: PrayerFilterOptions): Promise<Prayer[]> {
   const limit = options.limit || 20;
   const offset = options.offset || 0;
-  return getPrayersFilteredCached(
+  return hydrateFreshPrayedCounts(await getPrayersFilteredCached(
     options.country ?? null,
     options.city ?? null,
     options.churchSlug ?? null,
     limit,
     offset
-  );
+  ));
 }
 
-export async function incrementPrayedCount(prayerId: string): Promise<number> {
+export async function incrementPrayedCount(prayerId: string): Promise<number | null> {
   if (!isPrayerStoreEnabled()) {
     const prayer = memoryPrayers.get(prayerId);
-    if (!prayer) return 0;
+    if (!prayer) return null;
     const prayedCount = (prayer.prayedCount ?? 0) + 1;
     memoryPrayers.set(prayerId, { ...prayer, prayedCount });
     return prayedCount;
   }
 
   try {
-    const sb = createAdminClient();
-    const { data } = await sb.rpc("increment_prayed_count", { prayer_id: prayerId });
+    const sql = getSql();
+    const rows = (await sql`
+      UPDATE prayers
+      SET prayed_count = prayed_count + 1
+      WHERE id = ${prayerId}
+      RETURNING prayed_count
+    `) as Array<{ prayed_count: number }>;
+    const prayedCount = rows[0]?.prayed_count;
+    if (typeof prayedCount !== "number") return null;
     revalidatePrayers();
-    return (data as number) ?? 0;
+    return prayedCount;
   } catch {
     prayerStoreUnavailableSince = Date.now();
     const prayer = memoryPrayers.get(prayerId);
-    if (!prayer) return 0;
+    if (!prayer) return null;
     const prayedCount = (prayer.prayedCount ?? 0) + 1;
     memoryPrayers.set(prayerId, { ...prayer, prayedCount });
     return prayedCount;
