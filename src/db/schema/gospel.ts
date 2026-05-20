@@ -76,6 +76,17 @@ export const churches = pgTable(
     // imports/bulk-approve + nightly — may be briefly stale (affects order
     // only, never which churches list/count).
     directoryRank: integer("directory_rank"),
+    // Precomputed reciprocal related-church assignment (orphan-pages plan,
+    // deploy 1, 2026-05-20). The detail page reads this column + one batched
+    // IN() hydration to render the "related churches" block, replacing the
+    // lat/long-gated NearbyChurchesSection. Two invariants enforced by
+    // scripts/backfill-related-churches.ts: (a) every indexable church emits
+    // K (default 8) slugs; (b) every indexable church RECEIVES >=1 inlink
+    // (the reciprocity/least-linked pass). NULL = not yet backfilled →
+    // detail-page block renders nothing gracefully. Read via the primary
+    // slug key (no separate index needed). Cleared/recomputed per nightly
+    // reconcile.
+    relatedChurchSlugs: text("related_church_slugs").array(),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
