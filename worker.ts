@@ -24,8 +24,11 @@ type WorkerHandler = {
 const openNextWorker = generatedOpenNextWorker as OpenNextWorkerModule;
 const SITEMAP_EDGE_CACHE_NAME = "gospelchannel-sitemaps";
 const HTML_EDGE_CACHE_NAME = "gospelchannel-html-v2";
-const HTML_EDGE_CACHE_TTL_SECONDS = 3600;
-const HTML_EDGE_CACHE_SWR_SECONDS = 86400;
+// 24h fresh + 7d stale-while-revalidate. Near-static directory/content pages;
+// long TTL collapses crawler-driven cold renders (per-colo Cache API misses ×
+// ~65k slugs × ~10 Neon queries each) into background revalidations.
+const HTML_EDGE_CACHE_TTL_SECONDS = 86400;
+const HTML_EDGE_CACHE_SWR_SECONDS = 604800;
 const AUTH_COOKIE_PATTERN = /(?:^|;\s*)(?:better-auth|session|auth)/i;
 
 // OpenNext on Cloudflare returns 200 OK even when Next.js notFound() triggers

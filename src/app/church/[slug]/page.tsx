@@ -51,7 +51,10 @@ type ChurchPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export const revalidate = 3600;
+// Church data is near-static (enrichment changes rarely). 24h ISR cuts
+// crawler-driven cold renders: re-crawls within a day hit the cache instead
+// of rebuilding from ~10 Neon queries. Worker edge cache mirrors this TTL.
+export const revalidate = 86400;
 export const dynamic = "force-static";
 
 async function ChurchPrayerSection({ churchSlug, churchName }: { churchSlug: string; churchName: string }) {
