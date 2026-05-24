@@ -98,7 +98,7 @@ async function fetchSitemapUrls(rootUrl: string, depth = 0): Promise<string[]> {
 }
 
 async function buildUrlList(db: ReturnType<typeof createAdminClient>): Promise<string[]> {
-  const urls: string[] = [
+  const core: string[] = [
     SITE_URL,
     `${SITE_URL}/church`,
     `${SITE_URL}/about`,
@@ -106,22 +106,31 @@ async function buildUrlList(db: ReturnType<typeof createAdminClient>): Promise<s
   ];
 
   const networks = ["hillsong", "c3", "icf", "vineyard", "sos-church", "calvary-chapel", "every-nation", "pingstkyrkan", "svenska-kyrkan"];
-  for (const n of networks) urls.push(`${SITE_URL}/network/${n}`);
+  for (const n of networks) core.push(`${SITE_URL}/network/${n}`);
+
+  // Facet hub pages (/church/{city,country,style,denomination}/...) carry the
+  // SEO weight but sit last in the sitemap behind ~73k church pages, so the
+  // 200/day Indexing API quota never reached them. Pull them out and push them
+  // right after the core pages so the quota serves hubs first.
+  const sitemapUrls = await fetchSitemapUrls(`${SITE_URL}/sitemap.xml`);
+  const HUB_RE = /\/church\/(?:city|country|style|denomination)\//;
+  const hubUrls: string[] = [];
+  const otherSitemapUrls: string[] = [];
+  for (const url of sitemapUrls) {
+    (HUB_RE.test(url) ? hubUrls : otherSitemapUrls).push(url);
+  }
 
   const { data: churches } = await db.from<Church[]>("churches")
     .select("slug")
     .eq("status", "approved")
     .order("slug", { ascending: true });
+  const churchUrls = (churches ?? []).map((c) => `${SITE_URL}/church/${c.slug}`);
 
-  if (churches) {
-    for (const c of churches) {
-      urls.push(`${SITE_URL}/church/${c.slug}`);
-    }
-  }
-
-  const sitemapUrls = await fetchSitemapUrls(`${SITE_URL}/sitemap.xml`);
-  const seen = new Set(urls);
-  for (const url of sitemapUrls) {
+  // Order: core -> hubs -> churches -> remaining sitemap URLs (prayer etc.).
+  // Dedupe while preserving first-seen order.
+  const seen = new Set<string>();
+  const urls: string[] = [];
+  for (const url of [...core, ...hubUrls, ...churchUrls, ...otherSitemapUrls]) {
     if (!seen.has(url)) {
       seen.add(url);
       urls.push(url);
