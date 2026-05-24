@@ -5,6 +5,12 @@ const SITE_URL = "https://gospelchannel.com";
 const BATCH_SIZE = 200;
 const CHECKPOINT_KEY = "indexing_push_checkpoint";
 
+// IndexNow (Bing, Yandex, Seznam, Naver). Key file lives at
+// /public/<key>.txt and is already served at the domain root. Override via
+// INDEXNOW_KEY only if the hosted file is rotated to match.
+const INDEXNOW_KEY = process.env.INDEXNOW_KEY || "da4a97e480614b03ad37185dfd1d7785";
+const INDEXNOW_KEY_LOCATION = `${SITE_URL}/${INDEXNOW_KEY}.txt`;
+
 function authorized(request: NextRequest): boolean {
   const configuredSecret = process.env.CRON_SECRET;
   if (!configuredSecret) return true;
@@ -136,6 +142,29 @@ async function pushUrl(accessToken: string, url: string): Promise<"OK" | "QUOTA"
   return "OK";
 }
 
+// Submit a batch to IndexNow in a single request (the API accepts up to
+// 10 000 URLs). Unlike Google's per-URL endpoint there is no auth step, so
+// this is called before the Google loop and never blocks it. Returns the raw
+// status (200/202 = accepted) so the cron response surfaces Bing's verdict.
+async function submitToIndexNow(urls: string[]): Promise<string> {
+  if (urls.length === 0) return "SKIP empty";
+  try {
+    const res = await fetch("https://api.indexnow.org/indexnow", {
+      method: "POST",
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify({
+        host: "gospelchannel.com",
+        key: INDEXNOW_KEY,
+        keyLocation: INDEXNOW_KEY_LOCATION,
+        urlList: urls.slice(0, 10_000),
+      }),
+    });
+    return `${res.status}`;
+  } catch (err) {
+    return `ERROR ${err instanceof Error ? err.message : "unknown"}`;
+  }
+}
+
 export async function GET(request: NextRequest) {
   if (!authorized(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -162,6 +191,10 @@ export async function GET(request: NextRequest) {
     if (batch.length === 0) {
       return NextResponse.json({ ok: true, message: "No URLs to push", pushed, total: allUrls.length });
     }
+
+    // Ping IndexNow (Bing + others) first — no auth, so Bing gets the batch
+    // even if the Google Indexing API below fails on auth or quota.
+    const indexNowStatus = await submitToIndexNow(batch);
 
     const accessToken = await getAccessToken();
     let success = 0;
@@ -193,6 +226,7 @@ export async function GET(request: NextRequest) {
       ok: true,
       pushed: success,
       errors,
+      indexNow: indexNowStatus,
       totalPushed: pushed,
       totalUrls: allUrls.length,
       progress: `${((pushed / allUrls.length) * 100).toFixed(1)}%`,
