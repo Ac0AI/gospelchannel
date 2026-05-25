@@ -88,7 +88,7 @@ export async function SiteFooter() {
         {/* Bottom bar */}
         <div className="flex flex-col gap-3 pt-8 text-[13px] sm:flex-row sm:items-center sm:justify-between">
           <span>
-            © {COPYRIGHT_YEAR} GospelChannel &mdash; made with love. Built by{" "}
+            © {COPYRIGHT_YEAR} GospelChannel &ndash; made with love. Built by{" "}
             <a
               href="https://ac0.ai"
               target="_blank"
@@ -97,11 +97,6 @@ export async function SiteFooter() {
             >
               ac0.ai
             </a>
-          </span>
-          <span className="flex gap-4 text-[rgba(253,248,244,0.7)]">
-            <span className="text-linen">English</span>
-            <span className="cursor-default opacity-50">Svenska</span>
-            <span className="cursor-default opacity-50">Español</span>
           </span>
         </div>
       </div>
