@@ -104,6 +104,7 @@ type ChurchDataRow = ChurchDirectorySeedRow & {
   source_kind: ChurchConfig["sourceKind"] | null;
   youtube_videos?: ChurchConfig["youtubeVideos"] | null;
   display_score?: number | null;
+  city_slug?: string | null;
 };
 
 type ChurchStatsRow = {
@@ -336,6 +337,7 @@ function mapRowToChurchConfig(row: ChurchDataRow, enrichment?: Record<string, un
     denomination: row.denomination || undefined,
     founded: row.founded || undefined,
     location: row.location || undefined,
+    citySlug: row.city_slug || undefined,
     musicStyle: row.music_style || undefined,
     notableArtists: row.notable_artists || undefined,
     youtubeChannelId: row.youtube_channel_id || undefined,

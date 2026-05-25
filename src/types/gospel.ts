@@ -29,6 +29,10 @@ export type ChurchConfig = {
   denomination?: string;
   founded?: number;
   location?: string;
+  // Materialized churches.city_slug — the exact slug the /church/city/[slug]
+  // facet resolves on. Link city facets via this, not slugify(displayCity),
+  // so they never 404 on postcode/street-polluted display values.
+  citySlug?: string;
   musicStyle?: string[];
   notableArtists?: string[];
   youtubeChannelId?: string;

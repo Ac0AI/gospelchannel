@@ -348,8 +348,8 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
     church.country
       ? { href: `/church/country/${slugify(church.country)}`, label: `More churches in ${church.country}` }
       : null,
-    city
-      ? { href: `/church/city/${slugify(city)}`, label: `Churches in ${city}` }
+    city && church.citySlug
+      ? { href: `/church/city/${church.citySlug}`, label: `Churches in ${city}` }
       : null,
     primaryStyleFilter
       ? { href: `/church/style/${primaryStyleFilter.slug}`, label: `${primaryStyleFilter.seoLabel} churches` }
