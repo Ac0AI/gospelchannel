@@ -165,7 +165,7 @@ async function exportSnapshot(countryAggregates, platforms) {
       "Coverage = number of churches with detected signal / total mapped churches.",
     license: "CC-BY-4.0",
     source: "https://gospelchannel.com/european-church-tech-2026",
-    repository: "https://github.com/gospelchannel/european-church-tech-2026",
+    repository: "https://github.com/Ac0AI/european-church-tech-2026",
     countries: countryAggregates,
     platformsByCountry: platforms,
   };
