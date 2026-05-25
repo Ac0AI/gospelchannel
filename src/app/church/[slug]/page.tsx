@@ -60,11 +60,30 @@ export const dynamic = "force-static";
 async function ChurchPrayerSection({ churchSlug, churchName }: { churchSlug: string; churchName: string }) {
   const prayers = await getPrayers({ churchSlug, limit: 5 });
   return (
-    <ChurchPagePrayerSection
-      churchSlug={churchSlug}
-      churchName={churchName}
-      initialPrayers={prayers}
-    />
+    <>
+      <ChurchPagePrayerSection
+        churchSlug={churchSlug}
+        churchName={churchName}
+        initialPrayers={prayers}
+      />
+      {/* Only link to the full prayerwall page when this church actually has
+          prayers. The prayerwall route (prayerwall/[...segments]) calls
+          notFound() for churches with zero prayers (it's built over the
+          prayer-scoped index), so an unconditional link made every one of
+          ~64k prayerless church pages emit a dead /prayerwall/church/<slug>
+          link, the source of the "Not found (404)" cluster in GSC.
+          getPrayers and getChurchSlugsWithPrayers read the same prayers
+          table, so prayers.length > 0 is an exact proxy for "prayerwall
+          resolves 200". See prayer-nav-parity.test.ts. */}
+      {prayers.length > 0 && (
+        <Link
+          href={`/prayerwall/church/${churchSlug}`}
+          className="mt-4 inline-block text-xs font-semibold uppercase tracking-[0.18em] text-muted-warm transition-colors hover:text-rose-gold"
+        >
+          See all prayers &rarr;
+        </Link>
+      )}
+    </>
   );
 }
 
@@ -1225,12 +1244,6 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
           <div className="mt-4">
             <ChurchPrayerSection churchSlug={church.slug} churchName={displayName} />
           </div>
-          <Link
-            href={`/prayerwall/church/${church.slug}`}
-            className="mt-4 inline-block text-xs font-semibold uppercase tracking-[0.18em] text-muted-warm transition-colors hover:text-rose-gold"
-          >
-            See all prayers &rarr;
-          </Link>
         </section>
 
         <Suspense fallback={null}>
