@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ChurchDirectoryGrid } from "@/components/ChurchDirectoryGrid";
+import type { HubEditorial } from "@/lib/hub-content";
 
 type ChurchCollectionPageItem = {
   slug: string;
@@ -64,6 +65,7 @@ export function ChurchCollectionPage({
   churches,
   breadcrumbs,
   relatedSections = [],
+  editorial,
 }: {
   eyebrow: string;
   title: string;
@@ -76,6 +78,7 @@ export function ChurchCollectionPage({
   churches: ChurchCollectionPageItem[];
   breadcrumbs: Breadcrumb[];
   relatedSections?: RelatedSection[];
+  editorial?: HubEditorial;
 }) {
   const currentUrl = buildPageHref(basePath, currentPage);
   const canonicalUrl = `https://gospelchannel.com${basePath}`;
@@ -84,7 +87,7 @@ export function ChurchCollectionPage({
   // get the lighter linen-deep treatment with the stat strip.
   const isTradition = basePath.startsWith("/church/denomination/") || basePath.startsWith("/church/style/");
 
-  const jsonLd = [
+  const jsonLd: Array<Record<string, unknown>> = [
     {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
@@ -137,6 +140,18 @@ export function ChurchCollectionPage({
       })),
     },
   ];
+
+  if (editorial && editorial.faqs.length > 0) {
+    jsonLd.push({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: editorial.faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: { "@type": "Answer", text: faq.answer },
+      })),
+    });
+  }
 
   return (
     <>
@@ -279,6 +294,17 @@ export function ChurchCollectionPage({
         </section>
       )}
 
+      {/* Editorial intro */}
+      {editorial && editorial.intro.length > 0 && (
+        <section className="mx-auto max-w-[760px] px-5 pt-12 sm:px-12 sm:pt-14">
+          <div className="space-y-4 text-base leading-relaxed text-warm-brown sm:text-lg">
+            {editorial.intro.map((paragraph, i) => (
+              <p key={i}>{paragraph}</p>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Grid */}
       <section className="mx-auto max-w-[1280px] px-5 pt-12 sm:px-12 sm:pt-14">
         <ChurchDirectoryGrid churches={churches} />
@@ -352,6 +378,24 @@ export function ChurchCollectionPage({
               ))}
           </div>
         </div>
+      )}
+
+      {/* FAQ */}
+      {editorial && editorial.faqs.length > 0 && (
+        <section className="mx-auto mt-20 max-w-[820px] px-5 sm:px-12">
+          <p className="gc-eyebrow">Good to know</p>
+          <h2 className="mt-2 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-3xl">
+            Frequently asked <em className="gc-italic">questions</em>.
+          </h2>
+          <dl className="mt-7 divide-y divide-rose-gold/[0.12] border-t border-rose-gold/[0.12]">
+            {editorial.faqs.map((faq) => (
+              <div key={faq.question} className="py-6">
+                <dt className="font-semibold text-espresso">{faq.question}</dt>
+                <dd className="mt-2 leading-relaxed text-warm-brown">{faq.answer}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
       )}
 
       {/* Suggest CTA */}

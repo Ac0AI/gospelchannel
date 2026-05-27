@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ChurchCollectionPage } from "@/components/ChurchCollectionPage";
 import { getChurchFacetPageData } from "@/lib/church";
+import { buildCityHubContent } from "@/lib/hub-content";
 
 export const revalidate = 3600;
 
@@ -31,7 +32,7 @@ export async function generateMetadata({ params, searchParams }: CityPageProps):
   if (!data) return { title: "Not Found" };
 
   const basePath = `https://gospelchannel.com/church/city/${slug}`;
-  const title = `${data.label} Churches, Worship Playlists & Service Times`;
+  const title = `Churches in ${data.label}: Worship Music, Playlists & Service Times`;
   const description = `Explore ${data.totalCount.toLocaleString("en-US")} churches in ${data.label}. Browse worship playlists, live videos, service times, and community pages on GospelChannel.`;
 
   return {
@@ -59,6 +60,19 @@ export default async function CityPage({ params, searchParams }: CityPageProps) 
   const countryLinks = relatedLinks.country;
   const basePath = `/church/city/${slug}`;
 
+  // Editorial + FAQ only on page 1 (paginated pages are noindex,follow). Woven
+  // from this city's real denomination/worship-style mix so each hub is unique.
+  const editorial =
+    currentPage === 1
+      ? buildCityHubContent({
+          city: label,
+          country: breadcrumbCountry?.label ?? null,
+          totalCount,
+          denominations: relatedLinks.denomination,
+          styles: relatedLinks.style,
+        })
+      : null;
+
   return (
     <ChurchCollectionPage
       eyebrow="Browse by City"
@@ -80,6 +94,7 @@ export default async function CityPage({ params, searchParams }: CityPageProps) 
         { title: `Worship Styles in ${label}`, links: relatedLinks.style },
         { title: `Denominations in ${label}`, links: relatedLinks.denomination },
       ]}
+      editorial={editorial ?? undefined}
     />
   );
 }
