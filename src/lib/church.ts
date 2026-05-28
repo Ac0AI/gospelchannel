@@ -1718,6 +1718,28 @@ export async function fetchFacetRelatedLinks(
   };
 }
 
+// Full facet sets (every country/city/style/denomination with >0 approved
+// churches, count-sorted) for the facet-index hub pages at /church/{kind}.
+// Same SQL aggregate the per-facet pages and the sitemap use; the result is
+// small so unstable_cache actually stores it. 1h TTL, CHURCH_INDEX_TAG.
+export const getAllChurchFacetLinks = unstable_cache(
+  async (): Promise<FacetRelatedLinks> => {
+    if (isOfflinePublicBuild() || !hasServiceConfig()) {
+      return { country: [], city: [], style: [], denomination: [] };
+    }
+    try {
+      return await fetchFacetRelatedLinks({});
+    } catch (error) {
+      console.error(
+        `[facet-index] Falling back to empty facets: ${error instanceof Error ? error.message : String(error)}`,
+      );
+      return { country: [], city: [], style: [], denomination: [] };
+    }
+  },
+  ["all-church-facet-links-v1"],
+  { revalidate: 3600, tags: [CHURCH_INDEX_TAG] },
+);
+
 /**
  * Cached count query — keyed on filter shape via the function args.
  * 1h TTL; invalidates with CHURCH_INDEX_TAG when an admin action fires

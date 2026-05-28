@@ -864,6 +864,31 @@ export async function getChurchStatsAsync(): Promise<{
   return getApprovedChurchStatsCached();
 }
 
+// Freshest approved-church updated_at — the site's real content-freshness
+// signal. Daily enrichment crons bump these rows, so this advances on its own
+// and keeps sitemap <lastmod> honest instead of pinned to the CONTENT_UPDATED_AT
+// constant (which goes stale the moment content changes). 1h TTL, invalidated
+// with CHURCH_INDEX_TAG on admin content edits.
+export const getFreshestChurchUpdatedAtAsync = unstable_cache(
+  async (): Promise<string | null> => {
+    if (isOfflinePublicBuild() || !hasServiceConfig()) {
+      return null;
+    }
+    try {
+      const sql = getSql();
+      const rows = (await sql.query(
+        `SELECT MAX(updated_at) AS max_updated FROM churches WHERE status = 'approved'`,
+      )) as Array<{ max_updated: string | null }>;
+      return rows[0]?.max_updated ?? null;
+    } catch (error) {
+      logChurchSnapshotFallback("freshest-church-updated-at", error);
+      return null;
+    }
+  },
+  ["freshest-church-updated-at-v1"],
+  { revalidate: 3600, tags: [CHURCH_INDEX_TAG] },
+);
+
 export const getHomepageShowcaseChurches = unstable_cache(
   async (): Promise<HomepageShowcaseChurch[]> => buildHomepageShowcaseChurches(tryLoadLocalChurchSnapshot()),
   ["homepage-showcase-v1"],

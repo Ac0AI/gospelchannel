@@ -48,6 +48,9 @@ vi.mock("next/cache", () => ({
 
 vi.mock("@/lib/content", () => ({
   CHURCH_INDEX_TAG: "church-index",
+  // Returns null so getSitemapLastModified falls back to the CONTENT_UPDATED_AT
+  // floor — the behavior these section-ordering assertions were written against.
+  getFreshestChurchUpdatedAtAsync: () => Promise.resolve(null),
   getChurchDirectorySeedAsync: getChurchDirectorySeedAsyncMock,
   getChurchDirectorySeedCountAsync: getChurchDirectorySeedCountAsyncMock,
   getChurchDirectorySeedSliceAsync: getChurchDirectorySeedSliceAsyncMock,
@@ -159,7 +162,7 @@ describe("sitemap-data", () => {
   it("computes the total sitemap entry count from section counts", async () => {
     getChurchDirectorySeedCountAsyncMock.mockResolvedValue(3);
 
-    await expect(getSitemapEntryCount()).resolves.toBe(40);
+    await expect(getSitemapEntryCount()).resolves.toBe(44);
   });
 
   it("builds chunk 0 from the exact church slice without touching later DB slices", async () => {
@@ -172,23 +175,27 @@ describe("sitemap-data", () => {
 
     expect(entries).toHaveLength(2_500);
     expect(entries[0]?.url).toBe("https://gospelchannel.com");
-    expect(entries[11]?.url).toBe("https://gospelchannel.com/compare");
-    expect(entries[12]?.url).toBe("https://gospelchannel.com/european-church-tech-2026");
-    expect(entries[13]?.url).toBe("https://gospelchannel.com/alternatives/churchfinder");
-    expect(entries[14]?.url).toBe("https://gospelchannel.com/alternatives/gospel-coalition");
-    expect(entries[15]?.url).toBe("https://gospelchannel.com/alternatives/mychurchfinder");
-    expect(entries[16]?.url).toBe("https://gospelchannel.com/for/expats");
-    expect(entries[17]?.url).toBe("https://gospelchannel.com/for/students");
-    expect(entries[18]?.url).toBe("https://gospelchannel.com/for/young-adults");
-    expect(entries[19]?.url).toBe("https://gospelchannel.com/for/families");
-    expect(entries[20]?.url).toBe("https://gospelchannel.com/for/new-believers");
-    expect(entries[21]?.url).toBe("https://gospelchannel.com/for/deconstructing");
-    expect(entries[22]?.url).toBe("https://gospelchannel.com/guides/worship-styles-explained");
-    expect(entries[23]?.url).toBe("https://gospelchannel.com/guides/denominations-comparison");
-    expect(entries[24]?.url).toBe("https://gospelchannel.com/guides/how-to-find-the-right-church");
-    expect(entries[25]?.url).toBe("https://gospelchannel.com/church/church-0");
-    expect(entries.at(-1)?.url).toBe("https://gospelchannel.com/church/church-2474");
-    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(0, 2_475);
+    expect(entries[2]?.url).toBe("https://gospelchannel.com/church/city");
+    expect(entries[3]?.url).toBe("https://gospelchannel.com/church/country");
+    expect(entries[4]?.url).toBe("https://gospelchannel.com/church/denomination");
+    expect(entries[5]?.url).toBe("https://gospelchannel.com/church/style");
+    expect(entries[15]?.url).toBe("https://gospelchannel.com/compare");
+    expect(entries[16]?.url).toBe("https://gospelchannel.com/european-church-tech-2026");
+    expect(entries[17]?.url).toBe("https://gospelchannel.com/alternatives/churchfinder");
+    expect(entries[18]?.url).toBe("https://gospelchannel.com/alternatives/gospel-coalition");
+    expect(entries[19]?.url).toBe("https://gospelchannel.com/alternatives/mychurchfinder");
+    expect(entries[20]?.url).toBe("https://gospelchannel.com/for/expats");
+    expect(entries[21]?.url).toBe("https://gospelchannel.com/for/students");
+    expect(entries[22]?.url).toBe("https://gospelchannel.com/for/young-adults");
+    expect(entries[23]?.url).toBe("https://gospelchannel.com/for/families");
+    expect(entries[24]?.url).toBe("https://gospelchannel.com/for/new-believers");
+    expect(entries[25]?.url).toBe("https://gospelchannel.com/for/deconstructing");
+    expect(entries[26]?.url).toBe("https://gospelchannel.com/guides/worship-styles-explained");
+    expect(entries[27]?.url).toBe("https://gospelchannel.com/guides/denominations-comparison");
+    expect(entries[28]?.url).toBe("https://gospelchannel.com/guides/how-to-find-the-right-church");
+    expect(entries[29]?.url).toBe("https://gospelchannel.com/church/church-0");
+    expect(entries.at(-1)?.url).toBe("https://gospelchannel.com/church/church-2470");
+    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(0, 2_471);
     expect(getNetworksSliceMock).not.toHaveBeenCalled();
     expect(getPublishedCampusesSliceMock).not.toHaveBeenCalled();
   });
@@ -202,6 +209,10 @@ describe("sitemap-data", () => {
     const entries = await buildSitemapEntriesForChunk(2);
 
     expect(entries.map((entry) => entry.url)).toEqual([
+      "https://gospelchannel.com/church/church-4971",
+      "https://gospelchannel.com/church/church-4972",
+      "https://gospelchannel.com/church/church-4973",
+      "https://gospelchannel.com/church/church-4974",
       "https://gospelchannel.com/church/church-4975",
       "https://gospelchannel.com/church/church-4976",
       "https://gospelchannel.com/church/church-4977",
@@ -242,7 +253,7 @@ describe("sitemap-data", () => {
       "https://gospelchannel.com/prayerwall/church/prayer-1",
       "https://gospelchannel.com/prayerwall/church/prayer-2",
     ]);
-    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(4_975, 27);
+    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(4_971, 31);
     expect(getNetworksSliceMock).toHaveBeenCalledWith(0, 1);
     expect(getPublishedCampusesSliceMock).toHaveBeenCalledWith(0, 1);
   });

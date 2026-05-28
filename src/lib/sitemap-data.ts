@@ -4,6 +4,7 @@
 import { unstable_cache } from "next/cache";
 import {
   CHURCH_INDEX_TAG,
+  getFreshestChurchUpdatedAtAsync,
   getSitemapChurchSeedCountAsync,
   getSitemapChurchSeedSliceAsync,
   type ChurchDirectorySeed,
@@ -32,6 +33,10 @@ export const CHUNK_SIZE = 2_500;
 const STATIC_ROUTE_PATHS = [
   "",
   "/church",
+  "/church/city",
+  "/church/country",
+  "/church/denomination",
+  "/church/style",
   "/about",
   "/for-churches",
   "/church/suggest",
@@ -100,9 +105,20 @@ type SitemapSectionCounts = {
   prayerChurchCount: number;
 };
 
-function getSitemapLastModified(): Date {
-  const date = new Date(CONTENT_UPDATED_AT);
-  return Number.isNaN(date.getTime()) ? new Date() : date;
+// Site-wide <lastmod>: the later of the CONTENT_UPDATED_AT floor and the
+// freshest approved-church updated_at. Daily enrichment crons advance the DB
+// signal on their own, so the sitemap no longer reports a pinned, stale date.
+// Per-church routes still carry their own row-level updatedAt (buildChurchRoute).
+async function getSitemapLastModified(): Promise<Date> {
+  const floor = new Date(CONTENT_UPDATED_AT);
+  const base = Number.isNaN(floor.getTime()) ? new Date() : floor;
+
+  const freshestRaw = await getFreshestChurchUpdatedAtAsync();
+  const freshest = freshestRaw ? new Date(freshestRaw) : null;
+  if (freshest && !Number.isNaN(freshest.getTime()) && freshest > base) {
+    return freshest;
+  }
+  return base;
 }
 
 function buildStaticRoute(path: string, lastModified: Date): SitemapEntry {
@@ -346,7 +362,7 @@ export async function buildSitemapEntriesForChunk(id: number): Promise<SitemapEn
   }
 
   const rangeEndExclusive = Math.min(totalEntries, rangeStart + CHUNK_SIZE);
-  const lastModified = getSitemapLastModified();
+  const lastModified = await getSitemapLastModified();
   const entries: SitemapEntry[] = [];
   let cursor = 0;
 
@@ -493,7 +509,7 @@ export const getSitemapIndexXml = unstable_cache(
   async (): Promise<string> => {
     const entryCount = await getSitemapEntryCount();
     const chunkCount = Math.max(1, Math.ceil(entryCount / CHUNK_SIZE));
-    return renderIndexXml(chunkCount, getSitemapLastModified());
+    return renderIndexXml(chunkCount, await getSitemapLastModified());
   },
   ["sitemap-index-xml-v1"],
   { revalidate: 3600, tags: [CHURCH_INDEX_TAG] },
