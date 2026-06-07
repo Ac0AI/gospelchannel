@@ -9,7 +9,7 @@ import {
   getSitemapChurchSeedSliceAsync,
   type ChurchDirectorySeed,
 } from "@/lib/content";
-import { type FacetLink } from "@/lib/church-directory";
+import { MIN_INDEXABLE_CITY_CHURCHES, type FacetLink } from "@/lib/church-directory";
 import { fetchFacetRelatedLinks } from "@/lib/church";
 import {
   getNetworkCount,
@@ -259,12 +259,17 @@ const getSitemapFacetDataCached = unstable_cache(
     const links = await fetchFacetRelatedLinks({});
     return {
       countryLinks: links.country,
-      cityLinks: links.city,
+      // Thin city hubs (<MIN_INDEXABLE_CITY_CHURCHES) go noindex,follow on the
+      // page and are dropped here so they leave both the sitemap and the
+      // Google/IndexNow push (the cron walks the sitemap). Keeps crawl budget
+      // on substantial hubs. Must stay in lockstep with the page-level gate in
+      // church/city/[slug]/page.tsx so sitemap'd == indexable.
+      cityLinks: links.city.filter((l) => l.count >= MIN_INDEXABLE_CITY_CHURCHES),
       styleLinks: links.style,
       denominationLinks: links.denomination,
     };
   },
-  ["sitemap-facets-v2"],
+  ["sitemap-facets-v3"],
   { revalidate: 3600, tags: [CHURCH_INDEX_TAG] },
 );
 

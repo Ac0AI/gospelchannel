@@ -65,6 +65,7 @@ vi.mock("@/lib/church-directory", () => ({
   getCityLinks: getCityLinksMock,
   getStyleLinks: getStyleLinksMock,
   getDenominationLinks: getDenominationLinksMock,
+  MIN_INDEXABLE_CITY_CHURCHES: 3,
 }));
 
 vi.mock("@/lib/church", () => ({
@@ -163,6 +164,27 @@ describe("sitemap-data", () => {
     getChurchDirectorySeedCountAsyncMock.mockResolvedValue(3);
 
     await expect(getSitemapEntryCount()).resolves.toBe(44);
+  });
+
+  it("drops thin city hubs (<MIN_INDEXABLE_CITY_CHURCHES) from the sitemap", async () => {
+    getChurchDirectorySeedCountAsyncMock.mockResolvedValue(0);
+    fetchFacetRelatedLinksMock.mockResolvedValue({
+      country: [{ slug: "sweden", label: "Sweden", href: "/church/country/sweden", count: 12 }],
+      city: [
+        { slug: "stockholm", label: "Stockholm", href: "/church/city/stockholm", count: 8 },
+        { slug: "gobbler", label: "Gobbler", href: "/church/city/gobbler", count: 2 },
+        { slug: "lone", label: "Lone", href: "/church/city/lone", count: 1 },
+      ],
+      style: [{ slug: "gospel", label: "Gospel", href: "/church/style/gospel", count: 4 }],
+      denomination: [{ slug: "pentecostal", label: "Pentecostal", href: "/church/denomination/pentecostal", count: 3 }],
+    });
+
+    const entries = await buildSitemapEntriesForChunk(0);
+    const urls = entries.map((e) => e.url);
+
+    expect(urls).toContain("https://gospelchannel.com/church/city/stockholm");
+    expect(urls).not.toContain("https://gospelchannel.com/church/city/gobbler");
+    expect(urls).not.toContain("https://gospelchannel.com/church/city/lone");
   });
 
   it("builds chunk 0 from the exact church slice without touching later DB slices", async () => {

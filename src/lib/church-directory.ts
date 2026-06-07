@@ -423,6 +423,15 @@ export function getCountryLinks(churches: Pick<ChurchDirectoryEntry, "country">[
   return typeof limit === "number" ? links.slice(0, limit) : links;
 }
 
+// Minimum approved churches a city must aggregate before its hub is worth
+// indexing. Below this the hub is a near-duplicate of the one/two church
+// detail pages it lists, adds no aggregation value, and — multiplied across
+// ~6k thin city slugs — teaches Google the whole city-hub class is low value,
+// which is why high-demand hubs (Madrid, Stockholm) sit "Discovered, not
+// indexed". Thin hubs stay live for users but go noindex,follow + out of the
+// sitemap/indexing push so crawl budget concentrates on substantial hubs.
+export const MIN_INDEXABLE_CITY_CHURCHES = 3;
+
 export function getCityLinks(churches: Pick<ChurchDirectoryEntry, "location">[], limit?: number): FacetLink[] {
   const counts = new Map<string, { label: string; count: number }>();
 

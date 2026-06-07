@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ChurchCollectionPage } from "@/components/ChurchCollectionPage";
 import { getChurchFacetPageData } from "@/lib/church";
+import { MIN_INDEXABLE_CITY_CHURCHES } from "@/lib/church-directory";
 import { buildCityHubContent } from "@/lib/hub-content";
 
 export const revalidate = 3600;
@@ -46,7 +47,13 @@ export async function generateMetadata({ params, searchParams }: CityPageProps):
       type: "website",
       siteName: "GospelChannel",
     },
-    ...(page > 1 ? { robots: { index: false, follow: true } } : {}),
+    // noindex,follow when paginated OR when the city aggregates too few churches
+    // to add value over the church detail pages it lists (kept in lockstep with
+    // the sitemap city filter in lib/sitemap-data.ts). follow keeps link equity
+    // flowing to the listed churches.
+    ...(page > 1 || data.totalCount < MIN_INDEXABLE_CITY_CHURCHES
+      ? { robots: { index: false, follow: true } }
+      : {}),
   };
 }
 
