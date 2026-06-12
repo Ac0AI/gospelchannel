@@ -31,6 +31,11 @@ function getMemoryRateLimit(key: string): RateLimitEntry | null {
 }
 
 export function getClientIp(request: NextRequest): string | null {
+  // Cloudflare Workers does not forward x-forwarded-for to the app;
+  // cf-connecting-ip is the canonical client IP there. Keep the
+  // x-forwarded-for fallback for local dev and other proxies.
+  const cfIp = request.headers.get("cf-connecting-ip")?.trim();
+  if (cfIp) return cfIp;
   const forwarded = request.headers.get("x-forwarded-for");
   if (!forwarded) return null;
   const ip = forwarded.split(",")[0]?.trim();

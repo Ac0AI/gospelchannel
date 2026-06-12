@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { incrementPrayedCount } from "@/lib/prayer";
 import { captureServerEvent } from "@/lib/posthog-server";
-import { hasKvRateLimit, setKvRateLimit } from "@/lib/request-guards";
+import { getClientIp, hasKvRateLimit, setKvRateLimit } from "@/lib/request-guards";
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Rate limit: 1 pray per prayer per IP (24h)
-    const ip = request.headers.get("x-forwarded-for") || "unknown";
+    const ip = getClientIp(request) ?? "unknown";
     const rateLimitKey = `prayer:prayed:v2:${prayerId}:${ip}`;
     if (await hasKvRateLimit(rateLimitKey)) {
       return NextResponse.json({ error: "Already prayed" }, { status: 429 });

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getChurchVoteCounts, incrementChurchVote } from "@/lib/church-community";
 import { captureServerEvent } from "@/lib/posthog-server";
-import { hasKvRateLimit, setKvRateLimit } from "@/lib/request-guards";
+import { getClientIp, hasKvRateLimit, setKvRateLimit } from "@/lib/request-guards";
 
 function sanitizeSlug(value: string): string {
   return value.replace(/[^a-z0-9-]/g, "").slice(0, 64);
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
   }
 
   const cookieName = `church_${slug}`;
-  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+  const ip = getClientIp(request) ?? undefined;
   const ipKey = ip ? `church:vote:ip:${slug}:${ip}` : null;
 
   if (request.cookies.get(cookieName)?.value === "1") {

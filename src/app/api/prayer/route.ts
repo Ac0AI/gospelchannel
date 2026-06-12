@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { submitPrayer, getPrayers, getPrayersFiltered, getChurchNamesForSlugsSQL } from "@/lib/prayer";
-import { getRateLimitValue, hasKvRateLimit, incrementRateLimitValue, setKvRateLimit } from "@/lib/request-guards";
+import { getClientIp, getRateLimitValue, hasKvRateLimit, incrementRateLimitValue, setKvRateLimit } from "@/lib/request-guards";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Rate limit: 1 prayer per 2 minutes per IP, max 10 per hour
-    const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const ip = getClientIp(request) ?? "unknown";
     const rateLimitKey = `prayer:rate:${ip}`;
     const hourlyKey = `prayer:hourly:${ip}`;
     if (await hasKvRateLimit(rateLimitKey)) {
