@@ -31,6 +31,8 @@ tmp/
 *.zip
 *.tar.gz
 
+package-lock.json
+
 # debug
 npm-debug.log*
 yarn-debug.log*

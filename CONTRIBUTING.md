@@ -25,10 +25,10 @@ Please keep things simple and explicit. Small issues, small PRs, and plain-langu
 
 ```bash
 nvm use
-npm install
+pnpm install
 cp .env.example .env.local
-npm run lint
-npm run build
+pnpm lint
+pnpm build
 ```
 
 If your change affects UI, include screenshots or a short screen recording in the pull request.

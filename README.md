@@ -47,18 +47,18 @@ nvm use
 Install and start:
 
 ```bash
-npm install
+pnpm install
 cp .env.example .env.local
-npm run dev
+pnpm dev
 ```
 
 Helpful commands:
 
 ```bash
-npm run lint
-npm run build
-npm run smoke
-npm run check:env
+pnpm lint
+pnpm build
+pnpm smoke
+pnpm check:env
 ```
 
 ## Database (Neon)
@@ -100,12 +100,12 @@ Admin access is database-backed.
 Promote an account to admin with:
 
 ```bash
-npm run db:seed -- --emails=you@example.com
+pnpm db:seed -- --emails=you@example.com
 ```
 
 Notes:
 
-- `npm run build` uses offline mode for the content pipeline.
+- `pnpm build` uses offline mode for the content pipeline.
 - Full admin, mail, sync, and deployment flows need real service credentials.
 - Keep secrets in `.env.local`. Do not commit them.
 
@@ -140,7 +140,7 @@ Contributors usually do not need deployment access.
 Maintainer deploy command:
 
 ```bash
-npm run deploy
+pnpm deploy
 ```
 
 ## Project notes
