@@ -13,10 +13,9 @@ const INDEXNOW_KEY_LOCATION = `${SITE_URL}/${INDEXNOW_KEY}.txt`;
 
 function authorized(request: NextRequest): boolean {
   const configuredSecret = process.env.CRON_SECRET;
-  if (!configuredSecret) return true;
+  if (!configuredSecret) return false;
   const bearer = request.headers.get("authorization")?.replace("Bearer ", "");
-  const query = request.nextUrl.searchParams.get("secret");
-  return bearer === configuredSecret || query === configuredSecret;
+  return bearer === configuredSecret;
 }
 
 function base64url(input: ArrayBuffer | Uint8Array | string): string {

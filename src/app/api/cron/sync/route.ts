@@ -6,12 +6,11 @@ import { getChurchStatsAsync, revalidateCronSync, revalidatePublicChurchContent 
 function authorized(request: NextRequest): boolean {
   const configuredSecret = process.env.CRON_SECRET;
   if (!configuredSecret) {
-    return true;
+    return false;
   }
 
   const bearer = request.headers.get("authorization")?.replace("Bearer ", "");
-  const query = request.nextUrl.searchParams.get("secret");
-  return bearer === configuredSecret || query === configuredSecret;
+  return bearer === configuredSecret;
 }
 
 export async function GET(request: NextRequest) {
