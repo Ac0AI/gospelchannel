@@ -40,10 +40,11 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const votes = await incrementChurchVote(slug);
   if (ipKey) {
     await setKvRateLimit(ipKey, 60 * 60 * 24 * 7);
   }
+
+  const votes = await incrementChurchVote(slug);
 
   await captureServerEvent({
     distinctId: ip ?? "anonymous",

@@ -30,7 +30,8 @@ export async function POST(request: NextRequest) {
       properties: { prayer_id: prayerId, total_prayed: count },
     });
     return NextResponse.json({ prayedCount: count });
-  } catch {
+  } catch (err) {
+    console.error("[pray] Unexpected error:", err);
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 }

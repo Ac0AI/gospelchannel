@@ -150,7 +150,7 @@ export async function saveEnrichmentToSuggestion(
   const { createAdminClient } = await import("@/lib/neon-client");
   const client = createAdminClient();
 
-  await client
+  const { error } = await client
     .from("church_suggestions")
     .update({
       enrichment_data: {
@@ -168,4 +168,8 @@ export async function saveEnrichmentToSuggestion(
       },
     })
     .eq("id", suggestionId);
+
+  if (error) {
+    throw new Error(`[auto-enrich] Failed to save enrichment for suggestion ${suggestionId}: ${error.message ?? String(error)}`);
+  }
 }

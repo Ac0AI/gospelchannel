@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ensureChurchAccessForEmail } from "@/lib/church-community";
+import { getClientIp, hasKvRateLimit, setKvRateLimit } from "@/lib/request-guards";
 
 function sanitizeEmail(value: string | undefined): string {
   return (value || "").trim().toLowerCase().slice(0, 200);
@@ -19,8 +20,20 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "A valid email is required" }, { status: 400 });
   }
 
+  const ip = getClientIp(request);
+  const rateLimitKey = ip ? `church-admin:access:${ip}` : null;
+
+  if (rateLimitKey && await hasKvRateLimit(rateLimitKey)) {
+    return NextResponse.json({ error: "Too many attempts. Please wait a few minutes." }, { status: 429 });
+  }
+
   try {
     const memberships = await ensureChurchAccessForEmail(email);
+
+    if (rateLimitKey) {
+      await setKvRateLimit(rateLimitKey, 60 * 5);
+    }
+
     if (memberships.length === 0) {
       return NextResponse.json({ error: "No verified church access was found for this email" }, { status: 404 });
     }

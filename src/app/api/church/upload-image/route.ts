@@ -4,6 +4,12 @@ import { getServerUser } from '@/lib/auth/server';
 import { getChurchMembershipForUserAndSlug } from '@/lib/church-community';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
+const EXT_BY_TYPE: Record<string, string> = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp',
+  'image/svg+xml': 'svg',
+};
 const MAX_SIZE = 2 * 1024 * 1024;
 
 const IMAGE_TARGETS: Record<string, { folder: string; prefix: string; allowSvg?: boolean }> = {
@@ -43,7 +49,7 @@ export async function POST(request: NextRequest) {
   if (!membership) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   const client = createAdminClient();
-  const ext = file.name.split('.').pop()?.toLowerCase() || 'png';
+  const ext = EXT_BY_TYPE[file.type] ?? 'png';
   const filePath = `${target.folder}/${churchSlug}/${target.prefix}-${Date.now()}.${ext}`;
 
   const buffer = Buffer.from(await file.arrayBuffer());
