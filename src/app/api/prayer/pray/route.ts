@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { incrementPrayedCount } from "@/lib/prayer";
-import { getPostHogClient } from "@/lib/posthog-server";
+import { captureServerEvent } from "@/lib/posthog-server";
 import { hasKvRateLimit, setKvRateLimit } from "@/lib/request-guards";
 
 export async function POST(request: NextRequest) {
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
 
     await setKvRateLimit(rateLimitKey, 86400);
 
-    getPostHogClient().capture({
+    await captureServerEvent({
       distinctId: ip,
       event: "prayer_prayed",
       properties: { prayer_id: prayerId, total_prayed: count },

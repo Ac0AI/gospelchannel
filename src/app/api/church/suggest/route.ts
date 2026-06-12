@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { addChurchSuggestion } from "@/lib/church-community";
 import { sendSuggestionAdminNotification } from "@/lib/email";
 import { getClientIp, hasKvRateLimit, isBotTrapFilled, setKvRateLimit } from "@/lib/request-guards";
-import { getPostHogClient } from "@/lib/posthog-server";
+import { captureServerEvent } from "@/lib/posthog-server";
 import { enrichFromWebsite, saveEnrichmentToSuggestion } from "@/lib/auto-enrich";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
     await setKvRateLimit(rateLimitKey, 60 * 15);
   }
 
-  getPostHogClient().capture({
+  await captureServerEvent({
     distinctId: contactEmail,
     event: "church_suggestion_received",
     properties: { church_name: name, country, language, suggestion_id: suggestion.id },

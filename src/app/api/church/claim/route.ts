@@ -4,7 +4,7 @@ import { addChurchClaim } from "@/lib/church-community";
 import { getChurchBySlugAsync } from "@/lib/content";
 import { sendClaimReceivedEmail, sendClaimAdminNotification } from "@/lib/email";
 import { getClientIp, hasKvRateLimit, isBotTrapFilled, setKvRateLimit } from "@/lib/request-guards";
-import { getPostHogClient } from "@/lib/posthog-server";
+import { captureServerEvent } from "@/lib/posthog-server";
 
 function sanitize(value: string, maxLen: number): string {
   return value.trim().slice(0, maxLen);
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
       await setKvRateLimit(rateLimitKey, 60 * 15);
     }
 
-    getPostHogClient().capture({
+    await captureServerEvent({
       distinctId: email,
       event: "church_claim_received",
       properties: { church_slug: churchSlug, role: role || undefined, claim_id: claim.id },

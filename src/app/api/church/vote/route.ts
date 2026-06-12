@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getChurchVoteCounts, incrementChurchVote } from "@/lib/church-community";
-import { getPostHogClient } from "@/lib/posthog-server";
+import { captureServerEvent } from "@/lib/posthog-server";
 import { hasKvRateLimit, setKvRateLimit } from "@/lib/request-guards";
 
 function sanitizeSlug(value: string): string {
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     await setKvRateLimit(ipKey, 60 * 60 * 24 * 7);
   }
 
-  getPostHogClient().capture({
+  await captureServerEvent({
     distinctId: ip ?? "anonymous",
     event: "church_voted",
     properties: { church_slug: slug, total_votes: votes },

@@ -1,4 +1,5 @@
 import { PostHog } from "posthog-node";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 
 let posthogClient: PostHog | null = null;
 
@@ -11,4 +12,20 @@ export function getPostHogClient(): PostHog {
     });
   }
   return posthogClient;
+}
+
+type CaptureArgs = Parameters<PostHog["capture"]>[0];
+
+export async function captureServerEvent(event: CaptureArgs): Promise<void> {
+  const client = getPostHogClient();
+  client.capture(event);
+  const flush = client.flush().catch((err) => {
+    console.error("[posthog] flush failed:", err);
+  });
+  try {
+    const { ctx } = await getCloudflareContext({ async: true });
+    ctx.waitUntil(flush);
+  } catch {
+    // Outside the Workers runtime (e.g. plain `next dev`): nothing to keep alive.
+  }
 }

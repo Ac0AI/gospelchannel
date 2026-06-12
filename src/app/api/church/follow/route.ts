@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { hasServiceConfig, createAdminClient } from "@/lib/neon-client";
 import { getClientIp, hasKvRateLimit, isBotTrapFilled, setKvRateLimit } from "@/lib/request-guards";
-import { getPostHogClient } from "@/lib/posthog-server";
+import { captureServerEvent } from "@/lib/posthog-server";
 
 export async function POST(request: NextRequest) {
   const payload = (await request.json().catch(() => null)) as {
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
     await setKvRateLimit(rateLimitKey, 60 * 10);
   }
 
-  getPostHogClient().capture({
+  await captureServerEvent({
     distinctId: email,
     event: "church_follow_received",
     properties: { church_slug: slug },

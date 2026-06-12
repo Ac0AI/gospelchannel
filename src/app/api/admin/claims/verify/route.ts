@@ -5,6 +5,7 @@ import { verifyChurchClaim } from "@/lib/church-community";
 import { getChurchBySlugAsync } from "@/lib/content";
 import { sendClaimVerifiedEmail } from "@/lib/email";
 import { revalidateChurchClaimStatus } from "@/lib/church";
+import { captureServerEvent } from "@/lib/posthog-server";
 
 export async function POST(request: NextRequest) {
   const admin = await requireAdminRoute(request);
@@ -21,6 +22,12 @@ export async function POST(request: NextRequest) {
   try {
     const result = await verifyChurchClaim(payload.id);
     revalidateChurchClaimStatus();
+
+    await captureServerEvent({
+      distinctId: result.email,
+      event: "church_claim_verified",
+      properties: { church_slug: result.churchSlug, claim_id: payload.id },
+    });
 
     const church = await getChurchBySlugAsync(result.churchSlug);
     const { ctx } = await getCloudflareContext({ async: true });
