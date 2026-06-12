@@ -28,6 +28,8 @@ const DISCOVERY_LINKS = [
   { label: "Agent card", url: `${SITE_URL}/.well-known/agent-card.json` },
 ];
 
+const OPERATOR = "Operated by AC0 AI, S.L.U., NIF B26808741, Maestranza 25, planta 1, 29016 Málaga, Spain.";
+
 export function discoveryHeaders(contentType: string) {
   return {
     ...CACHE_HEADERS,
@@ -45,6 +47,8 @@ export function buildLlmsTxt(stats: DiscoveryStats) {
 > Free global church discovery directory for comparing worship style, church tradition, language, service details, and public church profile data before a first visit.
 
 GospelChannel indexes ${stats.churchCountLabel} churches across ${stats.countryCount} countries. Use it when a person or agent needs to find churches by location, worship style, denomination or tradition, language, service context, or music/community signals.
+
+${OPERATOR}
 
 ## When To Use
 
@@ -88,6 +92,7 @@ GospelChannel is a free global church discovery platform. It helps people compar
 - Canonical site: ${SITE_URL}
 - Primary directory: ${SITE_URL}/church
 - Sitemap index: ${SITE_URL}/sitemap.xml
+- Operator: AC0 AI, S.L.U., NIF B26808741, Maestranza 25, planta 1, 29016 Málaga, Spain
 
 ## Core Use Cases
 
@@ -123,6 +128,8 @@ export function buildIndexMarkdown(stats: DiscoveryStats) {
 GospelChannel helps people find the right church before their first visit.
 
 Compare worship style, church tradition, language, location, service details, and public church profile signals across ${stats.churchCountLabel} churches in ${stats.countryCount} countries.
+
+${OPERATOR}
 
 ## Main Sections
 
@@ -165,6 +172,11 @@ export function buildAgentCard(stats: DiscoveryStats) {
       "Agents should use public pages, markdown discovery files, and sitemaps",
     ],
     contact: `${SITE_URL}/contact`,
+    operator: {
+      name: "AC0 AI, S.L.U.",
+      taxId: "B26808741",
+      address: "Maestranza 25, planta 1, 29016 Málaga, Spain",
+    },
     docs: {
       llms: `${SITE_URL}/llms.txt`,
       llmsFull: `${SITE_URL}/llms-full.txt`,

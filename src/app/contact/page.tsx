@@ -52,6 +52,9 @@ export default function ContactPage() {
               {contactEmail}
             </a>
           </p>
+          <p className="mt-5 max-w-[640px] text-sm leading-relaxed text-warm-brown">
+            Operated by AC0 AI, S.L.U., NIF B26808741, Maestranza 25, planta 1, 29016 Málaga, Spain.
+          </p>
         </div>
       </section>
 

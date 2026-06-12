@@ -20,6 +20,13 @@ export default function PrivacyPage() {
 
       <div className="mt-12 space-y-10 font-serif text-lg leading-[1.7] text-espresso">
         <section>
+          <h2 className="m-0 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso">Who runs this site</h2>
+          <p className="mt-3 text-base text-warm-brown">
+            GospelChannel is operated by AC0 AI, S.L.U., NIF B26808741, Maestranza 25, planta 1, 29016 Málaga, Spain.
+          </p>
+        </section>
+
+        <section>
           <h2 className="m-0 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso">What we collect</h2>
           <p className="mt-3 text-base text-warm-brown">
             GospelChannel collects minimal data to provide a better experience:
