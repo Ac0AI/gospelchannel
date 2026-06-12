@@ -146,7 +146,7 @@ export const PROFILE_FIELDS: ProfileFieldDefinition[] = [
     category: 'bonus',
     points: 8,
     type: 'select',
-    options: ['Pingst', 'EFK', 'Equmenia', 'Svenska kyrkan', 'Katolska', 'Vineyard', 'Trosrörelsen', 'Frälsningsarmén', 'Baptistsamfundet', 'Annat'],
+    options: ['Pentecostal', 'Charismatic', 'Evangelical', 'Baptist', 'Anglican', 'Lutheran', 'Methodist', 'Reformed', 'Non-denominational', 'Vineyard', 'Catholic', 'Orthodox', 'Other'],
     validation: { maxLength: 100 },
   },
   {
