@@ -14,13 +14,11 @@ export const revalidate = 3600;
 
 const TRADITIONS: Array<{ slug: string; name: string; vibe: string; example: string; swatch: string }> = [
   { slug: "pentecostal", name: "Pentecostal", vibe: "Anthemic · raised hands", example: "Hillsong, Bethel", swatch: "#b06a50" },
-  { slug: "anglican", name: "Anglican", vibe: "Choral · liturgical", example: "Holy Trinity Brompton", swatch: "#6b7a99" },
-  { slug: "baptist", name: "Baptist", vibe: "Sermon-led · gospel choir", example: "Saddleback", swatch: "#a07050" },
-  { slug: "lutheran", name: "Lutheran", vibe: "Hymns · stillness", example: "Sankta Maria, Malmö", swatch: "#c89b58" },
-  { slug: "catholic", name: "Catholic", vibe: "Mass · incense · stone", example: "Notre-Dame de Paris", swatch: "#9b7fa0" },
-  { slug: "orthodox", name: "Orthodox", vibe: "Iconography · chant", example: "St. Sophia, Istanbul", swatch: "#c8731f" },
-  { slug: "non-denominational", name: "Non-denom", vibe: "Modern · no labels", example: "Elevation, Passion", swatch: "#3a6fb0" },
   { slug: "charismatic", name: "Charismatic", vibe: "Spirit-led · spontaneous", example: "Bethel · Jesus Culture", swatch: "#c08a4f" },
+  { slug: "baptist", name: "Baptist", vibe: "Sermon-led · gospel choir", example: "Saddleback", swatch: "#a07050" },
+  { slug: "non-denominational", name: "Non-denom", vibe: "Modern · no labels", example: "Elevation, Passion", swatch: "#3a6fb0" },
+  { slug: "evangelical", name: "Evangelical", vibe: "Bible-led · contemporary", example: "The Village · Redeemer", swatch: "#6b7a99" },
+  { slug: "reformed", name: "Reformed", vibe: "Word-centred · hymns", example: "Grace Community", swatch: "#c89b58" },
 ];
 
 const TOP_CITIES: Array<{ name: string; country: string; slug: string }> = [
@@ -147,7 +145,7 @@ export default async function HomePage() {
               Tradition
             </h2>
             <p className="mt-2.5 max-w-[460px] text-[15px] text-warm-brown">
-              Eight ways the same gospel sounds. Pick the one that already feels like home.
+              Six ways the same gospel sounds. Pick the one that already feels like home.
             </p>
           </div>
           <Link
@@ -159,7 +157,7 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-3">
           {TRADITIONS.map((t, i) => (
             <Link
               key={t.slug}
