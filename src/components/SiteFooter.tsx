@@ -16,10 +16,10 @@ const cols = [
     title: "By tradition",
     links: [
       { label: "Pentecostal", href: "/church/denomination/pentecostal" },
-      { label: "Anglican", href: "/church/denomination/anglican" },
+      { label: "Charismatic", href: "/church/denomination/charismatic" },
       { label: "Baptist", href: "/church/denomination/baptist" },
-      { label: "Lutheran", href: "/church/denomination/lutheran" },
-      { label: "Catholic", href: "/church/denomination/catholic" },
+      { label: "Non-denominational", href: "/church/denomination/non-denominational" },
+      { label: "Evangelical", href: "/church/denomination/evangelical" },
     ],
   },
   {
