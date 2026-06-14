@@ -172,11 +172,16 @@ export async function generateMetadata({ params }: ChurchPageProps): Promise<Met
 
   const pageUrl = `https://gospelchannel.com/church/${church.slug}`;
 
-  // Gate genuinely empty stubs out of the index (no real text/media/music).
-  // follow:true so internal link equity still flows to facet/hub pages.
-  // Self-healing: enrichment lifts indexScore past the threshold and the page
-  // flips back to indexable on the next revalidate.
-  const indexable = isIndexableChurch(church.indexScore);
+  // On-brand concentration gate: index only on-brand churches with real content
+  // OR any church with a worship playlist (the moat). Off-brand/thin pages go
+  // noindex,follow so internal link equity still flows to facet/hub pages.
+  // Self-healing: enrichment lifts indexScore and on-brand churches flip back to
+  // indexable on the next revalidate. Must mirror the sitemap seed (content.ts).
+  const indexable = isIndexableChurch({
+    indexScore: church.indexScore,
+    denomination: church.denomination,
+    hasWorship: hasPlaylists,
+  });
 
   return {
     title,

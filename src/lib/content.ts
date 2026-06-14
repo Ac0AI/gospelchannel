@@ -13,7 +13,8 @@ import {
   isGeneratedChurchDescription,
   isPlayableSpotifyUrl,
   normalizeDisplayText,
-  INDEXABLE_DISPLAY_SCORE_MIN,
+  INDEXABLE_ONBRAND_SCORE_MIN,
+  OFF_BRAND_DENOMINATIONS,
 } from "@/lib/content-quality";
 
 // Sitemap church section lists ONLY indexable churches — mirrors
@@ -431,6 +432,21 @@ async function fetchSingleChurchBySlug(slug: string): Promise<ChurchConfig | und
   return isExplicitNonChurchSlug(church.slug) ? undefined : church;
 }
 
+// SQL form of isIndexableChurch (content-quality.ts) for the sitemap seed:
+// worship playlist OR on-brand denomination (known, not off-brand) with
+// display_score >= the on-brand floor. denylistParam/scoreParam are positional
+// placeholders ($N) the caller binds. Keep byte-identical to the TS predicate.
+function indexableSeedClause(denylistParam: string, scoreParam: string): string {
+  return `AND (
+        (array_length(spotify_playlist_ids, 1) > 0 OR array_length(additional_playlists, 1) > 0)
+        OR (
+          denomination IS NOT NULL AND length(denomination) > 0
+          AND NOT (denomination = ANY(${denylistParam}::text[]))
+          AND display_score IS NOT NULL AND display_score >= ${scoreParam}
+        )
+      )`;
+}
+
 async function fetchApprovedChurchDirectorySeedCountFromDb(
   indexableOnly = false,
 ): Promise<number> {
@@ -440,9 +456,9 @@ async function fetchApprovedChurchDirectorySeedCountFromDb(
     FROM churches
     WHERE status = 'approved'
       AND NOT (slug = ANY($1::text[]))
-      ${indexableOnly ? "AND (display_score IS NULL OR display_score >= $2)" : ""}
+      ${indexableOnly ? indexableSeedClause("$2", "$3") : ""}
   `, indexableOnly
-    ? [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS, INDEXABLE_DISPLAY_SCORE_MIN]
+    ? [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS, [...OFF_BRAND_DENOMINATIONS], INDEXABLE_ONBRAND_SCORE_MIN]
     : [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS])) as Array<{ count: number | string }>;
 
   return Number(rawRows[0]?.count ?? 0);
@@ -486,7 +502,7 @@ async function fetchApprovedChurchDirectorySeedChunkFromDb(
       FROM churches
       WHERE status = 'approved'
         AND NOT (slug = ANY($1::text[]))
-        ${indexableOnly ? "AND (display_score IS NULL OR display_score >= $4)" : ""}
+        ${indexableOnly ? indexableSeedClause("$4", "$5") : ""}
       ORDER BY name, slug
       LIMIT $2
       OFFSET $3
@@ -496,7 +512,7 @@ async function fetchApprovedChurchDirectorySeedChunkFromDb(
     JOIN churches c ON c.slug = r.slug
     ORDER BY c.name, c.slug
   `, indexableOnly
-    ? [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS, CHURCH_DIRECTORY_SEED_CHUNK_SIZE, offset, INDEXABLE_DISPLAY_SCORE_MIN]
+    ? [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS, CHURCH_DIRECTORY_SEED_CHUNK_SIZE, offset, [...OFF_BRAND_DENOMINATIONS], INDEXABLE_ONBRAND_SCORE_MIN]
     : [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS, CHURCH_DIRECTORY_SEED_CHUNK_SIZE, offset])) as ChurchDirectorySeedRow[];
 
   return rawRows.map(mapRowToChurchDirectorySeed);
@@ -579,7 +595,7 @@ const getSitemapChurchSeedCountCached = unstable_cache(
     }
     return fetchApprovedChurchDirectorySeedCountFromDb(true);
   },
-  ["sitemap-church-seed-count-v1-indexable"],
+  ["sitemap-church-seed-count-v2-onbrand"],
   { revalidate: 3600, tags: [CHURCH_CONTENT_TAG, CHURCH_INDEX_TAG] }
 );
 
@@ -592,7 +608,7 @@ const getSitemapChurchSeedChunkCached = unstable_cache(
     }
     return fetchApprovedChurchDirectorySeedChunkFromDb(chunkIndex, true);
   },
-  ["sitemap-church-seed-chunk-v1-indexable"],
+  ["sitemap-church-seed-chunk-v2-onbrand"],
   { revalidate: 3600, tags: [CHURCH_CONTENT_TAG, CHURCH_INDEX_TAG] }
 );
 

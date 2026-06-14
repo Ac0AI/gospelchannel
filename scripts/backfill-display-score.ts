@@ -253,7 +253,10 @@ async function main() {
       const score = scoreRow(r, hasPrayers);
       updates.push({ slug: r.slug, score });
       hist.set(score, (hist.get(score) ?? 0) + 1);
-      const nowIndexable = isIndexableChurch(score);
+      const hasWorship =
+        (r.spotify_playlist_ids?.length ?? 0) > 0
+        || (r.additional_playlists?.length ?? 0) > 0;
+      const nowIndexable = isIndexableChurch({ indexScore: score, denomination: r.denomination, hasWorship });
       if (nowIndexable) indexable += 1;
       // Deploy-1 attribution: compute the OLD score (no prayers input) for
       // every prayer-having row so we can prove the delta is monotonic
@@ -262,7 +265,7 @@ async function main() {
       // recompute them.
       if (DRY_RUN && hasPrayers) {
         const oldScore = scoreRow(r, false);
-        const wasIndexable = isIndexableChurch(oldScore);
+        const wasIndexable = isIndexableChurch({ indexScore: oldScore, denomination: r.denomination, hasWorship });
         if (wasIndexable) oldIndexable += 1;
         if (!wasIndexable && nowIndexable) newlyIndexableFromPrayers += 1;
       } else if (DRY_RUN) {

@@ -8,7 +8,7 @@ import {
   isGeneratedChurchDescription,
   isCriticalDisplayFlag,
   isIndexableChurch,
-  INDEXABLE_DISPLAY_SCORE_MIN,
+  INDEXABLE_ONBRAND_SCORE_MIN,
   isValidOfficialWebsiteUrl,
   sanitizeServiceTimes,
 } from "../content-quality";
@@ -118,29 +118,32 @@ describe("content-quality", () => {
   // church pages. A flipped null-default or off-by-one on the threshold
   // silently deindexes real pages or leaves empty stubs indexed, only
   // visible in GSC days later — hence explicit boundary coverage.
-  describe("isIndexableChurch", () => {
-    it("null score → indexable (safe default: never silently deindex a pre-backfill row)", () => {
-      expect(isIndexableChurch(null)).toBe(true);
+  describe("isIndexableChurch (on-brand concentration gate)", () => {
+    it("worship playlist → indexable regardless of denomination/score", () => {
+      expect(isIndexableChurch({ indexScore: 0, denomination: null, hasWorship: true })).toBe(true);
+      expect(isIndexableChurch({ indexScore: null, denomination: "Catholic", hasWorship: true })).toBe(true);
     });
 
-    it("undefined score → indexable (same safe default)", () => {
-      expect(isIndexableChurch(undefined)).toBe(true);
+    it("on-brand denomination at the on-brand floor → indexable (boundary inclusive)", () => {
+      expect(isIndexableChurch({ indexScore: INDEXABLE_ONBRAND_SCORE_MIN, denomination: "Baptist" })).toBe(true);
     });
 
-    it("just below threshold → not indexable", () => {
-      expect(isIndexableChurch(INDEXABLE_DISPLAY_SCORE_MIN - 1)).toBe(false);
+    it("on-brand denomination just below the floor → not indexable", () => {
+      expect(isIndexableChurch({ indexScore: INDEXABLE_ONBRAND_SCORE_MIN - 1, denomination: "Baptist" })).toBe(false);
     });
 
-    it("exactly at threshold → indexable (boundary is inclusive)", () => {
-      expect(isIndexableChurch(INDEXABLE_DISPLAY_SCORE_MIN)).toBe(true);
+    it("off-brand denomination → not indexable even with a high score", () => {
+      expect(isIndexableChurch({ indexScore: 100, denomination: "Catholic" })).toBe(false);
+      expect(isIndexableChurch({ indexScore: 100, denomination: "Methodist" })).toBe(false);
     });
 
-    it("above threshold → indexable", () => {
-      expect(isIndexableChurch(INDEXABLE_DISPLAY_SCORE_MIN + 1)).toBe(true);
+    it("unknown/empty denomination without worship → not indexable", () => {
+      expect(isIndexableChurch({ indexScore: 100, denomination: null })).toBe(false);
+      expect(isIndexableChurch({ indexScore: 100, denomination: "" })).toBe(false);
     });
 
-    it("zero → not indexable (empty stub)", () => {
-      expect(isIndexableChurch(0)).toBe(false);
+    it("null score on-brand without worship → not indexable", () => {
+      expect(isIndexableChurch({ indexScore: null, denomination: "Baptist" })).toBe(false);
     });
   });
 
@@ -155,17 +158,19 @@ describe("content-quality", () => {
       // No description, no enrichment summary, no music, no images.
     };
 
-    it("prayer-only church with valid metadata lands exactly at threshold", () => {
+    it("prayer-only church with valid metadata lands exactly at the substance score", () => {
       const result = deriveDisplayAssessment({ ...thinMetadataOnly, hasPrayers: true });
-      // displayReady (no critical flags) +20 + prayers +25 = 45 = threshold.
+      // displayReady (no critical flags) +20 + prayers +25 = 45.
       expect(result.displayScore).toBe(45);
-      expect(isIndexableChurch(result.displayScore)).toBe(true);
+      // Post-concentration: prayers alone (no on-brand denomination, no worship
+      // playlist) no longer make a page indexable — score 45 < on-brand floor.
+      expect(isIndexableChurch({ indexScore: result.displayScore, denomination: null })).toBe(false);
     });
 
-    it("no-prayers thin church stays below threshold (unchanged behaviour)", () => {
+    it("no-prayers thin church stays below the substance score", () => {
       const result = deriveDisplayAssessment({ ...thinMetadataOnly });
       expect(result.displayScore).toBe(20); // displayReady only
-      expect(isIndexableChurch(result.displayScore)).toBe(false);
+      expect(isIndexableChurch({ indexScore: result.displayScore, denomination: null })).toBe(false);
     });
 
     it("prayers boost is exactly +25 (matches hasMusic, deterministic)", () => {

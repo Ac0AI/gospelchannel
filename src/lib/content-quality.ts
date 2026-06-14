@@ -258,21 +258,63 @@ export function isCriticalDisplayFlag(flag: string): boolean {
   return flag.startsWith("critical_");
 }
 
-// Minimum displayScore (see deriveDisplayAssessment) for a church detail page
-// to be indexed by search engines and emitted in the sitemap. Balanced gate:
-// 20 (displayReady) + at least one substance signal — real non-generated text
-// (35) or playable music/video (25). Pure name+address stubs score 20 and are
-// excluded until enrichment lifts them. Single source of truth: both the
-// detail-page robots meta and the sitemap seed read this.
+// Legacy content-substance floor (20 displayReady + one substance signal).
+// Still used by the related-churches internal-link guard (church.ts) so that
+// block never links to an outright empty stub. The detail-page index decision
+// now uses the stricter on-brand gate below.
 export const INDEXABLE_DISPLAY_SCORE_MIN = 45;
 
-export function isIndexableChurch(
-  displayScore: number | null | undefined,
-): boolean {
-  // Unknown score (pre-backfill row) defaults to indexable so a stale/missing
-  // value never silently deindexes a real page.
-  if (displayScore == null) return true;
-  return displayScore >= INDEXABLE_DISPLAY_SCORE_MIN;
+// On-brand concentration gate (2026-06-14). A near-zero-authority domain with
+// ~70k templated pages was crawled-but-not-indexed almost everywhere (GSC:
+// ~2.5k impressions/90d, flagship church pages "Crawled - currently not
+// indexed"). The fix is to shrink the indexable set so crawl budget and link
+// equity land on pages that can actually compete: on-brand (free-church /
+// evangelical / charismatic) churches with real content, plus any church with
+// a worship playlist (the unique moat). Off-brand mainline/liturgical/
+// non-evangelical traditions stay in the DB and are served, but are excluded
+// from the index + sitemap. Single source of truth: the detail-page robots
+// meta (church/[slug]) and the sitemap seed (content.ts) both read this rule.
+export const INDEXABLE_ONBRAND_SCORE_MIN = 65;
+
+// Denominations outside the GospelChannel brand. Flat list so the SQL sitemap
+// seed (content.ts) can pass it as a text[] param and stay byte-identical to
+// this TS predicate.
+export const OFF_BRAND_DENOMINATIONS: readonly string[] = [
+  "Catholic", "Roman Catholic",
+  "Methodist", "United Methodist", "Free Methodist",
+  "AME", "CME", "African Methodist Episcopal", "Christian Methodist Episcopal",
+  "Presbyterian", "Lutheran", "Episcopal", "Anglican",
+  "Orthodox", "Greek Orthodox", "Russian Orthodox", "Eastern Orthodox",
+  "Coptic Orthodox", "Antiochian Orthodox",
+  "Seventh-day Adventist", "Seventh-Day Adventist", "Adventist", "Advent Christian",
+  "Christian Science", "Jehovah's Witnesses",
+  "Mormon", "Latter-Day Saints", "Latter-day Saints", "LDS",
+  "Buddhist", "Muslim", "Jewish", "Hindu",
+  "Unitarian", "Unitarian Universalist", "Quaker",
+  "United Church of Christ", "Church of Christ", "Christadelphian",
+];
+
+const OFF_BRAND_DENOMINATION_SET: ReadonlySet<string> = new Set(OFF_BRAND_DENOMINATIONS);
+
+export type ChurchIndexabilityInput = {
+  indexScore: number | null | undefined;
+  denomination?: string | null;
+  hasWorship?: boolean;
+};
+
+// A church detail page is indexable (and sitemap-emitted) when EITHER it has a
+// worship playlist (the unique moat — always worth indexing) OR it is on-brand
+// (known, non-off-brand denomination) with real content (score >= the on-brand
+// floor). Everything else is served but noindex,follow so internal link equity
+// still flows.
+export function isIndexableChurch(input: ChurchIndexabilityInput): boolean {
+  if (input.hasWorship) return true;
+  const denomination = (input.denomination ?? "").trim();
+  if (!denomination) return false;
+  if (OFF_BRAND_DENOMINATION_SET.has(denomination)) return false;
+  const score = input.indexScore;
+  if (score == null) return false;
+  return score >= INDEXABLE_ONBRAND_SCORE_MIN;
 }
 
 export function deriveDisplayAssessment(input: DisplayAssessmentInput): {
