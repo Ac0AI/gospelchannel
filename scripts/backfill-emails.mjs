@@ -6,6 +6,7 @@
  *   node scripts/backfill-emails.mjs [--dry-run]
  *   node scripts/backfill-emails.mjs --status=approved --countries="United Kingdom,Germany,Sweden"
  *   node scripts/backfill-emails.mjs --status=approved --limit=50
+ *   node scripts/backfill-emails.mjs --status=approved --slugs="slug-a,slug-b"
  */
 
 import { neon } from "@neondatabase/serverless";
@@ -131,10 +132,13 @@ async function main() {
   const COUNTRIES_RAW = parseFlag("countries");
   const COUNTRIES = COUNTRIES_RAW ? COUNTRIES_RAW.split(",").map(c => c.trim()).filter(Boolean) : null;
   const LIMIT = parseInt(parseFlag("limit", "0"), 10) || 0;
+  const SLUGS_RAW = parseFlag("slugs");
+  const SLUGS = SLUGS_RAW ? SLUGS_RAW.split(",").map(s => s.trim()).filter(Boolean) : null;
 
   console.log(`Mode: ${DRY_RUN ? "DRY RUN" : "LIVE"}`);
   console.log(`Status filter: ${STATUS_LIST.join(", ")}`);
   console.log(`Country filter: ${COUNTRIES ? COUNTRIES.join(", ") : "all"}`);
+  console.log(`Slug filter: ${SLUGS ? `${SLUGS.length} slugs` : "none"}`);
   console.log(`Limit: ${LIMIT || "none"}\n`);
 
   let query = `
@@ -149,6 +153,11 @@ async function main() {
   if (COUNTRIES) {
     query += ` AND country = ANY($${params.length + 1}::text[])`;
     params.push(COUNTRIES);
+  }
+
+  if (SLUGS) {
+    query += ` AND slug = ANY($${params.length + 1}::text[])`;
+    params.push(SLUGS);
   }
 
   query += ` ORDER BY country, name`;
