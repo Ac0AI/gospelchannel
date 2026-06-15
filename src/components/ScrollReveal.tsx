@@ -17,17 +17,36 @@ export function ScrollReveal({
     const el = ref.current;
     if (!el) return;
 
+    const reveal = () => {
+      el.style.animationPlayState = "running";
+    };
+
+    // No IntersectionObserver (older agents / non-standard renderers): reveal now.
+    if (typeof IntersectionObserver === "undefined") {
+      reveal();
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          el.style.animationPlayState = "running";
+          reveal();
           observer.unobserve(el);
         }
       },
       { threshold: 0.15 },
     );
     observer.observe(el);
-    return () => observer.disconnect();
+
+    // Safety net: never leave content stuck at opacity:0 if the observer never
+    // fires — e.g. a search/AI crawler that renders the page without scrolling
+    // (Googlebot WRS). Guarantees the rendered snapshot shows real content.
+    const fallback = window.setTimeout(reveal, 1500);
+
+    return () => {
+      observer.disconnect();
+      window.clearTimeout(fallback);
+    };
   }, []);
 
   return (
