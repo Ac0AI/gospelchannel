@@ -6,6 +6,10 @@ const RENDERABLE_IMAGE_HOSTS = new Set([
   "i.ytimg.com",
   "i.scdn.co",
   "mosaic.scdn.co",
+  // Google Places hero photos: lh3.googleusercontent.com is covered by the
+  // .googleusercontent.com suffix rule; Street View building thumbnails come
+  // from this host and need an explicit entry so they render as heroes.
+  "streetviewpixels-pa.googleapis.com",
 ]);
 
 function getMediaBaseUrl() {
