@@ -51,6 +51,7 @@ function parseArgs(argv) {
     limit: DEFAULT_LIMIT,
     force: false,
     dryRun: false,
+    missingHero: false,
     minScore: DEFAULT_MIN_SCORE,
     chunkSize: 500,
     parallelRuns: 2,
@@ -58,6 +59,7 @@ function parseArgs(argv) {
   for (const a of argv) {
     if (a === "--dry-run") o.dryRun = true;
     else if (a === "--force") o.force = true;
+    else if (a === "--missing-hero") o.missingHero = true;
     else if (a.startsWith("--country=")) o.country = a.split("=")[1];
     else if (a.startsWith("--slugs=")) o.slugs = a.split("=")[1].split(",").map((s) => s.trim()).filter(Boolean);
     else if (a.startsWith("--reason-prefix=")) o.reasonPrefix = a.split("=")[1];
@@ -108,6 +110,42 @@ async function loadTargets(sql, options) {
       FROM churches
       WHERE slug = ANY(${options.slugs}::text[]) AND status = 'approved'
     `;
+  }
+  // Hero-image backfill: indexable on-brand churches missing a header image,
+  // highest display_score first. Off-brand (mainline/liturgical) excluded so we
+  // don't spend Apify on noindex pages. See music-style/indexation concentration.
+  if (options.missingHero) {
+    const OFF_BRAND = [
+      "Catholic", "Roman Catholic", "Methodist", "United Methodist", "Free Methodist",
+      "AME", "CME", "Presbyterian", "Lutheran", "Episcopal", "Anglican", "Orthodox",
+      "Greek Orthodox", "Russian Orthodox", "Eastern Orthodox", "Coptic Orthodox",
+      "Seventh-day Adventist", "Seventh-Day Adventist", "Adventist", "Advent Christian",
+      "Christian Science", "Jehovah's Witnesses", "Mormon", "Latter-Day Saints",
+      "Latter-day Saints", "LDS", "Unitarian", "Quaker", "United Church of Christ",
+      "Church of Christ", "Christadelphian",
+    ];
+    return options.country
+      ? sql`
+          SELECT slug, name, location, country, website, header_image FROM churches
+          WHERE status = 'approved'
+            AND (header_image IS NULL OR header_image = '')
+            AND display_score IS NOT NULL AND display_score >= 65
+            AND denomination IS NOT NULL AND length(denomination) > 0
+            AND NOT (denomination = ANY(${OFF_BRAND}))
+            AND country = ${options.country}
+          ORDER BY display_score DESC NULLS LAST
+          LIMIT ${options.limit}
+        `
+      : sql`
+          SELECT slug, name, location, country, website, header_image FROM churches
+          WHERE status = 'approved'
+            AND (header_image IS NULL OR header_image = '')
+            AND display_score IS NOT NULL AND display_score >= 65
+            AND denomination IS NOT NULL AND length(denomination) > 0
+            AND NOT (denomination = ANY(${OFF_BRAND}))
+          ORDER BY display_score DESC NULLS LAST
+          LIMIT ${options.limit}
+        `;
   }
   const where = ["status = 'approved'"];
   const params = {};
