@@ -1,4 +1,16 @@
+import { unstable_cache } from "next/cache";
 import { getSql, hasDatabaseConfig } from "@/db";
+import { CHURCH_INDEX_TAG } from "@/lib/content";
+import { isOfflinePublicBuild } from "@/lib/runtime-mode";
+
+// Both pages below are force-dynamic (never prerendered against the DB at
+// build time), which means every request would otherwise hit Neon directly —
+// exactly the pattern that caused a prior Neon-egress incident when these
+// pages are also the ones we've deliberately made attractive to AI crawlers.
+// unstable_cache is the project's R2-backed cache (see CLAUDE.md: never use
+// module-level caches on Workers), so repeat requests within the revalidate
+// window are served from R2 instead of Neon.
+const DISCOVERY_CACHE_REVALIDATE_SECONDS = 3600;
 
 export type DiscoveryChurch = {
   name: string;
@@ -27,53 +39,65 @@ export type DiscoveryChurch = {
 //
 // Ranked by the same directory_score the rest of the site uses, so the flagships
 // (Hillsong Church London, Kensington Temple) surface first. Real data only.
-export async function getLondonCharismaticChurches(): Promise<DiscoveryChurch[]> {
-  if (!hasDatabaseConfig()) return [];
-  try {
-    const sql = getSql();
-    const rows = (await sql`
-      SELECT name, slug, location, country, website, denomination, music_style, language, header_image, logo
-      FROM churches
-      WHERE status = 'approved'
-        AND city_slug ILIKE '%london%'
-        AND (
-          denomination ILIKE ANY(ARRAY['%pentecostal%', '%charismatic%', '%elim%', '%vineyard%'])
-          OR music_style && ARRAY['charismatic worship', 'pentecostal', 'gospel']
-        )
-      ORDER BY directory_score DESC NULLS LAST, name
-    `) as Array<Record<string, unknown>>;
+export const getLondonCharismaticChurches = unstable_cache(
+  async (): Promise<DiscoveryChurch[]> => {
+    if (isOfflinePublicBuild() || !hasDatabaseConfig()) return [];
+    try {
+      const sql = getSql();
+      const rows = (await sql`
+        SELECT name, slug, location, country, website, denomination, music_style, language, header_image, logo
+        FROM churches
+        WHERE status = 'approved'
+          AND city_slug ILIKE '%london%'
+          AND (
+            denomination ILIKE ANY(ARRAY['%pentecostal%', '%charismatic%', '%elim%', '%vineyard%'])
+            OR music_style && ARRAY['charismatic worship', 'pentecostal', 'gospel']
+          )
+        ORDER BY directory_score DESC NULLS LAST, name
+      `) as Array<Record<string, unknown>>;
 
-    return rows.map(toDiscoveryChurch);
-  } catch {
-    return [];
-  }
-}
+      return rows.map(toDiscoveryChurch);
+    } catch {
+      return [];
+    }
+  },
+  ["discovery-london-charismatic-churches-v1"],
+  { revalidate: DISCOVERY_CACHE_REVALIDATE_SECONDS, tags: [CHURCH_INDEX_TAG] },
+);
 
 // Global "worship-known" churches — the same directory_score ranking the rest of
 // the site uses, filtered to churches whose data already flags them as worship-
 // led (contemporary/charismatic worship, gospel, pentecostal tags or tradition).
 // No independent "best" claim beyond our own directory ranking — the page discloses
 // that methodology rather than asserting an unverifiable superlative.
-export async function getBestWorshipChurches(limit = 30): Promise<DiscoveryChurch[]> {
-  if (!hasDatabaseConfig()) return [];
-  try {
-    const sql = getSql();
-    const rows = (await sql`
-      SELECT name, slug, location, country, website, denomination, music_style, language, header_image, logo
-      FROM churches
-      WHERE status = 'approved'
-        AND (
-          denomination ILIKE ANY(ARRAY['%pentecostal%', '%charismatic%', '%elim%', '%vineyard%'])
-          OR music_style && ARRAY['charismatic worship', 'pentecostal', 'gospel', 'contemporary worship']
-        )
-      ORDER BY directory_score DESC NULLS LAST, name
-      LIMIT ${limit}
-    `) as Array<Record<string, unknown>>;
+const getBestWorshipChurchesCached = unstable_cache(
+  async (limit: number): Promise<DiscoveryChurch[]> => {
+    if (isOfflinePublicBuild() || !hasDatabaseConfig()) return [];
+    try {
+      const sql = getSql();
+      const rows = (await sql`
+        SELECT name, slug, location, country, website, denomination, music_style, language, header_image, logo
+        FROM churches
+        WHERE status = 'approved'
+          AND (
+            denomination ILIKE ANY(ARRAY['%pentecostal%', '%charismatic%', '%elim%', '%vineyard%'])
+            OR music_style && ARRAY['charismatic worship', 'pentecostal', 'gospel', 'contemporary worship']
+          )
+        ORDER BY directory_score DESC NULLS LAST, name
+        LIMIT ${limit}
+      `) as Array<Record<string, unknown>>;
 
-    return rows.map(toDiscoveryChurch);
-  } catch {
-    return [];
-  }
+      return rows.map(toDiscoveryChurch);
+    } catch {
+      return [];
+    }
+  },
+  ["discovery-best-worship-churches-v1"],
+  { revalidate: DISCOVERY_CACHE_REVALIDATE_SECONDS, tags: [CHURCH_INDEX_TAG] },
+);
+
+export async function getBestWorshipChurches(limit = 30): Promise<DiscoveryChurch[]> {
+  return getBestWorshipChurchesCached(limit);
 }
 
 function toDiscoveryChurch(row: Record<string, unknown>): DiscoveryChurch {
