@@ -39,18 +39,30 @@ function getOrCreateKey() {
 
 // ─── Parse sitemap for URLs ───
 
-async function fetchSitemapUrls(changedOnly = false) {
-  const sitemapUrl = `${SITE_URL}/sitemap.xml`;
+// /sitemap.xml is a <sitemapindex> pointing at /sitemap-chunk/N.xml children.
+// Walk the tree to collect the actual page <url> entries. Depth cap guards
+// against accidental recursion if the format changes again.
+async function fetchSitemapUrls(changedOnly = false, sitemapUrl = `${SITE_URL}/sitemap.xml`, depth = 0) {
+  if (depth > 2) return [];
   console.log(`Fetching sitemap: ${sitemapUrl}`);
 
   const res = await fetch(sitemapUrl);
-  if (!res.ok) throw new Error(`Sitemap fetch failed: ${res.status}`);
+  if (!res.ok) throw new Error(`Sitemap fetch failed: ${res.status} (${sitemapUrl})`);
   const xml = await res.text();
+
+  // Sitemap index → recurse into each child sitemap.
+  if (xml.includes("<sitemapindex")) {
+    const childLocs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim());
+    const nested = await Promise.all(
+      childLocs.map((loc) => fetchSitemapUrls(changedOnly, loc, depth + 1)),
+    );
+    return nested.flat();
+  }
 
   const urls = [];
   const cutoff = changedOnly ? Date.now() - 24 * 60 * 60 * 1000 : 0;
 
-  // Simple XML parsing — extract <url> entries
+  // Extract <url> entries from a leaf sitemap
   const urlBlocks = xml.match(/<url>[\s\S]*?<\/url>/g) || [];
   for (const block of urlBlocks) {
     const loc = block.match(/<loc>(.*?)<\/loc>/)?.[1];

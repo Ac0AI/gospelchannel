@@ -96,7 +96,7 @@ async function fetchSitemapUrls(rootUrl: string, depth = 0): Promise<string[]> {
   }
 }
 
-async function buildUrlList(db: ReturnType<typeof createAdminClient>): Promise<string[]> {
+function coreAndNetworkUrls(): string[] {
   const core: string[] = [
     SITE_URL,
     `${SITE_URL}/church`,
@@ -107,11 +107,20 @@ async function buildUrlList(db: ReturnType<typeof createAdminClient>): Promise<s
   const networks = ["hillsong", "c3", "icf", "vineyard", "sos-church", "calvary-chapel", "every-nation", "pingstkyrkan", "svenska-kyrkan"];
   for (const n of networks) core.push(`${SITE_URL}/network/${n}`);
 
-  // Facet hub pages (/church/{city,country,style,denomination}/...) carry the
-  // SEO weight but sit last in the sitemap behind ~73k church pages, so the
-  // 200/day Indexing API quota never reached them. Pull them out and push them
-  // right after the core pages so the quota serves hubs first.
-  const sitemapUrls = await fetchSitemapUrls(`${SITE_URL}/sitemap.xml`);
+  return core;
+}
+
+// Google's ordered walk: core -> hubs -> all approved churches -> remaining
+// sitemap URLs. The 200/day Indexing API quota is precious, so facet hub pages
+// (/church/{city,country,style,denomination}/...) — which carry the SEO weight
+// but sit last in the sitemap behind ~73k church pages — are pulled ahead so
+// the quota serves hubs first. Takes the pre-fetched sitemap URL list.
+async function buildUrlList(
+  db: ReturnType<typeof createAdminClient>,
+  sitemapUrls: string[],
+): Promise<string[]> {
+  const core = coreAndNetworkUrls();
+
   const HUB_RE = /\/church\/(?:city|country|style|denomination)\//;
   const hubUrls: string[] = [];
   const otherSitemapUrls: string[] = [];
@@ -150,27 +159,36 @@ async function pushUrl(accessToken: string, url: string): Promise<"OK" | "QUOTA"
   return "OK";
 }
 
-// Submit a batch to IndexNow in a single request (the API accepts up to
-// 10 000 URLs). Unlike Google's per-URL endpoint there is no auth step, so
-// this is called before the Google loop and never blocks it. Returns the raw
-// status (200/202 = accepted) so the cron response surfaces Bing's verdict.
-async function submitToIndexNow(urls: string[]): Promise<string> {
-  if (urls.length === 0) return "SKIP empty";
-  try {
-    const res = await fetch("https://api.indexnow.org/indexnow", {
-      method: "POST",
-      headers: { "Content-Type": "application/json; charset=utf-8" },
-      body: JSON.stringify({
-        host: "gospelchannel.com",
-        key: INDEXNOW_KEY,
-        keyLocation: INDEXNOW_KEY_LOCATION,
-        urlList: urls.slice(0, 10_000),
-      }),
-    });
-    return `${res.status}`;
-  } catch (err) {
-    return `ERROR ${err instanceof Error ? err.message : "unknown"}`;
+// Submit URLs to IndexNow (Bing/Yandex/Seznam/Naver) in 9,000-URL chunks (the
+// API max is 10 000). IndexNow has NO auth and NO quota, so — unlike Google's
+// 200/day walk — we announce the ENTIRE indexable catalog every run. Called
+// before the Google loop so Bing gets everything even if Google auth/quota
+// fails. Returns per-chunk HTTP statuses (2xx = accepted) plus the accepted
+// URL count so the cron response surfaces exactly how many Bing took.
+async function submitToIndexNow(urls: string[]): Promise<{ accepted: number; total: number; chunks: string[] }> {
+  const CHUNK = 9000;
+  const chunks: string[] = [];
+  let accepted = 0;
+  for (let i = 0; i < urls.length; i += CHUNK) {
+    const slice = urls.slice(i, i + CHUNK);
+    try {
+      const res = await fetch("https://api.indexnow.org/indexnow", {
+        method: "POST",
+        headers: { "Content-Type": "application/json; charset=utf-8" },
+        body: JSON.stringify({
+          host: "gospelchannel.com",
+          key: INDEXNOW_KEY,
+          keyLocation: INDEXNOW_KEY_LOCATION,
+          urlList: slice,
+        }),
+      });
+      chunks.push(`${res.status}`);
+      if (res.ok) accepted += slice.length;
+    } catch (err) {
+      chunks.push(`ERROR ${err instanceof Error ? err.message : "unknown"}`);
+    }
   }
+  return { accepted, total: urls.length, chunks };
 }
 
 export async function GET(request: NextRequest) {
@@ -184,9 +202,25 @@ export async function GET(request: NextRequest) {
 
   try {
     const db = createAdminClient();
-    const allUrls = await buildUrlList(db);
+    const sitemapUrls = await fetchSitemapUrls(`${SITE_URL}/sitemap.xml`);
+    const allUrls = await buildUrlList(db, sitemapUrls);
 
-    // Load checkpoint
+    // IndexNow (Bing/Yandex/…) has no quota, so announce the FULL indexable
+    // catalog every run — not the 200-URL Google slice. The indexable set is
+    // core + network + sitemap URLs (the sitemap already excludes noindexed
+    // stubs). Done first so Bing gets everything even if Google auth/quota
+    // fails below.
+    const seenIndexNow = new Set<string>();
+    const indexNowUrls: string[] = [];
+    for (const url of [...coreAndNetworkUrls(), ...sitemapUrls]) {
+      if (!seenIndexNow.has(url)) {
+        seenIndexNow.add(url);
+        indexNowUrls.push(url);
+      }
+    }
+    const indexNowStatus = await submitToIndexNow(indexNowUrls);
+
+    // Load checkpoint (Google's 200/day walk)
     const { data: kvRows } = await db.from<KvRow[]>("app_kv")
       .select("key,value")
       .eq("key", CHECKPOINT_KEY);
@@ -197,12 +231,8 @@ export async function GET(request: NextRequest) {
 
     const batch = allUrls.slice(pushed, pushed + BATCH_SIZE);
     if (batch.length === 0) {
-      return NextResponse.json({ ok: true, message: "No URLs to push", pushed, total: allUrls.length });
+      return NextResponse.json({ ok: true, message: "No URLs to push", pushed, total: allUrls.length, indexNow: indexNowStatus });
     }
-
-    // Ping IndexNow (Bing + others) first — no auth, so Bing gets the batch
-    // even if the Google Indexing API below fails on auth or quota.
-    const indexNowStatus = await submitToIndexNow(batch);
 
     const accessToken = await getAccessToken();
     let success = 0;
@@ -234,7 +264,11 @@ export async function GET(request: NextRequest) {
       ok: true,
       pushed: success,
       errors,
-      indexNow: indexNowStatus,
+      indexNow: {
+        submitted: indexNowStatus.accepted,
+        total: indexNowStatus.total,
+        chunks: indexNowStatus.chunks,
+      },
       totalPushed: pushed,
       totalUrls: allUrls.length,
       progress: `${((pushed / allUrls.length) * 100).toFixed(1)}%`,
