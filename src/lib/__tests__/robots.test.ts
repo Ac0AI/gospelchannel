@@ -63,4 +63,30 @@ describe("robots", () => {
       expect(rule?.disallow, userAgent).not.toContain("/church?*q=");
     }
   });
+
+  it("welcomes the major AI model / grounding crawlers", () => {
+    const config = robots();
+    const rules = Array.isArray(config.rules) ? config.rules : [config.rules];
+
+    for (const userAgent of ["Google-Extended", "GPTBot", "ClaudeBot"]) {
+      const rule = rules.find((candidate) => candidate.userAgent === userAgent);
+      expect(rule, userAgent).toBeDefined();
+      expect(rule?.allow, userAgent).toBe("/");
+      expect(rule?.disallow, userAgent).toEqual(expect.arrayContaining(PRIVATE_DISALLOW));
+      // grounding bots may read /church?q= lookups
+      expect(rule?.disallow, userAgent).not.toContain("/church?*q=");
+    }
+  });
+
+  it("keeps bulk dataset scrapers fully blocked", () => {
+    const config = robots();
+    const rules = Array.isArray(config.rules) ? config.rules : [config.rules];
+
+    for (const userAgent of ["CCBot", "Bytespider", "Diffbot", "anthropic-ai"]) {
+      const rule = rules.find((candidate) => candidate.userAgent === userAgent);
+      expect(rule, userAgent).toBeDefined();
+      expect(rule?.disallow, userAgent).toBe("/");
+      expect(rule?.allow, userAgent).toBeUndefined();
+    }
+  });
 });
