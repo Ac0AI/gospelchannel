@@ -423,6 +423,10 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
       name: `${church.name} Playlist`,
       description: `Stream ${church.name} worship playlist. Curated songs, videos, and gospel music.`,
       url: pageUrl,
+      // Real freshness signal for AI/search — only when we have a verified date.
+      ...(church.verifiedAt && !Number.isNaN(Date.parse(String(church.verifiedAt))) && {
+        dateModified: new Date(church.verifiedAt).toISOString(),
+      }),
       about: {
         "@type": "Organization",
         name: church.name,
