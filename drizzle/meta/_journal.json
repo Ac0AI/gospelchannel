@@ -120,6 +120,13 @@
       "when": 1779258235000,
       "tag": "0016_add_related_church_slugs",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1782906984000,
+      "tag": "0017_search_fuzzy_matching",
+      "breakpoints": true
     }
   ]
 }
