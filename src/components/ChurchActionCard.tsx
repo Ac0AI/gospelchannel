@@ -4,10 +4,7 @@ import { ChurchContactButton } from "@/components/ChurchContactButton";
 type ChurchActionCardProps = {
   churchSlug: string;
   displayName: string;
-  streetAddress?: string;
-  city?: string;
-  country?: string;
-  googleMapsUrl?: string;
+  directionsHref?: string;
   phone?: string;
   contactEmail?: string;
   hasContactForm: boolean;
@@ -18,31 +15,11 @@ type ChurchActionCardProps = {
   isClaimed: boolean;
 };
 
-function buildDirectionsHref({
-  googleMapsUrl,
-  streetAddress,
-  city,
-  country,
-}: {
-  googleMapsUrl?: string;
-  streetAddress?: string;
-  city?: string;
-  country?: string;
-}): string | undefined {
-  if (googleMapsUrl) return googleMapsUrl;
-  const query = [streetAddress, city, country].filter(Boolean).join(", ");
-  if (!query) return undefined;
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
-}
-
 export function ChurchActionCard(props: ChurchActionCardProps) {
   const {
     churchSlug,
     displayName,
-    streetAddress,
-    city,
-    country,
-    googleMapsUrl,
+    directionsHref,
     phone,
     contactEmail,
     hasContactForm,
@@ -52,8 +29,6 @@ export function ChurchActionCard(props: ChurchActionCardProps) {
     givingUrl,
     isClaimed,
   } = props;
-
-  const directionsHref = buildDirectionsHref({ googleMapsUrl, streetAddress, city, country });
   const hasAnyAction = Boolean(
     directionsHref || phone || contactEmail || hasContactForm || websiteUrl || livestreamUrl || givingUrl
   );

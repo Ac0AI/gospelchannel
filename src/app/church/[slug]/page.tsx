@@ -4,6 +4,7 @@ import Image from "next/image";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Suspense } from "react";
 import { ChurchActionCard } from "@/components/ChurchActionCard";
+import { buildGoogleMapsHref } from "@/lib/maps";
 import { ChurchContactButton } from "@/components/ChurchContactButton";
 import { ChurchLatestUpdatesSection } from "@/components/ChurchLatestUpdatesSection";
 import { ChurchNetworkSection } from "@/components/ChurchNetworkSection";
@@ -262,6 +263,15 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   const serviceTimeLabel = getFirstServiceTimeLabel(serviceTimes);
   const streetAddress = normalizeDisplayText((mergedProfile.streetAddress as string | undefined) || enrichment?.streetAddress);
   const city = normalizeDisplayText(mergedProfile.city as string | undefined) || extractCity(church.location);
+  const mapsHref = buildGoogleMapsHref({
+    googleMapsUrl: isValidPublicUrl(enrichment?.googleMapsUrl) ? enrichment?.googleMapsUrl : undefined,
+    name: displayName,
+    streetAddress,
+    city,
+    country: (mergedProfile.country as string | undefined) || church.country || undefined,
+    latitude: enrichment?.latitude,
+    longitude: enrichment?.longitude,
+  });
   const rawEmail = (mergedProfile.contactEmail as string | undefined) || enrichment?.contactEmail || church.email;
   const hasValidEmail = isValidPublicEmail(rawEmail);
   const emailVisiblePublicly = Boolean(church.verifiedAt && church.showEmailPublicly);
@@ -458,6 +468,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
       ...(enrichment?.latitude && enrichment?.longitude && {
         geo: { "@type": "GeoCoordinates", latitude: enrichment.latitude, longitude: enrichment.longitude },
       }),
+      ...(mapsHref && { hasMap: mapsHref }),
       ...(phone && { telephone: phone }),
       ...(contactEmail && { email: contactEmail }),
       ...(communityDenomination && { additionalType: getProfileOptionLabel(communityDenomination) }),
@@ -846,7 +857,18 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                           Location
                         </dt>
                         <dd className="text-right text-sm leading-relaxed text-warm-brown">
-                          {streetAddress}
+                          {mapsHref ? (
+                            <a
+                              href={mapsHref}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-warm-brown transition-colors hover:text-rose-gold"
+                            >
+                              {streetAddress} ↗
+                            </a>
+                          ) : (
+                            streetAddress
+                          )}
                         </dd>
                       </div>
                     )}
@@ -1338,7 +1360,18 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                     <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.28em] text-blush/60">
                       Address
                     </div>
-                    <div className="font-serif text-base text-white sm:text-[17px]">{streetAddress}</div>
+                    {mapsHref ? (
+                      <a
+                        href={mapsHref}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-serif text-base text-white transition-colors hover:text-blush sm:text-[17px]"
+                      >
+                        {streetAddress} ↗
+                      </a>
+                    ) : (
+                      <div className="font-serif text-base text-white sm:text-[17px]">{streetAddress}</div>
+                    )}
                   </div>
                 )}
                 {phone && (
@@ -1369,10 +1402,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
               <ChurchActionCard
                 churchSlug={church.slug}
                 displayName={displayName}
-                streetAddress={streetAddress}
-                city={city}
-                country={(mergedProfile.country as string | undefined) || church.country || undefined}
-                googleMapsUrl={isValidPublicUrl(enrichment?.googleMapsUrl) ? enrichment!.googleMapsUrl : undefined}
+                directionsHref={mapsHref}
                 phone={phone}
                 contactEmail={contactEmail}
                 hasContactForm={hasValidEmail && !emailVisiblePublicly}
