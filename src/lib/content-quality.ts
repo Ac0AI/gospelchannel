@@ -290,6 +290,15 @@ export const OFF_BRAND_DENOMINATIONS: readonly string[] = [
   "Christian Science", "Jehovah's Witnesses",
   "Mormon", "Latter-Day Saints", "Latter-day Saints", "LDS",
   "Buddhist", "Muslim", "Jewish", "Hindu",
+  // Non-Christian variants seen in imported POI data (exact-match set, so every
+  // spelling matters). Messianic Jewish/Judaism stays OFF this list on purpose —
+  // those are Jesus-believing congregations and on-brand.
+  "Buddhism", "Jodo Shinshu Buddhism", "Jodo Shinshu Buddhist", "Shin Buddhist",
+  "Nichiren Buddhism", "Nichiren Buddhist", "Kadampa Buddhism", "Original Buddhism",
+  "Islam", "Islamic",
+  "Judaism", "Orthodox Judaism", "Orthodox Jewish", "Reform Judaism", "Reform Jewish",
+  "Conservative Judaism", "Jewish - Chabad",
+  "Sikh", "Sikhism", "Hinduism", "Swaminarayan Hindu", "Scientology",
   "Unitarian", "Unitarian Universalist", "Quaker",
   "United Church of Christ", "Church of Christ", "Christadelphian",
 ];
