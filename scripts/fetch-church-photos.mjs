@@ -47,6 +47,7 @@ import { tmpdir } from "node:os";
 import sharp from "sharp";
 import { neon } from "@neondatabase/serverless";
 import { loadLocalEnv } from "./lib/local-env.mjs";
+import { offBrandCategory } from "./lib/place-categories.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = join(__dirname, "..");
@@ -104,8 +105,8 @@ async function uploadToR2(key, buffer) {
   await writeFile(tmp, buffer);
   try {
     await new Promise((ok, fail) => {
-      const child = spawn("npx", [
-        "wrangler", "r2", "object", "put",
+      const child = spawn(join(ROOT_DIR, "node_modules", ".bin", "wrangler"), [
+        "r2", "object", "put",
         `${R2_BUCKET}/${key}`, "--remote", "--file", tmp,
         "--content-type", "image/webp",
       ], { cwd: ROOT_DIR, stdio: ["ignore", "pipe", "pipe"], env: wranglerEnv() });
@@ -217,6 +218,7 @@ async function main() {
         FROM churches c JOIN church_enrichments e ON e.church_slug = c.slug
         WHERE c.status = 'approved'
           AND e.photo_urls IS NULL
+          AND (e.raw_google_places->>'photoSkipped') IS NULL
           AND ${placeIdExpr} IS NOT NULL
           AND (
             array_length(c.spotify_playlist_ids, 1) > 0
@@ -262,12 +264,30 @@ async function main() {
   let updated = 0;
   let photosUploaded = 0;
   const failures = [];
-  for (const item of items) {
+
+  async function processItem(item) {
     const slugs = slugsByPlaceId.get(item.placeId) ?? [];
     appendFileSync(archivePath, JSON.stringify({ slug: slugs[0] ?? null, ...item }) + "\n");
-    if (slugs.length === 0) { failures.push(`unmatched placeId ${item.placeId}`); continue; }
+    if (slugs.length === 0) { failures.push(`unmatched placeId ${item.placeId}`); return; }
+
+    // Guard: the place_id resolved to a restaurant/dentist/mosque/etc. Do NOT
+    // mirror its photos. Stamp a sentinel so the church is excluded from future
+    // selection (and flag-able for place_id repair) instead of re-crawled forever.
+    const offBrand = offBrandCategory(item);
+    if (offBrand) {
+      await sql.query(`
+        UPDATE church_enrichments
+        SET raw_google_places = COALESCE(raw_google_places, '{}'::jsonb)
+              || jsonb_build_object('photoSkipped', $1::text, 'photoSkippedCategory', $2::text),
+            updated_at = now()
+        WHERE church_slug = ANY($3::text[])`,
+        [offBrand.reason, offBrand.categories, slugs]);
+      failures.push(`${slugs[0]}: off-brand category [${offBrand.categories}] — skipped`);
+      return;
+    }
+
     const sourceUrls = [...new Set((item.imageUrls || []).filter((u) => /^https:\/\//.test(u)))].slice(0, o.maxImages);
-    if (sourceUrls.length === 0) { failures.push(`${slugs[0]}: no imageUrls`); continue; }
+    if (sourceUrls.length === 0) { failures.push(`${slugs[0]}: no imageUrls`); return; }
 
     // Mirror once under the first slug; duplicate slugs share the same R2 URLs.
     const primarySlug = slugs[0];
@@ -282,7 +302,7 @@ async function main() {
         failures.push(`${primarySlug}[${i}]: ${err.message.slice(0, 80)}`);
       }
     }
-    if (r2Urls.length === 0) continue;
+    if (r2Urls.length === 0) return;
 
     for (const slug of slugs) {
       await sql.query(`
@@ -298,6 +318,16 @@ async function main() {
     photosUploaded += r2Urls.length;
     console.log(`  ${slugs.join(" + ")}: ${r2Urls.length} photos`);
   }
+
+  // Small worker pool: churches in parallel, each church's photos sequential.
+  const POOL = 5;
+  let cursor = 0;
+  await Promise.all(Array.from({ length: POOL }, async () => {
+    while (cursor < items.length) {
+      const item = items[cursor++];
+      await processItem(item);
+    }
+  }));
 
   console.log(`\nDone. ${updated} churches updated, ${photosUploaded} photos mirrored to R2.`);
   console.log(`Raw archive: ${archivePath}`);
