@@ -265,6 +265,19 @@ async function main() {
   let photosUploaded = 0;
   const failures = [];
 
+  // Stamp a photoSkipped sentinel so a church is excluded from future selection
+  // instead of re-crawled every chunk (SELECT filters photoSkipped IS NULL).
+  // Clear the sentinel to retry (e.g. after a transient 403 wave).
+  async function stampSkipped(slugs, reason, detail) {
+    await sql.query(`
+      UPDATE church_enrichments
+      SET raw_google_places = COALESCE(raw_google_places, '{}'::jsonb)
+            || jsonb_build_object('photoSkipped', $1::text, 'photoSkippedDetail', $2::text),
+          updated_at = now()
+      WHERE church_slug = ANY($3::text[])`,
+      [reason, detail || "", slugs]);
+  }
+
   async function processItem(item) {
     const slugs = slugsByPlaceId.get(item.placeId) ?? [];
     appendFileSync(archivePath, JSON.stringify({ slug: slugs[0] ?? null, ...item }) + "\n");
@@ -275,19 +288,18 @@ async function main() {
     // selection (and flag-able for place_id repair) instead of re-crawled forever.
     const offBrand = offBrandCategory(item);
     if (offBrand) {
-      await sql.query(`
-        UPDATE church_enrichments
-        SET raw_google_places = COALESCE(raw_google_places, '{}'::jsonb)
-              || jsonb_build_object('photoSkipped', $1::text, 'photoSkippedCategory', $2::text),
-            updated_at = now()
-        WHERE church_slug = ANY($3::text[])`,
-        [offBrand.reason, offBrand.categories, slugs]);
+      await stampSkipped(slugs, offBrand.reason, offBrand.categories);
       failures.push(`${slugs[0]}: off-brand category [${offBrand.categories}] — skipped`);
       return;
     }
 
     const sourceUrls = [...new Set((item.imageUrls || []).filter((u) => /^https:\/\//.test(u)))].slice(0, o.maxImages);
-    if (sourceUrls.length === 0) { failures.push(`${slugs[0]}: no imageUrls`); return; }
+    if (sourceUrls.length === 0) {
+      // Places genuinely has no photos for this place — definitive, sentinel it.
+      await stampSkipped(slugs, "no_photos", "no imageUrls");
+      failures.push(`${slugs[0]}: no imageUrls — sentinel'd`);
+      return;
+    }
 
     // Mirror once under the first slug; duplicate slugs share the same R2 URLs.
     const primarySlug = slugs[0];
@@ -302,7 +314,13 @@ async function main() {
         failures.push(`${primarySlug}[${i}]: ${err.message.slice(0, 80)}`);
       }
     }
-    if (r2Urls.length === 0) return;
+    if (r2Urls.length === 0) {
+      // Had imageUrls but every download failed (e.g. persistent 403). Re-crawling
+      // has proven futile — sentinel it; clearable to retry the 403 wave later.
+      await stampSkipped(slugs, "no_photos", "all downloads failed");
+      failures.push(`${primarySlug}: all ${sourceUrls.length} downloads failed — sentinel'd`);
+      return;
+    }
 
     for (const slug of slugs) {
       await sql.query(`
