@@ -246,7 +246,15 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
     videos,
     coverImageUrl: (mergedProfile.coverImageUrl as string | undefined) || enrichment?.coverImageUrl,
   }).filter(isRenderableImageUrl);
-  const heroImage = heroImageCandidates[0] || "";
+  // R2-mirrored Google Places gallery. Photo 0 is usually the same shot as the
+  // hero (both come from the Places main photo), so secondary slots start at 1
+  // and everything falls back to the hero for churches with no gallery yet.
+  const galleryPhotos = (enrichment?.photoUrls ?? []).filter(isRenderableImageUrl);
+  const heroImage = heroImageCandidates[0] || galleryPhotos[0] || "";
+  const aboutImage = galleryPhotos[1] || heroImage;
+  const expectImage = galleryPhotos[2] || heroImage;
+  const closingImage = galleryPhotos[3] || heroImage;
+  const galleryStrip = galleryPhotos.slice(4, 8);
   const heroIsVideoThumb = /(?:^|\.)(ytimg|youtube)\.com/i.test(heroImage);
   const churchLogo = isRenderableImageUrl((mergedProfile.logoUrl as string | undefined) || enrichment?.logoImageUrl || church.logo)
     ? ((mergedProfile.logoUrl as string | undefined) || enrichment?.logoImageUrl || church.logo)!
@@ -469,6 +477,9 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
         geo: { "@type": "GeoCoordinates", latitude: enrichment.latitude, longitude: enrichment.longitude },
       }),
       ...(mapsHref && { hasMap: mapsHref }),
+      ...((heroImage || galleryPhotos.length > 0) && {
+        image: [...new Set([heroImage, ...galleryPhotos].filter(Boolean))].slice(0, 6),
+      }),
       ...(phone && { telephone: phone }),
       ...(contactEmail && { email: contactEmail }),
       ...(communityDenomination && { additionalType: getProfileOptionLabel(communityDenomination) }),
@@ -746,15 +757,25 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
               </h2>
             </div>
 
-            {heroImage && (
+            {aboutImage && (
               <div className="mx-auto mt-16 max-w-[1100px]">
                 <div className="relative aspect-[16/9] overflow-hidden rounded-lg shadow-[0_32px_80px_-24px_rgba(59,42,34,0.4)]">
                   <HeroImage
-                    src={heroImage}
-                    fallbackSrcs={heroImageCandidates.slice(1)}
+                    src={aboutImage}
+                    fallbackSrcs={heroImageCandidates}
                     className="absolute inset-0 h-full w-full object-cover"
                   />
                 </div>
+              </div>
+            )}
+
+            {galleryStrip.length >= 2 && (
+              <div className="mx-auto mt-4 grid max-w-[1100px] grid-cols-2 gap-4 sm:grid-cols-4">
+                {galleryStrip.map((src) => (
+                  <div key={src} className="relative aspect-square overflow-hidden rounded-lg shadow-[0_16px_40px_-16px_rgba(59,42,34,0.35)]">
+                    <HeroImage src={src} className="absolute inset-0 h-full w-full object-cover" />
+                  </div>
+                ))}
               </div>
             )}
 
@@ -937,11 +958,11 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                   </dl>
                 </div>
 
-                {whatToExpect && heroImage && (
+                {whatToExpect && expectImage && (
                   <div className="relative aspect-[4/5] overflow-hidden rounded-xl shadow-[0_32px_80px_-24px_rgba(59,42,34,0.4)]">
                     <HeroImage
-                      src={heroImage}
-                      fallbackSrcs={heroImageCandidates.slice(1)}
+                      src={expectImage}
+                      fallbackSrcs={heroImageCandidates}
                       className="absolute inset-0 h-full w-full object-cover"
                     />
                     <div
@@ -957,7 +978,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                     </div>
                   </div>
                 )}
-                {whatToExpect && !heroImage && (
+                {whatToExpect && !expectImage && (
                   <div className="rounded-xl border border-rose-gold/15 bg-white p-8">
                     <div className="mb-3 text-[11px] font-bold uppercase tracking-[0.28em] text-rose-gold">
                       What to expect
@@ -1285,10 +1306,10 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
       {/* ━━━━━━━━━━ 9. FINAL CTA: "We've saved you a seat" ━━━━━━━━━━ */}
       <ScrollReveal>
         <section className="relative mt-32 min-h-[640px] overflow-hidden bg-[#1d0f0b] text-white sm:min-h-[720px]">
-          {heroImage && (
+          {closingImage && (
             <HeroImage
-              src={heroImage}
-              fallbackSrcs={heroImageCandidates.slice(1)}
+              src={closingImage}
+              fallbackSrcs={heroImageCandidates}
               className="absolute inset-0 h-full w-full object-cover opacity-40"
             />
           )}

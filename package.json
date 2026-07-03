@@ -91,6 +91,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
     "google-auth-library": "^10.6.1",
+    "sharp": "^0.35.3",
     "tailwindcss": "^4",
     "tsx": "^4.20.6",
     "typescript": "^5",

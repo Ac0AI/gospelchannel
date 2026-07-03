@@ -549,6 +549,7 @@ export async function getChurchEnrichment(slug: string): Promise<ChurchEnrichmen
     church_size: ChurchEnrichment["churchSize"] | null;
     cover_image_url: string | null;
     logo_image_url: string | null;
+    photo_urls: string[] | null;
     seo_description: string | null;
     summary: string | null;
     pastor_name: string | null;
@@ -605,6 +606,7 @@ export async function getChurchEnrichment(slug: string): Promise<ChurchEnrichmen
     ministries: row.ministries ?? undefined,
     churchSize: row.church_size ?? undefined,
     coverImageUrl: row.cover_image_url ?? undefined,
+    photoUrls: Array.isArray(row.photo_urls) && row.photo_urls.length > 0 ? row.photo_urls : undefined,
     logoImageUrl: row.logo_image_url ?? undefined,
     seoDescription: row.seo_description ?? undefined,
     summary: row.summary ?? undefined,

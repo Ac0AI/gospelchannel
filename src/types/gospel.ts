@@ -271,6 +271,8 @@ export type ChurchEnrichment = {
   // Images
   coverImageUrl?: string;
   logoImageUrl?: string;
+  /** R2-mirrored gallery photos (photos/<slug>/<n>.webp), from Google Places imagery. */
+  photoUrls?: string[];
 
   // Profile fields
   pastorName?: string;
