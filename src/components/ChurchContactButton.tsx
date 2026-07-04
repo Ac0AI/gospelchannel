@@ -4,7 +4,17 @@ import { useEffect, useRef, useState } from "react";
 
 type Status = "idle" | "submitting" | "sent" | "error";
 
-export function ChurchContactButton({ churchSlug, churchName }: { churchSlug: string; churchName: string }) {
+export function ChurchContactButton({
+  churchSlug,
+  churchName,
+  variant = "link",
+  label,
+}: {
+  churchSlug: string;
+  churchName: string;
+  variant?: "link" | "cta-primary" | "cta-secondary";
+  label?: string;
+}) {
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -80,17 +90,29 @@ export function ChurchContactButton({ churchSlug, churchName }: { churchSlug: st
     }
   }
 
+  // Trigger styling by context: inline link (light sections) vs filled/outline
+  // pill for the dark "plan your visit" CTA where this is a first-class action.
+  const triggerClass =
+    variant === "cta-primary"
+      ? "rounded-full bg-white px-10 py-5 text-sm font-bold tracking-[0.02em] text-espresso transition-all duration-150 hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(255,255,255,0.2)]"
+      : variant === "cta-secondary"
+        ? "rounded-full border border-white/50 bg-transparent px-10 py-5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+        : "inline-flex items-center gap-1.5 text-espresso underline decoration-rose-gold/40 underline-offset-2 hover:text-rose-gold";
+  const triggerLabel = label ?? "Contact this church";
+
   return (
     <>
       <button
         type="button"
         onClick={() => { reset(); setOpen(true); }}
-        className="inline-flex items-center gap-1.5 text-espresso underline decoration-rose-gold/40 underline-offset-2 hover:text-rose-gold"
+        className={triggerClass}
       >
-        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-        </svg>
-        Contact this church
+        {variant === "link" && (
+          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+          </svg>
+        )}
+        {triggerLabel}
       </button>
 
       {open && (

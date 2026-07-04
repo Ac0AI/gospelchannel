@@ -356,6 +356,17 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
     ? church.spotifyUrl.split("/artist/")[1]?.split(/[?#]/)[0] ?? null
     : null;
 
+  // Which action leads the final "plan your visit" CTA. Prefer keeping the
+  // visitor on-site (scroll to our aggregated "Your first Sunday" planner), then
+  // our own mediated contact-through-us, then a direct action. Never a dead CTA.
+  const visitPrimary: "plan" | "message" | "directions" | "call" | "website" | null =
+    hasAboutData ? "plan"
+      : hasValidEmail ? "message"
+        : mapsHref ? "directions"
+          : phone ? "call"
+            : websiteUrl ? "website"
+              : null;
+
   const missingFields: MissingField[] = [];
   if (!hasServiceTimes) missingFields.push({ key: "service_times", label: "Service times", placeholder: "e.g. Sundays 10:00 AM" });
   if (!hasValidEmail && !phone) missingFields.push({ key: "contact", label: "Contact email", placeholder: "e.g. info@church.org" });
@@ -836,7 +847,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
       {/* ━━━━━━━━━━ 4. YOUR FIRST SUNDAY ━━━━━━━━━━ */}
       {hasAboutData && (
         <ScrollReveal>
-          <section className="px-5 pt-32 sm:px-12 sm:pt-40">
+          <section id="your-first-sunday" className="scroll-mt-24 px-5 pt-32 sm:px-12 sm:pt-40">
             <div className="mx-auto max-w-[1400px]">
               <div className="grid items-start gap-16 lg:grid-cols-2 lg:gap-20">
                 <div>
@@ -956,6 +967,22 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                     )}
                     <div className="border-t border-rose-gold/25" />
                   </dl>
+
+                  {/* Contextualised: sits right under this church's own facts, so
+                      the generic guide reads as tailored rather than a dead link. */}
+                  <a
+                    href="/guides/first-visit-guide"
+                    className="group mt-8 flex items-center justify-between gap-4 rounded-xl border border-rose-gold/20 bg-white px-6 py-5 transition-colors hover:border-rose-gold/50"
+                  >
+                    <span className="text-sm leading-relaxed text-warm-brown">
+                      <span className="font-serif text-lg font-medium text-espresso">First time in a church?</span>
+                      <br />
+                      What to wear, when to arrive, and what actually happens.
+                    </span>
+                    <span className="whitespace-nowrap text-sm font-semibold text-rose-gold transition-transform group-hover:translate-x-0.5">
+                      First visit guide &rarr;
+                    </span>
+                  </a>
                 </div>
 
                 {whatToExpect && expectImage && (
@@ -1349,15 +1376,62 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
             </p>
 
             <div className="mt-14 flex flex-wrap items-center justify-center gap-3.5">
-              {websiteUrl && (
+              {/* Primary — keep the visitor on-site (scroll to our aggregated
+                  planner) when we have one, else the strongest direct action. */}
+              {visitPrimary === "plan" && (
+                <a
+                  href="#your-first-sunday"
+                  className="rounded-full bg-white px-10 py-5 text-sm font-bold tracking-[0.02em] text-espresso transition-all duration-150 hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(255,255,255,0.2)]"
+                >
+                  Plan my first visit &rarr;
+                </a>
+              )}
+              {visitPrimary === "message" && (
+                <ChurchContactButton
+                  churchSlug={church.slug}
+                  churchName={church.name}
+                  variant="cta-primary"
+                  label="Message this church →"
+                />
+              )}
+              {visitPrimary === "directions" && mapsHref && (
+                <a
+                  href={mapsHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-full bg-white px-10 py-5 text-sm font-bold tracking-[0.02em] text-espresso transition-all duration-150 hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(255,255,255,0.2)]"
+                >
+                  Get directions &rarr;
+                </a>
+              )}
+              {visitPrimary === "call" && phone && (
+                <a
+                  href={`tel:${phone}`}
+                  className="rounded-full bg-white px-10 py-5 text-sm font-bold tracking-[0.02em] text-espresso transition-all duration-150 hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(255,255,255,0.2)]"
+                >
+                  Call {phone}
+                </a>
+              )}
+              {visitPrimary === "website" && websiteUrl && (
                 <a
                   href={websiteUrl}
                   target="_blank"
                   rel="noreferrer"
                   className="rounded-full bg-white px-10 py-5 text-sm font-bold tracking-[0.02em] text-espresso transition-all duration-150 hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(255,255,255,0.2)]"
                 >
-                  Plan my first visit &rarr;
+                  Visit their website &rarr;
                 </a>
+              )}
+
+              {/* Secondary — our mediated contact-through-us, now a first-class
+                  action (not just a no-website fallback), plus livestream. */}
+              {hasValidEmail && visitPrimary !== "message" && (
+                <ChurchContactButton
+                  churchSlug={church.slug}
+                  churchName={church.name}
+                  variant="cta-secondary"
+                  label="Message this church"
+                />
               )}
               {livestreamUrl && (
                 <a
@@ -1369,10 +1443,21 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                   Watch this Sunday&rsquo;s service
                 </a>
               )}
-              {!websiteUrl && hasValidEmail && (
-                <ChurchContactButton churchSlug={church.slug} churchName={church.name} />
-              )}
             </div>
+
+            {/* Website demoted to a quiet tertiary link when it isn't the lead action. */}
+            {websiteUrl && visitPrimary !== "website" && (
+              <div className="mt-6">
+                <a
+                  href={websiteUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-sm font-medium text-white/60 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white"
+                >
+                  Visit their website &rarr;
+                </a>
+              </div>
+            )}
 
             {(streetAddress || phone || contactEmail) && (
               <div className="mx-auto mt-20 grid max-w-3xl grid-cols-1 gap-8 border-t border-blush/20 pt-8 text-sm sm:grid-cols-3">
