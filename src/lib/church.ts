@@ -1144,6 +1144,7 @@ async function getEnrichmentMeta(): Promise<Map<string, IndexEnrichmentHint>> {
   if (isOfflinePublicBuild() || !hasServiceConfig()) return new Map();
   type EnrichmentMetaRow = {
     church_slug: string | null;
+    enrichment_status: string | null;
     summary: string | null;
     service_times: Array<{ day: string; time: string }> | null;
     street_address: string | null;
@@ -1156,8 +1157,7 @@ async function getEnrichmentMeta(): Promise<Map<string, IndexEnrichmentHint>> {
   };
   const data = await fetchAllRows((sb, from, to) =>
     sb.from<EnrichmentMetaRow[]>("church_enrichments")
-      .select("church_slug, summary, service_times, street_address, languages, instagram_url, facebook_url, youtube_url, cover_image_url, logo_image_url")
-      .eq("enrichment_status", "complete")
+      .select("church_slug, enrichment_status, summary, service_times, street_address, languages, instagram_url, facebook_url, youtube_url, cover_image_url, logo_image_url")
       .range(from, to)
   );
   const map = new Map<string, IndexEnrichmentHint>();
@@ -1174,7 +1174,9 @@ async function getEnrichmentMeta(): Promise<Map<string, IndexEnrichmentHint>> {
       hasSocial,
     });
     const hint: IndexEnrichmentHint = {
-      summary: summaryLength >= 40 ? normalizeDisplayText(row.summary as string) : undefined,
+      // AI-written summary only when verified; facts (service times, location,
+      // socials, images) surface regardless of enrichment_status.
+      summary: (row.enrichment_status === "complete" && summaryLength >= 40) ? normalizeDisplayText(row.summary as string) : undefined,
       summaryLength,
       serviceTimes,
       location: normalizeDisplayText(row.street_address as string | undefined),
@@ -1196,6 +1198,7 @@ async function getEnrichmentMeta(): Promise<Map<string, IndexEnrichmentHint>> {
 
 export function mapEnrichmentMetaRow(row: {
   church_slug: string | null;
+  enrichment_status?: string | null;
   summary: string | null;
   service_times: Array<{ day: string; time: string }> | null;
   street_address: string | null;
@@ -1221,7 +1224,8 @@ export function mapEnrichmentMetaRow(row: {
   return {
     slug: canonicalSlug,
     hint: {
-      summary: summaryLength >= 40 ? normalizeDisplayText(row.summary as string) : undefined,
+      // AI-written summary only when verified; facts surface regardless.
+      summary: (row.enrichment_status === "complete" && summaryLength >= 40) ? normalizeDisplayText(row.summary as string) : undefined,
       summaryLength,
       serviceTimes,
       location: normalizeDisplayText(row.street_address as string | undefined),
@@ -1239,6 +1243,7 @@ async function getEnrichmentMetaForSlugs(slugs: string[]): Promise<Map<string, I
   const sb = createAdminClient();
   type EnrichmentMetaRow = {
     church_slug: string | null;
+    enrichment_status: string | null;
     summary: string | null;
     service_times: Array<{ day: string; time: string }> | null;
     street_address: string | null;
@@ -1252,8 +1257,7 @@ async function getEnrichmentMetaForSlugs(slugs: string[]): Promise<Map<string, I
   const lookupSlugs = Array.from(new Set(slugs.flatMap((slug) => getChurchSlugLookupCandidates(slug))));
   const { data } = await sb
     .from<EnrichmentMetaRow>("church_enrichments")
-    .select("church_slug, summary, service_times, street_address, languages, instagram_url, facebook_url, youtube_url, cover_image_url, logo_image_url")
-    .eq("enrichment_status", "complete")
+    .select("church_slug, enrichment_status, summary, service_times, street_address, languages, instagram_url, facebook_url, youtube_url, cover_image_url, logo_image_url")
     .in("church_slug", lookupSlugs);
 
   const map = new Map<string, IndexEnrichmentHint>();
@@ -1462,7 +1466,6 @@ function buildChurchIndexWhereClause(filters: ChurchDirectoryFilters) {
       OR EXISTS (
         SELECT 1 FROM church_enrichments ce
         WHERE ce.church_slug = churches.slug
-          AND ce.enrichment_status = 'complete'
           AND array_to_string(ce.languages, ' ') ILIKE $${index}
       )
     )`);
@@ -1472,7 +1475,6 @@ function buildChurchIndexWhereClause(filters: ChurchDirectoryFilters) {
     clauses.push(`EXISTS (
       SELECT 1 FROM church_enrichments ce
       WHERE ce.church_slug = churches.slug
-        AND ce.enrichment_status = 'complete'
         AND (ce.children_ministry = true OR ce.youth_ministry = true)
     )`);
   }
@@ -1481,7 +1483,6 @@ function buildChurchIndexWhereClause(filters: ChurchDirectoryFilters) {
     clauses.push(`EXISTS (
       SELECT 1 FROM church_enrichments ce
       WHERE ce.church_slug = churches.slug
-        AND ce.enrichment_status = 'complete'
         AND ce.service_times IS NOT NULL
         AND jsonb_typeof(ce.service_times) = 'array'
         AND jsonb_array_length(ce.service_times) > 0
