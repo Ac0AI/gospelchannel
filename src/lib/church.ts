@@ -573,11 +573,16 @@ export async function getChurchEnrichment(slug: string): Promise<ChurchEnrichmen
   const { data } = await sb
     .from<ChurchEnrichmentRow>("church_enrichments")
     .select("*")
-    .in("church_slug", getChurchSlugLookupCandidates(canonicalSlug))
-    .eq("enrichment_status", "complete");
+    .in("church_slug", getChurchSlugLookupCandidates(canonicalSlug));
   const enrichmentRows = (data as ChurchEnrichmentRow[] | null) ?? [];
   const row = enrichmentRows.find((entry) => entry.church_slug === canonicalSlug) ?? enrichmentRows[0] ?? null;
   if (!row) return null;
+  // Surface FACTUAL fields (address, service times, phone, maps, socials, photos)
+  // for every church, but expose AI-GENERATED prose/inference (summary, SEO copy,
+  // what-to-expect, visitor FAQ, pastor, fit tags, theology) only once the
+  // enrichment is verified ("complete"). Previously the whole row was gated on
+  // "complete", which hid trustworthy facts for ~25.7k "pending" churches.
+  const verified = row.enrichment_status === "complete";
   return {
     id: row.id,
     churchSlug: row.church_slug ?? undefined,
@@ -588,7 +593,7 @@ export async function getChurchEnrichment(slug: string): Promise<ChurchEnrichmen
     latitude: row.latitude ?? undefined,
     longitude: row.longitude ?? undefined,
     serviceTimes: row.service_times ?? undefined,
-    theologicalOrientation: row.theological_orientation ?? undefined,
+    theologicalOrientation: verified ? (row.theological_orientation ?? undefined) : undefined,
     denominationNetwork: row.denomination_network ?? undefined,
     languages: row.languages ?? undefined,
     phone: row.phone ?? undefined,
@@ -608,18 +613,18 @@ export async function getChurchEnrichment(slug: string): Promise<ChurchEnrichmen
     coverImageUrl: row.cover_image_url ?? undefined,
     photoUrls: Array.isArray(row.photo_urls) && row.photo_urls.length > 0 ? row.photo_urls : undefined,
     logoImageUrl: row.logo_image_url ?? undefined,
-    seoDescription: row.seo_description ?? undefined,
-    summary: row.summary ?? undefined,
-    pastorName: row.pastor_name ?? undefined,
-    pastorTitle: row.pastor_title ?? undefined,
-    pastorPhotoUrl: row.pastor_photo_url ?? undefined,
+    seoDescription: verified ? (row.seo_description ?? undefined) : undefined,
+    summary: verified ? (row.summary ?? undefined) : undefined,
+    pastorName: verified ? (row.pastor_name ?? undefined) : undefined,
+    pastorTitle: verified ? (row.pastor_title ?? undefined) : undefined,
+    pastorPhotoUrl: verified ? (row.pastor_photo_url ?? undefined) : undefined,
     livestreamUrl: row.livestream_url ?? undefined,
     givingUrl: row.giving_url ?? undefined,
-    whatToExpect: row.what_to_expect ?? undefined,
+    whatToExpect: verified ? (row.what_to_expect ?? undefined) : undefined,
     serviceDurationMinutes: row.service_duration_minutes ?? undefined,
     parkingInfo: row.parking_info ?? undefined,
-    goodFitTags: row.good_fit_tags ?? undefined,
-    visitorFaq: row.visitor_faq ?? undefined,
+    goodFitTags: verified ? (row.good_fit_tags ?? undefined) : undefined,
+    visitorFaq: verified ? (row.visitor_faq ?? undefined) : undefined,
     sources: row.sources ?? undefined,
     enrichmentStatus: row.enrichment_status,
     confidence: row.confidence,
