@@ -115,3 +115,12 @@ docs/lemlist-tools/
 
 # European Church Tech 2026 dataset — separate published repo, not source
 data-release/
+
+# Raw Apify Google Places archive (contains addresses/phones — never commit)
+data/places-raw/
+
+# Recovered gstack design docs (internal strategy — never commit to public repo)
+docs/design/
+
+# Prospect audit reports (contact data — internal)
+data/audits/

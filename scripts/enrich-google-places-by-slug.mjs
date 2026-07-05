@@ -27,6 +27,7 @@
 
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { writeFileSync, mkdirSync } from "node:fs";
 import { neon } from "@neondatabase/serverless";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
@@ -52,6 +53,8 @@ function parseArgs(argv) {
     force: false,
     dryRun: false,
     missingHero: false,
+    needsReviews: false,
+    city: "",
     minScore: DEFAULT_MIN_SCORE,
     chunkSize: 500,
     parallelRuns: 2,
@@ -60,6 +63,8 @@ function parseArgs(argv) {
     if (a === "--dry-run") o.dryRun = true;
     else if (a === "--force") o.force = true;
     else if (a === "--missing-hero") o.missingHero = true;
+    else if (a === "--needs-reviews") o.needsReviews = true;
+    else if (a.startsWith("--city=")) o.city = a.split("=")[1];
     else if (a.startsWith("--country=")) o.country = a.split("=")[1];
     else if (a.startsWith("--slugs=")) o.slugs = a.split("=")[1].split(",").map((s) => s.trim()).filter(Boolean);
     else if (a.startsWith("--reason-prefix=")) o.reasonPrefix = a.split("=")[1];
@@ -111,6 +116,36 @@ async function loadTargets(sql, options) {
       WHERE slug = ANY(${options.slugs}::text[]) AND status = 'approved'
     `;
   }
+  // City-scoped size enrichment (--needs-reviews [--city=slug]): churches that
+  // lack Google review data — our "how big / can they pay" signal for the
+  // "financially strong + weak tech" ICP. Unlike the default path this
+  // deliberately INCLUDES churches that already have a website: the DIY/
+  // amateur-web (and no-web-at-all) prospects are exactly the ones we size.
+  if (options.needsReviews) {
+    return options.city
+      ? sql`
+          SELECT c.slug, c.name, c.location, c.country, c.website, c.header_image
+          FROM churches c
+          LEFT JOIN church_enrichments e ON e.church_slug = c.slug
+          WHERE c.status = 'approved'
+            AND c.city_slug = ${options.city}
+            AND (${options.country || null}::text IS NULL OR c.country = ${options.country || null})
+            AND e.google_reviews_count IS NULL
+          ORDER BY (c.website IS NOT NULL AND c.website <> '') DESC, c.slug
+          LIMIT ${options.limit}
+        `
+      : sql`
+          SELECT c.slug, c.name, c.location, c.country, c.website, c.header_image
+          FROM churches c
+          LEFT JOIN church_enrichments e ON e.church_slug = c.slug
+          WHERE c.status = 'approved'
+            AND (${options.country || null}::text IS NULL OR c.country = ${options.country || null})
+            AND e.google_reviews_count IS NULL
+          ORDER BY c.slug
+          LIMIT ${options.limit}
+        `;
+  }
+
   // Hero-image backfill: indexable on-brand churches missing a header image,
   // highest display_score first. Off-brand (mainline/liturgical) excluded so we
   // don't spend Apify on noindex pages. See music-style/indexation concentration.
@@ -521,6 +556,22 @@ async function main() {
   );
   console.log(`Apify returned ${results.length} total results`);
 
+  // Never waste a paid result: archive EVERY raw Apify item to disk (JSONL),
+  // including queries with no confident DB match. The DB keeps only confident
+  // matches (to protect signal integrity); this file keeps the full haul so
+  // nothing we paid for is ever discarded. data/places-raw/ is gitignored.
+  try {
+    const rawDir = join(ROOT_DIR, "data", "places-raw");
+    mkdirSync(rawDir, { recursive: true });
+    const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const tag = (options.city || options.country || "run").replace(/[^a-z0-9-]/gi, "_");
+    const rawFile = join(rawDir, `${stamp}-${tag}.jsonl`);
+    writeFileSync(rawFile, results.map((r) => JSON.stringify(r)).join("\n") + (results.length ? "\n" : ""));
+    console.log(`Archived ${results.length} raw Apify items → ${rawFile}`);
+  } catch (e) {
+    console.log(`Raw archive failed (non-fatal): ${e.message}`);
+  }
+
   // Back-map Apify results by the exact searchString field so we don't rely
   // on positional alignment (Apify may skip queries with no results).
   const resultsByQuery = new Map();
@@ -609,6 +660,17 @@ async function main() {
       churchValues.push(heroImage);
       churchUpdates.push(`header_image_attribution = COALESCE(NULLIF(header_image_attribution, ''), $${churchValues.length + 1})`);
       churchValues.push("google-places");
+    }
+    // Harvest more of the paid place detail into the LIVE directory (not just
+    // church_enrichments): phone + service times upgrade the public church page
+    // and feed the authority flywheel. COALESCE so we never overwrite existing.
+    if (phone) {
+      churchUpdates.push(`phone = COALESCE(NULLIF(phone, ''), $${churchValues.length + 1})`);
+      churchValues.push(phone);
+    }
+    if (serviceTimes) {
+      churchUpdates.push(`service_times = COALESCE(service_times, $${churchValues.length + 1}::jsonb)`);
+      churchValues.push(JSON.stringify(serviceTimes));
     }
     if (place.permanentlyClosed === true) {
       churchUpdates.push(`status = $${churchValues.length + 1}`);
