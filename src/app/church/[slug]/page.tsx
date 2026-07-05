@@ -13,6 +13,7 @@ import { NearbyChurchesSection } from "@/components/NearbyChurchesSection";
 import { PlayAllButton } from "@/components/PlayAllButton";
 import { ServiceTimesDisplay } from "@/components/ServiceTimesDisplay";
 import { SpotifyEmbedCard } from "@/components/SpotifyEmbedCard";
+import { ChurchSongsList } from "@/components/ChurchSongsList";
 import { SpotifyPlaylistShelf } from "@/components/SpotifyPlaylistShelf";
 import { ChurchPagePrayerSection } from "@/components/ChurchPagePrayerSection";
 import { ChurchViewerActions } from "@/components/ChurchViewerActions";
@@ -207,7 +208,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   const pageData = await getChurchPublicPageData(canonicalSlug);
   if (!pageData) notFound();
 
-  const { church, videos, latestUpdates, enrichment, mergedProfile } = pageData;
+  const { church, videos, latestUpdates, enrichment, mergedProfile, topSongs } = pageData;
   const network = "network" in pageData ? pageData.network as import("@/types/gospel").ChurchNetwork | undefined : undefined;
   const isCampus = "isCampus" in pageData ? (pageData.isCampus as boolean) : false;
   const parentChurchName = "parentChurchName" in pageData ? (pageData.parentChurchName as string | undefined) : undefined;
@@ -539,6 +540,25 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
           "@context": "https://schema.org",
           "@type": "FAQPage",
           mainEntity: faqMainEntity,
+        }]
+      : []),
+    // What they sing — from the playlist.church corpus (church_songs)
+    ...(topSongs.length >= 3
+      ? [{
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: `Worship songs ${church.name} sings`,
+          numberOfItems: topSongs.length,
+          itemListElement: topSongs.map((song) => ({
+            "@type": "ListItem",
+            position: song.rank,
+            item: {
+              "@type": "MusicRecording",
+              name: song.title,
+              byArtist: { "@type": "MusicGroup", name: song.artistName },
+              url: song.playlistChurchUrl,
+            },
+          })),
         }]
       : []),
   ];
@@ -1132,6 +1152,21 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                 </div>
               )}
             </div>
+          </section>
+        </ScrollReveal>
+      )}
+
+      {/* ━━━━━━━━━━ 5b. WHAT THEY SING (playlist.church corpus) ━━━━━━━━━━ */}
+      {topSongs.length >= 3 && (
+        <ScrollReveal>
+          <section className="mx-auto mt-14 w-full max-w-5xl px-4 sm:px-6">
+            <ChurchSongsList
+              eyebrow="What they sing"
+              title={`The songs ${church.name} actually sings`}
+              subtitle={`From their real worship playlists, ranked by how many churches worldwide sing each song.${pageData.isCampus && pageData.parentChurchName ? ` Music from ${pageData.parentChurchName}, shared across all campuses.` : ""}`}
+              songs={topSongs}
+              chartHref={`https://playlist.church/church/${pageData.isCampus && pageData.network?.parentChurchSlug ? pageData.network.parentChurchSlug : church.slug}/`}
+            />
           </section>
         </ScrollReveal>
       )}

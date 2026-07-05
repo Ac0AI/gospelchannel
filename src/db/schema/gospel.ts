@@ -344,6 +344,29 @@ export const churchEnrichments = pgTable(
   }),
 );
 
+// Top worship songs per church, synced wholesale from the playlist.church
+// corpus (playlists repo: pipeline/src/sync-to-gospel.mjs). Read-only here —
+// playlists replaces all rows per sync inside one transaction.
+export const churchSongs = pgTable(
+  "church_songs",
+  {
+    churchSlug: text("church_slug")
+      .notNull()
+      .references(() => churches.slug, { onDelete: "cascade" }),
+    rank: integer("rank").notNull(),
+    title: text("title").notNull(),
+    artistName: text("artist_name").notNull(),
+    artUrl: text("art_url"),
+    adoptionCount: integer("adoption_count").notNull().default(0),
+    spotifyTrackId: text("spotify_track_id"),
+    playlistChurchUrl: text("playlist_church_url").notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.churchSlug, table.rank] }),
+  }),
+);
+
 export const churchProfileEdits = pgTable(
   "church_profile_edits",
   {

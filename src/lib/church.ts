@@ -4,7 +4,7 @@ import { uniqueSpotifyPlaylistIds } from "@/lib/spotify-playlist";
 import type { ChurchProfileEdit, YouTubeVideo, ChurchEnrichment, ChurchProfileScore } from "@/types/gospel";
 import type { ChurchConfig } from "@/types/gospel";
 import { CHURCH_INDEX_TAG, getChurchBySlugAsync, getLocalChurchSnapshot } from "@/lib/content";
-import { getSql } from "@/db";
+import { getSql, hasDatabaseConfig } from "@/db";
 import { CONTENT_UPDATED_AT, normalizeText, tokenSimilarity } from "@/lib/utils";
 import { hasServiceConfig, createAdminClient } from "@/lib/neon-client";
 import { getCampusBySlug } from "@/lib/church-networks";
@@ -821,9 +821,10 @@ async function _getChurchPublicPageData(slug: string) {
   const timings: ChurchTimingMap = {};
   const church = await measureChurchStep(timings, "public.base", () => getChurchBySlugAsync(slug));
 
-  const [enrichment, edits] = await Promise.all([
+  const [enrichment, edits, topSongs] = await Promise.all([
     measureChurchStep(timings, "public.enrichment", () => getChurchEnrichment(slug)),
     measureChurchStep(timings, "public.edits", () => getApprovedProfileEditsForChurch(slug)),
+    measureChurchStep(timings, "public.songs", () => getChurchTopSongs(slug)),
   ]);
 
   if (church) {
@@ -886,6 +887,7 @@ async function _getChurchPublicPageData(slug: string) {
       mergedProfile,
       badgeEligible: isBadgeEligibleFromMergedProfile(mergedProfile),
       updatedAt: metrics.verifiedAt,
+      topSongs,
       network: undefined,
       campusCount: 0,
       isCampus: false,
@@ -899,6 +901,10 @@ async function _getChurchPublicPageData(slug: string) {
   const parentChurch = campus.network.parentChurchSlug
     ? await getChurchBySlugAsync(campus.network.parentChurchSlug)
     : null;
+  // campuses inherit the parent's music, exactly like playlists/videos
+  const campusTopSongs = await measureChurchStep(timings, "public.campus_songs", () =>
+    getChurchTopSongs(campus.network.parentChurchSlug ?? slug),
+  );
 
   const campusAsChurch: ChurchConfig = {
     slug: campus.slug,
@@ -971,6 +977,7 @@ async function _getChurchPublicPageData(slug: string) {
     mergedProfile,
     badgeEligible: isBadgeEligibleFromMergedProfile(mergedProfile),
     updatedAt: campus.updatedAt,
+    topSongs: campusTopSongs,
     network: campus.network,
     campusCount: 0,
     isCampus: true,
@@ -1010,6 +1017,50 @@ export const getChurchPublicPageData = unstable_cache(
  * intentionally omitted — coords are a backfill-time tiebreak, not a render
  * concern; the presentational component now treats distance as optional.
  */
+
+/**
+ * Top worship songs for a church, from the playlist.church corpus (synced
+ * into church_songs by the playlists repo — see drizzle/0019). Read-only,
+ * PK-indexed single-key lookup; rides the church-page unstable_cache.
+ */
+export type ChurchTopSong = {
+  rank: number;
+  title: string;
+  artistName: string;
+  artUrl: string | null;
+  adoptionCount: number;
+  spotifyTrackId: string | null;
+  playlistChurchUrl: string;
+};
+
+export async function getChurchTopSongs(slug: string): Promise<ChurchTopSong[]> {
+  if (!hasDatabaseConfig()) return [];
+  try {
+    const rows = (await getSql()`
+      SELECT rank, title, artist_name, art_url, adoption_count, spotify_track_id, playlist_church_url
+        FROM church_songs
+       WHERE church_slug = ${slug}
+       ORDER BY rank ASC
+       LIMIT 10
+    `) as Array<{
+      rank: number; title: string; artist_name: string; art_url: string | null;
+      adoption_count: number; spotify_track_id: string | null; playlist_church_url: string;
+    }>;
+    return rows.map((r) => ({
+      rank: r.rank,
+      title: r.title,
+      artistName: r.artist_name,
+      artUrl: r.art_url,
+      adoptionCount: r.adoption_count,
+      spotifyTrackId: r.spotify_track_id,
+      playlistChurchUrl: r.playlist_church_url,
+    }));
+  } catch {
+    // table may not exist yet in a fresh environment — the section just hides
+    return [];
+  }
+}
+
 export async function getRelatedChurches(
   slug: string,
 ): Promise<Array<{ slug: string; name: string; country: string; location?: string }>> {
