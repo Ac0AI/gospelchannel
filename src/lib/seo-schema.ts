@@ -164,3 +164,49 @@ export function buildItemListSchema(args: {
     })),
   };
 }
+
+const DAY_OF_WEEK: Record<string, string> = {
+  sunday: "https://schema.org/Sunday",
+  monday: "https://schema.org/Monday",
+  tuesday: "https://schema.org/Tuesday",
+  wednesday: "https://schema.org/Wednesday",
+  thursday: "https://schema.org/Thursday",
+  friday: "https://schema.org/Friday",
+  saturday: "https://schema.org/Saturday",
+};
+
+export type OpeningHoursInput = { day: string; time: string };
+
+/**
+ * Map service times ({day, time} strings) to schema.org
+ * openingHoursSpecification entries. Only entries whose day matches an
+ * English weekday (singular or plural, any case) AND whose time parses to
+ * HH:MM (12h with am/pm, or 24h) are emitted; everything else is skipped —
+ * partial data beats malformed markup.
+ */
+export function buildOpeningHours(times: OpeningHoursInput[]): {
+  "@type": "OpeningHoursSpecification";
+  dayOfWeek: string;
+  opens: string;
+}[] {
+  const out: { "@type": "OpeningHoursSpecification"; dayOfWeek: string; opens: string }[] = [];
+  for (const entry of times) {
+    const dayKey = entry.day.trim().toLowerCase().replace(/s$/, "");
+    const dayOfWeek = DAY_OF_WEEK[dayKey];
+    if (!dayOfWeek) continue;
+    const match = entry.time.trim().match(/^(\d{1,2})[:.](\d{2})\s*(am|pm)?$/i);
+    if (!match) continue;
+    let hours = Number(match[1]);
+    const minutes = match[2];
+    const meridiem = match[3]?.toLowerCase();
+    if (meridiem === "pm" && hours < 12) hours += 12;
+    if (meridiem === "am" && hours === 12) hours = 0;
+    if (hours > 23 || Number(minutes) > 59) continue;
+    out.push({
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek,
+      opens: `${String(hours).padStart(2, "0")}:${minutes}`,
+    });
+  }
+  return out;
+}

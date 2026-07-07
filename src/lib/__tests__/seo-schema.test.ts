@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildArticleSchema, buildGuideSchema, buildHowToSchema, buildItemListSchema } from "@/lib/seo-schema";
+import { buildArticleSchema, buildGuideSchema, buildHowToSchema, buildItemListSchema, buildOpeningHours } from "@/lib/seo-schema";
 
 describe("seo schema", () => {
   it("adds optional about and mention entities to article schema", () => {
@@ -132,5 +132,50 @@ describe("seo schema", () => {
         },
       ],
     });
+  });
+
+  it("maps Sunday 10:00 AM to a single opening-hours entry", () => {
+    const hours = buildOpeningHours([{ day: "Sunday", time: "10:00 AM" }]);
+
+    expect(hours).toHaveLength(1);
+    expect(hours[0].dayOfWeek).toMatch(/\/Sunday$/);
+    expect(hours[0].opens).toBe("10:00");
+  });
+
+  it("handles plural day names and PM conversion", () => {
+    const hours = buildOpeningHours([{ day: "Sundays", time: "4:30 pm" }]);
+
+    expect(hours).toHaveLength(1);
+    expect(hours[0].opens).toBe("16:30");
+  });
+
+  it("handles 12am/12pm edge cases", () => {
+    const midnight = buildOpeningHours([{ day: "Sunday", time: "12:00 am" }]);
+    const noon = buildOpeningHours([{ day: "Sunday", time: "12:15 PM" }]);
+
+    expect(midnight[0].opens).toBe("00:00");
+    expect(noon[0].opens).toBe("12:15");
+  });
+
+  it("skips entries with an unrecognized day or unparseable time", () => {
+    const badDay = buildOpeningHours([{ day: "Weekly", time: "10:00 AM" }]);
+    const badTime = buildOpeningHours([{ day: "Sunday", time: "morning" }]);
+
+    expect(badDay).toEqual([]);
+    expect(badTime).toEqual([]);
+  });
+
+  it("keeps only valid entries from a mixed list, preserving order", () => {
+    const hours = buildOpeningHours([
+      { day: "Sunday", time: "9:00 AM" },
+      { day: "Weekly", time: "10:00 AM" },
+      { day: "Wednesday", time: "7:00 pm" },
+      { day: "Sunday", time: "morning" },
+    ]);
+
+    expect(hours).toEqual([
+      { "@type": "OpeningHoursSpecification", dayOfWeek: "https://schema.org/Sunday", opens: "09:00" },
+      { "@type": "OpeningHoursSpecification", dayOfWeek: "https://schema.org/Wednesday", opens: "19:00" },
+    ]);
   });
 });

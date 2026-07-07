@@ -262,6 +262,10 @@ export type ChurchEnrichment = {
   youtubeSubscribers?: number;
   socialStatsFetchedAt?: string;
 
+  /** Google Places rating, 1.0-5.0, harvested from Places data. Factual, not AI-generated. */
+  googleRating?: number;
+  googleReviewsCount?: number;
+
   // Level 2
   childrenMinistry?: boolean;
   youthMinistry?: boolean;

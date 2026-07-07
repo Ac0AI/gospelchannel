@@ -529,6 +529,8 @@ export async function getChurchEnrichment(slug: string): Promise<ChurchEnrichmen
     google_maps_url: string | null;
     latitude: number | null;
     longitude: number | null;
+    google_rating: number | null;
+    google_reviews_count: number | null;
     service_times: ChurchEnrichment["serviceTimes"] | null;
     theological_orientation: string | null;
     denomination_network: string | null;
@@ -592,6 +594,14 @@ export async function getChurchEnrichment(slug: string): Promise<ChurchEnrichmen
     googleMapsUrl: row.google_maps_url ?? undefined,
     latitude: row.latitude ?? undefined,
     longitude: row.longitude ?? undefined,
+    googleRating:
+      row.google_rating != null && Number.isFinite(Number(row.google_rating))
+        ? Number(row.google_rating)
+        : undefined,
+    googleReviewsCount:
+      row.google_reviews_count != null && Number.isFinite(Number(row.google_reviews_count))
+        ? Number(row.google_reviews_count)
+        : undefined,
     serviceTimes: row.service_times ?? undefined,
     theologicalOrientation: verified ? (row.theological_orientation ?? undefined) : undefined,
     denominationNetwork: row.denomination_network ?? undefined,

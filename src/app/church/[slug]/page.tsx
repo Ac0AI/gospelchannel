@@ -49,6 +49,7 @@ import { resolveCanonicalChurchSlug } from "@/lib/church-slugs";
 import { CHURCH_SIZE_LABELS, getProfileOptionLabel } from "@/lib/profile-fields";
 import { buildChurchDescription, buildChurchTitle } from "@/lib/church-metadata";
 import { serializeJsonLd } from "@/lib/json-ld";
+import { buildOpeningHours } from "@/lib/seo-schema";
 
 type ChurchPageProps = {
   params: Promise<{ slug: string }>;
@@ -351,6 +352,11 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   if (instagramUrl) socialLinks.push({ platform: "Instagram", url: instagramUrl, icon: "instagram" });
   if (facebookUrl) socialLinks.push({ platform: "Facebook", url: facebookUrl, icon: "facebook" });
 
+  const googleRating = enrichment?.googleRating;
+  const googleReviewsCount = enrichment?.googleReviewsCount;
+  const showGoogleRating = Boolean(
+    googleRating && googleRating >= 1 && googleRating <= 5 && googleReviewsCount && googleReviewsCount >= 3
+  );
   const pastorName = (mergedProfile.pastorName as string | undefined) || enrichment?.pastorName || undefined;
   const pastorTitle = (mergedProfile.pastorTitle as string | undefined) || enrichment?.pastorTitle || undefined;
   const livestreamUrl = isValidPublicUrl((mergedProfile.livestreamUrl as string | undefined) || enrichment?.livestreamUrl)
@@ -437,6 +443,9 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   const profileEvidenceSignals: ProfileEvidenceSignal[] = [
     locationEvidence
       ? { key: "location", label: "Location proof", value: locationEvidence, href: mapsHref }
+      : null,
+    showGoogleRating
+      ? { key: "google-rating", label: "Google rating", value: `${googleRating!.toFixed(1)} of 5 (${googleReviewsCount!.toLocaleString("en-US")} Google reviews)`, href: mapsHref }
       : null,
     serviceTimeLabel
       ? { key: "service-times", label: "Sunday timing", value: serviceTimeLabel, href: "#your-first-sunday" }
@@ -570,6 +579,34 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
       ...(serviceDurationMinutes && { eventSchedule: { "@type": "Schedule", duration: `PT${serviceDurationMinutes}M` } }),
       ...(parkingInfo && { amenityFeature: { "@type": "LocationFeatureSpecification", name: "Parking", value: parkingInfo } }),
       ...(goodFitTags && goodFitTags.length > 0 && { keywords: goodFitTags.join(", ") }),
+      ...(showGoogleRating && {
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue: googleRating,
+          reviewCount: googleReviewsCount,
+          bestRating: 5,
+          worstRating: 1,
+        },
+      }),
+      ...(serviceTimes.length > 0 && (() => {
+        const openingHours = buildOpeningHours(serviceTimes);
+        return openingHours.length > 0 ? { openingHoursSpecification: openingHours } : {};
+      })()),
+      ...(socialLinks.length > 0 && { sameAs: socialLinks.map((link) => link.url) }),
+      ...(pastorName && {
+        employee: {
+          "@type": "Person",
+          name: pastorName,
+          ...(pastorTitle && { jobTitle: pastorTitle }),
+        },
+      }),
+      ...(livestreamUrl && {
+        potentialAction: {
+          "@type": "WatchAction",
+          target: livestreamUrl,
+          name: "Watch the Sunday service online",
+        },
+      }),
     },
     ...(allPlaylists.length > 0 && videos.length > 0 ? [{
       "@context": "https://schema.org",
