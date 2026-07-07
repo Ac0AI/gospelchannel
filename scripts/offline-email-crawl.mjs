@@ -24,6 +24,7 @@ import { fileURLToPath } from "node:url";
 import { existsSync, readFileSync, appendFileSync } from "node:fs";
 import { neon } from "@neondatabase/serverless";
 import { loadLocalEnv } from "./lib/local-env.mjs";
+import { isPlausibleContactEmail } from "./lib/website-contact.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(resolve(__dirname, ".."));
@@ -60,8 +61,8 @@ function extractEmails(html) {
   for (const m of html.matchAll(mailto)) found.add(m[1].toLowerCase());
   for (const m of html.matchAll(plain)) found.add(m[0].toLowerCase());
   return [...found].filter((email) =>
+    isPlausibleContactEmail(email) &&
     !IGNORED_EMAIL_PATTERNS.some((p) => p.test(email)) &&
-    !email.endsWith(".png") && !email.endsWith(".jpg") &&
     !email.includes("sentry") && !email.includes("cloudflare")
   );
 }

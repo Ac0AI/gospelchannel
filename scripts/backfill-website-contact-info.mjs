@@ -19,6 +19,7 @@ import { neon } from "@neondatabase/serverless";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadLocalEnv } from "./lib/local-env.mjs";
+import { isPlausibleContactEmail } from "./lib/website-contact.mjs";
 import { mapWithConcurrency, sleep } from "./lib/enrichment/rate-limiter.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -50,7 +51,7 @@ function extractEmails(html) {
   const out = new Set();
   for (const m of html.matchAll(mailto)) out.add(m[1].toLowerCase());
   for (const m of html.matchAll(plain)) out.add(m[0].toLowerCase());
-  return [...out].filter((e) => !IGNORED_EMAIL_PATTERNS.some((re) => re.test(e)));
+  return [...out].filter((e) => isPlausibleContactEmail(e) && !IGNORED_EMAIL_PATTERNS.some((re) => re.test(e)));
 }
 
 function pickBestEmail(emails, churchName) {
