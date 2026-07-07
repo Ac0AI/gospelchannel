@@ -59,15 +59,15 @@ const FEATURES = [
 
 const STEPS = [
   { n: "1", t: "Find or add", d: "Search for your church. If we have it, claim it. If not, add it in 2 minutes." },
-  { n: "2", t: "Verify", d: "We send a code to the church email or phone on file. One step." },
+  { n: "2", t: "Verify", d: "We check your claim against the church's official email or website and approve it, usually within a day." },
   { n: "3", t: "Polish", d: "Add photos, music links, service times. Live preview as you go." },
-  { n: "4", t: "Publish", d: "Press publish. The page is live. Edit anytime, no review queue." },
+  { n: "4", t: "Publish", d: "Your page is live from day one. Submit edits anytime and we publish them after a quick review." },
 ];
 
 const FAQ = [
   { q: "Who runs GospelChannel?", a: "A small team based in Stockholm with backgrounds in tech and ministry. We're independent and not affiliated with any single denomination or network." },
   { q: "What if my church doesn't have great photos?", a: "Use the no-photo layout — we generate a beautiful color page using your tradition's palette. Many small churches choose this even when they have photos." },
-  { q: "Can I edit the page anytime?", a: "Yes. Changes are live immediately. No review queue. You can also add multiple admins from your team." },
+  { q: "Can I edit the page anytime?", a: "Yes. Submit changes anytime and they go live after a quick review, usually the same day. You can also add multiple admins from your team." },
   { q: "Will you email my visitors?", a: "Never. Visitors who tap your contact button go to your channels, not ours. We don't have a newsletter to push them into." },
   { q: "What about prayer requests?", a: "If you turn on the wall, prayers come into a moderation inbox you control. Volunteers from your church can moderate together." },
   { q: "Can I delete my church anytime?", a: "Yes. One click in the dashboard. The page disappears. We don't keep an archive." },
@@ -153,19 +153,19 @@ export default async function ForChurchesPage() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
-                href="/church/suggest"
+                href="/church"
                 className="rounded-full bg-rose-gold px-7 py-4 text-sm font-bold text-white transition-all duration-150 hover:-translate-y-px hover:bg-rose-gold-deep hover:shadow-[0_8px_24px_rgba(176,106,80,0.3)]"
               >
-                Add your church
+                Claim your church page
               </Link>
               <Link
-                href="/church"
+                href="/church/suggest"
                 className="rounded-full border border-rose-gold/30 px-7 py-4 text-sm font-semibold text-espresso transition-colors hover:bg-rose-gold/[0.06]"
               >
-                Claim existing page
+                Add a new church
               </Link>
             </div>
-            <p className="mt-4 text-xs text-muted-warm">Takes 4 minutes. Completely free.</p>
+            <p className="mt-4 text-xs text-muted-warm">Free forever. Claiming takes about 4 minutes.</p>
           </div>
 
           <div className="relative">
@@ -317,10 +317,10 @@ export default async function ForChurchesPage() {
             We take a small donation from supporting churches who want to. We don&rsquo;t run ads. We don&rsquo;t sell data. We don&rsquo;t gate features. The same page Hillsong has, your village parish has.
           </p>
           <Link
-            href="/church/suggest"
+            href="/church"
             className="mt-8 inline-flex rounded-full bg-linen px-7 py-4 text-sm font-bold text-espresso transition-all duration-150 hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(255,255,255,0.15)]"
           >
-            Add your church free
+            Claim your church page
           </Link>
         </div>
       </section>
@@ -367,10 +367,10 @@ export default async function ForChurchesPage() {
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link
-            href="/church/suggest"
+            href="/church"
             className="rounded-full bg-rose-gold px-7 py-4 text-sm font-bold text-white transition-all duration-150 hover:-translate-y-px hover:bg-rose-gold-deep hover:shadow-[0_8px_24px_rgba(176,106,80,0.3)]"
           >
-            Add your church free
+            Claim your church page
           </Link>
           <Link
             href="/contact"
