@@ -10,7 +10,7 @@ import { hasServiceConfig, createAdminClient } from "@/lib/neon-client";
 import { getCampusBySlug } from "@/lib/church-networks";
 import { getApprovedProfileEditsForChurch, buildMergedProfile } from "@/lib/church-profile";
 import { calculateProfileScore } from "@/lib/profile-score";
-import { rewriteLegacyMediaUrl } from "@/lib/media";
+import { rewriteLegacyMediaUrl, rewriteSpotifyArtUrl } from "@/lib/media";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
 import {
   filterCanonicalChurchSlugRecords,
@@ -1060,7 +1060,7 @@ export async function getChurchTopSongs(slug: string): Promise<ChurchTopSong[]> 
       rank: r.rank,
       title: r.title,
       artistName: r.artist_name,
-      artUrl: r.art_url,
+      artUrl: rewriteSpotifyArtUrl(r.art_url),
       adoptionCount: r.adoption_count,
       spotifyTrackId: r.spotify_track_id,
       playlistChurchUrl: r.playlist_church_url,
