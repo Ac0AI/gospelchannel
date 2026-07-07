@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getLondonCharismaticChurches } from "@/lib/discovery-churches";
+import {
+  buildDiscoveryChurchProofs,
+  formatDiscoveryLanguage,
+  formatDiscoveryStyles,
+  getLondonCharismaticChurches,
+} from "@/lib/discovery-churches";
 
 // Proof-of-concept discovery page: an answer-shaped, citeable page for the exact
 // query AI assistants (ChatGPT/Bing/Perplexity) get asked — "charismatic /
@@ -11,35 +16,6 @@ export const dynamic = "force-dynamic";
 const PATH = "/church/charismatic-churches-in-london";
 const CANONICAL = `https://gospelchannel.com${PATH}`;
 const MIN_INDEXABLE = 3;
-
-const LANGUAGE_LABELS: Record<string, string> = {
-  en: "English",
-  english: "English",
-  es: "Spanish",
-  spanish: "Spanish",
-  fr: "French",
-  french: "French",
-  de: "German",
-  german: "German",
-  it: "Italian",
-  italian: "Italian",
-  sv: "Swedish",
-  swedish: "Swedish",
-  pt: "Portuguese",
-  portuguese: "Portuguese",
-  ko: "Korean",
-};
-
-function prettyLanguage(lang: string | null): string | null {
-  if (!lang) return null;
-  const key = lang.trim().toLowerCase();
-  return LANGUAGE_LABELS[key] ?? lang.charAt(0).toUpperCase() + lang.slice(1);
-}
-
-function prettyStyles(styles: string[] | null): string | null {
-  if (!styles || styles.length === 0) return null;
-  return styles.map((s) => s.charAt(0).toUpperCase() + s.slice(1)).join(", ");
-}
 
 const FAQS = [
   {
@@ -73,6 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description,
     alternates: { canonical: CANONICAL },
     openGraph: { title, description, url: CANONICAL, type: "website", siteName: "GospelChannel" },
+    twitter: { card: "summary_large_image", title, description },
     // noindex,follow if too thin to add value over the church detail pages.
     ...(count < MIN_INDEXABLE ? { robots: { index: false, follow: true } } : {}),
   };
@@ -141,6 +118,7 @@ export default async function CharismaticChurchesInLondonPage() {
           "@id": `https://gospelchannel.com/church/${church.slug}`,
           name: church.name,
           url: `https://gospelchannel.com/church/${church.slug}`,
+          description: buildDiscoveryChurchProofs(church).join("; "),
           ...(church.website ? { sameAs: church.website } : {}),
           ...(church.logo ? { image: church.logo } : {}),
           address: {
@@ -214,13 +192,15 @@ export default async function CharismaticChurchesInLondonPage() {
                       <th className="px-4 py-3 font-semibold">Tradition</th>
                       <th className="px-4 py-3 font-semibold">Worship style</th>
                       <th className="px-4 py-3 font-semibold">Language</th>
+                      <th className="px-4 py-3 font-semibold">Profile proof</th>
                       <th className="px-4 py-3 font-semibold">Site</th>
                     </tr>
                   </thead>
                   <tbody>
                     {churches.map((church) => {
-                      const style = prettyStyles(church.musicStyle);
-                      const language = prettyLanguage(church.language);
+                      const style = formatDiscoveryStyles(church.musicStyle);
+                      const language = formatDiscoveryLanguage(church.language);
+                      const proof = buildDiscoveryChurchProofs(church);
                       return (
                         <tr key={church.slug} className="border-b border-rose-gold/10 last:border-0 align-top">
                           <td className="px-4 py-3">
@@ -234,6 +214,9 @@ export default async function CharismaticChurchesInLondonPage() {
                           <td className="px-4 py-3 text-espresso/75">{church.denomination ?? "—"}</td>
                           <td className="px-4 py-3 text-espresso/75">{style ?? "—"}</td>
                           <td className="px-4 py-3 text-espresso/75">{language ?? "—"}</td>
+                          <td className="px-4 py-3 text-espresso/75">
+                            {proof.length > 0 ? proof.slice(0, 3).join(" · ") : "Profile data available"}
+                          </td>
                           <td className="px-4 py-3">
                             {church.website ? (
                               <a
@@ -258,7 +241,9 @@ export default async function CharismaticChurchesInLondonPage() {
               <p className="mt-4 text-xs text-muted-warm">
                 How we chose: churches across Greater London in the Pentecostal, Charismatic, Vineyard
                 or Elim traditions, or tagged with charismatic, Pentecostal or gospel worship, ranked by
-                GospelChannel&rsquo;s directory score. Data from church profiles on GospelChannel.
+                GospelChannel&rsquo;s profile completeness score. The proof column is pulled from each church profile:
+                service times, worship playlists, videos, style tags, language, official site, and
+                location where available.
               </p>
             </>
           )}

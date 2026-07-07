@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ForAudienceLayout } from "@/components/ForAudienceLayout";
 import { FOR_AUDIENCE } from "@/lib/for-audience-data";
-import { buildArticleSchema, buildBreadcrumbSchema } from "@/lib/seo-schema";
+import { buildArticleSchema, buildBreadcrumbSchema, buildItemListSchema } from "@/lib/seo-schema";
 
 const SITE_URL = "https://gospelchannel.com";
 
@@ -32,6 +32,11 @@ export async function generateMetadata({
       siteName: "GospelChannel",
       type: "article",
     },
+    twitter: {
+      card: "summary_large_image",
+      title: data.meta_title,
+      description: data.meta_description,
+    },
   };
 }
 
@@ -56,6 +61,15 @@ export default async function ForAudiencePage({
       url,
       headline: data.hero_h1,
       description: data.meta_description,
+      about: [
+        "Church choice",
+        `${data.audience_name} church search`,
+        "Church profile evidence",
+      ],
+      mentions: [
+        { name: "GospelChannel church profile database", url: `${SITE_URL}/church` },
+        { name: `${data.audience_name} church proof routes`, url },
+      ],
     }),
     buildBreadcrumbSchema([
       { name: "GospelChannel", url: SITE_URL },
@@ -71,6 +85,24 @@ export default async function ForAudiencePage({
         acceptedAnswer: { "@type": "Answer", text: faq.answer },
       })),
     },
+    buildItemListSchema({
+      name: `${data.audience_name} church decision routes`,
+      items: data.solutions.map((solution) => ({
+        name: solution.title,
+        url: `${SITE_URL}${solution.href}`,
+      })),
+    }),
+    ...(data.curated_cards.length > 0
+      ? [
+          buildItemListSchema({
+            name: `${data.audience_name} church proof routes`,
+            items: data.curated_cards.map((card) => ({
+              name: card.title,
+              url: `${SITE_URL}${card.href}`,
+            })),
+          }),
+        ]
+      : []),
   ];
 
   return (

@@ -145,6 +145,12 @@ export type CompareCard = {
 
 export const GUIDE_CARDS: ToolCard[] = [
   {
+    href: "/guides/church-choice-answers",
+    title: "Church Choice Answers",
+    description: "Short answers to the most common church-choice questions, each paired with a guide and a profile proof route.",
+    eyebrow: "Answer map",
+  },
+  {
     href: "/guides/church-fit-quiz",
     title: "Church Fit Quiz",
     description: "Answer seven fast questions and get three church paths that fit your worship style, social comfort, and Sunday priorities.",
@@ -160,7 +166,7 @@ export const GUIDE_CARDS: ToolCard[] = [
   {
     href: "/guides/worship-style-match",
     title: "Church Sound Match",
-    description: "Match your worship taste to church styles, browse routes, and real churches that already sound close to home.",
+    description: "Match your worship taste to church styles, proof routes, and real churches that already sound close to home.",
     eyebrow: "Music-first",
   },
   {

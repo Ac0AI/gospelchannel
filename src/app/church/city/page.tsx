@@ -7,7 +7,8 @@ export const revalidate = 3600;
 const CANONICAL = "https://gospelchannel.com/church/city";
 const TITLE = "Browse Churches by City";
 const DESCRIPTION =
-  "Find churches by city. Browse worship playlists, live videos, service times, and community pages for congregations in cities around the world.";
+  "Use city hubs as the practical Sunday decision route. Compare location, service times, worship style, denomination, and profile proof for churches in cities around the world.";
+const MAX_RENDERED_CITY_LINKS = 500;
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -19,6 +20,11 @@ export const metadata: Metadata = {
     url: CANONICAL,
     type: "website",
     siteName: "GospelChannel",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
   },
 };
 
@@ -35,6 +41,7 @@ export default async function CityIndexPage() {
       breadcrumbLabel="By city"
       itemNoun="cities"
       links={city}
+      maxRenderedLinks={MAX_RENDERED_CITY_LINKS}
     />
   );
 }

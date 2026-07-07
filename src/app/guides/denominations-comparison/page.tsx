@@ -1,8 +1,10 @@
 /* eslint-disable react/no-unescaped-entities */
 import type { Metadata } from "next";
 import Link from "next/link";
-import { GuideHero, GuideRelated } from "@/components/guides";
-import { buildGuideSchema } from "@/lib/seo-schema";
+import { GuideChurchEvidence, GuideHero, GuideProofLinks, GuideRelated, type GuideChurchEvidenceGroup } from "@/components/guides";
+import { getChurchIndexPageData } from "@/lib/church";
+import { buildGuideSchema, buildItemListSchema } from "@/lib/seo-schema";
+import { toToolChurchPreview } from "@/lib/tooling";
 
 export const revalidate = 86400;
 
@@ -20,6 +22,11 @@ export const metadata: Metadata = {
     url: "https://gospelchannel.com/guides/denominations-comparison",
     siteName: "GospelChannel",
     type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: META_TITLE,
+    description: META_DESCRIPTION,
   },
 };
 
@@ -130,12 +137,74 @@ const DENOMINATIONS: Array<{
   },
 ];
 
-export default function DenominationsComparisonPage() {
-  const schema = buildGuideSchema({
-    slug: "denominations-comparison",
-    headline: "Free-Church Denominations Compared",
-    description: META_DESCRIPTION,
-  });
+const DENOMINATION_EVIDENCE = [
+  {
+    id: "baptist",
+    title: "Baptist church examples",
+    description: "Grounded, teaching-forward profiles where the denomination label can be checked against worship style and visitor signals.",
+    href: "/church/denomination/baptist",
+    linkLabel: "Browse Baptist churches",
+    filters: { denominationSlug: "baptist" },
+  },
+  {
+    id: "pentecostal",
+    title: "Pentecostal church examples",
+    description: "Spirit-expectant and expressive church profiles where worship, response, and service context matter before visiting.",
+    href: "/church/denomination/pentecostal",
+    linkLabel: "Browse Pentecostal churches",
+    filters: { denominationSlug: "pentecostal" },
+  },
+  {
+    id: "anglican",
+    title: "Anglican church examples",
+    description: "Liturgical and rooted church profiles where the guide's tradition language can be compared with real congregations.",
+    href: "/church/denomination/anglican",
+    linkLabel: "Browse Anglican churches",
+    filters: { denominationSlug: "anglican" },
+  },
+] as const;
+
+function buildEvidenceSchema(groups: GuideChurchEvidenceGroup[]) {
+  return groups
+    .filter((group) => group.churches.length > 0)
+    .map((group) =>
+      buildItemListSchema({
+        name: group.title,
+        items: group.churches.map((church) => ({
+          name: church.name,
+          url: `https://gospelchannel.com${church.href}`,
+        })),
+      }),
+    );
+}
+
+export default async function DenominationsComparisonPage() {
+  const evidenceGroups = await Promise.all(
+    DENOMINATION_EVIDENCE.map(async (group) => {
+      const page = await getChurchIndexPageData({
+        filters: group.filters,
+        page: 1,
+        pageSize: 3,
+      });
+
+      return {
+        id: group.id,
+        title: group.title,
+        description: group.description,
+        href: group.href,
+        linkLabel: group.linkLabel,
+        churches: page.pageItems.map(toToolChurchPreview),
+      };
+    }),
+  );
+  const schema = [
+    ...buildGuideSchema({
+      slug: "denominations-comparison",
+      headline: "Free-Church Denominations Compared",
+      description: META_DESCRIPTION,
+    }),
+    ...buildEvidenceSchema(evidenceGroups),
+  ];
 
   return (
     <article className="mx-auto max-w-[1080px] px-5 pb-24 sm:px-12">
@@ -157,7 +226,7 @@ export default function DenominationsComparisonPage() {
           labels can be intimidating if you didn't grow up using them, and the differences can
           feel bigger from a distance than they often are inside a Sunday morning. This guide
           describes each major free-church and evangelical tradition in plain language so you can
-          read the directory with the right vocabulary in hand.
+          read the profile database with the right vocabulary in hand.
         </p>
         <p className="mt-4 text-base leading-relaxed text-warm-brown sm:text-lg">
           What you'll see below: a short summary of each tradition's shape, the kind of worship
@@ -171,6 +240,39 @@ export default function DenominationsComparisonPage() {
           guide stays inside the part of the Christian family we're built around.
         </p>
       </section>
+
+      <GuideProofLinks
+        title="Compare traditions against real church profiles"
+        intro="The denomination label is only the starting point. Use these proof routes to see actual churches, then inspect profile details, worship style, playlists, and first-visit information before deciding where to visit."
+        links={[
+          {
+            href: "/church/denomination",
+            label: "All denomination hubs",
+            description: "Start here when you know the tradition family but not the specific church.",
+          },
+          {
+            href: "/church/denomination/baptist",
+            label: "Baptist churches",
+            description: "Compare grounded, teaching-forward churches across cities and worship styles.",
+          },
+          {
+            href: "/church/denomination/pentecostal",
+            label: "Pentecostal churches",
+            description: "Browse expressive, Spirit-expectant churches and check their actual profile signals.",
+          },
+          {
+            href: "/compare/baptist-vs-pentecostal",
+            label: "Baptist vs Pentecostal",
+            description: "Use the side-by-side guide when these two lanes are both plausible.",
+          },
+        ]}
+      />
+
+      <GuideChurchEvidence
+        intro="These examples come from the profile database, not from the guide copy. Use them to test the denomination label against worship style, service context, location, and profile richness before you visit."
+        groups={evidenceGroups}
+        toolName="denominations_guide"
+      />
 
       <section className="mt-16 space-y-12">
         {DENOMINATIONS.map((denom, index) => (

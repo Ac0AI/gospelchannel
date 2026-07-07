@@ -43,6 +43,7 @@ const CHURCH_PAGE_PUBLIC_TAG = "church-page-public";
 const HOME_TAG = "home";
 const EMPTY_CHURCH_DIRECTORY_ERROR = "No approved churches returned from database";
 const CHURCH_DIRECTORY_SEED_CHUNK_SIZE = 8_000;
+const SITEMAP_CHURCH_SEED_CACHE_CHUNK_SIZE = 2_000;
 const CHURCH_DIRECTORY_SEED_FETCH_CONCURRENCY = 4;
 const CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS = Array.from(new Set([
   ...getExplicitNonChurchSlugs(),
@@ -490,9 +491,10 @@ async function fetchApprovedChurchStatsFromDb(): Promise<{
 async function fetchApprovedChurchDirectorySeedChunkFromDb(
   chunkIndex: number,
   indexableOnly = false,
+  chunkSize = CHURCH_DIRECTORY_SEED_CHUNK_SIZE,
 ): Promise<ChurchDirectorySeed[]> {
   const sql = getSql();
-  const offset = chunkIndex * CHURCH_DIRECTORY_SEED_CHUNK_SIZE;
+  const offset = chunkIndex * chunkSize;
   // CTE drives the ordered pagination via index-only scan on
   // (status, name, slug); JOIN back fetches the wide columns by PK.
   // Avoids a full table sort that spilled to disk past OFFSET ~10k.
@@ -512,8 +514,8 @@ async function fetchApprovedChurchDirectorySeedChunkFromDb(
     JOIN churches c ON c.slug = r.slug
     ORDER BY c.name, c.slug
   `, indexableOnly
-    ? [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS, CHURCH_DIRECTORY_SEED_CHUNK_SIZE, offset, [...OFF_BRAND_DENOMINATIONS], INDEXABLE_ONBRAND_SCORE_MIN]
-    : [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS, CHURCH_DIRECTORY_SEED_CHUNK_SIZE, offset])) as ChurchDirectorySeedRow[];
+    ? [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS, chunkSize, offset, [...OFF_BRAND_DENOMINATIONS], INDEXABLE_ONBRAND_SCORE_MIN]
+    : [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS, chunkSize, offset])) as ChurchDirectorySeedRow[];
 
   return rawRows.map(mapRowToChurchDirectorySeed);
 }
@@ -603,12 +605,16 @@ const getSitemapChurchSeedChunkCached = unstable_cache(
   async (chunkIndex: number): Promise<ChurchDirectorySeed[]> => {
     if (isOfflinePublicBuild() || !hasServiceConfig()) {
       const snapshot = getFallbackChurchDirectorySeed();
-      const offset = chunkIndex * CHURCH_DIRECTORY_SEED_CHUNK_SIZE;
-      return snapshot.slice(offset, offset + CHURCH_DIRECTORY_SEED_CHUNK_SIZE);
+      const offset = chunkIndex * SITEMAP_CHURCH_SEED_CACHE_CHUNK_SIZE;
+      return snapshot.slice(offset, offset + SITEMAP_CHURCH_SEED_CACHE_CHUNK_SIZE);
     }
-    return fetchApprovedChurchDirectorySeedChunkFromDb(chunkIndex, true);
+    return fetchApprovedChurchDirectorySeedChunkFromDb(
+      chunkIndex,
+      true,
+      SITEMAP_CHURCH_SEED_CACHE_CHUNK_SIZE,
+    );
   },
-  ["sitemap-church-seed-chunk-v2-onbrand"],
+  ["sitemap-church-seed-chunk-v3-onbrand-small"],
   { revalidate: 3600, tags: [CHURCH_CONTENT_TAG, CHURCH_INDEX_TAG] }
 );
 
@@ -765,8 +771,8 @@ export async function getSitemapChurchSeedSliceAsync(
   if (isOfflinePublicBuild() || !hasServiceConfig()) {
     return getFallbackChurchDirectorySeed().slice(safeOffset, safeOffset + safeLimit);
   }
-  const firstChunkIndex = Math.floor(safeOffset / CHURCH_DIRECTORY_SEED_CHUNK_SIZE);
-  const lastChunkIndex = Math.floor((safeOffset + safeLimit - 1) / CHURCH_DIRECTORY_SEED_CHUNK_SIZE);
+  const firstChunkIndex = Math.floor(safeOffset / SITEMAP_CHURCH_SEED_CACHE_CHUNK_SIZE);
+  const lastChunkIndex = Math.floor((safeOffset + safeLimit - 1) / SITEMAP_CHURCH_SEED_CACHE_CHUNK_SIZE);
   const chunkIndexes = Array.from(
     { length: lastChunkIndex - firstChunkIndex + 1 },
     (_, index) => firstChunkIndex + index,
@@ -775,7 +781,7 @@ export async function getSitemapChurchSeedSliceAsync(
     chunkIndexes.map((chunkIndex) => getSitemapChurchSeedChunkCached(chunkIndex)),
   );
   const flattened = rows.flat();
-  const chunkStartOffset = firstChunkIndex * CHURCH_DIRECTORY_SEED_CHUNK_SIZE;
+  const chunkStartOffset = firstChunkIndex * SITEMAP_CHURCH_SEED_CACHE_CHUNK_SIZE;
   const localOffset = safeOffset - chunkStartOffset;
   return flattened.slice(localOffset, localOffset + safeLimit);
 }

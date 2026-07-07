@@ -15,8 +15,8 @@ export type ChurchTier = "music" | "profile" | "thin";
 const TITLE_SEPARATOR = "·";
 const DESCRIPTION_MAX = 158;
 const TITLE_TEMPLATES: Record<ChurchTier, string> = {
-  music: "Worship Songs, Service Times & Visit Info",
-  profile: "Service Times, Worship Style & Languages",
+  music: "Worship Songs, Service Times & Profile Proof",
+  profile: "Service Times, Worship Style & Profile Proof",
   thin: "Church Profile",
 };
 
@@ -122,6 +122,7 @@ function clip(text: string, max: number): string {
 }
 
 export function buildChurchDescription(input: ChurchMetadataInput): string {
+  const tier = classifyChurchTier(input);
   const city = resolveCity(input);
   const country = normalizeDisplayText(input.church.country);
   const denomination = resolveDenomination(input);
@@ -184,6 +185,10 @@ export function buildChurchDescription(input: ChurchMetadataInput): string {
     sentences.push(`Worship in ${languages[0]}.`);
   } else if (languages.length > 1) {
     sentences.push(`Worship in ${languages.slice(0, 2).join(" and ")}.`);
+  }
+
+  if (tier !== "thin") {
+    sentences.push("Profile proof for a first visit.");
   }
 
   let built = joinSentences(sentences);

@@ -90,13 +90,13 @@ export function HomeHero({ surpriseSlugs, churchCountLabel }: Props) {
       {/* Hero content */}
       <div className="relative z-[2] flex h-full flex-col items-center justify-center px-5 text-center sm:px-12">
         <p className="font-serif text-base italic text-white/70 sm:text-[17px]">
-          People find God in different ways.
+          Choose a church with answers you can verify.
         </p>
-        <h1 className="mt-3 max-w-[12ch] font-serif text-5xl font-semibold leading-[1.08] tracking-[-0.02em] text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.3)] sm:text-7xl lg:whitespace-nowrap lg:text-[88px]">
-          Find <em className="not-italic font-serif italic text-blush">yours</em>.
+        <h1 className="mt-3 max-w-[14ch] font-serif text-5xl font-semibold leading-[1.08] tracking-[-0.02em] text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.3)] sm:text-7xl lg:text-[88px]">
+          Find the <em className="not-italic font-serif italic text-blush">right</em> church.
         </h1>
         <p className="mx-auto mt-5 max-w-[520px] text-base leading-relaxed text-white/85 sm:text-lg lg:text-[19px]">
-          Listen to worship. Watch sermons. Find where you belong &mdash; before Sunday.
+          Ask the practical question first, then compare worship, service details, location, and profile proof before Sunday.
         </p>
 
         <div className="mt-9 w-full max-w-[620px]">

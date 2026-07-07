@@ -1,24 +1,42 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getChurchStatsAsync } from "@/lib/content";
+import { buildBreadcrumbSchema, buildItemListSchema } from "@/lib/seo-schema";
+
+const SITE_URL = "https://gospelchannel.com";
+const PAGE_URL = `${SITE_URL}/for-churches`;
+const PAGE_TITLE = "Claim Your Church Proof Profile";
+const PAGE_DESCRIPTION =
+  "Claim or add a free GospelChannel proof profile so first-time visitors can verify service times, worship, location, language, and visitor cues before Sunday.";
 
 export const metadata: Metadata = {
-  title: "For Churches",
-  description:
-    "People are looking for a church like yours. They'll hear your worship and watch your sermons before they visit. Claim your free page on GospelChannel.",
-  alternates: { canonical: "https://gospelchannel.com/for-churches" },
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
+  alternates: { canonical: PAGE_URL },
+  openGraph: {
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+    url: PAGE_URL,
+    type: "website",
+    siteName: "GospelChannel",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+  },
 };
 
 const WHY = [
   {
     num: "01",
     title: "Show your soul, not just hours.",
-    body: "Your music, your photos, your team, the feel of a Sunday. People decide on vibe before they decide on doctrine.",
+    body: "Your music, your photos, your team, the feel of a Sunday. People decide with proof before they decide to visit.",
   },
   {
     num: "02",
     title: "Help the right people find you.",
-    body: "Filters by language, kids program, denomination, worship style. We surface you to people whose Sunday is incomplete without you.",
+    body: "Filters by language, kids program, denomination, worship style, and service times. We surface you to people whose Sunday is incomplete without you.",
   },
   {
     num: "03",
@@ -58,9 +76,66 @@ const TRUST_NAMES = ["Hillsong", "Bethel", "Elevation", "Holy Trinity", "Passion
 
 export default async function ForChurchesPage() {
   const { churchCountLabel, countryCount } = await getChurchStatsAsync();
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: PAGE_TITLE,
+      description: PAGE_DESCRIPTION,
+      url: PAGE_URL,
+      isPartOf: {
+        "@type": "WebSite",
+        name: "GospelChannel",
+        url: SITE_URL,
+      },
+      about: [
+        { "@type": "Thing", name: "Church profile proof" },
+        { "@type": "Thing", name: "First-time visitor decision support" },
+        { "@type": "Thing", name: "Church service times and worship evidence" },
+      ],
+    },
+    buildBreadcrumbSchema([
+      { name: "GospelChannel", url: SITE_URL },
+      { name: "For Churches", url: PAGE_URL },
+    ]),
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      name: "How to publish a GospelChannel proof profile",
+      description: "Find or add a church, verify access, complete public proof fields, and publish the profile.",
+      totalTime: "PT4M",
+      step: STEPS.map((step, index) => ({
+        "@type": "HowToStep",
+        position: index + 1,
+        name: step.t,
+        text: step.d,
+      })),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: FAQ.map((item) => ({
+        "@type": "Question",
+        name: item.q,
+        acceptedAnswer: { "@type": "Answer", text: item.a },
+      })),
+    },
+    buildItemListSchema({
+      name: "Church proof profile fields",
+      items: FEATURES.map((feature) => ({
+        name: feature.t,
+        url: PAGE_URL,
+      })),
+    }),
+  ];
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* Editorial split hero */}
       <section className="mx-auto max-w-[1280px] px-5 pt-20 pb-15 sm:px-12 sm:pt-24 sm:pb-16">
         <div className="grid items-center gap-12 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
@@ -73,7 +148,7 @@ export default async function ForChurchesPage() {
               The page your church <em className="gc-italic">deserves</em>.
             </h1>
             <p className="mt-6 max-w-[540px] text-lg leading-relaxed text-warm-brown sm:text-xl">
-              A premium directory page for your church &mdash; Spotify, YouTube, service times, prayer wall, all in one place. Free forever. No ads. No tracking. Built so first-time visitors find what they need before Sunday.
+              A premium proof profile for your church &mdash; Spotify, YouTube, service times, prayer wall, all in one place. Free forever. No ads. No tracking. Built so first-time visitors can decide with confidence before Sunday.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
@@ -138,7 +213,7 @@ export default async function ForChurchesPage() {
             className="mt-3 font-serif font-semibold tracking-[-0.01em] text-espresso"
             style={{ fontSize: "clamp(36px, 6vw, 56px)" }}
           >
-            Three things every directory should do.
+            Three things every proof profile should do.
           </h2>
           <p className="mx-auto mt-5 max-w-[580px] text-lg text-warm-brown">
             And one thing they shouldn&rsquo;t.

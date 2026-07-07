@@ -1178,6 +1178,8 @@ export type ChurchIndexRow = {
 export type IndexEnrichmentHint = EnrichmentHint & {
   coverImageUrl?: string;
   logoImageUrl?: string;
+  childrenMinistry?: boolean;
+  youthMinistry?: boolean;
 };
 
 type ChurchIndexPageData = {
@@ -1203,12 +1205,14 @@ async function getEnrichmentMeta(): Promise<Map<string, IndexEnrichmentHint>> {
     instagram_url: string | null;
     facebook_url: string | null;
     youtube_url: string | null;
+    children_ministry: boolean | null;
+    youth_ministry: boolean | null;
     cover_image_url: string | null;
     logo_image_url: string | null;
   };
   const data = await fetchAllRows((sb, from, to) =>
     sb.from<EnrichmentMetaRow[]>("church_enrichments")
-      .select("church_slug, enrichment_status, summary, service_times, street_address, languages, instagram_url, facebook_url, youtube_url, cover_image_url, logo_image_url")
+      .select("church_slug, enrichment_status, summary, service_times, street_address, languages, instagram_url, facebook_url, youtube_url, children_ministry, youth_ministry, cover_image_url, logo_image_url")
       .range(from, to)
   );
   const map = new Map<string, IndexEnrichmentHint>();
@@ -1232,6 +1236,8 @@ async function getEnrichmentMeta(): Promise<Map<string, IndexEnrichmentHint>> {
       serviceTimes,
       location: normalizeDisplayText(row.street_address as string | undefined),
       languages: row.languages ?? undefined,
+      childrenMinistry: row.children_ministry ?? undefined,
+      youthMinistry: row.youth_ministry ?? undefined,
       hasSocial,
       dataRichnessScore: score,
       coverImageUrl: rewriteLegacyMediaUrl(row.cover_image_url ?? undefined),
@@ -1257,6 +1263,8 @@ export function mapEnrichmentMetaRow(row: {
   instagram_url: string | null;
   facebook_url: string | null;
   youtube_url: string | null;
+  children_ministry?: boolean | null;
+  youth_ministry?: boolean | null;
   cover_image_url: string | null;
   logo_image_url: string | null;
 }): { slug: string; hint: IndexEnrichmentHint } | null {
@@ -1281,6 +1289,8 @@ export function mapEnrichmentMetaRow(row: {
       serviceTimes,
       location: normalizeDisplayText(row.street_address as string | undefined),
       languages: row.languages ?? undefined,
+      childrenMinistry: row.children_ministry ?? undefined,
+      youthMinistry: row.youth_ministry ?? undefined,
       hasSocial,
       dataRichnessScore: score,
       coverImageUrl: rewriteLegacyMediaUrl(row.cover_image_url ?? undefined),
@@ -1302,13 +1312,15 @@ async function getEnrichmentMetaForSlugs(slugs: string[]): Promise<Map<string, I
     instagram_url: string | null;
     facebook_url: string | null;
     youtube_url: string | null;
+    children_ministry: boolean | null;
+    youth_ministry: boolean | null;
     cover_image_url: string | null;
     logo_image_url: string | null;
   };
   const lookupSlugs = Array.from(new Set(slugs.flatMap((slug) => getChurchSlugLookupCandidates(slug))));
   const { data } = await sb
     .from<EnrichmentMetaRow>("church_enrichments")
-    .select("church_slug, enrichment_status, summary, service_times, street_address, languages, instagram_url, facebook_url, youtube_url, cover_image_url, logo_image_url")
+    .select("church_slug, enrichment_status, summary, service_times, street_address, languages, instagram_url, facebook_url, youtube_url, children_ministry, youth_ministry, cover_image_url, logo_image_url")
     .in("church_slug", lookupSlugs);
 
   const map = new Map<string, IndexEnrichmentHint>();

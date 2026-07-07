@@ -433,7 +433,7 @@ export default async function PreviewPage({
           </h1>
           <p className="mx-auto mt-3 max-w-2xl text-base text-warm-brown">
             See what <span className="font-semibold text-espresso">{church.name}</span> looks like to visitors today,
-            and what it could look like with a complete profile.
+            and what it could look like as a complete proof profile.
           </p>
         </div>
 
@@ -504,7 +504,7 @@ export default async function PreviewPage({
 
         {/* Footer note */}
         <div className="mt-8 text-center text-xs text-muted-warm">
-          GospelChannel is a free church directory. No ads, no tracking, no surprises.
+          GospelChannel is a free church decision engine and profile database. No ads, no tracking, no surprises.
         </div>
       </div>
     </>

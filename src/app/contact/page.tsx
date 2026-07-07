@@ -1,10 +1,29 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { buildItemListSchema } from "@/lib/seo-schema";
+
+const SITE_URL = "https://gospelchannel.com";
+const PAGE_URL = `${SITE_URL}/contact`;
+const PAGE_TITLE = "Contact GospelChannel";
+const PAGE_DESCRIPTION =
+  "Contact GospelChannel for church proof database claims, profile corrections, proof updates, partnerships, or press.";
 
 export const metadata: Metadata = {
-  title: "Contact GospelChannel",
-  description: "Get in touch with GospelChannel — for church claims, corrections, partnerships, or press.",
-  alternates: { canonical: "https://gospelchannel.com/contact" },
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
+  alternates: { canonical: PAGE_URL },
+  openGraph: {
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+    url: PAGE_URL,
+    type: "website",
+    siteName: "GospelChannel",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+  },
 };
 
 const contactEmail = "hi@gospelchannel.com";
@@ -12,17 +31,17 @@ const contactEmail = "hi@gospelchannel.com";
 const topics = [
   {
     heading: "Claim or edit a church page",
-    body: "If the church is yours, the fastest path is to claim the page directly so you can edit service times, links, and details yourself.",
+    body: "If the church is yours, claim the profile directly so the public proof layer stays accurate: service times, worship links, language, contact details, and visitor cues.",
     cta: { href: "/church", label: "Find your church" },
   },
   {
     heading: "Suggest a missing church",
-    body: "Add any church that is not on GospelChannel yet. We review each submission before it goes live.",
+    body: "Add a church that is missing from the database. We review submissions so searchers can compare real profile evidence before a first visit.",
     cta: { href: "/church/suggest", label: "Suggest a church" },
   },
   {
     heading: "Corrections and takedowns",
-    body: "Spotted something wrong on a page, or want a page removed? Email us and we'll sort it out within a few days.",
+    body: "Spotted incorrect proof on a profile, or want a page removed? Email us and we'll sort it out within a few days.",
     cta: { href: `mailto:${contactEmail}?subject=Correction`, label: contactEmail },
   },
   {
@@ -33,8 +52,41 @@ const topics = [
 ];
 
 export default function ContactPage() {
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "ContactPage",
+      name: PAGE_TITLE,
+      description: PAGE_DESCRIPTION,
+      url: PAGE_URL,
+      isPartOf: {
+        "@type": "WebSite",
+        name: "GospelChannel",
+        url: SITE_URL,
+      },
+      contactPoint: {
+        "@type": "ContactPoint",
+        email: contactEmail,
+        contactType: "Church profile claims and corrections",
+      },
+    },
+    buildItemListSchema({
+      name: "GospelChannel contact routes",
+      items: [
+        { name: "Find and claim a church profile", url: `${SITE_URL}/church` },
+        { name: "Suggest a missing church", url: `${SITE_URL}/church/suggest` },
+        { name: "For churches", url: `${SITE_URL}/for-churches` },
+      ],
+    }),
+  ];
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <section className="px-5 pt-14 sm:px-12 sm:pt-16">
         <div className="mx-auto max-w-[1100px]">
           <p className="gc-eyebrow">Contact</p>
@@ -45,7 +97,7 @@ export default function ContactPage() {
             Get in <em className="gc-italic">touch</em>.
           </h1>
           <p className="mt-5 max-w-[640px] text-lg leading-relaxed text-warm-brown">
-            GospelChannel is a small, independent project. Emails reach a real person and we usually reply within a few days.
+            GospelChannel is a small, independent project. Send profile claims, proof corrections, takedown requests, and partnership notes here; emails reach a real person.
           </p>
           <p className="mt-8 font-serif text-2xl italic text-rose-gold sm:text-3xl">
             <a href={`mailto:${contactEmail}`} className="transition-colors hover:text-rose-gold-deep">

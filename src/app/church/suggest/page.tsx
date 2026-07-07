@@ -1,19 +1,71 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SuggestChurchForm } from "@/components/SuggestChurchForm";
+import { buildItemListSchema } from "@/lib/seo-schema";
+
+const SITE_URL = "https://gospelchannel.com";
+const PAGE_URL = `${SITE_URL}/church/suggest`;
+const PAGE_TITLE = "Add Your Church Profile";
+const PAGE_DESCRIPTION =
+  "Add your church to GospelChannel so service times, worship links, location, language, and contact details can become profile proof for people choosing where to visit.";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Add Your Church",
-  description:
-    "Give your church a page on GospelChannel. Share your playlist, website, and contact details - and help people discover your community.",
-  alternates: { canonical: "https://gospelchannel.com/church/suggest" },
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
+  alternates: { canonical: PAGE_URL },
+  openGraph: {
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+    url: PAGE_URL,
+    type: "website",
+    siteName: "GospelChannel",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+  },
 };
 
 export default function SuggestChurchPage() {
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: PAGE_TITLE,
+      description: PAGE_DESCRIPTION,
+      url: PAGE_URL,
+      isPartOf: {
+        "@type": "WebSite",
+        name: "GospelChannel",
+        url: SITE_URL,
+      },
+      about: [
+        { "@type": "Thing", name: "Church profile proof" },
+        { "@type": "Thing", name: "First-visit evidence" },
+        { "@type": "Thing", name: "Church profile database coverage" },
+      ],
+    },
+    buildItemListSchema({
+      name: "Church profile proof fields",
+      items: [
+        { name: "Official website and contact details", url: `${SITE_URL}/church/suggest#website` },
+        { name: "City and country", url: `${SITE_URL}/church/suggest#city` },
+        { name: "Worship playlist or video link", url: `${SITE_URL}/church/suggest#playlistUrl` },
+        { name: "Denomination and primary worship language", url: `${SITE_URL}/church/suggest#denomination` },
+      ],
+    }),
+  ];
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* Hero */}
       <section className="px-5 pt-14 sm:px-12 sm:pt-16">
         <div className="mx-auto max-w-[1100px]">
@@ -25,7 +77,7 @@ export default function SuggestChurchPage() {
             Tell us about your <em className="gc-italic">church</em>.
           </h1>
           <p className="mt-4 max-w-[480px] text-base leading-relaxed text-warm-brown sm:text-lg">
-            The basics now, polish later. We&rsquo;ll review and publish within 24 hours. You can claim it as the official admin afterward.
+            The basics now, polish later. We&rsquo;ll review and publish a profile that helps people prove fit before Sunday: location, worship, language, contact details, and first-visit signals.
           </p>
         </div>
       </section>
@@ -47,8 +99,8 @@ export default function SuggestChurchPage() {
                 <p className="gc-eyebrow">What happens next?</p>
                 <ol className="mt-3.5 list-decimal space-y-1.5 pl-5 text-sm leading-relaxed text-warm-brown">
                   <li>We review for spam &mdash; usually within 24h</li>
-                  <li>The page goes live with a &ldquo;Listed by community&rdquo; tag</li>
-                  <li>You (or someone at the church) can claim it to verify</li>
+                  <li>The page goes live as a community-listed profile</li>
+                  <li>You (or someone at the church) can claim it to verify the proof</li>
                 </ol>
               </div>
 
@@ -58,7 +110,7 @@ export default function SuggestChurchPage() {
               >
                 <p className="gc-eyebrow">What helps approval faster</p>
                 <ul className="mt-3.5 space-y-2 text-sm leading-relaxed text-warm-brown">
-                  <li>Spotify playlist URL</li>
+                  <li>Spotify, YouTube, or worship playlist URL</li>
                   <li>Official website domain</li>
                   <li>Contact email from the church</li>
                   <li>City &amp; country</li>
@@ -67,7 +119,24 @@ export default function SuggestChurchPage() {
               </div>
 
               <div className="rounded-[18px] border border-rose-gold/[0.14] bg-white p-7">
-                <p className="gc-eyebrow">Already in the catalog?</p>
+                <p className="gc-eyebrow">Profile proof</p>
+                <h3 className="mt-2.5 font-serif text-xl font-semibold tracking-[-0.01em] text-espresso">
+                  The goal is not another listing.
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-warm-brown">
+                  A useful GospelChannel profile should help a first-time visitor verify the basics before they walk in: where it meets, what it sounds like, who to contact, and whether the visit is realistic this Sunday.
+                </p>
+                <Link
+                  href="/guides/first-visit-guide"
+                  prefetch={false}
+                  className="mt-4 inline-flex rounded-full border border-rose-gold/30 px-4 py-2 text-sm font-semibold text-rose-gold transition-colors hover:bg-rose-gold/[0.06]"
+                >
+                  See first-visit proof &rarr;
+                </Link>
+              </div>
+
+              <div className="rounded-[18px] border border-rose-gold/[0.14] bg-white p-7">
+                <p className="gc-eyebrow">Already has a profile?</p>
                 <h3 className="mt-2.5 font-serif text-xl font-semibold tracking-[-0.01em] text-espresso">
                   Claim it instead of submitting a duplicate.
                 </h3>

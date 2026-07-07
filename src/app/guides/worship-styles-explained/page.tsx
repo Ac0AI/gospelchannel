@@ -1,8 +1,10 @@
 /* eslint-disable react/no-unescaped-entities */
 import type { Metadata } from "next";
 import Link from "next/link";
-import { GuideHero, GuideRelated } from "@/components/guides";
-import { buildGuideSchema } from "@/lib/seo-schema";
+import { GuideChurchEvidence, GuideHero, GuideProofLinks, GuideRelated, type GuideChurchEvidenceGroup } from "@/components/guides";
+import { getChurchIndexPageData } from "@/lib/church";
+import { buildGuideSchema, buildItemListSchema } from "@/lib/seo-schema";
+import { toToolChurchPreview } from "@/lib/tooling";
 
 export const revalidate = 86400;
 
@@ -20,6 +22,11 @@ export const metadata: Metadata = {
     url: "https://gospelchannel.com/guides/worship-styles-explained",
     siteName: "GospelChannel",
     type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: META_TITLE,
+    description: META_DESCRIPTION,
   },
 };
 
@@ -118,12 +125,74 @@ const STYLES: Array<{
   },
 ];
 
-export default function WorshipStylesExplainedPage() {
-  const schema = buildGuideSchema({
-    slug: "worship-styles-explained",
-    headline: "Worship Styles Explained",
-    description: META_DESCRIPTION,
-  });
+const WORSHIP_EVIDENCE = [
+  {
+    id: "contemporary",
+    title: "Contemporary worship examples",
+    description: "Modern band-led churches where the profile can show songs, videos, service signals, and location context.",
+    href: "/church/style/contemporary-worship",
+    linkLabel: "Browse contemporary worship",
+    filters: { styleSlug: "contemporary-worship" },
+  },
+  {
+    id: "gospel",
+    title: "Gospel worship examples",
+    description: "Profiles tagged around gospel worship, fuller room response, choir energy, and gospel-rooted sound.",
+    href: "/church/style/gospel",
+    linkLabel: "Browse gospel worship",
+    filters: { styleSlug: "gospel" },
+  },
+  {
+    id: "charismatic",
+    title: "Charismatic worship examples",
+    description: "Spirit-led and expressive worship profiles where the guide's vocabulary can be checked against real churches.",
+    href: "/church/style/charismatic",
+    linkLabel: "Browse charismatic worship",
+    filters: { styleSlug: "charismatic" },
+  },
+] as const;
+
+function buildEvidenceSchema(groups: GuideChurchEvidenceGroup[]) {
+  return groups
+    .filter((group) => group.churches.length > 0)
+    .map((group) =>
+      buildItemListSchema({
+        name: group.title,
+        items: group.churches.map((church) => ({
+          name: church.name,
+          url: `https://gospelchannel.com${church.href}`,
+        })),
+      }),
+    );
+}
+
+export default async function WorshipStylesExplainedPage() {
+  const evidenceGroups = await Promise.all(
+    WORSHIP_EVIDENCE.map(async (group) => {
+      const page = await getChurchIndexPageData({
+        filters: group.filters,
+        page: 1,
+        pageSize: 3,
+      });
+
+      return {
+        id: group.id,
+        title: group.title,
+        description: group.description,
+        href: group.href,
+        linkLabel: group.linkLabel,
+        churches: page.pageItems.map(toToolChurchPreview),
+      };
+    }),
+  );
+  const schema = [
+    ...buildGuideSchema({
+      slug: "worship-styles-explained",
+      headline: "Worship Styles Explained",
+      description: META_DESCRIPTION,
+    }),
+    ...buildEvidenceSchema(evidenceGroups),
+  ];
 
   return (
     <article className="mx-auto max-w-[1080px] px-5 pb-24 sm:px-12">
@@ -144,7 +213,7 @@ export default function WorshipStylesExplainedPage() {
           Two free-church congregations on the same street can sound completely different on a
           Sunday morning. That isn't a bug — different worship traditions reach different people
           and meet different needs, and most of us know which fits us long before we can name it.
-          This guide names the most common styles so you can search the directory with the right
+          This guide names the most common styles so you can search the profile database with the right
           vocabulary in hand.
         </p>
         <p className="mt-4 text-base leading-relaxed text-warm-brown sm:text-lg">
@@ -154,6 +223,39 @@ export default function WorshipStylesExplainedPage() {
           loved by the congregations that gather around it.
         </p>
       </section>
+
+      <GuideProofLinks
+        title="Hear the guide inside real church pages"
+        intro="Each style below links to a live proof route. Use those routes to move from definition to real churches, then open profiles with worship playlists, videos, service details, and location context."
+        links={[
+          {
+            href: "/church/style",
+            label: "All worship-style hubs",
+            description: "Start from the full style index when you are still choosing a sound.",
+          },
+          {
+            href: "/church/style/contemporary-worship",
+            label: "Contemporary worship churches",
+            description: "Use this when modern band-led worship is the clearest starting point.",
+          },
+          {
+            href: "/church/style/gospel",
+            label: "Gospel worship churches",
+            description: "Find fuller choir, response, and gospel-rooted worship rooms.",
+          },
+          {
+            href: "/church/style/charismatic",
+            label: "Charismatic worship churches",
+            description: "Browse expressive, Spirit-led churches with more room for response.",
+          },
+        ]}
+      />
+
+      <GuideChurchEvidence
+        intro="These examples are loaded from the live profile database. The guide gives you vocabulary; the profiles show whether a church actually carries the worship sound, service details, and visitor signals you are looking for."
+        groups={evidenceGroups}
+        toolName="worship_styles_guide"
+      />
 
       <section className="mt-16 space-y-12">
         {STYLES.map((style, index) => (

@@ -6,10 +6,10 @@ import { useEffect, useMemo, useState } from "react";
 
 type SearchSuggestion = {
   id: string;
-  type: "church";
+  type: "church" | "guide" | "compare" | "proof_route";
   title: string;
   subtitle?: string;
-  slug: string;
+  slug?: string;
   href: string;
 };
 

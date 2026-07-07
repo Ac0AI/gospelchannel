@@ -2,6 +2,11 @@ import { CONTENT_UPDATED_AT } from "@/lib/utils";
 
 const SITE_URL = "https://gospelchannel.com";
 
+type SchemaThingInput = string | {
+  name: string;
+  url?: string;
+};
+
 export type ArticleSchemaInput = {
   url: string;
   headline: string;
@@ -9,7 +14,24 @@ export type ArticleSchemaInput = {
   datePublished?: string;
   dateModified?: string;
   image?: string;
+  about?: SchemaThingInput[];
+  mentions?: SchemaThingInput[];
 };
+
+function buildThingSchema(thing: SchemaThingInput) {
+  if (typeof thing === "string") {
+    return {
+      "@type": "Thing",
+      name: thing,
+    };
+  }
+
+  return {
+    "@type": "Thing",
+    name: thing.name,
+    ...(thing.url ? { url: thing.url } : {}),
+  };
+}
 
 export function buildArticleSchema(input: ArticleSchemaInput) {
   const dateModified = input.dateModified ?? CONTENT_UPDATED_AT;
@@ -37,6 +59,8 @@ export function buildArticleSchema(input: ArticleSchemaInput) {
       },
     },
     ...(input.image ? { image: input.image } : {}),
+    ...(input.about?.length ? { about: input.about.map(buildThingSchema) } : {}),
+    ...(input.mentions?.length ? { mentions: input.mentions.map(buildThingSchema) } : {}),
   };
 }
 
@@ -60,6 +84,8 @@ export function buildGuideSchema(args: {
   headline: string;
   description: string;
   image?: string;
+  about?: SchemaThingInput[];
+  mentions?: SchemaThingInput[];
 }) {
   const url = `${SITE_URL}/guides/${args.slug}`;
   return [
@@ -68,6 +94,15 @@ export function buildGuideSchema(args: {
       headline: args.headline,
       description: args.description,
       image: args.image,
+      about: args.about ?? [
+        "Church choice",
+        "Church decision guide",
+        "Church profile evidence",
+      ],
+      mentions: args.mentions ?? [
+        { name: "GospelChannel church profile database", url: `${SITE_URL}/church` },
+        { name: "Church proof routes", url: `${SITE_URL}/guides` },
+      ],
     }),
     buildBreadcrumbSchema([
       { name: "GospelChannel", url: SITE_URL },
@@ -75,4 +110,57 @@ export function buildGuideSchema(args: {
       { name: args.headline, url },
     ]),
   ];
+}
+
+export type HowToSchemaStep = {
+  id: string;
+  title: string;
+  text: string;
+};
+
+export function buildHowToSchema(args: {
+  name: string;
+  description: string;
+  url: string;
+  totalTime?: string;
+  steps: readonly HowToSchemaStep[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: args.name,
+    description: args.description,
+    ...(args.totalTime ? { totalTime: args.totalTime } : {}),
+    mainEntityOfPage: args.url,
+    step: args.steps.map((step, index) => ({
+      "@type": "HowToStep",
+      position: index + 1,
+      name: step.title,
+      text: step.text,
+      url: `${args.url}#${step.id}`,
+    })),
+  };
+}
+
+export type ItemListSchemaItem = {
+  name: string;
+  url: string;
+};
+
+export function buildItemListSchema(args: {
+  name: string;
+  items: ItemListSchemaItem[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: args.name,
+    numberOfItems: args.items.length,
+    itemListElement: args.items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      url: item.url,
+    })),
+  };
 }

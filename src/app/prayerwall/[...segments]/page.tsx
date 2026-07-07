@@ -7,6 +7,7 @@ import { PrayerWallHero } from "@/components/PrayerWallHero";
 import { PrayerWallFilters } from "@/components/PrayerWallFilters";
 import { PrayerWallBreadcrumbs } from "@/components/PrayerWallBreadcrumbs";
 import { PrayerWallChurchSection } from "@/components/PrayerWallChurchSection";
+import { buildItemListSchema } from "@/lib/seo-schema";
 import {
   getChurchNamesBySlugs,
   getAvailableCities,
@@ -76,9 +77,9 @@ export async function generateMetadata({
   };
 
   const descriptions: Record<string, string> = {
-    country: `Prayers from churches in ${filter.displayName}. Join the ${filter.displayName} prayer community.`,
-    city: `Prayers from churches in ${filter.displayName}. Join in faith.`,
-    church: `Pray for ${filter.displayName} and their community.`,
+    country: `Prayers from churches in ${filter.displayName}. Use them as a community signal, then verify fit in church profiles.`,
+    city: `Prayers from churches in ${filter.displayName}. Use them as a community signal, then verify fit in church profiles.`,
+    church: `Pray for ${filter.displayName} and use the church profile for service times, location, worship, and first-visit proof.`,
   };
 
   // Empty filter pages all look identical to Google (same shell, "No prayers"
@@ -105,6 +106,12 @@ export async function generateMetadata({
       description: descriptions[filter.type],
       url: `https://gospelchannel.com/prayerwall/${segments.join("/")}`,
       images: [{ url: "https://gospelchannel.com/images/prayerwall-hero.jpg" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: titles[filter.type],
+      description: descriptions[filter.type],
+      images: ["https://gospelchannel.com/images/prayerwall-hero.jpg"],
     },
   };
 }
@@ -159,9 +166,9 @@ export default async function FilteredPrayerWallPage({
   }
 
   const subtitles: Record<string, string> = {
-    country: `Prayers from churches in ${filter.displayName}`,
-    city: `Prayers from churches in ${filter.displayName}`,
-    church: `Pray for ${filter.displayName} and their community`,
+    country: `Prayers from churches in ${filter.displayName}. Read them as a community signal, then use profiles for visit proof.`,
+    city: `Prayers from churches in ${filter.displayName}. Read them as a community signal, then use profiles for visit proof.`,
+    church: `Pray for ${filter.displayName} and use the church profile for service times, worship, location, and first-visit proof.`,
   };
 
   const emptyMessages: Record<string, string> = {
@@ -170,24 +177,59 @@ export default async function FilteredPrayerWallPage({
     church: `No prayers for ${filter.displayName} yet. Be the first!`,
   };
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    name: `Prayer Wall — ${filter.displayName}`,
-    description: subtitles[filter.type],
-    url: `https://gospelchannel.com/prayerwall/${segments.join("/")}`,
-    isPartOf: {
-      "@type": "WebSite",
-      name: "GospelChannel",
-      url: "https://gospelchannel.com",
+  const profileProofRoute =
+    filter.type === "church"
+      ? {
+          name: `${filter.displayName} profile proof`,
+          url: `https://gospelchannel.com/church/${filter.slug}`,
+          href: `/church/${filter.slug}`,
+          label: "Open the church profile",
+        }
+      : {
+          name: "Church profiles with service times",
+          url: "https://gospelchannel.com/church/churches-with-service-times",
+          href: "/church/churches-with-service-times",
+          label: "Profiles with service times",
+        };
+
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      name: `Prayer Wall — ${filter.displayName}`,
+      description: subtitles[filter.type],
+      url: `https://gospelchannel.com/prayerwall/${segments.join("/")}`,
+      isPartOf: {
+        "@type": "WebSite",
+        name: "GospelChannel",
+        url: "https://gospelchannel.com",
+      },
+      about: [
+        { "@type": "Thing", name: "Church community signal" },
+        { "@type": "Thing", name: "Prayer and first-visit discernment" },
+        { "@type": "Thing", name: "Church profile proof" },
+      ],
     },
-  };
+    buildItemListSchema({
+      name: `${filter.displayName} prayer decision support routes`,
+      items: [
+        { name: "Prayer guide", url: "https://gospelchannel.com/guides/prayer-guide" },
+        { name: "First visit guide", url: "https://gospelchannel.com/guides/first-visit-guide" },
+        { name: profileProofRoute.name, url: profileProofRoute.url },
+      ],
+    }),
+  ];
 
   const heroEyebrows: Record<string, string> = {
     country: `Prayer Wall · ${filter.displayName}`,
     city: `Prayer Wall · ${filter.displayName}`,
     church: `Prayer Wall · ${filter.displayName}`,
   };
+
+  const supportTitle =
+    filter.type === "church"
+      ? "Prayer is one signal; the profile proves the visit."
+      : "Use prayer as a community signal, then verify in profiles.";
 
   return (
     <>
@@ -221,6 +263,31 @@ export default async function FilteredPrayerWallPage({
       </section>
 
       <section className="mx-auto max-w-[1280px] px-5 pt-6 pb-20 sm:px-12">
+        <div className="mb-8 rounded-[18px] border border-rose-gold/[0.14] bg-white px-6 py-6 shadow-sm sm:px-7">
+          <p className="gc-eyebrow">Decision support</p>
+          <h2 className="mt-3 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-3xl">
+            {supportTitle}
+          </h2>
+          <p className="mt-3 max-w-[840px] text-sm leading-[1.7] text-warm-brown sm:text-base">
+            Prayer activity can show life around a church community, but it is not a
+            ranking, score, or endorsement. Use it with profile evidence: service times,
+            location, worship, language, contact details, and first-visit cues.
+          </p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <Link
+              href="/guides/prayer-guide"
+              className="rounded-full bg-rose-gold px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-rose-gold-deep"
+            >
+              Read the prayer guide
+            </Link>
+            <Link
+              href={profileProofRoute.href}
+              className="rounded-full border border-rose-gold/30 px-5 py-2.5 text-sm font-semibold text-espresso transition-colors hover:bg-rose-gold/[0.06]"
+            >
+              {profileProofRoute.label}
+            </Link>
+          </div>
+        </div>
         {filter.type === "church" ? (
           <PrayerWallChurchSection
             churchSlug={filter.slug}

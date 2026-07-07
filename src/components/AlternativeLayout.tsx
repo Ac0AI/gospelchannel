@@ -29,6 +29,27 @@ type Props = {
   siblings: Array<{ slug: string; competitor_name: string }>;
 };
 
+const DECISION_PROOF_STEPS = [
+  {
+    title: "1. Understand the tradeoff",
+    body: "Use this comparison to see what the other directory optimizes for: coverage, curation, theology, worship data, or profile depth.",
+    href: "/guides/how-to-find-the-right-church",
+    label: "Read the church-choice guide",
+  },
+  {
+    title: "2. Choose your lane",
+    body: "Use the fit quiz or comparison guides to turn preference into a concrete search lane before browsing hundreds of profiles.",
+    href: "/guides/church-fit-quiz",
+    label: "Take the fit quiz",
+  },
+  {
+    title: "3. Prove it in profiles",
+    body: "Open GospelChannel profiles to verify service times, worship music, videos, language, location, and first-visit cues.",
+    href: "/church",
+    label: "Open church profiles",
+  },
+];
+
 export function AlternativeLayout({ data, siblings }: Props) {
   return (
     <article className="mx-auto max-w-[1080px] px-5 pb-24 sm:px-12">
@@ -49,7 +70,7 @@ export function AlternativeLayout({ data, siblings }: Props) {
             href="/church"
             className="rounded-full bg-rose-gold px-6 py-3 text-sm font-bold text-white transition-all duration-150 hover:-translate-y-px hover:bg-rose-gold-deep hover:shadow-[0_8px_24px_rgba(176,106,80,0.3)]"
           >
-            Browse the directory
+            Open church profiles
           </Link>
           <Link
             href="/guides/church-fit-quiz"
@@ -57,6 +78,37 @@ export function AlternativeLayout({ data, siblings }: Props) {
           >
             Take the fit quiz
           </Link>
+        </div>
+      </section>
+
+      {/* Decision path */}
+      <section className="mt-14 rounded-[22px] border border-rose-gold/[0.14] bg-white p-6 shadow-sm sm:p-8">
+        <p className="gc-eyebrow">Decision path</p>
+        <h2 className="mt-3 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-3xl">
+          Use this alternative page to decide, then verify the answer in real profiles.
+        </h2>
+        <p className="mt-3 max-w-[780px] text-sm leading-[1.7] text-warm-brown sm:text-base">
+          A directory comparison should not be the final answer. It should tell you which questions
+          to ask next. GospelChannel pairs the answer layer with proof routes: guides for fit,
+          then church profiles for service details, worship, language, location, and visitor signals.
+        </p>
+        <div className="mt-7 grid gap-4 md:grid-cols-3">
+          {DECISION_PROOF_STEPS.map((step) => (
+            <article key={step.title} className="rounded-[16px] border border-rose-gold/[0.12] bg-linen-deep/35 p-5">
+              <h3 className="font-serif text-lg font-semibold tracking-[-0.01em] text-espresso">
+                {step.title}
+              </h3>
+              <p className="mt-2 text-sm leading-[1.65] text-warm-brown">
+                {step.body}
+              </p>
+              <Link
+                href={step.href}
+                className="mt-4 inline-flex text-sm font-bold text-rose-gold transition-colors hover:text-rose-gold-deep"
+              >
+                {step.label} &rarr;
+              </Link>
+            </article>
+          ))}
         </div>
       </section>
 

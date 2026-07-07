@@ -1,40 +1,153 @@
 /* eslint-disable react/no-unescaped-entities */
 import type { Metadata } from "next";
 import Link from "next/link";
-import { GuideHero, GuideRelated, GuideStep, GuideTip } from "@/components/guides";
-import { buildGuideSchema } from "@/lib/seo-schema";
+import { GuideChurchEvidence, GuideHero, GuideProofLinks, GuideRelated, GuideStep, GuideTip, type GuideChurchEvidenceGroup } from "@/components/guides";
+import { getChurchIndexPageData } from "@/lib/church";
+import { buildGuideSchema, buildHowToSchema, buildItemListSchema } from "@/lib/seo-schema";
+import { toToolChurchPreview } from "@/lib/tooling";
 
 export const revalidate = 86400;
 
 const META_TITLE = "How to Find the Right Church — A Practical Step-by-Step Guide";
 const META_DESCRIPTION =
   "A plain-spoken seven-step framework for finding a church that fits — your worship style, your denomination, your city, your season of life. No shortcuts, no jargon.";
+const PAGE_URL = "https://gospelchannel.com/guides/how-to-find-the-right-church";
+
+const HOW_TO_STEPS = [
+  {
+    id: "name-what-you-need",
+    title: "Name what you actually need from a Sunday",
+    text: "Write down what a good Sunday morning looks like in this season: worship style, service length, room size, kids ministry, preaching style, and social comfort.",
+  },
+  {
+    id: "pick-worship-style",
+    title: "Pick a worship style first",
+    text: "Choose the worship sound and room feel that makes a second visit most likely before narrowing by denomination.",
+  },
+  {
+    id: "pick-denomination-range",
+    title: "Pick a denomination range (or skip this step)",
+    text: "Filter by denomination if you already know the tradition family you want. If not, use denomination as a secondary filter after worship style.",
+  },
+  {
+    id: "filter-by-city",
+    title: "Filter by your city, not your radius",
+    text: "Start with a city page you can realistically attend, then narrow by style, denomination, language, and profile details.",
+  },
+  {
+    id: "read-profiles-listen-to-music",
+    title: "Read profile copy and listen to the music",
+    text: "Use each church profile's description, service details, playlists, and videos to understand what Sunday actually sounds and feels like.",
+  },
+  {
+    id: "visit-two-or-three",
+    title: "Visit two or three, not seven",
+    text: "Create a short list and visit two or three churches in consecutive weeks so comparison fatigue does not distort the decision.",
+  },
+  {
+    id: "land-somewhere",
+    title: "Land somewhere on purpose",
+    text: "After a few visits, choose a congregation and give it enough Sundays to learn its real rhythm before deciding whether it fits.",
+  },
+];
+
+const CHURCH_SEARCH_EVIDENCE = [
+  {
+    id: "music-first",
+    title: "Music-first profile examples",
+    description: "Profiles with worship music available, so you can hear the room before using a Sunday morning.",
+    href: "/church/churches-with-worship-music",
+    linkLabel: "Browse churches with music",
+    filters: { hasMusic: true },
+  },
+  {
+    id: "service-ready",
+    title: "Profiles with service times",
+    description: "Churches with concrete visit details, useful when you are turning a shortlist into a real Sunday plan.",
+    href: "/church/churches-with-service-times",
+    linkLabel: "Browse service-ready profiles",
+    filters: { hasServiceTimes: true },
+  },
+  {
+    id: "contemporary-starting-points",
+    title: "Contemporary worship starting points",
+    description: "A common first lane for people who want a modern, lower-friction worship environment.",
+    href: "/church/style/contemporary-worship",
+    linkLabel: "Browse contemporary churches",
+    filters: { styleSlug: "contemporary-worship" },
+  },
+] as const;
+
+function buildEvidenceSchema(groups: GuideChurchEvidenceGroup[]) {
+  return groups
+    .filter((group) => group.churches.length > 0)
+    .map((group) =>
+      buildItemListSchema({
+        name: group.title,
+        items: group.churches.map((church) => ({
+          name: church.name,
+          url: `https://gospelchannel.com${church.href}`,
+        })),
+      }),
+    );
+}
 
 export const metadata: Metadata = {
   title: META_TITLE,
   description: META_DESCRIPTION,
-  alternates: { canonical: "https://gospelchannel.com/guides/how-to-find-the-right-church" },
+  alternates: { canonical: PAGE_URL },
   openGraph: {
     title: META_TITLE,
     description: META_DESCRIPTION,
-    url: "https://gospelchannel.com/guides/how-to-find-the-right-church",
+    url: PAGE_URL,
     siteName: "GospelChannel",
     type: "article",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: META_TITLE,
+    description: META_DESCRIPTION,
+  },
 };
 
-export default function HowToFindTheRightChurchPage() {
+export default async function HowToFindTheRightChurchPage() {
+  const evidenceGroups = await Promise.all(
+    CHURCH_SEARCH_EVIDENCE.map(async (group) => {
+      const page = await getChurchIndexPageData({
+        filters: group.filters,
+        page: 1,
+        pageSize: 3,
+      });
+
+      return {
+        id: group.id,
+        title: group.title,
+        description: group.description,
+        href: group.href,
+        linkLabel: group.linkLabel,
+        churches: page.pageItems.map(toToolChurchPreview),
+      };
+    }),
+  );
   const schema = buildGuideSchema({
     slug: "how-to-find-the-right-church",
     headline: "How to Find the Right Church",
     description: META_DESCRIPTION,
   });
+  const howToSchema = buildHowToSchema({
+    name: "How to Find the Right Church",
+    description: META_DESCRIPTION,
+    url: PAGE_URL,
+    totalTime: "PT60M",
+    steps: HOW_TO_STEPS,
+  });
+  const evidenceSchema = buildEvidenceSchema(evidenceGroups);
 
   return (
     <article className="mx-auto max-w-[760px] px-5 pb-24 sm:px-6">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([...schema, howToSchema, ...evidenceSchema]) }}
       />
 
       <GuideHero
@@ -59,9 +172,43 @@ export default function HowToFindTheRightChurchPage() {
         </p>
       </section>
 
-      <GuideStep step={1} title="Name what you actually need from a Sunday">
+      <GuideProofLinks
+        title="Turn the framework into a shortlist"
+        intro="Use the guide for the order of decisions, then use GospelChannel's proof routes to validate each decision with real churches, worship styles, locations, service details, and music links."
+        links={[
+          {
+            href: "/church/style",
+            label: "Start with worship style",
+            description: "Browse churches by the sound and room feel you are most likely to return to.",
+          },
+          {
+            href: "/church/denomination",
+            label: "Check denomination fit",
+            description: "Compare tradition families after you know what kind of Sunday you want.",
+          },
+          {
+            href: "/church/city",
+            label: "Pick a city before a radius",
+            description: "Open a city hub, then narrow by style, denomination, language, and church profile signals.",
+          },
+          {
+            href: "/church",
+            label: "Read individual profiles",
+            description: "Use service times, music, videos, contact details, and first-visit cues as the final proof.",
+          },
+        ]}
+      />
+
+      <GuideChurchEvidence
+        title="Use real profiles to test the plan"
+        intro="The framework is only useful if it produces churches you can actually compare. These examples come from the profile database and show the kinds of signals to inspect before visiting."
+        groups={evidenceGroups}
+        toolName="find_right_church_guide"
+      />
+
+      <GuideStep id={HOW_TO_STEPS[0].id} step={1} title={HOW_TO_STEPS[0].title}>
         <p>
-          Before you open any directory, write down what a good Sunday morning looks like for
+          Before you open any church profile database, write down what a good Sunday morning looks like for
           you in this season. Three or four sentences, not a manifesto. Worship style. Length of
           service. Whether you want a big room or a small one. Whether you want kids ministry,
           and how integrated you want it to be. Whether you want preaching that's expositional,
@@ -82,7 +229,7 @@ export default function HowToFindTheRightChurchPage() {
         </GuideTip>
       </GuideStep>
 
-      <GuideStep step={2} title="Pick a worship style first">
+      <GuideStep id={HOW_TO_STEPS[1].id} step={2} title={HOW_TO_STEPS[1].title}>
         <p>
           Of all the filters available, worship style is the one most people get wrong by
           ignoring it. Two free-church congregations on the same street can sound completely
@@ -105,7 +252,7 @@ export default function HowToFindTheRightChurchPage() {
         </GuideTip>
       </GuideStep>
 
-      <GuideStep step={3} title="Pick a denomination range (or skip this step)">
+      <GuideStep id={HOW_TO_STEPS[2].id} step={3} title={HOW_TO_STEPS[2].title}>
         <p>
           Some readers know exactly what tradition they want — Baptist, Vineyard, Pentecostal,
           Anglican. If that's you, filter by denomination as your second criterion. If you
@@ -121,7 +268,7 @@ export default function HowToFindTheRightChurchPage() {
         </p>
       </GuideStep>
 
-      <GuideStep step={4} title="Filter by your city, not your radius">
+      <GuideStep id={HOW_TO_STEPS[3].id} step={4} title={HOW_TO_STEPS[3].title}>
         <p>
           Open the city page for your actual location and look at what's there. Most directories
           show you a radius — 5, 10, 25 miles — and let suburbs that you'll never realistically
@@ -137,7 +284,7 @@ export default function HowToFindTheRightChurchPage() {
         </p>
       </GuideStep>
 
-      <GuideStep step={5} title="Read profile copy and listen to the music">
+      <GuideStep id={HOW_TO_STEPS[4].id} step={5} title={HOW_TO_STEPS[4].title}>
         <p>
           You should now have a short list of three to eight churches that fit your style,
           denomination, and city. Before you visit any of them, do two things on each profile:
@@ -161,7 +308,7 @@ export default function HowToFindTheRightChurchPage() {
         </GuideTip>
       </GuideStep>
 
-      <GuideStep step={6} title="Visit two or three, not seven">
+      <GuideStep id={HOW_TO_STEPS[5].id} step={6} title={HOW_TO_STEPS[5].title}>
         <p>
           Pick two or three churches from your short list and visit them in consecutive weeks.
           Don't try to visit eight churches; the comparison fatigue makes every Sunday worse
@@ -182,7 +329,7 @@ export default function HowToFindTheRightChurchPage() {
         </p>
       </GuideStep>
 
-      <GuideStep step={7} title="Land somewhere on purpose">
+      <GuideStep id={HOW_TO_STEPS[6].id} step={7} title={HOW_TO_STEPS[6].title}>
         <p>
           After two or three visits, pick a congregation and commit to giving it eight Sundays
           before deciding. Eight is the rough number where a church stops being a place you
@@ -259,7 +406,7 @@ export default function HowToFindTheRightChurchPage() {
             <p className="mt-2 text-sm leading-relaxed text-warm-brown sm:text-base">
               Go gentle. Slow the process down, lean on broader traditions in step 3, and give
               yourself permission to leave a visit early without judgement on the congregation.
-              The /for/deconstructing page describes how the directory can fit this season.
+              The /for/deconstructing page describes how profile proof can fit this season.
             </p>
             <Link
               href="/for/deconstructing"
@@ -281,7 +428,7 @@ export default function HowToFindTheRightChurchPage() {
           the most common reasons people end up at the wrong church.
         </p>
         <p className="mt-4 text-base leading-relaxed text-warm-brown">
-          Everything else is execution. The directory, the worship-styles guide, the
+          Everything else is execution. The profile database, the worship-styles guide, the
           denominations guide, the fit quiz, and the audience-specific pages are tools for the
           same job: finding a Sunday morning you'd want to keep coming back to. None of them
           replaces the visit; they just make sure the visit is worth the morning.
@@ -291,7 +438,7 @@ export default function HowToFindTheRightChurchPage() {
             href="/church"
             className="rounded-full bg-rose-gold px-6 py-3 text-sm font-bold text-white transition-all duration-150 hover:-translate-y-px hover:bg-rose-gold-deep hover:shadow-[0_8px_24px_rgba(176,106,80,0.3)]"
           >
-            Open the directory
+            Open church profiles
           </Link>
           <Link
             href="/guides/church-fit-quiz"

@@ -58,8 +58,11 @@ export function HeroSearch({ churches = [], surpriseSlugs = [], variant = "hero"
           onValueChange={setQuery}
           onSuggestionSelect={(suggestion, selectedQuery) => {
             posthog.capture("church_search_result_selected", {
-              church_slug: suggestion.slug,
-              church_name: suggestion.title,
+              church_slug: suggestion.type === "church" ? suggestion.slug : undefined,
+              church_name: suggestion.type === "church" ? suggestion.title : undefined,
+              suggestion_type: suggestion.type,
+              suggestion_title: suggestion.title,
+              suggestion_href: suggestion.href,
               query: selectedQuery,
               variant,
             });

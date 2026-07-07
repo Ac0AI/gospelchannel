@@ -7,7 +7,7 @@ export const revalidate = 3600;
 const CANONICAL = "https://gospelchannel.com/church/denomination";
 const TITLE = "Browse Churches by Denomination";
 const DESCRIPTION =
-  "Find churches by tradition and denomination. Compare worship playlists, service times, and community pages across Baptist, Pentecostal, Lutheran, non-denominational, and more.";
+  "Use denomination as a church decision route. Compare Baptist, Pentecostal, Lutheran, non-denominational, and other traditions, then prove the fit with real church profiles.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -19,6 +19,11 @@ export const metadata: Metadata = {
     url: CANONICAL,
     type: "website",
     siteName: "GospelChannel",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
   },
 };
 

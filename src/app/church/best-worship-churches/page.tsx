@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getBestWorshipChurches } from "@/lib/discovery-churches";
+import {
+  buildDiscoveryChurchProofs,
+  formatDiscoveryStyles,
+  getBestWorshipChurches,
+} from "@/lib/discovery-churches";
 
 // Proof-of-concept discovery page #2: intercepts the "[topic] reddit"-shaped
 // search pattern (e.g. "best worship church reddit") the way the approved
@@ -25,7 +29,7 @@ const FAQS = [
   {
     question: "How is this list put together?",
     answer:
-      "This is GospelChannel's own curated list, ranked by our internal directory score (a measure of profile completeness and data quality), filtered to churches tagged as contemporary, charismatic or gospel worship. It is not sourced from Reddit, reviews, or any third-party ranking.",
+      "This is GospelChannel's own curated list, ranked by our internal profile completeness score (a measure of documented public profile evidence and data quality), filtered to churches tagged as contemporary, charismatic or gospel worship. It is not sourced from Reddit, reviews, or any third-party ranking.",
   },
   {
     question: "Are these churches Pentecostal or charismatic?",
@@ -40,14 +44,15 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = "Best Worship Churches — What People Recommend";
   const description =
     count > 0
-      ? `${count} churches known for their worship, from Hillsong and Planetshakers to Jesus Culture and Kensington Temple, ranked by GospelChannel's directory data.`
-      : "Churches known for their worship, ranked by GospelChannel's directory data.";
+      ? `${count} churches known for their worship, from Hillsong and Planetshakers to Jesus Culture and Kensington Temple, ranked by GospelChannel's profile evidence data.`
+      : "Churches known for their worship, ranked by GospelChannel's profile evidence data.";
 
   return {
     title,
     description,
     alternates: { canonical: CANONICAL },
     openGraph: { title, description, url: CANONICAL, type: "website", siteName: "GospelChannel" },
+    twitter: { card: "summary_large_image", title, description },
     ...(count < MIN_INDEXABLE ? { robots: { index: false, follow: true } } : {}),
   };
 }
@@ -63,7 +68,7 @@ export default async function BestWorshipChurchesPage() {
   const intro =
     `Searching for churches people recommend for worship? Here are ${count} congregations ` +
     `known for their worship, from ${leadIn} to Kensington Temple and Jesus Culture, drawn from ` +
-    `GospelChannel's own directory and ranked by how complete and well-documented each church's ` +
+    `GospelChannel's own profile database and ranked by how complete and well-documented each church's ` +
     `profile is. Each entry links to its full profile.`;
 
   const updatedIso = new Date().toISOString();
@@ -113,6 +118,7 @@ export default async function BestWorshipChurchesPage() {
           "@id": `https://gospelchannel.com/church/${church.slug}`,
           name: church.name,
           url: `https://gospelchannel.com/church/${church.slug}`,
+          description: buildDiscoveryChurchProofs(church).join("; "),
           ...(church.website ? { sameAs: church.website } : {}),
           ...(church.logo ? { image: church.logo } : {}),
           address: {
@@ -186,15 +192,15 @@ export default async function BestWorshipChurchesPage() {
                       <th className="px-4 py-3 font-semibold">Location</th>
                       <th className="px-4 py-3 font-semibold">Tradition</th>
                       <th className="px-4 py-3 font-semibold">Worship style</th>
+                      <th className="px-4 py-3 font-semibold">Profile proof</th>
                       <th className="px-4 py-3 font-semibold">Site</th>
                     </tr>
                   </thead>
                   <tbody>
                     {churches.map((church) => {
-                      const style = church.musicStyle && church.musicStyle.length > 0
-                        ? church.musicStyle.map((s) => s.charAt(0).toUpperCase() + s.slice(1)).join(", ")
-                        : null;
+                      const style = formatDiscoveryStyles(church.musicStyle);
                       const place = church.location ?? church.country ?? null;
+                      const proof = buildDiscoveryChurchProofs(church);
                       return (
                         <tr key={church.slug} className="border-b border-rose-gold/10 last:border-0 align-top">
                           <td className="px-4 py-3">
@@ -208,6 +214,9 @@ export default async function BestWorshipChurchesPage() {
                           <td className="px-4 py-3 text-espresso/75">{place ?? "—"}</td>
                           <td className="px-4 py-3 text-espresso/75">{church.denomination ?? "—"}</td>
                           <td className="px-4 py-3 text-espresso/75">{style ?? "—"}</td>
+                          <td className="px-4 py-3 text-espresso/75">
+                            {proof.length > 0 ? proof.slice(0, 3).join(" · ") : "Profile data available"}
+                          </td>
                           <td className="px-4 py-3">
                             {church.website ? (
                               <a
@@ -231,8 +240,10 @@ export default async function BestWorshipChurchesPage() {
 
               <p className="mt-4 text-xs text-muted-warm">
                 How we chose: churches tagged as contemporary, charismatic or gospel worship, ranked by
-                GospelChannel&rsquo;s own directory score (a measure of profile completeness, not an
-                independent or user-submitted rating). Data from church profiles on GospelChannel.
+                GospelChannel&rsquo;s own profile completeness score (not an
+                independent or user-submitted rating). The proof column is pulled from each church
+                profile: service times, worship playlists, videos, style tags, language, official site,
+                and location where available.
               </p>
             </>
           )}

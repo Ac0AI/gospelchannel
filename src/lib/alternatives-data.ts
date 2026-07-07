@@ -226,7 +226,7 @@ export const ALTERNATIVES: Record<string, AlternativeData> = {
 
     cta_h2: "Ready to find your Sunday?",
     cta_lede:
-      "Browse the directory, take the church fit quiz, or jump straight to your country, city, or worship style.",
+      "Open church profiles, take the church fit quiz, or jump straight to your country, city, or worship style.",
   },
 
   "gospel-coalition": {
@@ -392,7 +392,7 @@ export const ALTERNATIVES: Record<string, AlternativeData> = {
 
     cta_h2: "Find a church that fits — without a confessional gate",
     cta_lede:
-      "Browse the directory, filter by worship style, or take the church fit quiz to find a free-church congregation near you.",
+      "Open church profiles, filter by worship style, or take the church fit quiz to find a free-church congregation near you.",
   },
 
   mychurchfinder: {

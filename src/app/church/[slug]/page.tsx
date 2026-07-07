@@ -53,6 +53,13 @@ type ChurchPageProps = {
   params: Promise<{ slug: string }>;
 };
 
+type ProfileEvidenceSignal = {
+  key: string;
+  label: string;
+  value: string;
+  href?: string;
+};
+
 // Church data is near-static (enrichment changes rarely). 24h ISR cuts
 // crawler-driven cold renders: re-crawls within a day hit the cache instead
 // of rebuilding from ~10 Neon queries. Worker edge cache mirrors this TTL.
@@ -139,6 +146,19 @@ function splitDisplayName(name: string): { first: string; rest: string } {
 function firstSentence(text: string): string {
   const match = text.match(/^[^.!?]+[.!?]/);
   return (match ? match[0] : text).trim();
+}
+
+function joinEvidenceList(values: Array<string | null | undefined>, max = 3): string {
+  return values
+    .map((value) => normalizeDisplayText(value))
+    .filter((value): value is string => Boolean(value))
+    .slice(0, max)
+    .map((value) => getProfileOptionLabel(value))
+    .join(", ");
+}
+
+function formatEvidenceCount(count: number, singular: string, plural: string): string {
+  return `${count.toLocaleString("en-US")} ${count === 1 ? singular : plural}`;
 }
 
 /* ─── metadata (unchanged) ─── */
@@ -396,6 +416,55 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
       ? { href: "/guides/worship-style-match", label: "Match my worship style" }
       : { href: "/guides/first-visit-guide", label: "First visit guide" },
   ].filter((link): link is { href: string; label: string } => Boolean(link));
+  const locationEvidence = joinEvidenceList([streetAddress, city, church.country], 3);
+  const musicEvidence = [
+    allPlaylists.length > 0
+      ? formatEvidenceCount(allPlaylists.length, "worship playlist", "worship playlists")
+      : null,
+    videos.length > 0
+      ? formatEvidenceCount(videos.length, "worship video", "worship videos")
+      : null,
+    topSongs.length >= 3
+      ? formatEvidenceCount(topSongs.length, "known worship song", "known worship songs")
+      : null,
+  ].filter((value): value is string => Boolean(value)).join(", ");
+  const ministryEvidence = joinEvidenceList([
+    enrichment?.childrenMinistry ? "children" : null,
+    enrichment?.youthMinistry ? "youth" : null,
+    ...communityMinistries,
+  ], 4);
+  const profileEvidenceSignals: ProfileEvidenceSignal[] = [
+    locationEvidence
+      ? { key: "location", label: "Location proof", value: locationEvidence, href: mapsHref }
+      : null,
+    serviceTimeLabel
+      ? { key: "service-times", label: "Sunday timing", value: serviceTimeLabel, href: "#your-first-sunday" }
+      : null,
+    serviceDurationMinutes
+      ? { key: "service-length", label: "Service length", value: `${serviceDurationMinutes} minutes`, href: "#your-first-sunday" }
+      : null,
+    communityDenomination
+      ? { key: "tradition", label: "Tradition signal", value: getProfileOptionLabel(communityDenomination), href: primaryDenominationFilter ? `/church/denomination/${primaryDenominationFilter.slug}` : undefined }
+      : null,
+    styles.length > 0
+      ? { key: "worship-style", label: "Worship style", value: joinEvidenceList(styles, 3), href: primaryStyleFilter ? `/church/style/${primaryStyleFilter.slug}` : undefined }
+      : null,
+    musicEvidence
+      ? { key: "music-preview", label: "Music preview", value: musicEvidence, href: primaryPlaylist || spotifyArtistId ? "#the-sound" : topSongs.length >= 3 ? "#what-they-sing" : undefined }
+      : null,
+    communityLanguages.length > 0
+      ? { key: "languages", label: "Languages", value: joinEvidenceList(communityLanguages, 4) }
+      : null,
+    ministryEvidence
+      ? { key: "ministries", label: "Ministries", value: ministryEvidence, href: "#your-first-sunday" }
+      : null,
+    goodFitTags && goodFitTags.length > 0
+      ? { key: "fit-tags", label: "Good fit signals", value: goodFitTags.slice(0, 3).join(", ") }
+      : null,
+    whatToExpect
+      ? { key: "first-visit", label: "First-visit cue", value: firstSentence(whatToExpect), href: "#your-first-sunday" }
+      : null,
+  ].filter((signal): signal is ProfileEvidenceSignal => Boolean(signal && signal.value));
   const videoSchemaItems = videos
     .filter((video) => Boolean(video.publishedAt && video.thumbnailUrl))
     .slice(0, 20);
@@ -535,6 +604,33 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
         { "@type": "ListItem", position: 2, name: church.name, item: pageUrl },
       ],
     },
+    ...(profileEvidenceSignals.length > 0
+      ? [{
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: `Profile evidence for ${displayName}`,
+          description: `Decision signals on ${displayName}'s GospelChannel profile: service details, music, location, tradition, language, and first-visit cues where available.`,
+          itemListElement: profileEvidenceSignals.map((signal, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            name: signal.label,
+            item: {
+              "@type": "Thing",
+              name: signal.label,
+              description: signal.value,
+              ...(signal.href
+                ? {
+                    url: signal.href.startsWith("http")
+                      ? signal.href
+                      : signal.href.startsWith("#")
+                        ? `${pageUrl}${signal.href}`
+                        : `https://gospelchannel.com${signal.href}`,
+                  }
+                : {}),
+            },
+          })),
+        }]
+      : []),
     ...(faqMainEntity.length > 0
       ? [{
           "@context": "https://schema.org",
@@ -864,6 +960,65 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
         </section>
       </ScrollReveal>
 
+      {/* ━━━━━━━━━━ 3b. PROFILE EVIDENCE ━━━━━━━━━━ */}
+      {profileEvidenceSignals.length > 0 && (
+        <ScrollReveal>
+          <section id="profile-evidence" className="mx-auto max-w-[1100px] px-5 pt-20 sm:px-12 sm:pt-24">
+            <div className="border-y border-rose-gold/[0.14] py-8">
+              <p className="gc-eyebrow">Profile evidence</p>
+              <h2 className="mt-2 font-serif text-3xl font-semibold tracking-[-0.01em] text-espresso sm:text-4xl">
+                Why this profile belongs in a shortlist.
+              </h2>
+              <p className="mt-3 max-w-[760px] text-sm leading-[1.7] text-warm-brown sm:text-base">
+                Use these signals as the proof layer behind the guides and proof routes. They show what can be checked before a first visit.
+              </p>
+              <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {profileEvidenceSignals.slice(0, 9).map((signal) => {
+                  const content = (
+                    <>
+                      <span className="block text-[11px] font-bold uppercase tracking-[0.16em] text-muted-warm">
+                        {signal.label}
+                      </span>
+                      <span className="mt-2 block text-sm leading-[1.55] text-espresso">
+                        {signal.value}
+                      </span>
+                    </>
+                  );
+
+                  if (signal.href) {
+                    return signal.href.startsWith("http") ? (
+                      <a
+                        key={signal.key}
+                        href={signal.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="rounded-lg border border-rose-gold/20 bg-white px-4 py-4 transition-colors hover:border-rose-gold/45"
+                      >
+                        {content}
+                      </a>
+                    ) : (
+                      <Link
+                        key={signal.key}
+                        href={signal.href}
+                        className="rounded-lg border border-rose-gold/20 bg-white px-4 py-4 transition-colors hover:border-rose-gold/45"
+                      >
+                        {content}
+                      </Link>
+                    );
+                  }
+
+                  return (
+                    <div key={signal.key} className="rounded-lg border border-rose-gold/20 bg-white px-4 py-4">
+                      {content}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        </ScrollReveal>
+      )}
+
       {/* ━━━━━━━━━━ 4. YOUR FIRST SUNDAY ━━━━━━━━━━ */}
       {hasAboutData && (
         <ScrollReveal>
@@ -959,8 +1114,8 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                         </dt>
                         <dd className="max-w-[40ch] text-right text-sm leading-relaxed text-warm-brown">
                           {Array.from(new Set([
-                            enrichment!.childrenMinistry && "Children",
-                            enrichment!.youthMinistry && "Youth",
+                            enrichment?.childrenMinistry && "Children",
+                            enrichment?.youthMinistry && "Youth",
                             ...communityMinistries.map((ministry) => getProfileOptionLabel(ministry)),
                           ].filter(Boolean))).join(", ")}
                         </dd>
@@ -1045,6 +1200,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
       {(primaryPlaylist || (!hasPlaylist && spotifyArtistId)) && (
         <ScrollReveal>
           <section
+            id="the-sound"
             className="relative mt-32 overflow-hidden px-5 py-32 text-white sm:px-12 sm:py-36"
             style={{ background: "radial-gradient(ellipse at 30% 20%, #4a2519 0%, #1d0f0b 70%)" }}
           >
@@ -1159,7 +1315,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
       {/* ━━━━━━━━━━ 5b. WHAT THEY SING (playlist.church corpus) ━━━━━━━━━━ */}
       {topSongs.length >= 3 && (
         <ScrollReveal>
-          <section className="mx-auto mt-14 w-full max-w-5xl px-4 sm:px-6">
+          <section id="what-they-sing" className="mx-auto mt-14 w-full max-w-5xl px-4 sm:px-6">
             <ChurchSongsList
               eyebrow="What they sing"
               title={`The songs ${church.name} actually sings`}

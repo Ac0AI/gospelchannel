@@ -3,25 +3,57 @@ import {
   GuideHero,
   GuideWorryCard,
   GuideCTA,
+  GuideProofLinks,
   GuideRelated,
 } from "@/components/guides";
 import { ToolPageTracker } from "@/components/tools/ToolPageTracker";
-import { buildGuideSchema } from "@/lib/seo-schema";
+import { buildGuideSchema, buildItemListSchema } from "@/lib/seo-schema";
 
 export const revalidate = 3600;
 
+const PAGE_URL = "https://gospelchannel.com/guides/faith-faq";
+const META_DESCRIPTION =
+  "What is salvation? Why read the Bible? Is baptism required? Honest answers to the questions everyone asks but nobody wants to be the first to say out loud.";
+
+const FAITH_PROOF_LINKS = [
+  {
+    href: "/church/denomination/evangelical",
+    label: "Browse evangelical churches",
+    description: "Good starting point for salvation, Bible, baptism, and local church membership questions.",
+  },
+  {
+    href: "/church/denomination/pentecostal",
+    label: "Browse Pentecostal churches",
+    description: "Use this when Holy Spirit baptism, spiritual gifts, and expressive prayer are central questions.",
+  },
+  {
+    href: "/church/style/charismatic",
+    label: "Browse charismatic churches",
+    description: "Compare churches where prayer response, gifts of the Spirit, and freer worship are more visible.",
+  },
+  {
+    href: "/compare/baptist-vs-pentecostal",
+    label: "Compare Baptist vs Pentecostal",
+    description: "Useful when the question is really about which Sunday room and theology emphasis fits you.",
+  },
+];
+
 export const metadata: Metadata = {
   title: "Common Questions About Faith - Honest Answers",
-  description:
-    "What is salvation? Why read the Bible? Is baptism required? Honest answers to the questions everyone asks but nobody wants to be the first to say out loud.",
-  alternates: { canonical: "https://gospelchannel.com/guides/faith-faq" },
+  description: META_DESCRIPTION,
+  alternates: { canonical: PAGE_URL },
   openGraph: {
     title: "Common Questions About Faith",
     description:
       "Honest answers to the big questions about salvation, baptism, the Holy Spirit, and church life.",
-    url: "https://gospelchannel.com/guides/faith-faq",
+    url: PAGE_URL,
     siteName: "GospelChannel",
     type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Common Questions About Faith",
+    description: "Honest answers to the big questions about salvation, baptism, the Holy Spirit, and church life.",
   },
 };
 
@@ -154,8 +186,14 @@ export default function FaithFaqPage() {
   const guideSchema = buildGuideSchema({
     slug: "faith-faq",
     headline: "Common Questions About Faith",
-    description:
-      "What is salvation? Why read the Bible? Is baptism required? Honest answers to the questions everyone asks but nobody wants to be the first to say out loud.",
+    description: META_DESCRIPTION,
+  });
+  const proofRouteSchema = buildItemListSchema({
+    name: "Faith FAQ church decision routes",
+    items: FAITH_PROOF_LINKS.map((link) => ({
+      name: link.label,
+      url: `https://gospelchannel.com${link.href}`,
+    })),
   });
 
   return (
@@ -164,7 +202,7 @@ export default function FaithFaqPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify([...guideSchema, buildFaqSchema()]),
+          __html: JSON.stringify([...guideSchema, buildFaqSchema(), proofRouteSchema]),
         }}
       />
 
@@ -172,6 +210,12 @@ export default function FaithFaqPage() {
         eyebrow="Free Guide"
         title="Common Questions About Faith"
         intro="The questions everyone asks but nobody wants to be the first to say out loud."
+      />
+
+      <GuideProofLinks
+        title="Turn answers into a church search"
+        intro="Some faith questions are personal. Others point toward the kind of church tradition you should visit first. Use the answers here for language, then use the profile database to compare real churches shaped by those emphases."
+        links={FAITH_PROOF_LINKS}
       />
 
       {SECTIONS.map((section) => (

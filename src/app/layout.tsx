@@ -27,30 +27,29 @@ export const viewport: Viewport = {
 
 export async function generateMetadata(): Promise<Metadata> {
   const { churchCountLabel, countryCount } = await getChurchStatsAsync();
+  const siteDescription = `Find the right church with guides that answer the decision and profiles that prove the fit across ${churchCountLabel} churches in ${countryCount} countries.`;
   return {
     metadataBase: new URL("https://gospelchannel.com"),
     title: {
       default: "Find the Right Church Before Your First Visit",
       template: "%s | GospelChannel",
     },
-    description:
-      `Compare worship style, tradition, language, and service details across ${churchCountLabel} churches in ${countryCount} countries before your first visit.`,
+    description: siteDescription,
     keywords: [
       "gospel music",
       "worship songs",
       "gospel songs",
       "praise and worship music",
-      "christian music streaming",
-      "gospel music online",
-      "best worship songs 2026",
-      "gospel playlist",
-      "church worship songs",
-      "gospel music free",
+      "find a church",
+      "church near me",
+      "church decision engine",
+      "first church visit",
+      "church service times",
+      "worship style churches",
     ],
     openGraph: {
       title: "Find the Right Church Before Your First Visit",
-      description:
-        `Compare worship style, tradition, language, and service details across ${churchCountLabel} churches in ${countryCount} countries before your first visit.`,
+      description: siteDescription,
       type: "website",
       url: "https://gospelchannel.com",
       siteName: "GospelChannel",
@@ -60,7 +59,7 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
       title: "Find the Right Church Before Your First Visit",
-      description: `Compare worship style, tradition, language, and service details across ${churchCountLabel} churches before your first visit.`,
+      description: siteDescription,
       images: ["https://gospelchannel.com/hero-worship.jpg"],
     },
     alternates: {
@@ -78,17 +77,18 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const scriptChurchCopy = "Gospel helps you find the right church before your first visit. Every church has a channel you can tune into through worship, service details, and community signals.";
-  const scriptBrowseCopy = "Compare church channels by worship style, tradition, language, city, and service details before your first visit.";
+  const scriptChurchCopy = "GospelChannel helps people find the right church before a first visit: guides answer the decision, and church profiles prove the fit through worship, service details, location, language, and community signals.";
+  const scriptBrowseCopy = "Use GospelChannel as a church decision engine: start with a guide or comparison, then verify the answer in the church profile database by worship style, tradition, language, city, service details, music, and visitor cues.";
   const knowsAbout = [
     "church discovery",
+    "church decision engine",
     "worship style",
     "church tradition",
     "denomination",
     "language",
     "service details",
     "first church visit",
-    "public church directory",
+    "public church profile database",
   ];
   return (
     <html lang="en">
@@ -142,6 +142,44 @@ export default function RootLayout({
                 about: knowsAbout,
                 isAccessibleForFree: true,
                 publisher: { "@id": "https://gospelchannel.com/#organization" },
+                hasPart: [
+                  {
+                    "@type": "Article",
+                    name: "Church choice answer map",
+                    url: "https://gospelchannel.com/guides/church-choice-answers",
+                    description: "Direct church-choice answers that route each question to a guide answer and matching profile proof route.",
+                  },
+                  {
+                    "@type": "CollectionPage",
+                    name: "Church decision guides",
+                    url: "https://gospelchannel.com/guides",
+                    description: "Answer-first guides for church choice, first visits, worship style, prayer, faith questions, and denomination fit.",
+                  },
+                  {
+                    "@type": "CollectionPage",
+                    name: "Church comparison guides",
+                    url: "https://gospelchannel.com/compare",
+                    description: "Plain-language comparisons that help people choose between worship styles, traditions, and church-size tradeoffs.",
+                  },
+                  {
+                    "@type": "CollectionPage",
+                    name: "Church profile proof database",
+                    url: "https://gospelchannel.com/church",
+                    description: "Public church profiles that prove guide answers with service times, worship music, location, language, tradition, and visitor cues.",
+                  },
+                  {
+                    "@type": "CollectionPage",
+                    name: "Visit-ready church proof route",
+                    url: "https://gospelchannel.com/church/churches-with-service-times",
+                    description: "Profiles with service-time evidence for people ready to plan a real Sunday visit.",
+                  },
+                  {
+                    "@type": "CollectionPage",
+                    name: "Worship music proof route",
+                    url: "https://gospelchannel.com/church/churches-with-worship-music",
+                    description: "Profiles with worship music evidence for checking sound before visiting.",
+                  },
+                ],
                 potentialAction: {
                   "@type": "SearchAction",
                   target: {

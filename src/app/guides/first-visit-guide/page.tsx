@@ -2,6 +2,7 @@
 // src/app/tools/first-visit-guide/page.tsx
 import type { Metadata } from "next";
 import {
+  GuideChurchEvidence,
   GuideHero,
   GuideIllustration,
   GuideStep,
@@ -9,26 +10,102 @@ import {
   GuideTip,
   GuideWorryCard,
   GuideCTA,
+  GuideProofLinks,
   GuideRelated,
+  type GuideChurchEvidenceGroup,
 } from "@/components/guides";
 import { ToolPageTracker } from "@/components/tools/ToolPageTracker";
-import { buildGuideSchema } from "@/lib/seo-schema";
+import { getChurchIndexPageData } from "@/lib/church";
+import { buildGuideSchema, buildHowToSchema, buildItemListSchema } from "@/lib/seo-schema";
+import { toToolChurchPreview } from "@/lib/tooling";
 
 export const revalidate = 3600;
 
 const MEDIA = "https://media.gospelchannel.com/guides/first-visit";
+const PAGE_URL = "https://gospelchannel.com/guides/first-visit-guide";
+const META_DESCRIPTION =
+  "Honest step-by-step guide for your first worship service. What the music is like, whether you need to raise your hands, what to do during an altar call, and everything else nobody tells you.";
+
+const FIRST_VISIT_EVIDENCE = [
+  {
+    id: "service-ready",
+    title: "Profiles with service times",
+    description: "Use these when the question is no longer abstract and you need a real Sunday plan.",
+    href: "/church/churches-with-service-times",
+    linkLabel: "Browse service-ready profiles",
+    filters: { hasServiceTimes: true },
+  },
+  {
+    id: "music-preview",
+    title: "Profiles with worship music",
+    description: "Listen before you visit so the worship set is less surprising when you walk in.",
+    href: "/church/churches-with-worship-music",
+    linkLabel: "Browse churches with music",
+    filters: { hasMusic: true },
+  },
+  {
+    id: "low-friction",
+    title: "Modern first-visit starting points",
+    description: "Contemporary churches often make first visits easier to decode with clearer host moments and familiar worship language.",
+    href: "/church/style/contemporary-worship",
+    linkLabel: "Browse contemporary churches",
+    filters: { styleSlug: "contemporary-worship" },
+  },
+] as const;
+
+const FIRST_VISIT_STEPS = [
+  {
+    id: "parking-lot",
+    title: "The Parking Lot",
+    text: "Take a breath before going in. Most first-time visitors feel nervous, and you can leave anytime.",
+  },
+  {
+    id: "lobby",
+    title: "The Lobby",
+    text: "Say you are visiting if someone greets you, grab coffee if it helps, and arrive about ten minutes early.",
+  },
+  {
+    id: "finding-a-seat",
+    title: "Finding a Seat",
+    text: "Choose a back-row aisle seat if you want a lower-pressure first visit and an easy exit.",
+  },
+  {
+    id: "music",
+    title: "The Music",
+    text: "Expect 20 to 40 minutes of worship. You can stand, sit, sing, stay quiet, or simply listen.",
+  },
+  {
+    id: "sermon",
+    title: "The Sermon",
+    text: "Expect a Bible-based message, usually 25 to 45 minutes. Give a church more than one sermon before deciding.",
+  },
+  {
+    id: "after",
+    title: "After",
+    text: "You can leave quickly, stay for coffee, pass the offering along, or ask for prayer. There is no wrong first-visit move.",
+  },
+  {
+    id: "bringing-kids",
+    title: "Bringing Kids",
+    text: "Check kids ministry details before Sunday, then decide whether to use check-in or keep your child with you.",
+  },
+] as const;
 
 export const metadata: Metadata = {
   title: "First-Time Church Visit Guide - What to Actually Expect",
-  description:
-    "Honest step-by-step guide for your first worship service. What the music is like, whether you need to raise your hands, what to do during an altar call, and everything else nobody tells you.",
-  alternates: { canonical: "https://gospelchannel.com/guides/first-visit-guide" },
+  description: META_DESCRIPTION,
+  alternates: { canonical: PAGE_URL },
   openGraph: {
     title: "Your First Church Visit, Step by Step",
     description: "Walk through every moment of a Sunday service so nothing catches you off guard.",
-    url: "https://gospelchannel.com/guides/first-visit-guide",
+    url: PAGE_URL,
     siteName: "GospelChannel",
     type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Your First Church Visit, Step by Step",
+    description: "Walk through every moment of a Sunday service so nothing catches you off guard.",
   },
 };
 
@@ -72,12 +149,51 @@ function buildFaqSchema() {
   };
 }
 
-export default function FirstVisitGuidePage() {
+function buildEvidenceSchema(groups: GuideChurchEvidenceGroup[]) {
+  return groups
+    .filter((group) => group.churches.length > 0)
+    .map((group) =>
+      buildItemListSchema({
+        name: group.title,
+        items: group.churches.map((church) => ({
+          name: church.name,
+          url: `https://gospelchannel.com${church.href}`,
+        })),
+      }),
+    );
+}
+
+export default async function FirstVisitGuidePage() {
+  const evidenceGroups = await Promise.all(
+    FIRST_VISIT_EVIDENCE.map(async (group) => {
+      const page = await getChurchIndexPageData({
+        filters: group.filters,
+        page: 1,
+        pageSize: 3,
+      });
+
+      return {
+        id: group.id,
+        title: group.title,
+        description: group.description,
+        href: group.href,
+        linkLabel: group.linkLabel,
+        churches: page.pageItems.map(toToolChurchPreview),
+      };
+    }),
+  );
   const guideSchema = buildGuideSchema({
     slug: "first-visit-guide",
     headline: "Your First Church Visit, Step by Step",
     description:
       "You already know the hardest part is the parking lot. This guide walks you through every moment of your first church visit so nothing catches you off guard.",
+  });
+  const howToSchema = buildHowToSchema({
+    name: "How to Visit a Church for the First Time",
+    description: META_DESCRIPTION,
+    url: PAGE_URL,
+    totalTime: "PT90M",
+    steps: FIRST_VISIT_STEPS,
   });
 
   return (
@@ -86,7 +202,7 @@ export default function FirstVisitGuidePage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify([...guideSchema, buildFaqSchema()]),
+          __html: JSON.stringify([...guideSchema, howToSchema, buildFaqSchema(), ...buildEvidenceSchema(evidenceGroups)]),
         }}
       />
 
@@ -97,9 +213,36 @@ export default function FirstVisitGuidePage() {
         intro="You already know the hardest part is the parking lot. This guide walks you through every moment so nothing catches you off guard."
       />
 
+      <GuideProofLinks
+        title="Use the guide for confidence, then check the profile"
+        intro="A first visit gets much easier when the church page answers the practical questions before Sunday. Look for service times, worship music, kids or youth signals, location, videos, and contact details."
+        links={[
+          {
+            href: "/church/churches-with-service-times",
+            label: "Profiles with service times",
+            description: "Best when you are ready to choose an actual Sunday and avoid vague visit details.",
+          },
+          {
+            href: "/church/churches-with-worship-music",
+            label: "Profiles with worship music",
+            description: "Use music and videos to reduce surprise before the first worship set.",
+          },
+          {
+            href: "/church/family-friendly-churches",
+            label: "Profiles with kids or youth signals",
+            description: "Useful if check-in, age groups, or family confidence affect whether you can visit.",
+          },
+          {
+            href: "/guides/church-fit-quiz",
+            label: "Take the fit quiz first",
+            description: "Use this if you are still deciding what kind of room would feel safest to try.",
+          },
+        ]}
+      />
+
       <GuideIllustration src={`${MEDIA}/01-parking-lot.png`} alt="Person sitting in car looking at a church through the windshield" />
 
-      <GuideStep step={1} title="The Parking Lot">
+      <GuideStep id={FIRST_VISIT_STEPS[0].id} step={1} title={FIRST_VISIT_STEPS[0].title}>
         <p>
           You pull in, turn off the engine, and the voice in your head says{" "}
           <em>"what am I doing here?"</em>
@@ -123,7 +266,7 @@ export default function FirstVisitGuidePage() {
 
       <GuideIllustration src={`${MEDIA}/03-lobby.png`} alt="Welcoming church lobby with coffee station and friendly greeter" />
 
-      <GuideStep step={2} title="The Lobby">
+      <GuideStep id={FIRST_VISIT_STEPS[1].id} step={2} title={FIRST_VISIT_STEPS[1].title}>
         <p>
           Someone will probably say hi. A smile and "hey, first time here" is
           all you need. You don't have to explain your life story.
@@ -139,7 +282,7 @@ export default function FirstVisitGuidePage() {
 
       <GuideIllustration src={`${MEDIA}/04-finding-seat.png`} alt="View from back of church showing person choosing a back-row aisle seat" />
 
-      <GuideStep step={3} title="Finding a Seat">
+      <GuideStep id={FIRST_VISIT_STEPS[2].id} step={3} title={FIRST_VISIT_STEPS[2].title}>
         <p>Back row, aisle seat. That's the veteran first-timer move.</p>
         <p>
           Easy to slip out if you need to, and nobody behind you watching what
@@ -149,7 +292,7 @@ export default function FirstVisitGuidePage() {
 
       <GuideIllustration src={`${MEDIA}/05-worship-wide.png`} alt="Worship band on stage with congregation standing, seen from behind" wide />
 
-      <GuideStep step={4} title="The Music">
+      <GuideStep id={FIRST_VISIT_STEPS[3].id} step={4} title={FIRST_VISIT_STEPS[3].title}>
         <p>
           The worship set usually runs 20-40 minutes. The lyrics show on a
           screen. Everyone stands, and some people raise their hands.
@@ -168,7 +311,7 @@ export default function FirstVisitGuidePage() {
 
       <GuideIllustration src={`${MEDIA}/06-sermon.png`} alt="Speaker at podium with open Bible and warm stage lights" />
 
-      <GuideStep step={5} title="The Sermon">
+      <GuideStep id={FIRST_VISIT_STEPS[4].id} step={5} title={FIRST_VISIT_STEPS[4].title}>
         <p>
           This is the teaching part. Usually 25-45 minutes. Someone talks about a
           Bible passage and connects it to everyday life.
@@ -188,7 +331,7 @@ export default function FirstVisitGuidePage() {
 
       <GuideIllustration src={`${MEDIA}/07-after.png`} alt="People leaving church through open doors into sunlight" />
 
-      <GuideStep step={6} title="After">
+      <GuideStep id={FIRST_VISIT_STEPS[5].id} step={6} title={FIRST_VISIT_STEPS[5].title}>
         <p>
           Some churches do an altar call at the end - an invitation to come to
           the front for prayer. You don't have to go. Most people don't.
@@ -223,7 +366,7 @@ export default function FirstVisitGuidePage() {
 
       <GuideIllustration src={`${MEDIA}/08-kids.png`} alt="Parent and child at a colorful kids check-in counter" />
 
-      <GuideStep title="Bringing Kids">
+      <GuideStep id={FIRST_VISIT_STEPS[6].id} title={FIRST_VISIT_STEPS[6].title}>
         <p>
           Most churches over 100 people have a dedicated kids program during the
           service. You check them in before the service starts (usually near the
@@ -241,6 +384,13 @@ export default function FirstVisitGuidePage() {
           </p>
         </GuideTip>
       </GuideStep>
+
+      <GuideChurchEvidence
+        title="Turn the first visit into a short list"
+        intro="These examples show the kind of profile evidence to check before you walk in: published service times, worship previews, and lower-friction starting points."
+        groups={evidenceGroups}
+        toolName="first_visit_guide"
+      />
 
       <GuideCTA
         links={[

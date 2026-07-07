@@ -7,26 +7,90 @@ import {
   GuideStep,
   GuideQuote,
   GuideCTA,
+  GuideProofLinks,
   GuideRelated,
 } from "@/components/guides";
 import { ToolPageTracker } from "@/components/tools/ToolPageTracker";
-import { buildGuideSchema } from "@/lib/seo-schema";
+import { buildGuideSchema, buildHowToSchema, buildItemListSchema } from "@/lib/seo-schema";
 
 export const revalidate = 3600;
 
 const MEDIA = "https://media.gospelchannel.com/guides/prayer-guide";
+const PAGE_URL = "https://gospelchannel.com/guides/prayer-guide";
+const META_DESCRIPTION =
+  "There is no wrong way to pray. If you don't know what to say, start here. A practical, no-jargon guide to having your first conversation with God.";
+
+const PRAYER_PROOF_LINKS = [
+  {
+    href: "/church/churches-with-service-times",
+    label: "Find a service you can attend",
+    description: "Prayer can start alone, but a real Sunday service gives it community, rhythm, and next steps.",
+  },
+  {
+    href: "/church/style/acoustic",
+    label: "Browse quieter worship rooms",
+    description: "Useful if you want a gentler, reflective setting while you are still new to prayer.",
+  },
+  {
+    href: "/church/style/charismatic",
+    label: "Browse prayer-forward churches",
+    description: "Use this if you want a room where prayer response and spiritual openness are more visible.",
+  },
+  {
+    href: "/church/churches-with-worship-music",
+    label: "Listen before you visit",
+    description: "Open profiles with worship music so Sunday feels less unfamiliar before you go.",
+  },
+];
+
+const PRAYER_STEPS = [
+  {
+    id: "start-talking",
+    title: "Just Start Talking",
+    text: "Begin with ordinary words. You can pray out loud, silently, in a journal, on a walk, or in the middle of a normal day.",
+  },
+  {
+    id: "say-thank-you",
+    title: "Say Thank You",
+    text: "Start with gratitude by naming one or two things already in front of you.",
+  },
+  {
+    id: "say-whats-on-your-mind",
+    title: "Say What's On Your Mind",
+    text: "Tell God what you are worried about, excited about, confused about, or carrying right now.",
+  },
+  {
+    id: "pray-for-someone-else",
+    title: "Pray for Someone Else",
+    text: "Name another person and ask God to be close to them, even if you do not know exactly what they need.",
+  },
+  {
+    id: "listen",
+    title: "Listen",
+    text: "After speaking, sit quietly for a moment and make room for clarity, peace, or later understanding.",
+  },
+  {
+    id: "close-or-dont",
+    title: "Close (or Don't)",
+    text: "End with amen, stop talking, or let the prayer fade into the rest of the day.",
+  },
+] as const;
 
 export const metadata: Metadata = {
   title: "How to Start Praying - A Simple Guide",
-  description:
-    "There is no wrong way to pray. If you don't know what to say, start here. A practical, no-jargon guide to having your first conversation with God.",
-  alternates: { canonical: "https://gospelchannel.com/guides/prayer-guide" },
+  description: META_DESCRIPTION,
+  alternates: { canonical: PAGE_URL },
   openGraph: {
     title: "How to Start Praying",
     description: "A simple, honest guide for people who want to pray but don't know where to begin.",
-    url: "https://gospelchannel.com/guides/prayer-guide",
+    url: PAGE_URL,
     siteName: "GospelChannel",
     type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Start Praying",
+    description: "A simple, honest guide for people who want to pray but don't know where to begin.",
   },
 };
 
@@ -53,15 +117,28 @@ export default function PrayerGuidePage() {
   const schema = buildGuideSchema({
     slug: "prayer-guide",
     headline: "How to Start Praying",
-    description:
-      "There is no wrong way to pray. If you don't know what to say, start here. A practical, no-jargon guide to having your first conversation with God.",
+    description: META_DESCRIPTION,
+  });
+  const howToSchema = buildHowToSchema({
+    name: "How to Start Praying",
+    description: META_DESCRIPTION,
+    url: PAGE_URL,
+    totalTime: "PT10M",
+    steps: PRAYER_STEPS,
+  });
+  const proofRouteSchema = buildItemListSchema({
+    name: "Prayer guide church next-step routes",
+    items: PRAYER_PROOF_LINKS.map((link) => ({
+      name: link.label,
+      url: `https://gospelchannel.com${link.href}`,
+    })),
   });
 
   return (
     <article className="mx-auto max-w-xl px-4 pb-16 sm:px-6">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([...schema, howToSchema, proofRouteSchema]) }}
       />
       <ToolPageTracker toolName="prayer_guide" />
 
@@ -71,9 +148,15 @@ export default function PrayerGuidePage() {
         intro="There is no wrong way to do this. If you don't know what to say, start here. Prayer is a conversation, not a performance."
       />
 
+      <GuideProofLinks
+        title="Use prayer as a next step, not a dead end"
+        intro="This guide helps you start privately. When you are ready to try church, use profile proof to choose a room that fits the way you want to pray, listen, and participate."
+        links={PRAYER_PROOF_LINKS}
+      />
+
       <GuideIllustration src={`${MEDIA}/01-hero.png`} alt="Person sitting quietly by a window in morning light, hands resting open" />
 
-      <GuideStep step={1} title="Just Start Talking">
+      <GuideStep id={PRAYER_STEPS[0].id} step={1} title={PRAYER_STEPS[0].title}>
         <p>
           Prayer isn't a special voice or a formula. It's talking to God like you'd
           talk to someone who already knows everything but wants to hear it from you anyway.
@@ -90,7 +173,7 @@ export default function PrayerGuidePage() {
 
       <GuideIllustration src={`${MEDIA}/02-conversation.png`} alt="Two chairs facing each other, one empty - a metaphor for conversation" />
 
-      <GuideStep step={2} title="Say Thank You">
+      <GuideStep id={PRAYER_STEPS[1].id} step={2} title={PRAYER_STEPS[1].title}>
         <p>
           Start with gratitude. It's the easiest entry point because you don't
           have to figure anything out - just notice what's already there.
@@ -108,7 +191,7 @@ export default function PrayerGuidePage() {
 
       <GuideIllustration src={`${MEDIA}/03-gratitude.png`} alt="Person at kitchen table with coffee, looking up with gentle smile in morning light" />
 
-      <GuideStep step={3} title="Say What's On Your Mind">
+      <GuideStep id={PRAYER_STEPS[2].id} step={3} title={PRAYER_STEPS[2].title}>
         <p>
           Tell God what you're worried about, excited about, confused about.
           Be specific.
@@ -127,7 +210,7 @@ export default function PrayerGuidePage() {
 
       <GuideIllustration src={`${MEDIA}/04-sharing.png`} alt="Person walking alone on a path outdoors with open sky above" />
 
-      <GuideStep step={4} title="Pray for Someone Else">
+      <GuideStep id={PRAYER_STEPS[3].id} step={4} title={PRAYER_STEPS[3].title}>
         <p>
           "I want to pray for [name]. Please be with them. Give them what they
           need today."
@@ -145,7 +228,7 @@ export default function PrayerGuidePage() {
 
       <GuideIllustration src={`${MEDIA}/05-others.png`} alt="Two people, one gently placing a hand on the other's shoulder" />
 
-      <GuideStep step={5} title="Listen">
+      <GuideStep id={PRAYER_STEPS[4].id} step={5} title={PRAYER_STEPS[4].title}>
         <p>
           Prayer isn't just talking. After you've said what you need to say,
           sit quietly for a moment. Even 30 seconds.
@@ -163,7 +246,7 @@ export default function PrayerGuidePage() {
 
       <GuideIllustration src={`${MEDIA}/06-listen.png`} alt="Person sitting still with eyes closed, warm glow around them" />
 
-      <GuideStep step={6} title="Close (or Don't)">
+      <GuideStep id={PRAYER_STEPS[5].id} step={6} title={PRAYER_STEPS[5].title}>
         <p>
           "Amen" just means "I mean it." It's not a magic word that activates
           the prayer. Some people say "In Jesus' name, amen." Some just stop
