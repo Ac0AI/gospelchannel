@@ -14,7 +14,6 @@ import { PlayAllButton } from "@/components/PlayAllButton";
 import { ServiceTimesDisplay } from "@/components/ServiceTimesDisplay";
 import { SpotifyEmbedCard } from "@/components/SpotifyEmbedCard";
 import { ChurchSongsList } from "@/components/ChurchSongsList";
-import { SpotifyPlaylistShelf } from "@/components/SpotifyPlaylistShelf";
 import { ChurchPagePrayerSection } from "@/components/ChurchPagePrayerSection";
 import { ChurchViewerActions } from "@/components/ChurchViewerActions";
 import { getPrayers } from "@/lib/prayer";
@@ -1341,16 +1340,6 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                 </div>
               </div>
 
-              {allPlaylists.length > 1 && (
-                <div className="mt-16">
-                  <SpotifyPlaylistShelf
-                    eyebrow="More from their channel"
-                    title={`${church.name} channel collection`}
-                    subtitle="More from their worship."
-                    items={allPlaylists.slice(1)}
-                  />
-                </div>
-              )}
             </div>
           </section>
         </ScrollReveal>
