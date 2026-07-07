@@ -17,7 +17,7 @@ Context for humans (batch 2): plan 008 fixes a stored-XSS vector in JSON-LD plus
 | 007  | Repo hygiene (dead code, lockfile, docs, CI typecheck) | P3 | S | — | DONE (commit 92457473, reviewed+approved 2026-06-12) |
 | 008  | Harden JSON-LD output and fix structured-data correctness bugs | P1 | M | — | DONE (commit d0532f3d, merged to geo-seo-decision-engine, reviewed+approved 2026-07-07) |
 | 009  | Surface ratings, service hours, socials, pastor, livestream in schema | P1 | M | 008 | DONE (commit d89ab0fb, merged, reviewed+approved 2026-07-07 — executor hardened the plan's null-coercion: Number(null)===0 guard added) |
-| 010  | Point the church funnel at claiming; export preview pitch links | P2 | S | — | DONE (commit 2b465c2e, merged, reviewed+approved 2026-07-07 — DATA GATE: only 10,342/72,394 churches have preview tokens; run scripts/backfill-preview-tokens.mjs (operator decision) before full-scale export; current yield 7,297 rows, US only 79) |
+| 010  | Point the church funnel at claiming; export preview pitch links | P2 | S | — | DONE (commit 2b465c2e, merged, reviewed+approved 2026-07-07 — data gate CLEARED same day: token backfill run with operator approval, 62,052 tokens generated, 0 errors; export now yields 31,009 rows, US 22,891) |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale)
 
