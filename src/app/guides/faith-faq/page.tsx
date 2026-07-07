@@ -8,6 +8,7 @@ import {
 } from "@/components/guides";
 import { ToolPageTracker } from "@/components/tools/ToolPageTracker";
 import { buildGuideSchema, buildItemListSchema } from "@/lib/seo-schema";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 export const revalidate = 3600;
 
@@ -202,7 +203,7 @@ export default function FaithFaqPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify([...guideSchema, buildFaqSchema(), proofRouteSchema]),
+          __html: serializeJsonLd([...guideSchema, buildFaqSchema(), proofRouteSchema]),
         }}
       />
 

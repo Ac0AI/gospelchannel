@@ -18,6 +18,7 @@ import { ToolPageTracker } from "@/components/tools/ToolPageTracker";
 import { getChurchIndexPageData } from "@/lib/church";
 import { buildGuideSchema, buildHowToSchema, buildItemListSchema } from "@/lib/seo-schema";
 import { toToolChurchPreview } from "@/lib/tooling";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 export const revalidate = 3600;
 
@@ -202,7 +203,7 @@ export default async function FirstVisitGuidePage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify([...guideSchema, howToSchema, buildFaqSchema(), ...buildEvidenceSchema(evidenceGroups)]),
+          __html: serializeJsonLd([...guideSchema, howToSchema, buildFaqSchema(), ...buildEvidenceSchema(evidenceGroups)]),
         }}
       />
 

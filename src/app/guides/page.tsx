@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getChurchStatsAsync } from "@/lib/content";
 import { COMPARE_CARDS, GUIDE_CARDS } from "@/lib/tooling";
 import { buildBreadcrumbSchema, buildItemListSchema } from "@/lib/seo-schema";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 const PAGE_URL = "https://gospelchannel.com/guides";
 const PAGE_TITLE = "Church Decision Guides to Choose and Verify the Right Church";
@@ -144,7 +145,7 @@ export default async function GuidesPage() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
 
       {/* Editorial dark hero */}
       <section className="bg-espresso px-5 py-20 text-linen sm:px-12 sm:py-24">

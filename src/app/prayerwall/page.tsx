@@ -5,6 +5,7 @@ import { PrayerWallHero } from "@/components/PrayerWallHero";
 import { PrayerWallFilters } from "@/components/PrayerWallFilters";
 import Link from "next/link";
 import { buildItemListSchema } from "@/lib/seo-schema";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "Prayer Wall: Community Prayers From Churches",
@@ -76,7 +77,7 @@ export default async function PrayerWallPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
 
       <PrayerWallHero

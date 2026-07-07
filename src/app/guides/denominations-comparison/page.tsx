@@ -5,6 +5,7 @@ import { GuideChurchEvidence, GuideHero, GuideProofLinks, GuideRelated, type Gui
 import { getChurchIndexPageData } from "@/lib/church";
 import { buildGuideSchema, buildItemListSchema } from "@/lib/seo-schema";
 import { toToolChurchPreview } from "@/lib/tooling";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 export const revalidate = 86400;
 
@@ -210,7 +211,7 @@ export default async function DenominationsComparisonPage() {
     <article className="mx-auto max-w-[1080px] px-5 pb-24 sm:px-12">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}
       />
 
       <GuideHero

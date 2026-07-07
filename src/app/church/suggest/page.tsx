@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SuggestChurchForm } from "@/components/SuggestChurchForm";
 import { buildItemListSchema } from "@/lib/seo-schema";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 const SITE_URL = "https://gospelchannel.com";
 const PAGE_URL = `${SITE_URL}/church/suggest`;
@@ -63,7 +64,7 @@ export default function SuggestChurchPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
 
       {/* Hero */}

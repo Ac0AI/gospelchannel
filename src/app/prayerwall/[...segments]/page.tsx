@@ -16,6 +16,7 @@ import {
   getNormalizedCountrySlug,
 } from "@/lib/prayer-filters";
 import { getPrayerNavIndex } from "@/lib/prayer-scoped-index";
+import { serializeJsonLd } from "@/lib/json-ld";
 export const dynamicParams = true;
 
 type FilterState = {
@@ -235,7 +236,7 @@ export default async function FilteredPrayerWallPage({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
 
       <PrayerWallHero

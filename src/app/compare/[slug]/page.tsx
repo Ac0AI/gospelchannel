@@ -13,6 +13,7 @@ import { ToolChurchGrid } from "@/components/tools/ToolCards";
 import { getChurchIndexPageData } from "@/lib/church";
 import { buildArticleSchema, buildBreadcrumbSchema, buildItemListSchema } from "@/lib/seo-schema";
 import { getCompareGuideBySlug, getCompareGuideContent, toToolChurchPreview } from "@/lib/tooling";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 export const revalidate = 3600;
 
@@ -127,7 +128,7 @@ export default async function CompareGuidePage({ params }: CompareGuidePageProps
       <ToolPageTracker toolName={`compare_${slug}`} />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}
       />
 
       <GuideHero

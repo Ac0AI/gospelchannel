@@ -5,6 +5,7 @@ import {
   formatDiscoveryStyles,
   getBestWorshipChurches,
 } from "@/lib/discovery-churches";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 // Proof-of-concept discovery page #2: intercepts the "[topic] reddit"-shaped
 // search pattern (e.g. "best worship church reddit") the way the approved
@@ -142,7 +143,7 @@ export default async function BestWorshipChurchesPage() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
 
       <main className="bg-linen text-espresso">
         <div className="mx-auto max-w-[1100px] px-5 py-14 sm:px-12 sm:py-20">

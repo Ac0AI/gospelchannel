@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cache } from "react";
 import { ChurchProofRouteLandingPage } from "@/components/ChurchProofRouteLandingPage";
 import { getChurchIndexPageData } from "@/lib/church";
 
@@ -27,13 +28,13 @@ const FAQS = [
   },
 ];
 
-async function getPageData() {
-  return getChurchIndexPageData({
+const getPageData = cache(async () =>
+  getChurchIndexPageData({
     filters: { hasServiceTimes: true },
     page: 1,
     pageSize: PAGE_SIZE,
-  });
-}
+  })
+);
 
 export async function generateMetadata(): Promise<Metadata> {
   const { totalCount } = await getPageData();

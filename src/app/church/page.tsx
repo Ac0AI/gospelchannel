@@ -13,6 +13,7 @@ import {
 import { getChurchIndexPageData } from "@/lib/church";
 import { getChurchStatsAsync } from "@/lib/content";
 import { buildBreadcrumbSchema } from "@/lib/seo-schema";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 export const revalidate = 3600;
 
@@ -228,7 +229,7 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
   return (
     <>
       {directorySchema ? (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(directorySchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(directorySchema) }} />
       ) : null}
 
       {/* Search-first hero (Säker) */}

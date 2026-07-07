@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ForAudienceLayout } from "@/components/ForAudienceLayout";
 import { FOR_AUDIENCE } from "@/lib/for-audience-data";
 import { buildArticleSchema, buildBreadcrumbSchema, buildItemListSchema } from "@/lib/seo-schema";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 const SITE_URL = "https://gospelchannel.com";
 
@@ -109,7 +110,7 @@ export default async function ForAudiencePage({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}
       />
       <ForAudienceLayout data={data} siblings={siblings} />
     </>

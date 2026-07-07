@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getNetworkBySlug, getNetworkCampusCount, getNetworkCampuses } from "@/lib/church-networks";
 import { getChurchBySlugAsync } from "@/lib/content";
 import type { ChurchCampus, ChurchEnrichment } from "@/types/gospel";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 type NetworkPageProps = {
   params: Promise<{ slug: string }>;
@@ -163,7 +164,7 @@ export default async function NetworkPage({ params }: NetworkPageProps) {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
 
       {/* Editorial dark hero */}
       <section className="bg-espresso px-5 py-16 text-linen sm:px-12 sm:py-20">

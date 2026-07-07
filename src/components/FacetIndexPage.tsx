@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { FacetLink } from "@/lib/church-directory";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 type FacetDecisionCard = {
   title: string;
@@ -227,7 +228,7 @@ export function FacetIndexPage({
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
 
       {/* Hero */}
       <section className="border-b border-rose-gold/[0.12] bg-linen px-5 pt-14 pb-10 sm:px-12 sm:pt-16 sm:pb-12">

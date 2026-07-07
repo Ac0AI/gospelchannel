@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ChurchDirectoryGrid } from "@/components/ChurchDirectoryGrid";
+import { extractCity } from "@/lib/church-directory";
 import type { HubEditorial } from "@/lib/hub-content";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 type ChurchCollectionPageItem = {
   slug: string;
@@ -177,7 +179,7 @@ export function ChurchCollectionPage({
             ? {
                 address: {
                   "@type": "PostalAddress",
-                  ...(church.location ? { addressLocality: church.location } : {}),
+                  ...(extractCity(church.location) ? { addressLocality: extractCity(church.location) } : {}),
                   ...(church.country ? { addressCountry: church.country } : {}),
                 },
               }
@@ -201,7 +203,7 @@ export function ChurchCollectionPage({
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
 
       {/* Editorial hero */}
       {isTradition ? (

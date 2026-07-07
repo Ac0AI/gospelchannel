@@ -6,6 +6,7 @@ import {
   formatDiscoveryStyles,
   getLondonCharismaticChurches,
 } from "@/lib/discovery-churches";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 // Proof-of-concept discovery page: an answer-shaped, citeable page for the exact
 // query AI assistants (ChatGPT/Bing/Perplexity) get asked — "charismatic /
@@ -142,7 +143,7 @@ export default async function CharismaticChurchesInLondonPage() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
 
       <main className="bg-linen text-espresso">
         <div className="mx-auto max-w-[1100px] px-5 py-14 sm:px-12 sm:py-20">

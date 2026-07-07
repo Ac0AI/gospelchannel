@@ -9,6 +9,7 @@ import {
   getSoundProfileDirectoryFilters,
   toToolChurchPreview,
 } from "@/lib/tooling";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 export const revalidate = 3600;
 
@@ -90,7 +91,7 @@ export default async function WorshipStyleMatchPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify([...schema, soundLaneSchema, ...buildEvidenceSchema(evidenceGroups)]),
+          __html: serializeJsonLd([...schema, soundLaneSchema, ...buildEvidenceSchema(evidenceGroups)]),
         }}
       />
       <ToolPageTracker toolName="worship_style_match" />

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ChurchDirectoryEntry } from "@/lib/church-directory";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 type ProofRouteFaq = {
   question: string;
@@ -102,7 +103,7 @@ export function ChurchProofRouteLandingPage({
       "@type": "ItemList",
       "@id": `${canonicalUrl}#itemlist`,
       name: `${title} ${titleAccent}`,
-      numberOfItems: count,
+      numberOfItems: churches.length,
       itemListElement: churches.map((church, index) => ({
         "@type": "ListItem",
         position: index + 1,
@@ -135,7 +136,7 @@ export function ChurchProofRouteLandingPage({
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
 
       <main className="bg-linen text-espresso">
         <div className="mx-auto max-w-[1100px] px-5 py-14 sm:px-12 sm:py-20">

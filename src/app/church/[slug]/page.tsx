@@ -48,6 +48,7 @@ import { isRenderableImageUrl } from "@/lib/media";
 import { resolveCanonicalChurchSlug } from "@/lib/church-slugs";
 import { CHURCH_SIZE_LABELS, getProfileOptionLabel } from "@/lib/profile-fields";
 import { buildChurchDescription, buildChurchTitle } from "@/lib/church-metadata";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 type ChurchPageProps = {
   params: Promise<{ slug: string }>;
@@ -570,7 +571,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
       ...(parkingInfo && { amenityFeature: { "@type": "LocationFeatureSpecification", name: "Parking", value: parkingInfo } }),
       ...(goodFitTags && goodFitTags.length > 0 && { keywords: goodFitTags.join(", ") }),
     },
-    ...(allPlaylists.length > 0 ? [{
+    ...(allPlaylists.length > 0 && videos.length > 0 ? [{
       "@context": "https://schema.org",
       "@type": "MusicPlaylist",
       name: `${church.name} Worship Playlist 2026`,
@@ -600,9 +601,15 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Churches", item: "https://gospelchannel.com/church" },
-        { "@type": "ListItem", position: 2, name: church.name, item: pageUrl },
-      ],
+        { name: "Churches", item: "https://gospelchannel.com/church" },
+        ...(church.country
+          ? [{ name: church.country, item: `https://gospelchannel.com/church/country/${slugify(church.country)}` }]
+          : []),
+        ...(city && church.citySlug
+          ? [{ name: city, item: `https://gospelchannel.com/church/city/${church.citySlug}` }]
+          : []),
+        { name: church.name, item: pageUrl },
+      ].map((crumb, index) => ({ "@type": "ListItem", position: index + 1, ...crumb })),
     },
     ...(profileEvidenceSignals.length > 0
       ? [{
@@ -661,7 +668,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
 
       {/* ━━━━━━━━━━ 1. CINEMATIC HERO ━━━━━━━━━━ */}
       <section className="relative min-h-[680px] overflow-hidden bg-[#120906] text-white sm:min-h-[820px] lg:min-h-[920px]">

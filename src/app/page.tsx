@@ -10,6 +10,7 @@ import {
 } from "@/lib/content";
 import { getClaimedChurchSlugs } from "@/lib/church";
 import { buildItemListSchema } from "@/lib/seo-schema";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 export const revalidate = 3600;
 
@@ -160,7 +161,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homeSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(homeSchema) }} />
 
       {/* 1. Cinematic full-bleed hero */}
       <HomeHero surpriseSlugs={surpriseSlugs} churchCountLabel={churchCountLabel} />

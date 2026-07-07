@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { AlternativeLayout } from "@/components/AlternativeLayout";
 import { ALTERNATIVES } from "@/lib/alternatives-data";
 import { buildArticleSchema, buildBreadcrumbSchema, buildItemListSchema } from "@/lib/seo-schema";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 const SITE_URL = "https://gospelchannel.com";
 
@@ -100,7 +101,7 @@ export default async function AlternativePage({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}
       />
       <AlternativeLayout data={data} siblings={siblings} />
     </>

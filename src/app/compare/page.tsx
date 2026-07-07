@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getCompareGuides } from "@/lib/tooling";
 import { buildBreadcrumbSchema, buildItemListSchema } from "@/lib/seo-schema";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 const PAGE_URL = "https://gospelchannel.com/compare";
 const PAGE_TITLE = "Compare Church Styles and Traditions";
@@ -65,7 +66,7 @@ export default function CompareHubPage() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
 
       <section className="px-5 pt-14 sm:px-12 sm:pt-16">
         <div className="mx-auto max-w-[1280px]">

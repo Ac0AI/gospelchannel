@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { PostHogProvider } from "@/components/PostHogProvider";
 import { getChurchStatsAsync } from "@/lib/content";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 const sans = Nunito({
   subsets: ["latin"],
@@ -106,7 +107,7 @@ export default function RootLayout({
           id="site-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify([
+            __html: serializeJsonLd([
               {
                 "@context": "https://schema.org",
                 "@type": "Organization",

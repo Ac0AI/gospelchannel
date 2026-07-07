@@ -12,6 +12,7 @@ import {
 } from "@/components/guides";
 import { ToolPageTracker } from "@/components/tools/ToolPageTracker";
 import { buildGuideSchema, buildHowToSchema, buildItemListSchema } from "@/lib/seo-schema";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 export const revalidate = 3600;
 
@@ -138,7 +139,7 @@ export default function PrayerGuidePage() {
     <article className="mx-auto max-w-xl px-4 pb-16 sm:px-6">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify([...schema, howToSchema, proofRouteSchema]) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd([...schema, howToSchema, proofRouteSchema]) }}
       />
       <ToolPageTracker toolName="prayer_guide" />
 

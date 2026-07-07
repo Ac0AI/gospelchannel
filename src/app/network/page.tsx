@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllNetworks } from "@/lib/church-networks";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 export const dynamic = "force-dynamic";
 
@@ -64,7 +65,7 @@ export default async function NetworkIndexPage() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
 
       <main className="bg-linen text-espresso">
         <section className="bg-espresso px-5 py-16 text-linen sm:px-12 sm:py-20">

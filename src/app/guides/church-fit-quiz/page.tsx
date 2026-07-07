@@ -9,6 +9,7 @@ import {
   getLaneDirectoryFilters,
   toToolChurchPreview,
 } from "@/lib/tooling";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 export const revalidate = 3600;
 
@@ -90,7 +91,7 @@ export default async function ChurchFitQuizPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify([...schema, decisionLaneSchema, ...buildEvidenceSchema(evidenceGroups)]),
+          __html: serializeJsonLd([...schema, decisionLaneSchema, ...buildEvidenceSchema(evidenceGroups)]),
         }}
       />
       <ToolPageTracker toolName="church_fit_quiz" />
