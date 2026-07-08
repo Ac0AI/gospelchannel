@@ -9,8 +9,11 @@ import type {
   ChurchClaim,
   ChurchMembership,
   ChurchOutreach,
+  SuggestionEnrichment,
 } from "@/types/gospel";
 import { CONTENT_BASE_DATE } from "@/lib/utils";
+import { slugify } from "@/lib/slugify";
+import { deriveDisplayAssessment, isValidPublicEmail } from "@/lib/content-quality";
 
 type SuggestionRow = {
   id: string;
@@ -25,6 +28,7 @@ type SuggestionRow = {
   message: string | null;
   submitted_at: string;
   status: ChurchSuggestion["status"];
+  enrichment_data: SuggestionEnrichment | null;
 };
 
 type FeedbackRow = {
@@ -232,7 +236,7 @@ export async function getChurchSuggestions(): Promise<ChurchSuggestion[]> {
 }
 
 export async function addChurchSuggestion(
-  suggestion: Omit<ChurchSuggestion, "id" | "submittedAt" | "status">
+  suggestion: Omit<ChurchSuggestion, "id" | "submittedAt" | "status" | "enrichment">
 ): Promise<ChurchSuggestion> {
   if (!isAdminEnabled()) {
     throw new Error("Database is not configured");
@@ -260,6 +264,145 @@ export async function addChurchSuggestion(
     throw new Error(error?.message ?? "Failed to insert suggestion");
   }
   return mapSuggestion(data);
+}
+
+// Display names from the suggest form → ISO codes used by churches.language.
+const SUGGESTION_LANGUAGE_CODES: Record<string, string> = {
+  english: "en",
+  spanish: "es",
+  portuguese: "pt",
+  german: "de",
+  french: "fr",
+  italian: "it",
+  dutch: "nl",
+  swedish: "sv",
+  norwegian: "no",
+  danish: "da",
+  finnish: "fi",
+};
+
+function getWebsiteHost(value: string | null): string | null {
+  if (!value) return null;
+  try {
+    return new URL(value).hostname.replace(/^www\./, "").toLowerCase() || null;
+  } catch {
+    return null;
+  }
+}
+
+export type SuggestionApprovalResult = {
+  createdSlug: string | null;
+  existingSlug: string | null;
+};
+
+/**
+ * Create a catalog entry from an approved suggestion. Dedupes on slug and
+ * website host: if the church already exists, nothing is created and the
+ * existing slug is returned so the admin panel can link to it.
+ *
+ * The suggested playlist URL is intentionally NOT copied into the playlist
+ * columns: additional_playlists counts as playable music and is rendered as
+ * an embed, which breaks for YouTube channel/handle URLs. Spotify playlist
+ * links go to spotify_url; everything else stays on the suggestion row for
+ * the existing Spotify/YouTube enrichment pipelines to pick up.
+ */
+export async function createChurchFromSuggestion(suggestionId: string): Promise<SuggestionApprovalResult> {
+  if (!isAdminEnabled()) {
+    throw new Error("Admin client is not configured");
+  }
+  const client = createAdminClient();
+
+  const { data: row, error } = await client
+    .from<SuggestionRow>("church_suggestions")
+    .select()
+    .eq("id", suggestionId)
+    .single();
+  if (error || !row) {
+    throw new Error(error?.message ?? "Suggestion not found");
+  }
+
+  const enrichment = row.enrichment_data ?? null;
+  const name = (enrichment?.nameFix || row.name).trim();
+  const city = (enrichment?.city || row.city || "").trim();
+  const citySlug = city ? slugify(city) : null;
+  const slug = citySlug && !slugify(name).endsWith(citySlug) ? `${slugify(name)}-${citySlug}` : slugify(name);
+
+  const { data: bySlug } = await client
+    .from<{ slug: string }>("churches")
+    .select("slug")
+    .eq("slug", slug)
+    .maybeSingle();
+  if (bySlug?.slug) {
+    return { createdSlug: null, existingSlug: bySlug.slug };
+  }
+
+  const websiteHost = getWebsiteHost(row.website);
+  if (websiteHost) {
+    const { data: byHost } = await client
+      .from<{ slug: string }>("churches")
+      .select("slug")
+      .ilike("website", `%//${websiteHost}%`)
+      .limit(1)
+      .maybeSingle();
+    const { data: byWwwHost } = byHost?.slug
+      ? { data: null }
+      : await client
+          .from<{ slug: string }>("churches")
+          .select("slug")
+          .ilike("website", `%//www.${websiteHost}%`)
+          .limit(1)
+          .maybeSingle();
+    const hostMatch = byHost?.slug ?? byWwwHost?.slug ?? null;
+    if (hostMatch) {
+      return { createdSlug: null, existingSlug: hostMatch };
+    }
+  }
+
+  const description = enrichment?.description?.trim() || null;
+  const contactEmail = [enrichment?.contactEmail, row.contact_email]
+    .find((value) => isValidPublicEmail(value)) ?? null;
+  const serviceTime = enrichment?.serviceTimes?.trim() || null;
+  const languageCode = SUGGESTION_LANGUAGE_CODES[(row.language ?? "").trim().toLowerCase()] ?? null;
+  const spotifyUrl = getWebsiteHost(row.playlist_url) === "open.spotify.com" ? row.playlist_url : null;
+
+  const assessment = deriveDisplayAssessment({
+    description: description ?? undefined,
+    country: row.country ?? undefined,
+    location: city || undefined,
+    serviceTimeLabel: serviceTime ?? undefined,
+    websiteUrl: row.website ?? undefined,
+    contactEmail: contactEmail ?? undefined,
+    spotifyUrl: spotifyUrl ?? undefined,
+  });
+
+  const { error: insertError } = await client.from("churches").insert({
+    slug,
+    name,
+    description,
+    country: row.country || null,
+    location: city || null,
+    city_slug: citySlug,
+    denomination: enrichment?.denomination || row.denomination || null,
+    website: row.website || null,
+    email: contactEmail,
+    language: languageCode,
+    spotify_url: spotifyUrl,
+    service_times: serviceTime ? [serviceTime] : null,
+    source_kind: "suggested",
+    status: "approved",
+    discovery_source: "user-suggestion",
+    reason: `church-suggestion ${row.id} approved in admin`,
+    confidence: 0.8,
+    discovered_at: new Date().toISOString(),
+    display_score: assessment.displayScore,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  });
+  if (insertError) {
+    throw new Error(insertError.message);
+  }
+
+  return { createdSlug: slug, existingSlug: null };
 }
 
 /* ── Church feedback ── */
@@ -749,6 +892,7 @@ function mapSuggestion(row: SuggestionRow): ChurchSuggestion {
     message: row.message ?? "",
     submittedAt: row.submitted_at,
     status: row.status,
+    enrichment: row.enrichment_data ?? null,
   };
 }
 

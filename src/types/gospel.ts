@@ -112,6 +112,20 @@ export type ChurchPageVideo = YouTubeVideo & {
   lowConfidence: boolean;
 };
 
+export type SuggestionEnrichment = {
+  city?: string | null;
+  description?: string | null;
+  heroImageUrl?: string | null;
+  contactEmail?: string | null;
+  serviceTimes?: string | null;
+  denomination?: string | null;
+  languages?: string[] | null;
+  quality?: "good" | "mediocre" | "reject" | string | null;
+  qualityReason?: string | null;
+  nameFix?: string | null;
+  enrichedAt?: string | null;
+};
+
 export type ChurchSuggestion = {
   id: string;
   name: string;
@@ -125,6 +139,7 @@ export type ChurchSuggestion = {
   message: string;
   submittedAt: string;
   status: "pending" | "reviewed" | "approved" | "rejected";
+  enrichment: SuggestionEnrichment | null;
 };
 
 export type ChurchClaim = {
