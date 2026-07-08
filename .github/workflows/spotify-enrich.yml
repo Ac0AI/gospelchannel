@@ -1,0 +1,46 @@
+name: Daily Spotify enrichment
+
+# 01:03 UTC daily (odd minute avoids the :00 thundering herd).
+# Moved from a local cron 2026-07-08 so runs no longer depend on a machine
+# being awake. Schedule-only plus manual dispatch; no PR triggers (public repo).
+on:
+  schedule:
+    - cron: '3 1 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: spotify-enrich
+
+jobs:
+  enrich:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      # Phase 1: re-run the strict matcher on legacy unverified matches.
+      # No-op once the legacy pool is drained; capped to leave quota for phase 2.
+      - name: Phase 1 revalidate-legacy
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+        run: node scripts/enrich-spotify-by-church-name.mjs --revalidate-legacy --limit=50 --throttle=400 --concurrency=2 || echo "::warning::phase 1 exited non-zero"
+
+      # Brief pause between bursts to ease aggregate rate-limit pressure.
+      - run: sleep 60
+
+      - name: Phase 2 daily enrichment
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+        run: node scripts/enrich-spotify-by-church-name.mjs --daily --daily-limit=500 --throttle=400 --concurrency=2
