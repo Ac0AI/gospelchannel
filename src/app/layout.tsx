@@ -28,7 +28,7 @@ export const viewport: Viewport = {
 
 export async function generateMetadata(): Promise<Metadata> {
   const { churchCountLabel, countryCount } = await getChurchStatsAsync();
-  const siteDescription = `Find the right church with guides that answer the decision and profiles that prove the fit across ${churchCountLabel} churches in ${countryCount} countries.`;
+  const siteDescription = `Find the right church by comparing worship style, tradition, location, language, and service times across ${churchCountLabel} churches in ${countryCount} countries.`;
   return {
     metadataBase: new URL("https://gospelchannel.com"),
     title: {
@@ -43,7 +43,7 @@ export async function generateMetadata(): Promise<Metadata> {
       "praise and worship music",
       "find a church",
       "church near me",
-      "church decision engine",
+      "church directory",
       "first church visit",
       "church service times",
       "worship style churches",
@@ -78,11 +78,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const scriptChurchCopy = "GospelChannel helps people find the right church before a first visit: guides answer the decision, and church profiles prove the fit through worship, service details, location, language, and community signals.";
-  const scriptBrowseCopy = "Use GospelChannel as a church decision engine: start with a guide or comparison, then verify the answer in the church profile database by worship style, tradition, language, city, service details, music, and visitor cues.";
+  const scriptChurchCopy = "GospelChannel helps people find the right church before a first visit by comparing worship style, tradition, location, language, service times, music, and community life.";
+  const scriptBrowseCopy = "Explore churches by worship style, tradition, language, city, service times, music, and visitor information.";
   const knowsAbout = [
     "church discovery",
-    "church decision engine",
+    "church search",
     "worship style",
     "church tradition",
     "denomination",
@@ -146,9 +146,9 @@ export default function RootLayout({
                 hasPart: [
                   {
                     "@type": "Article",
-                    name: "Church choice answer map",
+                    name: "Church choice guides",
                     url: "https://gospelchannel.com/guides/church-choice-answers",
-                    description: "Direct church-choice answers that route each question to a guide answer and matching profile proof route.",
+                    description: "Guides that help people explore worship style, tradition, location, language, and service times.",
                   },
                   {
                     "@type": "CollectionPage",
@@ -170,21 +170,21 @@ export default function RootLayout({
                   },
                   {
                     "@type": "CollectionPage",
-                    name: "Church profile proof database",
+                    name: "Church directory",
                     url: "https://gospelchannel.com/church",
-                    description: "Public church profiles that prove guide answers with service times, worship music, location, language, tradition, and visitor cues.",
+                    description: "Church pages with service times, worship music, location, language, tradition, and visitor information.",
                   },
                   {
                     "@type": "CollectionPage",
-                    name: "Visit-ready church proof route",
+                    name: "Churches with service times",
                     url: "https://gospelchannel.com/church/churches-with-service-times",
-                    description: "Profiles with service-time evidence for people ready to plan a real Sunday visit.",
+                    description: "Churches with published service times for people planning a Sunday visit.",
                   },
                   {
                     "@type": "CollectionPage",
-                    name: "Worship music proof route",
+                    name: "Churches with worship music",
                     url: "https://gospelchannel.com/church/churches-with-worship-music",
-                    description: "Profiles with worship music evidence for checking sound before visiting.",
+                    description: "Churches with worship music for people exploring their worship style.",
                   },
                 ],
                 potentialAction: {

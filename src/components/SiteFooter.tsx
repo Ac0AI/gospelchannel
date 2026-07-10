@@ -13,7 +13,7 @@ export const SITE_FOOTER_COLUMNS = [
     ],
   },
   {
-    title: "Decision paths",
+    title: "Find a church",
     links: [
       { label: "Church Choice Answers", href: "/guides/church-choice-answers" },
       { label: "Church Fit Quiz", href: "/guides/church-fit-quiz" },
@@ -36,7 +36,7 @@ export const SITE_FOOTER_COLUMNS = [
   {
     title: "For people",
     links: [
-      { label: "All audience routes", href: "/for" },
+      { label: "Browse by life stage", href: "/for" },
       { label: "For expats", href: "/for/expats" },
       { label: "For students", href: "/for/students" },
       { label: "For young adults", href: "/for/young-adults" },
@@ -69,7 +69,7 @@ export async function SiteFooter() {
               GospelChannel
             </div>
             <p className="mt-3.5 max-w-[320px] text-sm leading-relaxed">
-              A decision engine for finding the right church: guides answer the question, church profiles prove the fit with service details, music, location, and visitor signals.
+              Find the right church with worship style, tradition, service times, music, location, language, and visitor information.
             </p>
             <p className="mt-4 text-xs uppercase tracking-[0.08em] text-[rgba(253,248,244,0.55)]">
               {churchCountLabel} churches &middot; {countryCount} countries

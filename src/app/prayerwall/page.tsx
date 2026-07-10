@@ -10,7 +10,7 @@ import { serializeJsonLd } from "@/lib/json-ld";
 export const metadata: Metadata = {
   title: "Prayer Wall: Community Prayers From Churches",
   description:
-    "Prayers from churches around the world. Use the wall as a gentle community signal, then open church profiles for service details, worship, location, and first-visit proof.",
+    "Prayers from churches around the world. Use the wall as a gentle community signal, then open church pages for service details, worship, location, and first-visit information.",
   alternates: { canonical: "https://gospelchannel.com/prayerwall" },
   openGraph: {
     title: "Prayer Wall: Community Prayers From Churches",
@@ -50,7 +50,7 @@ export default async function PrayerWallPage() {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
       name: "Prayer Wall",
-      description: "A global prayer wall connecting churches worldwide as a community signal alongside church profile proof.",
+      description: "A global prayer wall connecting churches worldwide alongside church pages with service times, worship, location, language, and visitor information.",
       url: "https://gospelchannel.com/prayerwall",
       isPartOf: {
         "@type": "WebSite",
@@ -60,11 +60,11 @@ export default async function PrayerWallPage() {
       about: [
         { "@type": "Thing", name: "Church community signal" },
         { "@type": "Thing", name: "Prayer and first-visit discernment" },
-        { "@type": "Thing", name: "Church profile proof" },
+        { "@type": "Thing", name: "Church page details" },
       ],
     },
     buildItemListSchema({
-      name: "Prayer Wall decision support routes",
+      name: "Prayer Wall resources",
       items: [
         { name: "Prayer guide", url: "https://gospelchannel.com/guides/prayer-guide" },
         { name: "First visit guide", url: "https://gospelchannel.com/guides/first-visit-guide" },
@@ -83,7 +83,7 @@ export default async function PrayerWallPage() {
       <PrayerWallHero
         title="Carry someone's prayer today."
         accentWord="prayer"
-        subtitle="Real prayers, posted by real people, from churches around the world. Read them as a community signal, then use church profiles for the practical proof before a first visit."
+        subtitle="Real prayers, posted by real people, from churches around the world. Read them as a community signal, then use church pages for practical details before a first visit."
       />
 
       {/* Sticky filter bar */}
@@ -97,16 +97,16 @@ export default async function PrayerWallPage() {
         </div>
       </div>
 
-      {/* Decision support */}
+      {/* Visitor information */}
       <section className="mx-auto max-w-[1280px] px-5 pt-10 sm:px-12 sm:pt-12">
         <div className="rounded-[22px] border border-rose-gold/[0.14] bg-white p-6 shadow-sm sm:p-7">
           <p className="gc-eyebrow">Community signal</p>
           <h2 className="mt-3 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-3xl">
-            Prayer can inform a church choice, but profiles still prove the visit.
+            Prayer can show life around a church, but check the church details before you visit.
           </h2>
           <p className="mt-3 max-w-[820px] text-sm leading-[1.7] text-warm-brown sm:text-base">
             A prayer wall shows life around a church; it is not a score or endorsement.
-            Use it alongside the profile evidence that matters before Sunday: service times,
+            Use it alongside the details that matter before Sunday: service times,
             worship, location, language, contact details, and first-visit cues.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">

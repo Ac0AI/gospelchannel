@@ -7,7 +7,7 @@ const SITE_URL = "https://gospelchannel.com";
 const PAGE_URL = `${SITE_URL}/contact`;
 const PAGE_TITLE = "Contact GospelChannel";
 const PAGE_DESCRIPTION =
-  "Contact GospelChannel for church proof database claims, profile corrections, proof updates, partnerships, or press.";
+  "Contact GospelChannel for church page claims, corrections, information updates, partnerships, or press.";
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
@@ -32,17 +32,17 @@ const contactEmail = "hi@gospelchannel.com";
 const topics = [
   {
     heading: "Claim or edit a church page",
-    body: "If the church is yours, claim the profile directly so the public proof layer stays accurate: service times, worship links, language, contact details, and visitor cues.",
+    body: "If the church is yours, claim the page directly so its service times, worship links, language, contact details, and visitor information stay accurate.",
     cta: { href: "/church", label: "Find your church" },
   },
   {
     heading: "Suggest a missing church",
-    body: "Add a church that is missing from the database. We review submissions so searchers can compare real profile evidence before a first visit.",
+    body: "Add a church that is missing from the directory. We review submissions so visitors can compare service times, worship, location, language, and contact details before a first visit.",
     cta: { href: "/church/suggest", label: "Suggest a church" },
   },
   {
     heading: "Corrections and takedowns",
-    body: "Spotted incorrect proof on a profile, or want a page removed? Email us and we'll sort it out within a few days.",
+    body: "Spotted incorrect information on a church page, or want a page removed? Email us and we'll sort it out within a few days.",
     cta: { href: `mailto:${contactEmail}?subject=Correction`, label: contactEmail },
   },
   {
@@ -98,7 +98,7 @@ export default function ContactPage() {
             Get in <em className="gc-italic">touch</em>.
           </h1>
           <p className="mt-5 max-w-[640px] text-lg leading-relaxed text-warm-brown">
-            GospelChannel is a small, independent project. Send profile claims, proof corrections, takedown requests, and partnership notes here; emails reach a real person.
+            GospelChannel is a small, independent project. Send church page claims, corrections, takedown requests, and partnership notes here; emails reach a real person.
           </p>
           <p className="mt-8 font-serif text-2xl italic text-rose-gold sm:text-3xl">
             <a href={`mailto:${contactEmail}`} className="transition-colors hover:text-rose-gold-deep">

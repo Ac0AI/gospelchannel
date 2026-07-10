@@ -167,9 +167,9 @@ export default async function FilteredPrayerWallPage({
   }
 
   const subtitles: Record<string, string> = {
-    country: `Prayers from churches in ${filter.displayName}. Read them as a community signal, then use profiles for visit proof.`,
-    city: `Prayers from churches in ${filter.displayName}. Read them as a community signal, then use profiles for visit proof.`,
-    church: `Pray for ${filter.displayName} and use the church profile for service times, worship, location, and first-visit proof.`,
+    country: `Prayers from churches in ${filter.displayName}. Read them as a community signal, then use church pages for visit details.`,
+    city: `Prayers from churches in ${filter.displayName}. Read them as a community signal, then use church pages for visit details.`,
+    church: `Pray for ${filter.displayName} and use the church page for service times, worship, location, and first-visit information.`,
   };
 
   const emptyMessages: Record<string, string> = {
@@ -178,10 +178,10 @@ export default async function FilteredPrayerWallPage({
     church: `No prayers for ${filter.displayName} yet. Be the first!`,
   };
 
-  const profileProofRoute =
+  const churchRoute =
     filter.type === "church"
       ? {
-          name: `${filter.displayName} profile proof`,
+          name: `${filter.displayName} church page`,
           url: `https://gospelchannel.com/church/${filter.slug}`,
           href: `/church/${filter.slug}`,
           label: "Open the church profile",
@@ -208,15 +208,15 @@ export default async function FilteredPrayerWallPage({
       about: [
         { "@type": "Thing", name: "Church community signal" },
         { "@type": "Thing", name: "Prayer and first-visit discernment" },
-        { "@type": "Thing", name: "Church profile proof" },
+        { "@type": "Thing", name: "Church page details" },
       ],
     },
     buildItemListSchema({
-      name: `${filter.displayName} prayer decision support routes`,
+      name: `${filter.displayName} prayer resources`,
       items: [
         { name: "Prayer guide", url: "https://gospelchannel.com/guides/prayer-guide" },
         { name: "First visit guide", url: "https://gospelchannel.com/guides/first-visit-guide" },
-        { name: profileProofRoute.name, url: profileProofRoute.url },
+        { name: churchRoute.name, url: churchRoute.url },
       ],
     }),
   ];
@@ -229,8 +229,8 @@ export default async function FilteredPrayerWallPage({
 
   const supportTitle =
     filter.type === "church"
-      ? "Prayer is one signal; the profile proves the visit."
-      : "Use prayer as a community signal, then verify in profiles.";
+      ? "Prayer is one signal; check the church details before you visit."
+      : "Use prayer as a community signal, then explore church pages.";
 
   return (
     <>
@@ -265,13 +265,13 @@ export default async function FilteredPrayerWallPage({
 
       <section className="mx-auto max-w-[1280px] px-5 pt-6 pb-20 sm:px-12">
         <div className="mb-8 rounded-[18px] border border-rose-gold/[0.14] bg-white px-6 py-6 shadow-sm sm:px-7">
-          <p className="gc-eyebrow">Decision support</p>
+          <p className="gc-eyebrow">Visitor information</p>
           <h2 className="mt-3 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-3xl">
             {supportTitle}
           </h2>
           <p className="mt-3 max-w-[840px] text-sm leading-[1.7] text-warm-brown sm:text-base">
             Prayer activity can show life around a church community, but it is not a
-            ranking, score, or endorsement. Use it with profile evidence: service times,
+            ranking, score, or endorsement. Use it with church details: service times,
             location, worship, language, contact details, and first-visit cues.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
@@ -282,10 +282,10 @@ export default async function FilteredPrayerWallPage({
               Read the prayer guide
             </Link>
             <Link
-              href={profileProofRoute.href}
+              href={churchRoute.href}
               className="rounded-full border border-rose-gold/30 px-5 py-2.5 text-sm font-semibold text-espresso transition-colors hover:bg-rose-gold/[0.06]"
             >
-              {profileProofRoute.label}
+              {churchRoute.label}
             </Link>
           </div>
         </div>

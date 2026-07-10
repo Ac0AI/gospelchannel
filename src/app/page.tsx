@@ -34,36 +34,36 @@ const TOP_CITIES: Array<{ name: string; country: string; slug: string }> = [
 
 const HOME_DECISION_PATHS = [
   {
-    question: "I do not know what kind of church fits me.",
-    answer: "Start with the Church Fit Quiz, then open the matching proof route and compare real profiles.",
+    question: "I'm not sure what kind of church is right for me.",
+    answer: "Take the Church Fit Quiz to narrow down what matters, then explore churches that match.",
     guideHref: "/guides/church-fit-quiz",
-    guideLabel: "Take the fit quiz",
+    guideLabel: "Take the Church Fit Quiz",
     proofHref: "/church",
-    proofLabel: "Open church profiles",
+    proofLabel: "Browse all churches",
   },
   {
-    question: "The worship sound matters most.",
-    answer: "Use the worship match or style guide, then verify the result with music, videos, and style-tagged profiles.",
+    question: "Worship style matters most to me.",
+    answer: "Find the worship style that feels familiar, then listen to music and explore matching churches.",
     guideHref: "/guides/worship-style-match",
-    guideLabel: "Match worship style",
+    guideLabel: "Find my worship style",
     proofHref: "/church/churches-with-worship-music",
-    proofLabel: "Profiles with music",
+    proofLabel: "Churches with worship music",
   },
   {
-    question: "I need a church I can actually visit this Sunday.",
-    answer: "Start with city and service-time proof before comparing the softer fit signals.",
+    question: "I want a church I can visit this Sunday.",
+    answer: "Find churches with published service times, then compare location and what each community is like.",
     guideHref: "/guides/first-visit-guide",
-    guideLabel: "Read the first-visit guide",
+    guideLabel: "Plan my first visit",
     proofHref: "/church/churches-with-service-times",
-    proofLabel: "Profiles with service times",
+    proofLabel: "See Sunday service times",
   },
   {
-    question: "I already care about tradition or theology.",
-    answer: "Compare denominations in plain language, then browse real churches in that tradition.",
+    question: "Tradition or theology matters to me.",
+    answer: "Compare denominations in plain language, then explore churches in that tradition.",
     guideHref: "/guides/denominations-comparison",
     guideLabel: "Compare denominations",
     proofHref: "/church/denomination",
-    proofLabel: "Browse traditions",
+    proofLabel: "Browse by denomination",
   },
 ];
 
@@ -93,7 +93,7 @@ function buildHomeFaqSchema(churchCountLabel: string, countryCount: number) {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    description: `Answers to common questions about GospelChannel — a free church decision engine and profile database of ${churchCountLabel} churches across ${countryCount} countries, helping people compare fit before their first visit.`,
+    description: `Answers to common questions about GospelChannel — a free church directory of ${churchCountLabel} churches across ${countryCount} countries, with worship style, tradition, location, language, and service times.`,
     mainEntity: questions.map(({ q, a }) => ({
       "@type": "Question",
       name: q,
@@ -110,16 +110,16 @@ function buildHomeSchema(churchCountLabel: string, countryCount: number) {
       "@type": "WebSite",
       name: "GospelChannel",
       url: "https://gospelchannel.com",
-      description: `A free church decision engine and profile database of ${churchCountLabel} churches across ${countryCount} countries.`,
+      description: `A free church directory of ${churchCountLabel} churches across ${countryCount} countries.`,
       potentialAction: {
         "@type": "SearchAction",
         target: "https://gospelchannel.com/church?q={search_term_string}",
         "query-input": "required name=search_term_string",
       },
       about: [
-        { "@type": "Thing", name: "Church decision engine" },
-        { "@type": "Thing", name: "Church profile database evidence" },
-        { "@type": "Thing", name: "Worship style matching" },
+        { "@type": "Thing", name: "Church directory" },
+        { "@type": "Thing", name: "Church service times and visitor information" },
+        { "@type": "Thing", name: "Worship style" },
       ],
     },
     {
@@ -127,7 +127,7 @@ function buildHomeSchema(churchCountLabel: string, countryCount: number) {
       "@type": "CollectionPage",
       name: "GospelChannel",
       url: "https://gospelchannel.com",
-      description: `Find the right church across ${churchCountLabel} churches in ${countryCount} countries by starting with a guide, then proving the fit in church profiles.`,
+      description: `Find the right church across ${churchCountLabel} churches in ${countryCount} countries by exploring worship style, tradition, location, language, and service times.`,
       isPartOf: {
         "@type": "WebSite",
         name: "GospelChannel",
@@ -135,7 +135,7 @@ function buildHomeSchema(churchCountLabel: string, countryCount: number) {
       },
     },
     buildItemListSchema({
-      name: "GospelChannel church decision paths",
+      name: "GospelChannel church search options",
       items: HOME_DECISION_PATHS.map((path) => ({
         name: path.question,
         url: `https://gospelchannel.com${path.guideHref}`,
@@ -177,22 +177,21 @@ export default async function HomePage() {
         </p>
       </div>
 
-      {/* Decision engine */}
+      {/* Find your church */}
       <section className="mx-auto max-w-[1280px] px-5 pt-16 sm:px-12 sm:pt-20">
         <div className="rounded-[28px] border border-rose-gold/[0.16] bg-white p-6 shadow-[0_18px_55px_rgba(72,39,24,0.06)] sm:p-8 lg:p-10">
           <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
             <div>
-              <p className="gc-eyebrow">Quick answer</p>
+              <p className="gc-eyebrow">Find your church</p>
               <h2 className="mt-3 font-serif text-3xl font-semibold tracking-[-0.01em] text-espresso sm:text-[44px]">
-                Start with the question. Prove the answer in profiles.
+                Start with what matters to you.
               </h2>
               <p className="mt-4 max-w-[520px] text-base leading-relaxed text-warm-brown">
-                GospelChannel works best as a decision path: use a guide to name what matters,
-                then use the church database to verify it with service times, worship music,
-                videos, location, language, and first-visit cues.
+                Choose the part of church life that matters most right now, from worship style and tradition
+                to location, language, and service times. We&apos;ll help you explore churches that fit.
               </p>
               <div className="mt-6 flex flex-wrap gap-2">
-                {["guide answer", "database proof", "profile evidence", "Sunday plan"].map((label) => (
+                {["worship style", "location", "tradition", "this Sunday"].map((label) => (
                   <span
                     key={label}
                     className="rounded-full border border-rose-gold/20 bg-linen px-3 py-1 text-xs font-semibold text-warm-brown"

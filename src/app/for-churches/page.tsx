@@ -6,9 +6,9 @@ import { serializeJsonLd } from "@/lib/json-ld";
 
 const SITE_URL = "https://gospelchannel.com";
 const PAGE_URL = `${SITE_URL}/for-churches`;
-const PAGE_TITLE = "Claim Your Church Proof Profile";
+const PAGE_TITLE = "Claim Your Church Page";
 const PAGE_DESCRIPTION =
-  "Claim or add a free GospelChannel proof profile so first-time visitors can verify service times, worship, location, language, and visitor cues before Sunday.";
+  "Claim or add a free GospelChannel church page so first-time visitors can find service times, worship, location, language, and visitor information before Sunday.";
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
@@ -32,7 +32,7 @@ const WHY = [
   {
     num: "01",
     title: "Show your soul, not just hours.",
-    body: "Your music, your photos, your team, the feel of a Sunday. People decide with proof before they decide to visit.",
+    body: "Your music, your photos, your team, the feel of a Sunday. Help people see what to expect before they visit.",
   },
   {
     num: "02",
@@ -90,9 +90,9 @@ export default async function ForChurchesPage() {
         url: SITE_URL,
       },
       about: [
-        { "@type": "Thing", name: "Church profile proof" },
-        { "@type": "Thing", name: "First-time visitor decision support" },
-        { "@type": "Thing", name: "Church service times and worship evidence" },
+        { "@type": "Thing", name: "Church page details" },
+        { "@type": "Thing", name: "First-time visitor information" },
+        { "@type": "Thing", name: "Church service times and worship" },
       ],
     },
     buildBreadcrumbSchema([
@@ -102,8 +102,8 @@ export default async function ForChurchesPage() {
     {
       "@context": "https://schema.org",
       "@type": "HowTo",
-      name: "How to publish a GospelChannel proof profile",
-      description: "Find or add a church, verify access, complete public proof fields, and publish the profile.",
+      name: "How to publish a GospelChannel church page",
+      description: "Find or add a church, verify access, complete public details, and publish the page.",
       totalTime: "PT4M",
       step: STEPS.map((step, index) => ({
         "@type": "HowToStep",
@@ -122,7 +122,7 @@ export default async function ForChurchesPage() {
       })),
     },
     buildItemListSchema({
-      name: "Church proof profile fields",
+      name: "Church page fields",
       items: FEATURES.map((feature) => ({
         name: feature.t,
         url: PAGE_URL,

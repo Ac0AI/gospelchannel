@@ -96,7 +96,7 @@ export function HomeHero({ surpriseSlugs, churchCountLabel }: Props) {
           Find the <em className="not-italic font-serif italic text-blush">right</em> church.
         </h1>
         <p className="mx-auto mt-5 max-w-[520px] text-base leading-relaxed text-white/85 sm:text-lg lg:text-[19px]">
-          Ask the practical question first, then compare worship, service details, location, and profile proof before Sunday.
+          Ask the practical question first, then compare worship, service details, location, and church information before Sunday.
         </p>
 
         <div className="mt-9 w-full max-w-[620px]">
