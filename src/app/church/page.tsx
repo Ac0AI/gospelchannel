@@ -118,7 +118,7 @@ export async function generateMetadata({ searchParams }: ChurchIndexPageProps): 
   if (currentPage > 1) {
     return {
       title: "Church Profile Database",
-      description: `Compare ${churchCountLabel} church profiles in ${countryCount} countries by worship style, tradition, city, language, service details, and profile proof.`,
+      description: `Compare ${churchCountLabel} church profiles in ${countryCount} countries by worship style, tradition, city, language, service details, and church details.`,
       alternates: { canonical: "https://gospelchannel.com/church" },
       robots: { index: false, follow: true },
     };
@@ -126,11 +126,11 @@ export async function generateMetadata({ searchParams }: ChurchIndexPageProps): 
 
   return {
     title: "Church Profile Database",
-    description: `Compare ${churchCountLabel} church profiles in ${countryCount} countries by worship style, tradition, city, language, service details, and profile proof.`,
+    description: `Compare ${churchCountLabel} church profiles in ${countryCount} countries by worship style, tradition, city, language, service details, and church details.`,
     alternates: { canonical: "https://gospelchannel.com/church" },
     openGraph: {
       title: "Church Profile Database",
-      description: `Compare ${churchCountLabel} church profiles by worship style, tradition, city, language, service details, and profile proof before your first visit.`,
+      description: `Compare ${churchCountLabel} church profiles by worship style, tradition, city, language, service details, and church details before your first visit.`,
       url: "https://gospelchannel.com/church",
       type: "website",
       siteName: "GospelChannel",
@@ -138,7 +138,7 @@ export async function generateMetadata({ searchParams }: ChurchIndexPageProps): 
     twitter: {
       card: "summary_large_image",
       title: "Church Profile Database",
-      description: `Compare ${churchCountLabel} church profiles by worship style, tradition, city, language, service details, and profile proof.`,
+      description: `Compare ${churchCountLabel} church profiles by worship style, tradition, city, language, service details, and church details.`,
     },
   };
 }
@@ -187,7 +187,7 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
                 "@context": "https://schema.org",
                 "@type": "CollectionPage",
                 name: "GospelChannel Church Profile Database",
-                description: `Compare ${directoryCount} church profiles in ${countryCount} countries by worship style, tradition, city, language, service details, worship music, and profile proof.`,
+                description: `Compare ${directoryCount} church profiles in ${countryCount} countries by worship style, tradition, city, language, service details, worship music, and church details.`,
                 url: "https://gospelchannel.com/church",
                 isPartOf: {
                   "@type": "WebSite",
@@ -215,7 +215,7 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
           "@context": "https://schema.org",
           "@type": "ItemList",
           name: hasActiveFilters ? `Church profile results for ${filterSummary}` : "Church profile database",
-          description: `Compare ${directoryCount} church profiles across ${countryCount} countries by worship style, tradition, city, service details, and profile proof.`,
+          description: `Compare ${directoryCount} church profiles across ${countryCount} countries by worship style, tradition, city, service details, and church details.`,
           numberOfItems: pageItems.length,
           itemListElement: pageItems.map((church, index) => ({
             "@type": "ListItem",
@@ -238,7 +238,7 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
         style={{ background: "linear-gradient(135deg, var(--linen-deep) 0%, var(--linen) 60%)" }}
       >
         <div className="mx-auto max-w-[1280px]">
-          <p className="gc-eyebrow">Profile database</p>
+          <p className="gc-eyebrow">Church directory</p>
           <h1 className="mt-3 font-serif text-4xl font-semibold leading-[1] tracking-[-0.02em] text-espresso sm:text-5xl lg:text-[56px]">
             {searchSummary ? (
               <>Search results for <em className="gc-italic">{searchSummary}</em>.</>
@@ -372,13 +372,13 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
       {showDecisionGuide && (
         <section className="mx-auto max-w-[1280px] px-5 pt-12 sm:px-12 sm:pt-14">
           <div className="border-b border-rose-gold/[0.12] pb-10">
-            <p className="gc-eyebrow">Decision path</p>
+            <p className="gc-eyebrow">Start your search</p>
             <h2 className="mt-2 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-[32px]">
-              Turn profile proof into a shortlist.
+              Turn church details into a shortlist.
             </h2>
             <p className="mt-3 max-w-[760px] text-sm leading-[1.7] text-warm-brown sm:text-base">
               Start with the signal you can judge before visiting, then open church profiles for
-              proof: service details, music, videos, languages, location, and first-visit cues.
+              details: service times, music, videos, languages, location, and first-visit cues.
             </p>
             <div className="mt-7 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {[

@@ -65,7 +65,7 @@ function truncateText(value: string | undefined, maxLength = 140): string {
   return `${normalized.slice(0, maxLength - 3).trimEnd()}...`;
 }
 
-function getProofLine(church: ChurchCollectionPageItem): string {
+function getChurchDetailsLine(church: ChurchCollectionPageItem): string {
   const serviceTimes = truncateText(church.enrichmentHint?.serviceTimes, 96);
   if (serviceTimes) return `Service times: ${serviceTimes}`;
 
@@ -126,8 +126,8 @@ export function ChurchCollectionPage({
   const quickAnswerChurches = currentPage === 1 ? churches.slice(0, 3) : [];
   const target = getCollectionTarget(title);
   const quickAnswerLead = target
-    ? `GospelChannel lists ${totalCount.toLocaleString("en-US")} churches for ${target}. Start with the most specific filter that matches your decision, then open church profiles for proof: service times, worship music, videos, location, language, and visitor cues.`
-    : `GospelChannel lists ${totalCount.toLocaleString("en-US")} churches in this collection. Start with the most specific filter that matches your decision, then open church profiles for proof: service times, worship music, videos, location, language, and visitor cues.`;
+    ? `GospelChannel lists ${totalCount.toLocaleString("en-US")} churches for ${target}. This list uses published location, worship, service-time, language, music, and visitor information where available. Open church profiles for the details that matter to your visit.`
+    : `GospelChannel lists ${totalCount.toLocaleString("en-US")} churches in this collection. This list uses published location, worship, service-time, language, music, and visitor information where available. Open church profiles for the details that matter to your visit.`;
   const showQuickAnswer = currentPage === 1 && (quickAnswerSections.length > 0 || quickAnswerChurches.length > 0);
 
   const jsonLd: Array<Record<string, unknown>> = [
@@ -140,7 +140,7 @@ export function ChurchCollectionPage({
       mainEntity: { "@id": `${canonicalUrl}#itemlist` },
       about: [
         { "@type": "Thing", name: "Church choice" },
-        { "@type": "Thing", name: "Church profile database evidence" },
+        { "@type": "Thing", name: "Church details" },
         ...quickAnswerSections.map((section) => ({ "@type": "Thing", name: section.title })),
       ],
       isPartOf: {
@@ -398,7 +398,7 @@ export function ChurchCollectionPage({
               {quickAnswerChurches.length > 0 && (
                 <div>
                   <h3 className="font-sans text-xs font-bold uppercase tracking-[0.16em] text-muted-warm">
-                    Profile proof to inspect first
+                    Church details to inspect first
                   </h3>
                   <div className="mt-4 divide-y divide-rose-gold/[0.12] border-t border-rose-gold/[0.12]">
                     {quickAnswerChurches.map((church) => (
@@ -410,7 +410,7 @@ export function ChurchCollectionPage({
                           {church.name} &rarr;
                         </Link>
                         <p className="mt-1 text-sm leading-[1.55] text-warm-brown">
-                          {getProofLine(church)}
+                          {getChurchDetailsLine(church)}
                         </p>
                       </div>
                     ))}

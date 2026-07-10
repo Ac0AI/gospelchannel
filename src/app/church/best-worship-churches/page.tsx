@@ -9,14 +9,14 @@ import { getFreshestChurchUpdatedAtAsync } from "@/lib/content";
 import { serializeJsonLd } from "@/lib/json-ld";
 import { formatContentFreshness } from "@/lib/utils";
 
-// Proof-of-concept discovery page #2: intercepts the "[topic] reddit"-shaped
+// Discovery page #2: intercepts the "[topic] reddit"-shaped
 // search pattern (e.g. "best worship church reddit") the way the approved
 // GEO design doc recommends for the cautious, small-sample track — matching
 // the query intent with our own honestly-disclosed curation, NOT fabricated
 // Reddit citations. We have no way to verify real Reddit threads right now
 // (Reddit blocks anonymous search/API access), so this page never claims to
-// summarize Reddit — it's GospelChannel's own directory-score ranking, and
-// says so plainly in the methodology line below the table.
+// summarize Reddit — it uses GospelChannel's own church data and says so
+// plainly in the methodology line below the table.
 export const dynamic = "force-dynamic";
 
 const PATH = "/church/best-worship-churches";
@@ -32,7 +32,7 @@ const FAQS = [
   {
     question: "How is this list put together?",
     answer:
-      "This is GospelChannel's own curated list, ranked by our internal profile completeness score (a measure of documented public profile evidence and data quality), filtered to churches tagged as contemporary, charismatic or gospel worship. It is not sourced from Reddit, reviews, or any third-party ranking.",
+      "This list is based on published worship style, music, service-time, location, language, and church-profile data for churches tagged as contemporary, charismatic, or gospel worship. This is not a ranking, review, or third-party recommendation.",
   },
   {
     question: "Are these churches Pentecostal or charismatic?",
@@ -47,8 +47,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = "Best Worship Churches — What People Recommend";
   const description =
     count > 0
-      ? `${count} churches known for their worship, from Hillsong and Planetshakers to Jesus Culture and Kensington Temple, ranked by GospelChannel's profile evidence data.`
-      : "Churches known for their worship, ranked by GospelChannel's profile evidence data.";
+      ? `${count} churches known for their worship, from Hillsong and Planetshakers to Jesus Culture and Kensington Temple, with published worship, service, location, and church details.`
+      : "Churches known for their worship, with published worship, service, location, and church details.";
 
   return {
     title,
@@ -71,8 +71,8 @@ export default async function BestWorshipChurchesPage() {
   const intro =
     `Searching for churches people recommend for worship? Here are ${count} congregations ` +
     `known for their worship, from ${leadIn} to Kensington Temple and Jesus Culture, drawn from ` +
-    `GospelChannel's own profile database and ranked by how complete and well-documented each church's ` +
-    `profile is. Each entry links to its full profile.`;
+    `GospelChannel's own church directory. This list uses published worship, service, location, language, ` +
+    `and church-profile details. Each entry links to its full profile.`;
 
   const { updatedIso, updatedLabel } = formatContentFreshness(
     await getFreshestChurchUpdatedAtAsync(),
@@ -192,7 +192,7 @@ export default async function BestWorshipChurchesPage() {
                       <th className="px-4 py-3 font-semibold">Location</th>
                       <th className="px-4 py-3 font-semibold">Tradition</th>
                       <th className="px-4 py-3 font-semibold">Worship style</th>
-                      <th className="px-4 py-3 font-semibold">Profile proof</th>
+                      <th className="px-4 py-3 font-semibold">Church details</th>
                       <th className="px-4 py-3 font-semibold">Site</th>
                     </tr>
                   </thead>
@@ -200,7 +200,7 @@ export default async function BestWorshipChurchesPage() {
                     {churches.map((church) => {
                       const style = formatDiscoveryStyles(church.musicStyle);
                       const place = church.location ?? church.country ?? null;
-                      const proof = buildDiscoveryChurchProofs(church);
+                      const details = buildDiscoveryChurchProofs(church);
                       return (
                         <tr key={church.slug} className="border-b border-rose-gold/10 last:border-0 align-top">
                           <td className="px-4 py-3">
@@ -215,7 +215,7 @@ export default async function BestWorshipChurchesPage() {
                           <td className="px-4 py-3 text-espresso/75">{church.denomination ?? "—"}</td>
                           <td className="px-4 py-3 text-espresso/75">{style ?? "—"}</td>
                           <td className="px-4 py-3 text-espresso/75">
-                            {proof.length > 0 ? proof.slice(0, 3).join(" · ") : "Profile data available"}
+                            {details.length > 0 ? details.slice(0, 3).join(" · ") : "Church details available"}
                           </td>
                           <td className="px-4 py-3">
                             {church.website ? (
@@ -238,13 +238,14 @@ export default async function BestWorshipChurchesPage() {
                 </table>
               </div>
 
-              <p className="mt-4 text-xs text-muted-warm">
-                How we chose: churches tagged as contemporary, charismatic or gospel worship, ranked by
-                GospelChannel&rsquo;s own profile completeness score (not an
-                independent or user-submitted rating). The proof column is pulled from each church
-                profile: service times, worship playlists, videos, style tags, language, official site,
-                and location where available.
-              </p>
+              <div className="mt-4">
+                <p className="gc-eyebrow">How this list works</p>
+                <p className="mt-1 text-xs text-muted-warm">
+                  This list is based on churches tagged as contemporary, charismatic, or gospel worship,
+                  using published service times, worship playlists, videos, style tags, language, official
+                  sites, and location where available. This is not a ranking or an independent rating.
+                </p>
+              </div>
             </>
           )}
 

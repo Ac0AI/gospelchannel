@@ -16,12 +16,12 @@ const FAQS = [
   {
     question: "How do I find a church with kids ministry?",
     answer:
-      "Start with profiles that expose children or youth ministry signals, then check service times, location, visitor details, and the church website before visiting. A family-friendly claim is useful only when there is enough practical proof to plan the first Sunday.",
+      "Start with profiles that include children or youth ministry details, then check service times, location, visitor details, and the church website before visiting. A family-friendly claim is useful only when there is enough practical information to plan the first Sunday.",
   },
   {
     question: "Does this page rank the best family churches?",
     answer:
-      "No. This is a proof route, not a ranking. It surfaces churches with kids or youth ministry signals so families can inspect real profile evidence before choosing which churches to visit.",
+      "No. This is not a ranking. It lists churches with published kids or youth ministry details so families can inspect church information before choosing which churches to visit.",
   },
   {
     question: "What should parents check before the first visit?",
@@ -43,8 +43,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = "Family-Friendly Churches with Kids Ministry";
   const description =
     totalCount > 0
-      ? `${totalCount.toLocaleString("en-US")} church profiles with kids or youth ministry signals, service context, location, worship, and visitor proof.`
-      : "Church profiles with kids or youth ministry signals, service context, location, worship, and visitor proof.";
+      ? `${totalCount.toLocaleString("en-US")} church profiles with kids or youth ministry details, service context, location, worship, and visitor details.`
+      : "Church profiles with kids or youth ministry details, service context, location, worship, and visitor details.";
 
   return {
     title,
@@ -65,12 +65,12 @@ export default async function FamilyFriendlyChurchesPage() {
   return (
     <ChurchProofRouteLandingPage
       canonicalPath={PATH}
-      eyebrow="Family proof route"
+      eyebrow="Kids and youth"
       title="Family-Friendly"
       titleAccent="Churches"
-      description="Church profiles with kids or youth ministry proof for families choosing a realistic first Sunday."
-      answer={`Looking for a church with kids ministry? GospelChannel currently surfaces ${totalCount.toLocaleString("en-US")} profiles with kids or youth signals. Use this page as the family-fit proof layer, then open church profiles for service times, age-group cues, worship style, location, language, and first-visit details.`}
-      methodology="How we chose: churches where the public profile or enrichment data includes children or youth ministry signals. This is a proof route, not a ranking; inspect individual profiles for age groups, service timing, and visitor details before deciding where to visit."
+      description="A list of church profiles with published kids or youth ministry details for families planning a realistic first Sunday."
+      answer={`Looking for a church with kids ministry? GospelChannel currently lists ${totalCount.toLocaleString("en-US")} profiles with kids or youth ministry details. Open church profiles for service times, age-group cues, worship style, location, language, and first-visit details.`}
+      methodology="This list is based on published children or youth ministry data in church profiles or enrichment data. This is not a ranking; inspect individual profiles for age groups, service timing, and visitor details before deciding where to visit."
       count={totalCount}
       churches={pageItems}
       updatedIso={updatedIso}

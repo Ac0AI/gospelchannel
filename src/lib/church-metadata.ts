@@ -15,8 +15,8 @@ export type ChurchTier = "music" | "profile" | "thin";
 const TITLE_SEPARATOR = "·";
 const DESCRIPTION_MAX = 158;
 const TITLE_TEMPLATES: Record<ChurchTier, string> = {
-  music: "Worship Songs, Service Times & Profile Proof",
-  profile: "Service Times, Worship Style & Profile Proof",
+  music: "Worship Music, Service Times & Church Details",
+  profile: "Service Times, Worship Style & Church Details",
   thin: "Church Profile",
 };
 
@@ -188,7 +188,7 @@ export function buildChurchDescription(input: ChurchMetadataInput): string {
   }
 
   if (tier !== "thin") {
-    sentences.push("Profile proof for a first visit.");
+    sentences.push("Church details for a first visit.");
   }
 
   let built = joinSentences(sentences);

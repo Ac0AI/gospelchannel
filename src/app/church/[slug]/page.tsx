@@ -651,7 +651,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
       ? [{
           "@context": "https://schema.org",
           "@type": "ItemList",
-          name: `Profile evidence for ${displayName}`,
+          name: `Church details for ${displayName}`,
           description: `Decision signals on ${displayName}'s GospelChannel profile: service details, music, location, tradition, language, and first-visit cues where available.`,
           itemListElement: profileEvidenceSignals.map((signal, index) => ({
             "@type": "ListItem",
@@ -1003,17 +1003,17 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
         </section>
       </ScrollReveal>
 
-      {/* ━━━━━━━━━━ 3b. PROFILE EVIDENCE ━━━━━━━━━━ */}
+      {/* ━━━━━━━━━━ 3b. CHURCH DETAILS ━━━━━━━━━━ */}
       {profileEvidenceSignals.length > 0 && (
         <ScrollReveal>
           <section id="profile-evidence" className="mx-auto max-w-[1100px] px-5 pt-20 sm:px-12 sm:pt-24">
             <div className="border-y border-rose-gold/[0.14] py-8">
-              <p className="gc-eyebrow">Profile evidence</p>
+              <p className="gc-eyebrow">Church details</p>
               <h2 className="mt-2 font-serif text-3xl font-semibold tracking-[-0.01em] text-espresso sm:text-4xl">
                 Why this profile belongs in a shortlist.
               </h2>
               <p className="mt-3 max-w-[760px] text-sm leading-[1.7] text-warm-brown sm:text-base">
-                Use these signals as the proof layer behind the guides and proof routes. They show what can be checked before a first visit.
+                Use these details to check service times, music, location, tradition, language, and first-visit information before you visit.
               </p>
               <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {profileEvidenceSignals.slice(0, 9).map((signal) => {

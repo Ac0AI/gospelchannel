@@ -30,8 +30,8 @@ export async function generateMetadata({ params, searchParams }: CountryPageProp
   if (!data) return { title: "Not Found" };
 
   const basePath = `https://gospelchannel.com/church/country/${slug}`;
-  const title = `${data.label} Churches: City, Style & Profile Proof`;
-  const description = `Map the church landscape in ${data.label} across ${data.totalCount.toLocaleString("en-US")} churches, then narrow by city, worship style, denomination, service times, and profile proof.`;
+  const title = `${data.label} Churches: Cities, Worship Styles & Service Times`;
+  const description = `A list of ${data.totalCount.toLocaleString("en-US")} churches in ${data.label} based on published city, worship-style, service-time, language, and visitor details.`;
 
   return {
     title,
@@ -66,7 +66,7 @@ export default async function CountryPage({ params, searchParams }: CountryPageP
     <ChurchCollectionPage
       eyebrow="Browse by Country"
       title={`${label} Churches`}
-      description={`Use ${label} as the regional decision route, then narrow by city, worship style, denomination, service times, and profile-level proof before a first visit.`}
+      description={`Use ${label} to narrow by city, worship style, denomination, service times, and church details before a first visit.`}
       basePath={basePath}
       currentPage={currentPage}
       totalPages={totalPages}

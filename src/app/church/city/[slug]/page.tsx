@@ -33,8 +33,8 @@ export async function generateMetadata({ params, searchParams }: CityPageProps):
   if (!data) return { title: "Not Found" };
 
   const basePath = `https://gospelchannel.com/church/city/${slug}`;
-  const title = `Churches in ${data.label}: Sunday Fit & Profile Proof`;
-  const description = `Decide which church in ${data.label} you can actually visit. Compare ${data.totalCount.toLocaleString("en-US")} churches by location, service times, worship style, denomination, and profile proof.`;
+  const title = `Churches in ${data.label}: Service Times, Worship & Location`;
+  const description = `A list of ${data.totalCount.toLocaleString("en-US")} churches in ${data.label} based on published location, service-time, worship, language, and visitor details.`;
 
   return {
     title,

@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ChurchDirectoryEntry } from "@/lib/church-directory";
 import { serializeJsonLd } from "@/lib/json-ld";
 
-type ProofRouteFaq = {
+type CollectionFaq = {
   question: string;
   answer: string;
 };
@@ -32,8 +32,8 @@ function formatLanguages(church: ChurchDirectoryEntry): string | null {
   return languages.length > 0 ? languages.slice(0, 3).join(", ") : null;
 }
 
-function buildProofs(church: ChurchDirectoryEntry): string[] {
-  const proofs = [
+function buildChurchDetails(church: ChurchDirectoryEntry): string[] {
+  const details = [
     church.enrichmentHint?.serviceTimes ? `Service: ${truncate(church.enrichmentHint.serviceTimes)}` : null,
     church.enrichmentHint?.childrenMinistry ? "Kids ministry" : null,
     church.enrichmentHint?.youthMinistry ? "Youth ministry" : null,
@@ -43,7 +43,7 @@ function buildProofs(church: ChurchDirectoryEntry): string[] {
     church.enrichmentHint?.location || church.location ? `Location: ${truncate(church.enrichmentHint?.location || church.location)}` : null,
   ].filter((value): value is string => Boolean(value));
 
-  return Array.from(new Set(proofs)).slice(0, 4);
+  return Array.from(new Set(details)).slice(0, 4);
 }
 
 export function ChurchProofRouteLandingPage({
@@ -74,7 +74,7 @@ export function ChurchProofRouteLandingPage({
   updatedIso: string;
   updatedLabel: string;
   breadcrumbs: Breadcrumb[];
-  faqs: ProofRouteFaq[];
+  faqs: CollectionFaq[];
   relatedLinks: RelatedLink[];
 }) {
   const canonicalUrl = `https://gospelchannel.com${canonicalPath}`;
@@ -113,7 +113,7 @@ export function ChurchProofRouteLandingPage({
           "@id": `https://gospelchannel.com/church/${church.slug}`,
           name: church.name,
           url: `https://gospelchannel.com/church/${church.slug}`,
-          description: buildProofs(church).join("; "),
+          description: buildChurchDetails(church).join("; "),
           ...(church.logo ? { image: church.logo } : {}),
           address: {
             "@type": "PostalAddress",
@@ -172,7 +172,7 @@ export function ChurchProofRouteLandingPage({
           <p className="mt-3 text-xs text-muted-warm">Updated {updatedLabel}</p>
 
           {count === 0 ? (
-            <p className="mt-10 text-muted-warm">No churches matched this proof route yet.</p>
+            <p className="mt-10 text-muted-warm">No churches matched this list yet.</p>
           ) : (
             <>
               <div className="mt-10 overflow-x-auto rounded-2xl border border-rose-gold/20 bg-white/60">
@@ -183,12 +183,12 @@ export function ChurchProofRouteLandingPage({
                       <th className="px-4 py-3 font-semibold">Location</th>
                       <th className="px-4 py-3 font-semibold">Tradition</th>
                       <th className="px-4 py-3 font-semibold">Language</th>
-                      <th className="px-4 py-3 font-semibold">Profile proof</th>
+                      <th className="px-4 py-3 font-semibold">Church details</th>
                     </tr>
                   </thead>
                   <tbody>
                     {churches.map((church) => {
-                      const proofs = buildProofs(church);
+                      const details = buildChurchDetails(church);
                       return (
                         <tr key={church.slug} className="border-b border-rose-gold/10 last:border-0 align-top">
                           <td className="px-4 py-3">
@@ -203,7 +203,7 @@ export function ChurchProofRouteLandingPage({
                           <td className="px-4 py-3 text-espresso/75">{church.denomination ?? "-"}</td>
                           <td className="px-4 py-3 text-espresso/75">{formatLanguages(church) ?? "-"}</td>
                           <td className="px-4 py-3 text-espresso/75">
-                            {proofs.length > 0 ? proofs.join(" / ") : "Profile data available"}
+                            {details.length > 0 ? details.join(" / ") : "Church details available"}
                           </td>
                         </tr>
                       );
@@ -212,7 +212,10 @@ export function ChurchProofRouteLandingPage({
                 </table>
               </div>
 
-              <p className="mt-4 text-xs text-muted-warm">{methodology}</p>
+              <div className="mt-4">
+                <p className="gc-eyebrow">How this list works</p>
+                <p className="mt-1 text-xs text-muted-warm">{methodology}</p>
+              </div>
             </>
           )}
 

@@ -30,8 +30,8 @@ export async function generateMetadata({ params, searchParams }: DenominationPag
   if (!data) return { title: "Not Found" };
 
   const basePath = `https://gospelchannel.com/church/denomination/${slug}`;
-  const title = `${data.label} Churches: Tradition Fit & Profile Proof`;
-  const description = `Decide whether ${data.label.toLowerCase()} tradition fits you across ${data.totalCount.toLocaleString("en-US")} churches, then prove it with profiles showing worship style, service times, location, and visitor cues.`;
+  const title = `${data.label} Churches: Worship, Service Times & Locations`;
+  const description = `A list of ${data.totalCount.toLocaleString("en-US")} ${data.label.toLowerCase()} churches based on published worship style, service times, location, language, and visitor details.`;
 
   return {
     title,

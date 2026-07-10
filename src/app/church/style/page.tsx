@@ -7,7 +7,7 @@ export const revalidate = 3600;
 const CANONICAL = "https://gospelchannel.com/church/style";
 const TITLE = "Browse Churches by Worship Style";
 const DESCRIPTION =
-  "Use worship style as a church decision route. Compare contemporary, hymns, gospel, acoustic, and liturgical churches, then prove the fit with profiles showing music, videos, and service times.";
+  "Browse churches by worship style, including contemporary, hymns, gospel, acoustic, and liturgical churches, then compare music, videos, service times, and church details.";
 
 export const metadata: Metadata = {
   title: TITLE,

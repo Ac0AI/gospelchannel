@@ -30,8 +30,8 @@ export async function generateMetadata({ params, searchParams }: StylePageProps)
   if (!data) return { title: "Not Found" };
 
   const basePath = `https://gospelchannel.com/church/style/${slug}`;
-  const title = `${data.label} Churches: Worship Fit & Profile Proof`;
-  const description = `Decide whether ${data.label.toLowerCase()} worship fits you across ${data.totalCount.toLocaleString("en-US")} churches, then prove it with profiles showing music, videos, service times, location, and visitor cues.`;
+  const title = `${data.label} Churches: Music, Service Times & Locations`;
+  const description = `A list of ${data.totalCount.toLocaleString("en-US")} churches with ${data.label.toLowerCase()} worship, based on published music, service-time, location, language, and visitor details.`;
 
   return {
     title,

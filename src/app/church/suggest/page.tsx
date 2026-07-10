@@ -8,7 +8,7 @@ const SITE_URL = "https://gospelchannel.com";
 const PAGE_URL = `${SITE_URL}/church/suggest`;
 const PAGE_TITLE = "Add Your Church Profile";
 const PAGE_DESCRIPTION =
-  "Add your church to GospelChannel so service times, worship links, location, language, and contact details can become profile proof for people choosing where to visit.";
+  "Add your church to GospelChannel so service times, worship links, location, language, and contact details help people choose where to visit.";
 
 export const dynamic = "force-dynamic";
 
@@ -44,13 +44,13 @@ export default function SuggestChurchPage() {
         url: SITE_URL,
       },
       about: [
-        { "@type": "Thing", name: "Church profile proof" },
-        { "@type": "Thing", name: "First-visit evidence" },
+        { "@type": "Thing", name: "Church details" },
+        { "@type": "Thing", name: "First-visit information" },
         { "@type": "Thing", name: "Church profile database coverage" },
       ],
     },
     buildItemListSchema({
-      name: "Church profile proof fields",
+      name: "Church detail fields",
       items: [
         { name: "Official website and contact details", url: `${SITE_URL}/church/suggest#website` },
         { name: "City and country", url: `${SITE_URL}/church/suggest#city` },
@@ -78,7 +78,7 @@ export default function SuggestChurchPage() {
             Tell us about your <em className="gc-italic">church</em>.
           </h1>
           <p className="mt-4 max-w-[480px] text-base leading-relaxed text-warm-brown sm:text-lg">
-            The basics now, polish later. We&rsquo;ll review and publish a profile that helps people prove fit before Sunday: location, worship, language, contact details, and first-visit signals.
+            The basics now, polish later. We&rsquo;ll review and publish a profile that helps people plan a visit: location, worship, language, contact details, and first-visit information.
           </p>
         </div>
       </section>
@@ -101,7 +101,7 @@ export default function SuggestChurchPage() {
                 <ol className="mt-3.5 list-decimal space-y-1.5 pl-5 text-sm leading-relaxed text-warm-brown">
                   <li>We review for spam &mdash; usually within 24h</li>
                   <li>The page goes live as a community-listed profile</li>
-                  <li>You (or someone at the church) can claim it to verify the proof</li>
+                  <li>You (or someone at the church) can claim it to confirm the details</li>
                 </ol>
               </div>
 
@@ -120,7 +120,7 @@ export default function SuggestChurchPage() {
               </div>
 
               <div className="rounded-[18px] border border-rose-gold/[0.14] bg-white p-7">
-                <p className="gc-eyebrow">Profile proof</p>
+                <p className="gc-eyebrow">Church details</p>
                 <h3 className="mt-2.5 font-serif text-xl font-semibold tracking-[-0.01em] text-espresso">
                   The goal is not another listing.
                 </h3>
@@ -132,7 +132,7 @@ export default function SuggestChurchPage() {
                   prefetch={false}
                   className="mt-4 inline-flex rounded-full border border-rose-gold/30 px-4 py-2 text-sm font-semibold text-rose-gold transition-colors hover:bg-rose-gold/[0.06]"
                 >
-                  See first-visit proof &rarr;
+                  See first-visit details &rarr;
                 </Link>
               </div>
 

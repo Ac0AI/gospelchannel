@@ -91,7 +91,7 @@ describe("buildChurchTitle", () => {
       "Hillsong Church",
     );
     expect(buildChurchTitle(input)).toBe(
-      "Hillsong Church in London · Worship Songs, Service Times & Profile Proof",
+      "Hillsong Church in London · Worship Music, Service Times & Church Details",
     );
   });
 
@@ -103,7 +103,7 @@ describe("buildChurchTitle", () => {
       "Hope Church Copenhagen",
     );
     expect(buildChurchTitle(input)).toBe(
-      "Hope Church Copenhagen · Worship Songs, Service Times & Profile Proof",
+      "Hope Church Copenhagen · Worship Music, Service Times & Church Details",
     );
   });
 
@@ -115,7 +115,7 @@ describe("buildChurchTitle", () => {
       "Hope Church",
     );
     expect(buildChurchTitle(input)).toBe(
-      "Hope Church in Berlin · Service Times, Worship Style & Profile Proof",
+      "Hope Church in Berlin · Service Times, Worship Style & Church Details",
     );
   });
 
@@ -196,7 +196,7 @@ describe("buildChurchDescription", () => {
     const desc = buildChurchDescription(input);
     expect(desc).toContain("Services Sunday 10:00");
     expect(desc).toContain("English and Swedish");
-    expect(desc).toContain("Profile proof");
+    expect(desc).toContain("Church details");
   });
 
   it("falls back to country alone when city missing", () => {
@@ -256,14 +256,14 @@ describe("buildChurchDescription", () => {
     expect(buildChurchDescription(input)).not.toContain("Services");
   });
 
-  it("does not claim profile proof for thin profiles", () => {
+  it("does not add first-visit details for thin profiles", () => {
     const input = makeInput(
       { name: "Small Church", denomination: undefined, description: "", location: undefined, country: "Greece" },
       null,
       null,
       "Small Church",
     );
-    expect(buildChurchDescription(input)).not.toContain("Profile proof");
+    expect(buildChurchDescription(input)).not.toContain("Church details");
   });
 
   it("uses singular language phrasing for one language", () => {

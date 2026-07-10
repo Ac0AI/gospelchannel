@@ -12,7 +12,7 @@ type FacetDecisionCard = {
 type FacetDecisionModel = {
   quickAnswer: string;
   decisionCards: FacetDecisionCard[];
-  proofSignals: string[];
+  detailSignals: string[];
 };
 
 function singularizeFacetNoun(itemNoun: string): string {
@@ -27,8 +27,8 @@ function getFacetDecisionModel(basePath: string): FacetDecisionModel {
   if (basePath === "/church/city") {
     return {
       quickAnswer:
-        "Use city when the main question is whether you can realistically show up this Sunday. Pick a city first, then verify style, tradition, language, service times, and visitor cues inside the church profiles.",
-      proofSignals: ["service times", "map/location fit", "worship music", "language cues", "first-visit details"],
+        "Use city when the main question is whether you can realistically show up this Sunday. Pick a city first, then compare style, tradition, language, service times, and visitor information in church profiles.",
+      detailSignals: ["service times", "map/location fit", "worship music", "language cues", "first-visit details"],
       decisionCards: [
         {
           title: "Start with realistic geography",
@@ -43,7 +43,7 @@ function getFacetDecisionModel(basePath: string): FacetDecisionModel {
           label: "Browse worship styles",
         },
         {
-          title: "Finish on profile proof",
+          title: "Check church details",
           body: "Open individual profiles for service times, music, videos, address context, and visitor signals before planning the visit.",
           href: "/church/churches-with-service-times",
           label: "See visit-ready profiles",
@@ -55,8 +55,8 @@ function getFacetDecisionModel(basePath: string): FacetDecisionModel {
   if (basePath === "/church/country") {
     return {
       quickAnswer:
-        "Use country when you are mapping the church landscape across a region before choosing a city. Country hubs expose the available cities, worship styles, and traditions, then profiles prove the actual visit details.",
-      proofSignals: ["country coverage", "city options", "tradition mix", "worship styles", "profile freshness"],
+        "Use country when you are mapping the church landscape across a region before choosing a city. Country hubs show the available cities, worship styles, and traditions, then church profiles provide visit details.",
+      detailSignals: ["country coverage", "city options", "tradition mix", "worship styles", "profile freshness"],
       decisionCards: [
         {
           title: "Start with country coverage",
@@ -71,7 +71,7 @@ function getFacetDecisionModel(basePath: string): FacetDecisionModel {
           label: "Browse cities",
         },
         {
-          title: "Check the profile evidence",
+          title: "Check church details",
           body: "Use profiles to confirm service details, language, worship music, location, and official links before you visit.",
           href: "/church",
           label: "Open church profiles",
@@ -83,8 +83,8 @@ function getFacetDecisionModel(basePath: string): FacetDecisionModel {
   if (basePath === "/church/style") {
     return {
       quickAnswer:
-        "Use worship style when the real decision is what kind of room will help you come back. Style hubs translate sound and Sunday energy into churches, then profiles prove it with music, videos, service details, and location.",
-      proofSignals: ["worship style tags", "playlists", "videos", "service rhythm", "profile examples"],
+        "Use worship style when the real decision is what kind of room will help you come back. Style hubs translate sound and Sunday energy into churches, then profiles show music, videos, service details, and location.",
+      detailSignals: ["worship style tags", "playlists", "videos", "service rhythm", "profile examples"],
       decisionCards: [
         {
           title: "Start with the sound",
@@ -100,7 +100,7 @@ function getFacetDecisionModel(basePath: string): FacetDecisionModel {
         },
         {
           title: "Verify with music",
-          body: "Use profiles with music signals when worship sound is the decisive proof, not just a directory label.",
+          body: "Use profiles with music signals when worship sound matters more than a directory label.",
           href: "/church/churches-with-worship-music",
           label: "See profiles with music",
         },
@@ -110,8 +110,8 @@ function getFacetDecisionModel(basePath: string): FacetDecisionModel {
 
   return {
     quickAnswer:
-      "Use denomination when the decision is about theological family, governance, sacraments, or Sunday expectations. Tradition hubs narrow the field, then profiles prove how each church actually worships, teaches, and welcomes visitors.",
-    proofSignals: ["denomination signal", "worship style", "teaching emphasis", "service times", "visitor fit"],
+      "Use denomination when the decision is about theological family, governance, sacraments, or Sunday expectations. Tradition hubs narrow the field, then profiles show how each church worships, teaches, and welcomes visitors.",
+    detailSignals: ["denomination signal", "worship style", "teaching emphasis", "service times", "visitor fit"],
     decisionCards: [
       {
         title: "Start with tradition",
@@ -126,7 +126,7 @@ function getFacetDecisionModel(basePath: string): FacetDecisionModel {
         label: "Open comparisons",
       },
       {
-        title: "Prove it in profiles",
+        title: "Check church details",
         body: "Open church pages to confirm the tradition signal against worship style, service rhythm, music, location, and community cues.",
         href: "/church/denomination",
         label: "Browse denominations",
@@ -183,8 +183,8 @@ export function FacetIndexPage({
         url: "https://gospelchannel.com",
       },
       about: [
-        { "@type": "Thing", name: "Church decision routing" },
-        { "@type": "Thing", name: "Church profile database evidence" },
+        { "@type": "Thing", name: "Church discovery" },
+        { "@type": "Thing", name: "Church details" },
         { "@type": "Thing", name: `${titleTail} church search` },
       ],
     },
@@ -201,8 +201,8 @@ export function FacetIndexPage({
       "@type": "ItemList",
       name: `${titleLead} ${titleTail}`.trim(),
       description: isCapped
-        ? `Top ${renderedLinks.length} ${itemNoun} used to narrow a church decision before opening profile evidence. The complete canonical city set is available through sitemap.xml and city detail pages.`
-        : `Index of ${itemNoun} used to narrow a church decision before opening profile evidence.`,
+        ? `${renderedLinks.length} ${itemNoun} that help narrow a church search before opening church details. The complete canonical city set is available through sitemap.xml and city detail pages.`
+        : `Index of ${itemNoun} that help narrow a church search before opening church details.`,
       numberOfItems: links.length,
       itemListElement: renderedLinks.map((link, index) => ({
         "@type": "ListItem",
@@ -214,7 +214,7 @@ export function FacetIndexPage({
     {
       "@context": "https://schema.org",
       "@type": "ItemList",
-      name: `${breadcrumbLabel} decision path`,
+      name: `${breadcrumbLabel} church search`,
       description: decisionModel.quickAnswer,
       numberOfItems: decisionModel.decisionCards.length,
       itemListElement: decisionModel.decisionCards.map((card, index) => ({
@@ -276,13 +276,13 @@ export function FacetIndexPage({
         <div className="rounded-[24px] border border-rose-gold/[0.16] bg-white p-6 shadow-[0_18px_55px_rgba(72,39,24,0.06)] sm:p-8">
           <p className="gc-eyebrow">Quick answer</p>
           <h2 className="mt-3 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-3xl">
-            Use this hub as a decision route, then let profiles prove the fit.
+            Use this hub to narrow your search, then check church details.
           </h2>
           <p className="mt-3 max-w-[860px] text-sm leading-[1.7] text-warm-brown sm:text-base">
             {decisionModel.quickAnswer}
           </p>
           <div className="mt-5 flex flex-wrap gap-2">
-            {decisionModel.proofSignals.map((signal) => (
+            {decisionModel.detailSignals.map((signal) => (
               <span
                 key={signal}
                 className="rounded-full border border-rose-gold/20 bg-linen px-3 py-1 text-xs font-semibold text-warm-brown"
@@ -315,12 +315,12 @@ export function FacetIndexPage({
       {/* Link grid */}
       <section className="mx-auto max-w-[1280px] px-5 pt-12 sm:px-12 sm:pt-14">
         <div className="mb-5">
-          <p className="gc-eyebrow">Proof routes</p>
+          <p className="gc-eyebrow">Church collections</p>
           <h2 className="mt-2 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-3xl">
             Choose a {singularNoun}, then open the churches behind it.
           </h2>
           <p className="mt-2 max-w-[760px] text-sm leading-[1.7] text-warm-brown sm:text-base">
-            Each link below leads to a filtered church collection with profile-level evidence:
+            Each link below leads to a filtered church collection with published details:
             service details, music, videos, location, language, and visitor signals where available.
             {isCapped
               ? ` Showing the ${renderedLinks.length.toLocaleString("en-US")} largest ${itemNoun}; the full indexable city set remains available through sitemap.xml and city detail URLs.`

@@ -21,12 +21,12 @@ const FAQS = [
   {
     question: "Are service times enough to choose a church?",
     answer:
-      "No. Service times prove visitability, not fit. Use them as the first practical gate, then inspect worship style, location, language, kids or youth cues, and profile evidence before deciding where to go.",
+      "No. Service times make a visit practical, but they do not tell you whether a church fits. Use them as the first filter, then inspect worship style, location, language, kids or youth cues, and church details before deciding where to go.",
   },
   {
-    question: "Why use a service-time proof route?",
+    question: "Why use a service-time list?",
     answer:
-      "Many church-choice questions become practical only when you can plan the actual Sunday. Service-time proof helps agents and visitors separate general recommendations from churches that can be visited.",
+      "Many church-choice questions become practical only when you can plan the actual Sunday. This list highlights churches with published service times so visitors can make a realistic plan.",
   },
 ];
 
@@ -43,8 +43,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = "Churches with Service Times";
   const description =
     totalCount > 0
-      ? `${totalCount.toLocaleString("en-US")} church profiles with public service-time proof, location, worship style, language, and visitor details.`
-      : "Church profiles with public service-time proof, location, worship style, language, and visitor details.";
+      ? `${totalCount.toLocaleString("en-US")} church profiles with published service times, location, worship style, language, and visitor details.`
+      : "Church profiles with published service times, location, worship style, language, and visitor details.";
 
   return {
     title,
@@ -65,12 +65,12 @@ export default async function ChurchesWithServiceTimesPage() {
   return (
     <ChurchProofRouteLandingPage
       canonicalPath={PATH}
-      eyebrow="Visit-ready proof route"
+      eyebrow="Service times"
       title="Churches with"
       titleAccent="Service Times"
-      description="Church profiles with public service-time proof for turning a church search into a realistic Sunday plan."
-      answer={`Trying to choose a church you can actually visit? GospelChannel currently surfaces ${totalCount.toLocaleString("en-US")} profiles with service-time signals. Use this page as the visit-ready proof layer, then open individual profiles for location, worship style, language, kids details, and visitor context before Sunday.`}
-      methodology="How we chose: churches where the public profile or enrichment data includes service-time evidence. This is a proof route, not a ranking; inspect individual profiles for the current schedule before visiting."
+      description="A list of church profiles with published service times for planning a realistic Sunday visit."
+      answer={`Trying to choose a church you can actually visit? GospelChannel currently lists ${totalCount.toLocaleString("en-US")} profiles with published service times. Open individual profiles for location, worship style, language, kids details, and visitor context before Sunday.`}
+      methodology="This list is based on published service-time data in church profiles or enrichment data. This is not a ranking; check each church profile for the current schedule before visiting."
       count={totalCount}
       churches={pageItems}
       updatedIso={updatedIso}
