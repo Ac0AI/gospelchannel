@@ -78,9 +78,9 @@ export async function generateMetadata({
   };
 
   const descriptions: Record<string, string> = {
-    country: `Prayers from churches in ${filter.displayName}. Use them as a community signal, then verify fit in church profiles.`,
-    city: `Prayers from churches in ${filter.displayName}. Use them as a community signal, then verify fit in church profiles.`,
-    church: `Pray for ${filter.displayName} and use the church profile for service times, location, worship, and first-visit proof.`,
+    country: `Prayers from churches in ${filter.displayName}. See what communities are praying about, then open church pages for service times, worship, location, and first-visit details.`,
+    city: `Prayers from churches in ${filter.displayName}. See what communities are praying about, then open church pages for service times, worship, location, and first-visit details.`,
+    church: `Pray for ${filter.displayName} and use the church profile for service times, location, worship, and first-visit details.`,
   };
 
   // Empty filter pages all look identical to Google (same shell, "No prayers"

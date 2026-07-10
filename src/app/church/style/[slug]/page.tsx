@@ -66,7 +66,7 @@ export default async function StylePage({ params, searchParams }: StylePageProps
     <ChurchCollectionPage
       eyebrow="Browse by Worship Style"
       title={`${label} Churches`}
-      description={`Use ${label.toLowerCase()} worship as the decision route, then verify the fit in church profiles with music, videos, service times, location, and community signals.`}
+      description={`Explore churches with ${label.toLowerCase()} worship, then compare music, videos, service times, location, and community details before visiting.`}
       basePath={basePath}
       currentPage={currentPage}
       totalPages={totalPages}

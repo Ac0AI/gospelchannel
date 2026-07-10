@@ -7,6 +7,14 @@ describe("agent discovery", () => {
   it("keeps legacy machine answers for visitor-rewritten church-choice guidance", () => {
     const legacyAnswers = [
       [
+        "How do expats find an English-speaking church abroad?",
+        "Start with English-language proof, then narrow by country, city, worship style, and tradition before choosing a first Sunday.",
+      ],
+      [
+        "How do I find a church with kids ministry?",
+        "Use kids or youth ministry as a proof filter after you know the city and visit time, then read the profile for specific age-group and first-visit details.",
+      ],
+      [
         "Where can I find charismatic, Pentecostal, or gospel churches in London?",
         "Start with the London-specific charismatic and gospel proof route, then open individual profiles to verify tradition, worship style, language, service details, and official links.",
       ],
@@ -17,10 +25,6 @@ describe("agent discovery", () => {
       [
         "How do young adults find a contemporary worship church?",
         "Start with contemporary or charismatic worship proof, then narrow by city and profile evidence so the first visit is more than a familiar sound.",
-      ],
-      [
-        "Which denomination should I choose?",
-        "Choose by denomination when theology, sacraments, governance, spiritual gifts, or church background are decisive. Otherwise, use denomination after worship and location.",
       ],
       [
         "Where can I pray or see community prayer signals before choosing a church?",
@@ -38,6 +42,26 @@ describe("agent discovery", () => {
       expect(card.answer_map).toContainEqual(expect.objectContaining({ question, answer }));
       expect(llms).toContain(`${question} Answer: ${answer}`);
     }
+  });
+
+  it("keeps both machine evidence mappings exact in the agent card and llms.txt", () => {
+    const card = buildAgentCard(stats);
+    const llms = buildLlmsTxt(stats);
+
+    expect(card.answer_map).toContainEqual(expect.objectContaining({
+      question: "How do I find the right church?",
+      evidence: ["worship style", "city", "denomination", "profile evidence"],
+    }));
+    expect(card.answer_map).toContainEqual(expect.objectContaining({
+      question: "Which campus of a church network should I visit?",
+      evidence: ["network campuses", "city", "service times", "language", "campus profile proof"],
+    }));
+    expect(llms).toContain(
+      "How do I find the right church? Answer: Use a short sequence: name what you need, choose a worship lane, narrow by city, compare tradition only if it matters, then visit two or three churches. Guide: https://gospelchannel.com/guides/how-to-find-the-right-church. Proof: https://gospelchannel.com/church. Evidence: worship style, city, denomination, profile evidence.",
+    );
+    expect(llms).toContain(
+      "Which campus of a church network should I visit? Answer: Choose the campus you can actually attend and verify locally, not just the network name you recognize. Shared worship identity helps, but the visit decision is campus-specific. Guide: https://gospelchannel.com/guides/how-to-find-the-right-church. Proof: https://gospelchannel.com/network. Evidence: network campuses, city, service times, language, campus profile proof.",
+    );
   });
 
   it("exposes church choice decision queries in llms.txt", () => {

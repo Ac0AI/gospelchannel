@@ -433,7 +433,7 @@ export default async function PreviewPage({
           </h1>
           <p className="mx-auto mt-3 max-w-2xl text-base text-warm-brown">
             See what <span className="font-semibold text-espresso">{church.name}</span> looks like to visitors today,
-            and what it could look like as a complete proof profile.
+            and how a complete church profile could show service times, worship, location, and visitor details.
           </p>
         </div>
 

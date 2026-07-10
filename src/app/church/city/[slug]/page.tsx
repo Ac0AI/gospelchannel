@@ -89,7 +89,7 @@ export default async function CityPage({ params, searchParams }: CityPageProps) 
     <ChurchCollectionPage
       eyebrow="Browse by City"
       title={`${label} Churches`}
-      description={`Use ${label} as the practical Sunday decision route, then verify the fit in church profiles with location, service times, worship style, denomination, and visitor cues.`}
+      description={`Explore churches in ${label}, then compare location, service times, worship style, denomination, and first-visit details before choosing where to go.`}
       basePath={basePath}
       currentPage={currentPage}
       totalPages={totalPages}

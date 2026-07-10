@@ -32,7 +32,7 @@ const FAQS = [
   {
     question: "How is this list put together?",
     answer:
-      "This list includes churches tagged as contemporary, charismatic, or gospel worship, using published worship style, music, service-time, location, language, and church-profile data. GospelChannel orders entries by profile completeness: the amount and quality of published church information. This is not a review score, endorsement, popularity vote, or third-party recommendation.",
+      "This list includes churches with contemporary, charismatic, gospel, or Pentecostal worship tags, plus churches in Pentecostal, charismatic, Elim, or Vineyard traditions. GospelChannel orders entries by its directory score for profile completeness, then by church name. This is not a review score, endorsement, popularity vote, or third-party recommendation.",
   },
   {
     question: "Are these churches Pentecostal or charismatic?",
@@ -44,11 +44,11 @@ const FAQS = [
 export async function generateMetadata(): Promise<Metadata> {
   const churches = await getBestWorshipChurches();
   const count = churches.length;
-  const title = "Best Worship Churches — What People Recommend";
+  const title = "Churches Known for Worship";
   const description =
     count > 0
-      ? `${count} churches known for their worship, from Hillsong and Planetshakers to Jesus Culture and Kensington Temple, with published worship, service, location, and church details.`
-      : "Churches known for their worship, with published worship, service, location, and church details.";
+      ? `${count} churches selected by contemporary, charismatic, gospel, or Pentecostal worship tags and related traditions, ordered by GospelChannel's directory score for profile completeness.`
+      : "Churches selected by contemporary, charismatic, gospel, or Pentecostal worship tags and related traditions, ordered by GospelChannel's directory score for profile completeness.";
 
   return {
     title,
@@ -63,16 +63,11 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function BestWorshipChurchesPage() {
   const churches = await getBestWorshipChurches();
   const count = churches.length;
-  const topNames = churches.slice(0, 2).map((c) => c.name);
-  const leadIn =
-    topNames.length === 2
-      ? `${topNames[0]} and ${topNames[1]}`
-      : topNames[0] ?? "Hillsong and Planetshakers";
   const intro =
-    `Searching for churches people recommend for worship? Here are ${count} congregations ` +
-    `known for their worship, from ${leadIn} to Kensington Temple and Jesus Culture, drawn from ` +
-    `GospelChannel's own church directory. This list uses published worship, service, location, language, ` +
-    `and church-profile details. Each entry links to its full profile.`;
+    `GospelChannel includes ${count} churches filtered by published worship tags for contemporary, ` +
+    `charismatic, gospel, or Pentecostal worship, plus related Pentecostal, charismatic, Elim, and ` +
+    `Vineyard traditions. Entries are ordered by GospelChannel's directory score for profile completeness, ` +
+    `then by church name. Each entry links to service, worship, location, language, and visitor details.`;
 
   const { updatedIso, updatedLabel } = formatContentFreshness(
     await getFreshestChurchUpdatedAtAsync(),
@@ -88,7 +83,7 @@ export default async function BestWorshipChurchesPage() {
     {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
-      name: "Best Worship Churches — What People Recommend",
+      name: "Churches Known for Worship",
       url: CANONICAL,
       dateModified: updatedIso,
       mainEntity: { "@id": `${CANONICAL}#itemlist` },
@@ -170,7 +165,7 @@ export default async function BestWorshipChurchesPage() {
             className="mt-3 mb-0 font-serif font-semibold leading-[0.95] tracking-[-0.02em]"
             style={{ fontSize: "clamp(38px, 6vw, 68px)" }}
           >
-            Best Worship <em className="gc-italic">Churches</em> — What People Recommend
+            Churches Known for <em className="gc-italic">Worship</em>
           </h1>
 
           <p className="mt-6 max-w-[760px] text-lg leading-relaxed text-espresso/80 sm:text-xl">
@@ -241,11 +236,11 @@ export default async function BestWorshipChurchesPage() {
               <div className="mt-4">
                 <p className="gc-eyebrow">How this list works</p>
                 <p className="mt-1 text-xs text-muted-warm">
-                  This list is based on churches tagged as contemporary, charismatic, or gospel worship,
-                  using published service times, worship playlists, videos, style tags, language, official
-                  sites, and location where available. GospelChannel orders entries by profile completeness:
-                  the amount and quality of published church information. This is not a review score,
-                  endorsement, popularity vote, or third-party recommendation.
+                  This list includes churches with contemporary, charismatic, gospel, or Pentecostal worship
+                  tags, plus churches in Pentecostal, charismatic, Elim, or Vineyard traditions. GospelChannel
+                  orders entries by its directory score for profile completeness, then by church name. Published
+                  service times, worship playlists, videos, language, official sites, and location appear where
+                  available. This is not a review score, endorsement, popularity vote, or third-party recommendation.
                 </p>
               </div>
             </>

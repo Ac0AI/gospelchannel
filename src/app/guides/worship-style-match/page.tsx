@@ -96,8 +96,8 @@ export default async function WorshipStyleMatchPage() {
       />
       <ToolPageTracker toolName="worship_style_match" />
       <GuideProofLinks
-        title="Match the sound, then verify the profile"
-        intro="The sound match turns taste into worship-style lanes. Use the proof links to confirm the label against real church profiles with music, videos, service times, language, and location context."
+        title="Match the sound, then check the church details"
+        intro="The sound match turns taste into worship-style lanes. Explore real church profiles with music, videos, service times, language, and location details before planning a visit."
         links={[
           {
             href: "/church/style/contemporary-worship",

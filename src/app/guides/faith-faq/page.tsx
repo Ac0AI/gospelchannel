@@ -190,7 +190,7 @@ export default function FaithFaqPage() {
     description: META_DESCRIPTION,
   });
   const proofRouteSchema = buildItemListSchema({
-    name: "Faith FAQ church decision routes",
+    name: "Faith FAQ church guidance",
     items: FAITH_PROOF_LINKS.map((link) => ({
       name: link.label,
       url: `https://gospelchannel.com${link.href}`,

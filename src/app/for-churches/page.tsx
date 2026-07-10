@@ -149,7 +149,7 @@ export default async function ForChurchesPage() {
               The page your church <em className="gc-italic">deserves</em>.
             </h1>
             <p className="mt-6 max-w-[540px] text-lg leading-relaxed text-warm-brown sm:text-xl">
-              A premium proof profile for your church &mdash; Spotify, YouTube, service times, prayer wall, all in one place. Free forever. No ads. No tracking. Built so first-time visitors can decide with confidence before Sunday.
+              A complete church page with Spotify, YouTube, service times, and a prayer wall in one place. Free forever. No ads. No tracking. Built so first-time visitors can learn what to expect before Sunday.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
@@ -214,7 +214,7 @@ export default async function ForChurchesPage() {
             className="mt-3 font-serif font-semibold tracking-[-0.01em] text-espresso"
             style={{ fontSize: "clamp(36px, 6vw, 56px)" }}
           >
-            Three things every proof profile should do.
+            Three things every church page should do.
           </h2>
           <p className="mx-auto mt-5 max-w-[580px] text-lg text-warm-brown">
             And one thing they shouldn&rsquo;t.

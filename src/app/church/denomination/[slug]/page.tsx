@@ -66,7 +66,7 @@ export default async function DenominationPage({ params, searchParams }: Denomin
     <ChurchCollectionPage
       eyebrow="Browse by Tradition"
       title={`${label} Churches`}
-      description={`Use ${label.toLowerCase()} tradition as the decision route, then verify the fit in church profiles with worship style, service times, location, and community signals.`}
+      description={`Explore churches in the ${label.toLowerCase()} tradition, then compare worship style, service times, location, and community details before visiting.`}
       basePath={basePath}
       currentPage={currentPage}
       totalPages={totalPages}

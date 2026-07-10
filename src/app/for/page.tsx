@@ -53,7 +53,7 @@ export default function ForIndexPage() {
       { name: "For", url: PAGE_URL },
     ]),
     buildItemListSchema({
-      name: "Audience church-search routes",
+      name: "Church search by life stage and situation",
       items: audiences.map((audience) => ({
         name: audience.hero_eyebrow,
         url: `${SITE_URL}/for/${audience.slug}`,
@@ -70,7 +70,7 @@ export default function ForIndexPage() {
 
       <main className="bg-linen text-espresso">
         <section className="mx-auto max-w-[1180px] px-5 pt-16 pb-12 sm:px-12 sm:pt-20">
-          <p className="gc-eyebrow">Audience routes</p>
+          <p className="gc-eyebrow">Find your starting point</p>
           <h1
             className="mt-4 max-w-[18ch] font-serif font-semibold leading-[1.03] tracking-[-0.02em] text-espresso"
             style={{ fontSize: "clamp(42px, 7vw, 78px)" }}
@@ -78,9 +78,9 @@ export default function ForIndexPage() {
             Start with the person. Find their church.
           </h1>
           <p className="mt-6 max-w-[720px] text-base leading-relaxed text-warm-brown sm:text-lg">
-            Different people need different details before a first visit. These routes turn
-            expat, student, family, young-adult, new-believer, and low-pressure searches into a
-            a real-life question into a guide and churches to explore.
+            Different people need different details before a first visit. Start with your situation,
+            whether you are an expat, student, parent, young adult, new believer, or looking for a
+            lower-pressure next step, then find guidance and churches to explore.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
@@ -117,7 +117,7 @@ export default function ForIndexPage() {
         </section>
 
         <section className="mx-auto max-w-[1180px] px-5 py-14 pb-24 sm:px-12 sm:py-16">
-          <p className="gc-eyebrow">Choose a route</p>
+          <p className="gc-eyebrow">Choose your situation</p>
           <h2 className="mt-3 font-serif text-3xl font-semibold tracking-[-0.01em] text-espresso sm:text-4xl">
             Church search pages by intent
           </h2>
@@ -159,7 +159,7 @@ export default function ForIndexPage() {
                     href={`/for/${audience.slug}`}
                     className="mt-6 inline-flex text-sm font-bold text-rose-gold transition-colors group-hover:text-rose-gold-deep"
                   >
-                    Open route &rarr;
+                    See churches and guidance &rarr;
                   </Link>
                 </article>
               );

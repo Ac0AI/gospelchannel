@@ -1,123 +1,206 @@
-import { readFileSync } from "node:fs";
-import { describe, expect, it } from "vitest";
+import { readdirSync, readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import ts from "typescript";
+import { describe, expect, it, vi } from "vitest";
+import { ALTERNATIVES } from "@/lib/alternatives-data";
+import { AlternativeLayout } from "@/components/AlternativeLayout";
+import CompareHubPage from "@/app/compare/page";
+import BestWorshipChurchesPage, {
+  generateMetadata as generateBestWorshipMetadata,
+} from "@/app/church/best-worship-churches/page";
+import NetworkIndexPage from "@/app/network/page";
+
+vi.mock("@/lib/content", () => ({
+  getFreshestChurchUpdatedAtAsync: async () => "2026-07-10T00:00:00.000Z",
+}));
+
+vi.mock("@/lib/discovery-churches", () => ({
+  getBestWorshipChurches: async () => [
+    {
+      name: "Sample Worship Church",
+      slug: "sample-worship-church",
+      location: "London",
+      country: "United Kingdom",
+      website: "https://example.com",
+      denomination: "Pentecostal",
+      musicStyle: ["contemporary worship"],
+      language: "en",
+      headerImage: null,
+      logo: null,
+      serviceTimeLabel: "Sunday 10:00",
+      playlistCount: 1,
+      videoCount: 2,
+      directoryScore: 92,
+    },
+  ],
+  formatDiscoveryStyles: (styles: string[] | null) => styles?.join(", ") ?? null,
+  buildDiscoveryChurchProofs: () => ["Service time listed: Sunday 10:00"],
+}));
+
+vi.mock("@/lib/church-networks", () => ({
+  getAllNetworks: async () => [
+    {
+      id: "network-1",
+      slug: "sample-network",
+      name: "Sample Network",
+      headquartersCountry: "United Kingdom",
+      createdAt: "2026-07-10T00:00:00.000Z",
+      updatedAt: "2026-07-10T00:00:00.000Z",
+    },
+  ],
+}));
 
 const FORBIDDEN_PUBLIC_COPY = [
   /\bproof routes?\b/i,
-  /\bproof layer\b/i,
+  /\bproof layers?\b/i,
   /\bdatabase proof\b/i,
-  /\bprofile (?:proof|evidence)\b/i,
-  /\bdecision (?:engine|path)\b/i,
-  /\banswer map\b/i,
-  /\brequire evidence\b/i,
-];
-
-const FORBIDDEN_GUIDE_AND_AUDIENCE_COPY = [
-  /\bproof profiles?\b/i,
   /\bproof database\b/i,
+  /\bprofile (?:proof|evidence)\b/i,
+  /\bdecision (?:engines?|paths?|routes?)\b/i,
+  /\banswer maps?\b/i,
+  /\brequire evidence\b/i,
+  /\bproof profiles?\b/i,
+  /\bverify fit\b/i,
+  /\bproof links?\b/i,
   /\bdoes the proof work\b/i,
   /\bproved through a real church profile\b/i,
-  /\buse it as a decision route\b/i,
 ];
 
-const PUBLIC_COPY_GROUPS: Record<string, string[]> = {
-  global: [
-    "../../app/page.tsx",
-    "../../app/layout.tsx",
-    "../../app/about/page.tsx",
-    "../../app/contact/page.tsx",
-    "../../app/for-churches/page.tsx",
-    "../../app/prayerwall/page.tsx",
-    "../../app/prayerwall/[...segments]/page.tsx",
-    "../../components/HomeHero.tsx",
-    "../../components/SiteFooter.tsx",
-  ],
-  guidesAndAudiences: [
-    "../../app/for/page.tsx",
-    "../../app/for/[slug]/page.tsx",
-    "../../app/guides/page.tsx",
-    "../../app/guides/church-choice-answers/page.tsx",
-    "../../app/guides/church-fit-quiz/page.tsx",
-    "../../app/guides/denominations-comparison/page.tsx",
-    "../../app/guides/first-visit-guide/page.tsx",
-    "../../app/guides/how-to-find-the-right-church/page.tsx",
-    "../../app/guides/prayer-guide/page.tsx",
-    "../../app/guides/worship-styles-explained/page.tsx",
-    "../../components/ForAudienceLayout.tsx",
-    "../../components/guides/GuideChurchEvidence.tsx",
-    "../../components/guides/GuideProofLinks.tsx",
-    "../../components/tools/ChurchFitQuizClient.tsx",
-    "../../lib/church-choice-answers.ts",
-    "../../lib/for-audience-data.ts",
-    "../../lib/search-suggestions.ts",
-    "../../lib/seo-schema.ts",
-    "../../lib/tooling.ts",
-  ],
-  directoryAndProfiles: [
-    "../../app/church/page.tsx",
-    "../../app/church/[slug]/page.tsx",
-    "../../app/church/best-worship-churches/page.tsx",
-    "../../app/church/charismatic-churches-in-london/page.tsx",
-    "../../app/church/churches-with-service-times/page.tsx",
-    "../../app/church/churches-with-worship-music/page.tsx",
-    "../../app/church/english-speaking-churches/page.tsx",
-    "../../app/church/family-friendly-churches/page.tsx",
-    "../../app/church/city/page.tsx",
-    "../../app/church/city/[slug]/page.tsx",
-    "../../app/church/country/page.tsx",
-    "../../app/church/country/[slug]/page.tsx",
-    "../../app/church/denomination/page.tsx",
-    "../../app/church/denomination/[slug]/page.tsx",
-    "../../app/church/style/page.tsx",
-    "../../app/church/style/[slug]/page.tsx",
-    "../../app/church/suggest/page.tsx",
-    "../../components/ChurchCollectionPage.tsx",
-    "../../components/ChurchProofRouteLandingPage.tsx",
-    "../../components/FacetIndexPage.tsx",
-    "../../lib/church-metadata.ts",
-  ],
-  comparisonsAndNetworks: [
-    "../../app/compare/page.tsx",
-    "../../app/compare/[slug]/page.tsx",
-    "../../app/network/page.tsx",
-    "../../app/network/[slug]/page.tsx",
-    "../../app/alternatives/[slug]/page.tsx",
-    "../../app/preview/[slug]/page.tsx",
-    "../../components/AlternativeLayout.tsx",
-  ],
-};
+const SRC_ROOT = fileURLToPath(new URL("../..", import.meta.url));
+const PUBLIC_ROOTS = ["app", "components"];
+const PUBLIC_COPY_LIBS = [
+  "lib/church-choice-answers.ts",
+  "lib/church-metadata.ts",
+  "lib/for-audience-data.ts",
+  "lib/search-suggestions.ts",
+  "lib/seo-schema.ts",
+  "lib/tooling.ts",
+];
+const EXCLUDED_PUBLIC_DIRECTORIES = new Set([
+  "app/.well-known",
+  "app/admin",
+  "app/api",
+  "app/church-admin",
+  "app/index.md",
+  "app/llms-full.txt",
+  "app/llms.txt",
+  "app/sitemap-chunk",
+  "app/sitemap.xml",
+  "components/admin",
+  "components/church-admin",
+]);
 
-describe("public copy", () => {
-  for (const [group, paths] of Object.entries(PUBLIC_COPY_GROUPS)) {
-    it(`${group} uses visitor language instead of internal GEO terminology`, () => {
-      for (const path of paths) {
-        const source = readFileSync(new URL(path, import.meta.url), "utf8");
-        const forbiddenPatterns = [
-          ...FORBIDDEN_PUBLIC_COPY,
-          ...(group === "guidesAndAudiences" ? FORBIDDEN_GUIDE_AND_AUDIENCE_COPY : []),
-        ];
-        for (const pattern of forbiddenPatterns) {
-          expect(source, `${path} contains ${pattern}`).not.toMatch(pattern);
-        }
-      }
-    });
+function isExcluded(relativePath: string): boolean {
+  return [...EXCLUDED_PUBLIC_DIRECTORIES].some(
+    (excluded) => relativePath === excluded || relativePath.startsWith(`${excluded}/`),
+  );
+}
+
+function collectSourceFiles(relativeDirectory: string): string[] {
+  if (isExcluded(relativeDirectory)) return [];
+
+  return readdirSync(`${SRC_ROOT}/${relativeDirectory}`, { withFileTypes: true }).flatMap((entry) => {
+    const relativePath = `${relativeDirectory}/${entry.name}`;
+    if (entry.isDirectory()) return collectSourceFiles(relativePath);
+    return /\.(?:ts|tsx)$/.test(entry.name) ? [relativePath] : [];
+  });
+}
+
+function isPropertyName(node: ts.Node): boolean {
+  const parent = node.parent;
+  return (
+    (ts.isPropertyAssignment(parent) ||
+      ts.isPropertySignature(parent) ||
+      ts.isMethodDeclaration(parent) ||
+      ts.isMethodSignature(parent) ||
+      ts.isGetAccessorDeclaration(parent) ||
+      ts.isSetAccessorDeclaration(parent)) &&
+    parent.name === node
+  );
+}
+
+function isModuleSpecifier(node: ts.Node): boolean {
+  const parent = node.parent;
+  return (
+    (ts.isImportDeclaration(parent) || ts.isExportDeclaration(parent)) &&
+    parent.moduleSpecifier === node
+  );
+}
+
+function collectVisitorStrings(relativePath: string): string[] {
+  const source = readFileSync(`${SRC_ROOT}/${relativePath}`, "utf8");
+  const sourceFile = ts.createSourceFile(
+    relativePath,
+    source,
+    ts.ScriptTarget.Latest,
+    true,
+    relativePath.endsWith(".tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
+  );
+  const strings: string[] = [];
+
+  function visit(node: ts.Node): void {
+    if (ts.isJsxText(node)) {
+      strings.push(node.getText(sourceFile));
+    } else if (ts.isStringLiteralLike(node) && !isPropertyName(node) && !isModuleSpecifier(node)) {
+      strings.push(node.text);
+    } else if (
+      node.kind === ts.SyntaxKind.TemplateHead ||
+      node.kind === ts.SyntaxKind.TemplateMiddle ||
+      node.kind === ts.SyntaxKind.TemplateTail
+    ) {
+      strings.push((node as ts.TemplateLiteralLikeNode).text);
+    }
+
+    ts.forEachChild(node, visit);
   }
 
-  it("uses concrete visitor next steps in Prayer Wall social metadata", () => {
-    const source = readFileSync(new URL("../../app/prayerwall/page.tsx", import.meta.url), "utf8");
+  visit(sourceFile);
+  return strings;
+}
 
-    expect(source).not.toContain("verify fit in church profiles");
-    expect(source).toContain("open church pages for service details, worship, location, and first-visit information");
+const PUBLIC_COPY_FILES = [
+  ...PUBLIC_ROOTS.flatMap(collectSourceFiles),
+  ...PUBLIC_COPY_LIBS,
+].sort();
+
+describe("public copy", () => {
+  it("uses visitor language across every public route and shared component", () => {
+    for (const relativePath of PUBLIC_COPY_FILES) {
+      const visitorCopy = collectVisitorStrings(relativePath).join("\n");
+      for (const pattern of FORBIDDEN_PUBLIC_COPY) {
+        expect(visitorCopy, `${relativePath} contains ${pattern}`).not.toMatch(pattern);
+      }
+    }
   });
 
-  it("labels directory links and network lists for their destinations", () => {
-    const compareSource = readFileSync(new URL("../../app/compare/page.tsx", import.meta.url), "utf8");
-    const alternativeSource = readFileSync(new URL("../../components/AlternativeLayout.tsx", import.meta.url), "utf8");
-    const networkSource = readFileSync(new URL("../../app/network/page.tsx", import.meta.url), "utf8");
-
-    expect(compareSource).toMatch(/<Link\s+href="\/church"[\s\S]*?>\s*Browse churches\s*<\/Link>/);
-    expect(alternativeSource).toContain('href: "/church",\n    label: "Browse churches",');
-    expect(networkSource).toMatch(
-      /"@type": "ItemList",\s+name: "Church networks",[\s\S]*?itemListElement: networks\.map\([\s\S]*?url: `https:\/\/gospelchannel\.com\/network\/\$\{network\.slug\}`/,
+  it("renders CTA labels at their actual destinations", async () => {
+    const compareMarkup = renderToStaticMarkup(createElement(CompareHubPage));
+    const alternativeMarkup = renderToStaticMarkup(
+      createElement(AlternativeLayout, {
+        data: ALTERNATIVES.churchfinder,
+        siblings: [],
+      }),
     );
+    const networkMarkup = renderToStaticMarkup(await NetworkIndexPage());
+
+    expect(compareMarkup).toContain('href="/church">Browse churches</a>');
+    expect(alternativeMarkup).toContain('href="/church">Browse churches</a>');
+    expect(networkMarkup).toContain('href="/network/sample-network"');
+    expect(networkMarkup).toContain("https://gospelchannel.com/network/sample-network");
+  });
+
+  it("describes the best-worship collection by its filter and profile-completeness ordering", async () => {
+    const metadata = await generateBestWorshipMetadata();
+    const markup = renderToStaticMarkup(await BestWorshipChurchesPage());
+
+    expect(metadata.title).toBe("Churches Known for Worship");
+    expect(metadata.description).toContain("contemporary, charismatic, gospel, or Pentecostal worship");
+    expect(metadata.description).toContain("profile completeness");
+    expect(markup).toContain("Churches Known for");
+    expect(markup).toContain("filtered by published worship tags");
+    expect(markup).toContain("ordered by GospelChannel&#x27;s directory score for profile completeness");
+    expect(markup).not.toMatch(/What People Recommend|people recommend for worship/i);
   });
 });
