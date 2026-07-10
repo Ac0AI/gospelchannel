@@ -15,6 +15,8 @@ const FORBIDDEN_GUIDE_AND_AUDIENCE_COPY = [
   /\bproof profiles?\b/i,
   /\bproof database\b/i,
   /\bdoes the proof work\b/i,
+  /\bproved through a real church profile\b/i,
+  /\buse it as a decision route\b/i,
 ];
 
 const PUBLIC_COPY_GROUPS: Record<string, string[]> = {

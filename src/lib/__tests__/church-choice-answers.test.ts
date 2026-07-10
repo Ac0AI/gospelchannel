@@ -38,6 +38,20 @@ describe("church choice answers", () => {
     }
   });
 
+  it("uses concrete visitor language for young-adult and denomination next steps", () => {
+    const youngAdults = CHURCH_CHOICE_ANSWERS.find(
+      (item) => item.id === "how-do-young-adults-find-a-contemporary-worship-church",
+    );
+    const denomination = CHURCH_CHOICE_ANSWERS.find(
+      (item) => item.id === "which-denomination-should-i-choose",
+    );
+
+    expect(youngAdults?.detail).toContain("check the church profile for the practical details");
+    expect(youngAdults?.detail).not.toContain("proved through a real church profile");
+    expect(denomination?.detail).toContain("Use it to narrow down which churches to explore");
+    expect(denomination?.detail).not.toContain("Use it as a decision route");
+  });
+
   it("covers high-citation AI-search patterns from guide, best, local, checklist, and service-expectation queries", () => {
     expect(CHURCH_CHOICE_ANSWERS).toContainEqual(expect.objectContaining({
       id: "how-do-i-find-the-best-church-near-me",

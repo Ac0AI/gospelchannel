@@ -195,7 +195,7 @@ export const CHURCH_CHOICE_ANSWERS = [
     answer:
       "Start with contemporary or charismatic worship, then narrow by city and church details so the first visit is more than a familiar sound.",
     detail:
-      "Young-adult fit is often discovered through worship style, but it should be proved through a real church profile: music or video, service context, location, ministries, and whether the room looks like a place you can return to after the first Sunday.",
+      "Young-adult fit is often discovered through worship style, but check the church profile for the practical details: music or video, service context, location, ministries, and whether the room looks like a place you can return to after the first Sunday.",
     guide: { href: "/for/young-adults", label: "Use the young-adult church-search guide" },
     proof: { href: "/church/style/contemporary-worship", label: "Explore contemporary worship churches" },
     proofSignals: ["contemporary worship", "music or video", "city", "young-adult cues", "church details"],
@@ -206,7 +206,7 @@ export const CHURCH_CHOICE_ANSWERS = [
     answer:
       "Choose by denomination when theology, sacraments, governance, spiritual gifts, or church background are decisive. Otherwise, use denomination after worship and location.",
     detail:
-      "A denomination label can be useful, but it does not prove Sunday fit by itself. Use it as a decision route, then verify actual churches through profiles.",
+      "A denomination label can be useful, but it does not prove Sunday fit by itself. Use it to narrow down which churches to explore, then check their profiles for the practical details.",
     guide: { href: "/guides/denominations-comparison", label: "Compare denominations" },
     proof: { href: "/church/denomination", label: "Browse churches by denomination" },
     proofSignals: ["tradition", "teaching emphasis", "worship style", "service details"],

@@ -19,6 +19,10 @@ describe("agent discovery", () => {
         "Start with contemporary or charismatic worship proof, then narrow by city and profile evidence so the first visit is more than a familiar sound.",
       ],
       [
+        "Which denomination should I choose?",
+        "Choose by denomination when theology, sacraments, governance, spiritual gifts, or church background are decisive. Otherwise, use denomination after worship and location.",
+      ],
+      [
         "Where can I pray or see community prayer signals before choosing a church?",
         "Use prayer as a next step, not a shortcut around evidence. Pray privately or use the Prayer Wall as a community signal, then verify any church through real profile proof before visiting.",
       ],
