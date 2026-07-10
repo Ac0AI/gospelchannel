@@ -56,6 +56,7 @@ describe("agent discovery", () => {
     expect(text).toContain("Use guides and comparison pages for the direct answer.");
     expect(text).toContain("For answer-first queries, state the recommendation before listing profile evidence");
     expect(text).toContain("Use /network/[slug] pages for multi-campus church networks");
+    expect(text).toContain("through /for before citing /for/* pages");
     expect(text).toContain("Use church profile pages for canonical proof");
     expect(text).toContain("## Decision Paths");
     expect(text).toContain("https://gospelchannel.com/guides/church-choice-answers");
@@ -72,10 +73,11 @@ describe("agent discovery", () => {
     expect(text).toContain("Proof: https://gospelchannel.com/church/churches-with-service-times");
     expect(text).toContain("Community signal: https://gospelchannel.com/prayerwall");
     expect(text).toContain("## Audience Intent Pages");
+    expect(text).toContain("[Audience church-search routes](https://gospelchannel.com/for)");
     expect(text).toContain("[For expats](https://gospelchannel.com/for/expats)");
     expect(text).toContain("[For students](https://gospelchannel.com/for/students)");
-    expect(text).toContain("Proof routes: https://gospelchannel.com/church, https://gospelchannel.com/church/country");
-    expect(text).toContain("https://gospelchannel.com/church/city/oxford");
+    expect(text).toContain("Proof routes: https://gospelchannel.com/church/english-speaking-churches, https://gospelchannel.com/church/churches-with-service-times");
+    expect(text).toContain("Proof routes: https://gospelchannel.com/church/city, https://gospelchannel.com/church/churches-with-service-times");
     expect(text).toContain("## Proof Routes");
     expect(text).toContain("[Churches by worship style](https://gospelchannel.com/church/style)");
     expect(text).toContain("[Churches with service times](https://gospelchannel.com/church/churches-with-service-times)");
@@ -112,6 +114,7 @@ describe("agent discovery", () => {
     expect(text).toContain("## Community Signal Routes");
     expect(text).toContain("## Audience Intent Pages");
     expect(text).toContain("Route audience-specific searches for expats");
+    expect(text).toContain("the audience-intent hub at /for");
   });
 
   it("adds decision queries and evidence model to the agent card", () => {
@@ -129,6 +132,7 @@ describe("agent discovery", () => {
     expect(card.decision_queries).toContain("How do young adults find a contemporary worship church?");
     expect(card.decision_queries).toContain("How do I find a church with kids ministry?");
     expect(card.decision_queries).toContain("How do families choose a family-friendly church?");
+    expect(card.decision_queries).toContain("Where should a new believer start?");
     expect(card.decision_queries).toContain("Which campus of a church network should I visit?");
     expect(card.decision_queries).toContain("How do I find a low-pressure church after church hurt?");
     expect(card.decision_queries).toContain("Where can I find charismatic, Pentecostal, or gospel churches in London?");
@@ -157,19 +161,19 @@ describe("agent discovery", () => {
     }));
     expect(card.answer_map).toContainEqual(expect.objectContaining({
       question: "How do expats find an English-speaking church abroad?",
-      guide: "https://gospelchannel.com/guides/how-to-find-the-right-church",
+      guide: "https://gospelchannel.com/for/expats",
       proof: "https://gospelchannel.com/church/english-speaking-churches",
       evidence: ["English language", "country or city", "service times", "international cues", "profile evidence"],
     }));
     expect(card.answer_map).toContainEqual(expect.objectContaining({
       question: "How do students find a church near campus?",
-      guide: "https://gospelchannel.com/guides/how-to-find-the-right-church",
+      guide: "https://gospelchannel.com/for/students",
       proof: "https://gospelchannel.com/church/city",
       evidence: ["city", "transport friction", "service times", "worship style", "student-friendly cues"],
     }));
     expect(card.answer_map).toContainEqual(expect.objectContaining({
       question: "How do young adults find a contemporary worship church?",
-      guide: "https://gospelchannel.com/guides/worship-style-match",
+      guide: "https://gospelchannel.com/for/young-adults",
       proof: "https://gospelchannel.com/church/style/contemporary-worship",
       evidence: ["contemporary worship", "music or video", "city", "young-adult cues", "profile evidence"],
     }));
@@ -193,15 +197,21 @@ describe("agent discovery", () => {
     }));
     expect(card.answer_map).toContainEqual(expect.objectContaining({
       question: "How do families choose a family-friendly church?",
-      guide: "https://gospelchannel.com/guides/first-visit-guide",
+      guide: "https://gospelchannel.com/for/families",
       proof: "https://gospelchannel.com/church/family-friendly-churches",
       evidence: ["kids ministry", "youth ministry", "service times", "family logistics", "profile evidence"],
     }));
     expect(card.answer_map).toContainEqual(expect.objectContaining({
       question: "How do I find a low-pressure church after church hurt?",
-      guide: "https://gospelchannel.com/guides/faith-faq",
+      guide: "https://gospelchannel.com/for/deconstructing",
       proof: "https://gospelchannel.com/church",
       evidence: ["tradition", "worship style", "profile copy", "service details", "community signal"],
+    }));
+    expect(card.answer_map).toContainEqual(expect.objectContaining({
+      question: "Where should a new believer start?",
+      guide: "https://gospelchannel.com/for/new-believers",
+      proof: "https://gospelchannel.com/church/churches-with-service-times",
+      evidence: ["plain-language cues", "visitor welcome", "service details", "community rhythm"],
     }));
     expect(card.answer_map).toContainEqual(expect.objectContaining({
       question: "Where can I pray or see community prayer signals before choosing a church?",
@@ -279,7 +289,13 @@ describe("agent discovery", () => {
     }));
     expect(card.decision_paths).toContainEqual(expect.objectContaining({
       question: "I need a family-friendly church with kids or youth ministry.",
+      guide: "https://gospelchannel.com/for/families",
       proof: "https://gospelchannel.com/church/family-friendly-churches",
+    }));
+    expect(card.decision_paths).toContainEqual(expect.objectContaining({
+      question: "I am a new believer looking for a church where I can start simply.",
+      guide: "https://gospelchannel.com/for/new-believers",
+      proof: "https://gospelchannel.com/church/churches-with-service-times",
     }));
     expect(card.decision_paths).toContainEqual(expect.objectContaining({
       question: "I am processing church history and need a lower-pressure next step.",
@@ -304,7 +320,13 @@ describe("agent discovery", () => {
       url: "https://gospelchannel.com/for/students",
       proof_routes: expect.arrayContaining([
         "https://gospelchannel.com/church/city",
-        "https://gospelchannel.com/church/city/oxford",
+        "https://gospelchannel.com/church/churches-with-service-times",
+      ]),
+    }));
+    expect(card.audience_pages).toContainEqual(expect.objectContaining({
+      label: "For expats",
+      proof_routes: expect.arrayContaining([
+        "https://gospelchannel.com/church/english-speaking-churches",
       ]),
     }));
     expect(card.audience_pages).toContainEqual(expect.objectContaining({
@@ -312,6 +334,9 @@ describe("agent discovery", () => {
       url: "https://gospelchannel.com/for/new-believers",
       intent: expect.stringContaining("Recently came to faith"),
     }));
+    const audienceProofRoutes = card.audience_pages.flatMap((page) => page.proof_routes);
+    expect(audienceProofRoutes.length).toBeGreaterThan(0);
+    expect(audienceProofRoutes.every((url) => /^https:\/\/gospelchannel\.com\/(?:church|network)(?:\/|$)/.test(url))).toBe(true);
     expect(card.proof_routes).toContainEqual(expect.objectContaining({
       url: "https://gospelchannel.com/church/denomination",
     }));
@@ -362,6 +387,7 @@ describe("agent discovery", () => {
     expect(card.route_patterns).toMatchObject({
       networkIndex: "https://gospelchannel.com/network",
       network: "https://gospelchannel.com/network/[slug]",
+      audienceIndex: "https://gospelchannel.com/for",
       churchProfile: "https://gospelchannel.com/church/[slug]",
     });
   });

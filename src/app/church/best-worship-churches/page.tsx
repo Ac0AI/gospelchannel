@@ -5,7 +5,9 @@ import {
   formatDiscoveryStyles,
   getBestWorshipChurches,
 } from "@/lib/discovery-churches";
+import { getFreshestChurchUpdatedAtAsync } from "@/lib/content";
 import { serializeJsonLd } from "@/lib/json-ld";
+import { formatContentFreshness } from "@/lib/utils";
 
 // Proof-of-concept discovery page #2: intercepts the "[topic] reddit"-shaped
 // search pattern (e.g. "best worship church reddit") the way the approved
@@ -72,12 +74,9 @@ export default async function BestWorshipChurchesPage() {
     `GospelChannel's own profile database and ranked by how complete and well-documented each church's ` +
     `profile is. Each entry links to its full profile.`;
 
-  const updatedIso = new Date().toISOString();
-  const updatedLabel = new Date().toLocaleDateString("en-GB", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const { updatedIso, updatedLabel } = formatContentFreshness(
+    await getFreshestChurchUpdatedAtAsync(),
+  );
 
   const breadcrumbs = [
     { href: "/", label: "Home" },

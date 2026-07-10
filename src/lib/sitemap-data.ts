@@ -52,6 +52,7 @@ const STATIC_ROUTE_PATHS = [
   "/alternatives/churchfinder",
   "/alternatives/gospel-coalition",
   "/alternatives/mychurchfinder",
+  "/for",
   "/for/expats",
   "/for/students",
   "/for/young-adults",

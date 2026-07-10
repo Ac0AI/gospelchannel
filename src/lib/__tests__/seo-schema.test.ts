@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { buildArticleSchema, buildGuideSchema, buildHowToSchema, buildItemListSchema, buildOpeningHours } from "@/lib/seo-schema";
+import { formatContentFreshness } from "@/lib/utils";
 
 describe("seo schema", () => {
   it("adds optional about and mention entities to article schema", () => {
@@ -26,6 +27,14 @@ describe("seo schema", () => {
         url: "https://gospelchannel.com/church",
       },
     ]);
+    expect(schema.publisher.logo.url).toBe("https://gospelchannel.com/icon.svg");
+  });
+
+  it("formats a real content timestamp without replacing it with request time", () => {
+    expect(formatContentFreshness("2026-07-08T14:30:00.000Z")).toEqual({
+      updatedIso: "2026-07-08T14:30:00.000Z",
+      updatedLabel: "8 July 2026",
+    });
   });
 
   it("marks guide schema as a church decision guide backed by profile evidence", () => {
@@ -52,7 +61,7 @@ describe("seo schema", () => {
         {
           "@type": "Thing",
           name: "Church proof routes",
-          url: "https://gospelchannel.com/guides",
+          url: "https://gospelchannel.com/church",
         },
       ],
     });

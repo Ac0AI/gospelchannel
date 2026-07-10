@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ForAudienceData } from "@/lib/for-audience-data";
+import { getAudienceProofRoutes, type ForAudienceData } from "@/lib/for-audience-data";
 
 type Props = {
   data: ForAudienceData;
@@ -34,17 +34,13 @@ function getAudienceProofSignals(slug: string): string[] {
   }
 }
 
-function getPrimaryProofHref(data: ForAudienceData): string {
-  return data.curated_cards.find((card) => card.href.startsWith("/church"))?.href
-    ?? data.solutions.find((solution) => solution.href.startsWith("/church"))?.href
-    ?? "/church";
-}
-
 export function ForAudienceLayout({ data, siblings }: Props) {
   const proofSignals = getAudienceProofSignals(data.slug);
   const primarySolution = data.solutions[0];
   const secondarySolution = data.solutions[1] ?? data.solutions[0];
-  const primaryProofHref = getPrimaryProofHref(data);
+  const proofRoutes = getAudienceProofRoutes(data, 2);
+  const primaryProofRoute = proofRoutes[0] ?? { href: "/church", label: "Church profiles" };
+  const secondaryProofRoute = proofRoutes[1];
 
   return (
     <article className="mx-auto max-w-[1080px] px-5 pb-24 sm:px-12">
@@ -62,17 +58,19 @@ export function ForAudienceLayout({ data, siblings }: Props) {
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
-            href="/church"
+            href={primaryProofRoute.href}
             className="rounded-full bg-rose-gold px-6 py-3 text-sm font-bold text-white transition-all duration-150 hover:-translate-y-px hover:bg-rose-gold-deep hover:shadow-[0_8px_24px_rgba(176,106,80,0.3)]"
           >
-            Open church profiles
+            {primaryProofRoute.label}
           </Link>
-          <Link
-            href="/church/country"
-            className="rounded-full border border-rose-gold/30 px-6 py-3 text-sm font-semibold text-espresso transition-colors hover:bg-rose-gold/[0.06]"
-          >
-            Browse by country
-          </Link>
+          {secondaryProofRoute ? (
+            <Link
+              href={secondaryProofRoute.href}
+              className="rounded-full border border-rose-gold/30 px-6 py-3 text-sm font-semibold text-espresso transition-colors hover:bg-rose-gold/[0.06]"
+            >
+              {secondaryProofRoute.label}
+            </Link>
+          ) : null}
         </div>
       </section>
 
@@ -135,7 +133,7 @@ export function ForAudienceLayout({ data, siblings }: Props) {
               service details, music, location, language, and visitor fit where available.
             </p>
             <Link
-              href={primaryProofHref}
+              href={primaryProofRoute.href}
               className="mt-4 inline-flex text-sm font-bold text-rose-gold transition-colors hover:text-rose-gold-deep"
             >
               Open proof route &rarr;

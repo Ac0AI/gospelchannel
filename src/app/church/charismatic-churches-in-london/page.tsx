@@ -6,7 +6,9 @@ import {
   formatDiscoveryStyles,
   getLondonCharismaticChurches,
 } from "@/lib/discovery-churches";
+import { getFreshestChurchUpdatedAtAsync } from "@/lib/content";
 import { serializeJsonLd } from "@/lib/json-ld";
+import { formatContentFreshness } from "@/lib/utils";
 
 // Proof-of-concept discovery page: an answer-shaped, citeable page for the exact
 // query AI assistants (ChatGPT/Bing/Perplexity) get asked — "charismatic /
@@ -70,14 +72,9 @@ export default async function CharismaticChurchesInLondonPage() {
     `fellowships. The guide below compares them by tradition, worship style and language, each linking ` +
     `to its full profile.`;
 
-  // This page is force-dynamic and reflects live directory data, so "now" is an
-  // honest as-of date — a real freshness signal for AI and search.
-  const updatedIso = new Date().toISOString();
-  const updatedLabel = new Date().toLocaleDateString("en-GB", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const { updatedIso, updatedLabel } = formatContentFreshness(
+    await getFreshestChurchUpdatedAtAsync(),
+  );
 
   const breadcrumbs = [
     { href: "/", label: "Home" },

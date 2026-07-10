@@ -441,7 +441,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   ], 4);
   const profileEvidenceSignals: ProfileEvidenceSignal[] = [
     locationEvidence
-      ? { key: "location", label: "Location proof", value: locationEvidence, href: mapsHref }
+      ? { key: "location", label: "Location", value: locationEvidence, href: mapsHref }
       : null,
     showGoogleRating
       ? { key: "google-rating", label: "Google rating", value: `${googleRating!.toFixed(1)} of 5 (${googleReviewsCount!.toLocaleString("en-US")} Google reviews)`, href: mapsHref }

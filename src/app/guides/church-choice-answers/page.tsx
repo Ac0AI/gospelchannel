@@ -43,9 +43,16 @@ function buildFaqSchema() {
       "@type": "Question",
       name: item.question,
       text: item.question,
+      url: `${CHURCH_CHOICE_ANSWER_PAGE_URL}#${item.id}`,
       acceptedAnswer: {
         "@type": "Answer",
-        text: `${item.answer} ${item.detail}`,
+        text: [
+          item.answer,
+          item.detail,
+          `Guide: https://gospelchannel.com${item.guide.href}.`,
+          `Database proof: https://gospelchannel.com${item.proof.href}.`,
+          `Evidence: ${item.proofSignals.join(", ")}.`,
+        ].join(" "),
       },
     })),
   };

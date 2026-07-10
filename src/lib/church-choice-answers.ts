@@ -97,7 +97,7 @@ export const CHURCH_CHOICE_ANSWERS = [
       "Start with English-language proof, then narrow by country, city, worship style, and tradition before choosing a first Sunday.",
     detail:
       "For expats, the first decision is usually comprehension before preference. Use the expat guidance to frame the search, but require profile proof for language, country or city, service details, and whether the church is realistically visitable from your new home.",
-    guide: { href: "/guides/how-to-find-the-right-church", label: "Use the expat search sequence" },
+    guide: { href: "/for/expats", label: "Use the expat church-search guide" },
     proof: { href: "/church/english-speaking-churches", label: "Open English-language church proof" },
     proofSignals: ["English language", "country or city", "service times", "international cues", "profile evidence"],
   },
@@ -119,7 +119,7 @@ export const CHURCH_CHOICE_ANSWERS = [
       "Choose the church that is sustainable for the whole household: realistic travel, clear kids or youth signals, understandable service flow, and a worship room adults can still participate in.",
     detail:
       "Family fit is not only whether a church says it welcomes children. The proof is whether the profile exposes age-group ministry, service timing, first-visit expectations, location, and enough detail to plan the Sunday before loading everyone into the car.",
-    guide: { href: "/guides/first-visit-guide", label: "Use the family first-visit guide" },
+    guide: { href: "/for/families", label: "Use the family church-search guide" },
     proof: { href: "/church/family-friendly-churches", label: "Open family-ready profile proof" },
     proofSignals: ["kids ministry", "youth ministry", "service times", "family logistics", "profile evidence"],
   },
@@ -196,7 +196,7 @@ export const CHURCH_CHOICE_ANSWERS = [
       "Start with contemporary or charismatic worship proof, then narrow by city and profile evidence so the first visit is more than a familiar sound.",
     detail:
       "Young-adult fit is often discovered through worship style, but it should be proved through a real church profile: music or video, service context, location, ministries, and whether the room looks like a place you can return to after the first Sunday.",
-    guide: { href: "/guides/worship-style-match", label: "Match the contemporary worship fit" },
+    guide: { href: "/for/young-adults", label: "Use the young-adult church-search guide" },
     proof: { href: "/church/style/contemporary-worship", label: "Open contemporary worship proof" },
     proofSignals: ["contemporary worship", "music or video", "city", "young-adult cues", "profile evidence"],
   },
@@ -306,7 +306,7 @@ export const CHURCH_CHOICE_ANSWERS = [
       "Start with the university city, not a wide radius, then filter by worship style, language, service time, and whether the profile gives enough evidence to visit without a car.",
     detail:
       "Student church search is a logistics problem before it is a preference problem. A strong option is close enough to actually attend, familiar enough in worship to make the first visit possible, and clear enough in its profile that Sunday does not get postponed again.",
-    guide: { href: "/guides/how-to-find-the-right-church", label: "Build a student shortlist" },
+    guide: { href: "/for/students", label: "Use the student church-search guide" },
     proof: { href: "/church/city", label: "Open city church proof" },
     proofSignals: ["city", "transport friction", "service times", "worship style", "student-friendly cues"],
   },
@@ -317,8 +317,8 @@ export const CHURCH_CHOICE_ANSWERS = [
       "Start with a church that explains the basics plainly, makes a first visit low-pressure, and has enough public information that you know what you are walking into.",
     detail:
       "If prayer, baptism, salvation, or Bible questions are still new, choose a church where you can ask without needing insider language first.",
-    guide: { href: "/guides/faith-faq", label: "Read common faith questions" },
-    proof: { href: "/for/new-believers", label: "Open new-believer routes" },
+    guide: { href: "/for/new-believers", label: "Use the new-believer church-search guide" },
+    proof: { href: "/church/churches-with-service-times", label: "Open visit-ready profile proof" },
     proofSignals: ["plain-language cues", "visitor welcome", "service details", "community rhythm"],
   },
   {
@@ -328,7 +328,7 @@ export const CHURCH_CHOICE_ANSWERS = [
       "Use the gentlest verifiable next step: compare profile evidence quietly, avoid rushing commitment, and treat prayer or one visit as enough progress for now.",
     detail:
       "After church hurt or deconstruction, the database should not force a verdict. Use guides for language and prayer, then inspect profiles for tradition, worship style, public expectations, service details, and enough transparency to decide whether a single visit is worth trying.",
-    guide: { href: "/guides/faith-faq", label: "Use plain-language faith guidance" },
+    guide: { href: "/for/deconstructing", label: "Use the low-pressure church-search guide" },
     proof: { href: "/church", label: "Open broad profile proof" },
     proofSignals: ["tradition", "worship style", "profile copy", "service details", "community signal"],
   },

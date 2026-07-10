@@ -45,6 +45,7 @@ export type ForAudienceData = {
   curated_lede: string;
   curated_cards: CuratedCard[];
 
+  proof_routes: AudienceProofRoute[];
   related_guides: Array<{ href: string; label: string }>;
 
   faq_h2: string;
@@ -53,6 +54,31 @@ export type ForAudienceData = {
   cta_h2: string;
   cta_lede: string;
 };
+
+export type AudienceProofRoute = {
+  href: string;
+  label: string;
+};
+
+export function getAudienceProofRoutes(
+  audience: ForAudienceData,
+  limit = Number.POSITIVE_INFINITY,
+): AudienceProofRoute[] {
+  if (limit <= 0) return [];
+
+  const seen = new Set<string>();
+  const routes: AudienceProofRoute[] = [];
+
+  for (const route of audience.proof_routes) {
+    if (!/^\/(?:church|network)(?:\/|$)/.test(route.href) || seen.has(route.href)) continue;
+
+    seen.add(route.href);
+    routes.push(route);
+    if (routes.length >= limit) break;
+  }
+
+  return routes;
+}
 
 export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
   expats: {
@@ -102,7 +128,7 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
         title: "Filter by language",
         body:
           "Every church profile has a language field. Filter the profile database to English (or any other language you read) and the noise drops by 90% in non-English countries. You'll see English-speaking congregations and international fellowships first, instead of digging through hundreds of native-language results.",
-        href: "/church",
+        href: "/church/english-speaking-churches",
         cta: "Open proof profiles",
       },
       {
@@ -188,6 +214,13 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
           "Growing English-speaking free-church and charismatic communities — especially in Stockholm — alongside the historic Pingst (Pentecostal) and EFK networks.",
         href: "/church/country/sweden",
       },
+    ],
+
+    proof_routes: [
+      { href: "/church/english-speaking-churches", label: "English-speaking churches" },
+      { href: "/church/churches-with-service-times", label: "Churches with service times" },
+      { href: "/church/country", label: "Browse churches by country" },
+      { href: "/church/style", label: "Browse by worship style" },
     ],
 
     related_guides: [
@@ -370,6 +403,13 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       },
     ],
 
+    proof_routes: [
+      { href: "/church/city", label: "Browse churches by city" },
+      { href: "/church/churches-with-service-times", label: "Churches with service times" },
+      { href: "/church/churches-with-worship-music", label: "Churches with worship music" },
+      { href: "/church/style", label: "Browse by worship style" },
+    ],
+
     related_guides: [
       { href: "/guides/church-fit-quiz", label: "Church fit quiz" },
       { href: "/guides/first-visit-guide", label: "First visit guide" },
@@ -523,6 +563,13 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
           "Free-church congregations without a formal denominational affiliation. Often skew younger and lean into contemporary worship by default.",
         href: "/church/denomination/non-denominational",
       },
+    ],
+
+    proof_routes: [
+      { href: "/church/style/contemporary-worship", label: "Contemporary worship churches" },
+      { href: "/church/churches-with-worship-music", label: "Churches with worship music" },
+      { href: "/church/city", label: "Browse churches by city" },
+      { href: "/church/denomination/non-denominational", label: "Non-denominational churches" },
     ],
 
     related_guides: [
@@ -680,6 +727,13 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       },
     ],
 
+    proof_routes: [
+      { href: "/church/family-friendly-churches", label: "Family-friendly churches" },
+      { href: "/church/churches-with-service-times", label: "Churches with service times" },
+      { href: "/church/city", label: "Browse churches by city" },
+      { href: "/church/denomination", label: "Browse by denomination" },
+    ],
+
     related_guides: [
       { href: "/guides/first-visit-guide", label: "First visit guide" },
       { href: "/guides/church-fit-quiz", label: "Church fit quiz" },
@@ -835,6 +889,13 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       },
     ],
 
+    proof_routes: [
+      { href: "/church/churches-with-service-times", label: "Churches with service times" },
+      { href: "/church/denomination/non-denominational", label: "Non-denominational churches" },
+      { href: "/church/denomination/baptist", label: "Baptist churches" },
+      { href: "/church/denomination/charismatic", label: "Charismatic churches" },
+    ],
+
     related_guides: [
       { href: "/guides/first-visit-guide", label: "First visit guide" },
       { href: "/guides/faith-faq", label: "Faith FAQ" },
@@ -988,6 +1049,13 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
           "If prayer itself has gotten complicated, this guide is the shortest path back into it. No jargon. No pressure.",
         href: "/guides/prayer-guide",
       },
+    ],
+
+    proof_routes: [
+      { href: "/church", label: "Browse church profiles" },
+      { href: "/church/churches-with-service-times", label: "Churches with service times" },
+      { href: "/church/denomination", label: "Browse by tradition" },
+      { href: "/church/style", label: "Browse by worship style" },
     ],
 
     related_guides: [

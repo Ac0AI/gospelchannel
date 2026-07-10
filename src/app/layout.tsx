@@ -164,6 +164,12 @@ export default function RootLayout({
                   },
                   {
                     "@type": "CollectionPage",
+                    name: "Audience church-search routes",
+                    url: "https://gospelchannel.com/for",
+                    description: "Audience-specific church-choice routes for expats, students, young adults, families, new believers, and deconstructing seekers.",
+                  },
+                  {
+                    "@type": "CollectionPage",
                     name: "Church profile proof database",
                     url: "https://gospelchannel.com/church",
                     description: "Public church profiles that prove guide answers with service times, worship music, location, language, tradition, and visitor cues.",

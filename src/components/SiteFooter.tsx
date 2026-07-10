@@ -2,7 +2,7 @@ import Link from "next/link";
 import { COPYRIGHT_YEAR } from "@/lib/utils";
 import { getChurchStatsAsync } from "@/lib/content";
 
-const cols = [
+export const SITE_FOOTER_COLUMNS = [
   {
     title: "Discover",
     links: [
@@ -15,6 +15,7 @@ const cols = [
   {
     title: "Decision paths",
     links: [
+      { label: "Church Choice Answers", href: "/guides/church-choice-answers" },
       { label: "Church Fit Quiz", href: "/guides/church-fit-quiz" },
       { label: "Worship Style Match", href: "/guides/worship-style-match" },
       { label: "First Visit Guide", href: "/guides/first-visit-guide" },
@@ -35,10 +36,13 @@ const cols = [
   {
     title: "For people",
     links: [
+      { label: "All audience routes", href: "/for" },
       { label: "For expats", href: "/for/expats" },
       { label: "For students", href: "/for/students" },
+      { label: "For young adults", href: "/for/young-adults" },
       { label: "For families", href: "/for/families" },
       { label: "For new believers", href: "/for/new-believers" },
+      { label: "For deconstructing seekers", href: "/for/deconstructing" },
     ],
   },
   {
@@ -76,7 +80,7 @@ export async function SiteFooter() {
           </div>
 
           {/* Link columns */}
-          {cols.map((col) => (
+          {SITE_FOOTER_COLUMNS.map((col) => (
             <div key={col.title}>
               <h4 className="font-serif text-lg font-semibold tracking-[-0.01em] text-linen">
                 {col.title}

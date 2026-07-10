@@ -17,8 +17,8 @@ describe("church choice answers", () => {
       expect(item.question).toMatch(/\?$/);
       expect(item.answer.length).toBeGreaterThan(40);
       expect(item.detail.length).toBeGreaterThan(40);
-      expect(item.guide.href).toMatch(/^\/(?:guides|compare)\//);
-      expect(item.proof.href).toMatch(/^\/(?:church|for|network)\b/);
+      expect(item.guide.href).toMatch(/^\/(?:guides|compare|for)\//);
+      expect(item.proof.href).toMatch(/^\/(?:church|network)\b/);
       expect(item.proofSignals.length).toBeGreaterThanOrEqual(3);
     }
   });
@@ -78,7 +78,7 @@ describe("church choice answers", () => {
     expect(CHURCH_CHOICE_ANSWERS).toContainEqual(expect.objectContaining({
       id: "how-do-expats-find-an-english-speaking-church-abroad",
       question: "How do expats find an English-speaking church abroad?",
-      guide: expect.objectContaining({ href: "/guides/how-to-find-the-right-church" }),
+      guide: expect.objectContaining({ href: "/for/expats" }),
       proof: expect.objectContaining({ href: "/church/english-speaking-churches" }),
     }));
     expect(CHURCH_CHOICE_ANSWERS).toContainEqual(expect.objectContaining({
@@ -90,7 +90,7 @@ describe("church choice answers", () => {
     expect(CHURCH_CHOICE_ANSWERS).toContainEqual(expect.objectContaining({
       id: "how-do-families-choose-a-family-friendly-church",
       question: "How do families choose a family-friendly church?",
-      guide: expect.objectContaining({ href: "/guides/first-visit-guide" }),
+      guide: expect.objectContaining({ href: "/for/families" }),
       proof: expect.objectContaining({ href: "/church/family-friendly-churches" }),
     }));
     expect(CHURCH_CHOICE_ANSWERS).toContainEqual(expect.objectContaining({
@@ -114,7 +114,7 @@ describe("church choice answers", () => {
     expect(CHURCH_CHOICE_ANSWERS).toContainEqual(expect.objectContaining({
       id: "how-do-young-adults-find-a-contemporary-worship-church",
       question: "How do young adults find a contemporary worship church?",
-      guide: expect.objectContaining({ href: "/guides/worship-style-match" }),
+      guide: expect.objectContaining({ href: "/for/young-adults" }),
       proof: expect.objectContaining({ href: "/church/style/contemporary-worship" }),
     }));
     expect(CHURCH_CHOICE_ANSWERS).toContainEqual(expect.objectContaining({
@@ -138,13 +138,13 @@ describe("church choice answers", () => {
     expect(CHURCH_CHOICE_ANSWERS).toContainEqual(expect.objectContaining({
       id: "how-do-students-find-a-church-near-campus",
       question: "How do students find a church near campus?",
-      guide: expect.objectContaining({ href: "/guides/how-to-find-the-right-church" }),
+      guide: expect.objectContaining({ href: "/for/students" }),
       proof: expect.objectContaining({ href: "/church/city" }),
     }));
     expect(CHURCH_CHOICE_ANSWERS).toContainEqual(expect.objectContaining({
       id: "how-do-i-find-a-low-pressure-church-after-church-hurt",
       question: "How do I find a low-pressure church after church hurt?",
-      guide: expect.objectContaining({ href: "/guides/faith-faq" }),
+      guide: expect.objectContaining({ href: "/for/deconstructing" }),
       proof: expect.objectContaining({ href: "/church" }),
     }));
     expect(CHURCH_CHOICE_ANSWERS).toContainEqual(expect.objectContaining({
@@ -154,6 +154,33 @@ describe("church choice answers", () => {
       proof: expect.objectContaining({ href: "/church/churches-with-service-times" }),
       proofSignals: expect.arrayContaining(["community signal", "service times", "profile evidence"]),
     }));
+    expect(CHURCH_CHOICE_ANSWERS).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        id: "how-do-expats-find-an-english-speaking-church-abroad",
+        guide: expect.objectContaining({ href: "/for/expats" }),
+      }),
+      expect.objectContaining({
+        id: "how-do-students-find-a-church-near-campus",
+        guide: expect.objectContaining({ href: "/for/students" }),
+      }),
+      expect.objectContaining({
+        id: "how-do-young-adults-find-a-contemporary-worship-church",
+        guide: expect.objectContaining({ href: "/for/young-adults" }),
+      }),
+      expect.objectContaining({
+        id: "how-do-families-choose-a-family-friendly-church",
+        guide: expect.objectContaining({ href: "/for/families" }),
+      }),
+      expect.objectContaining({
+        id: "where-should-new-believers-start",
+        guide: expect.objectContaining({ href: "/for/new-believers" }),
+        proof: expect.objectContaining({ href: "/church/churches-with-service-times" }),
+      }),
+      expect.objectContaining({
+        id: "how-do-i-find-a-low-pressure-church-after-church-hurt",
+        guide: expect.objectContaining({ href: "/for/deconstructing" }),
+      }),
+    ]));
     expect(CHURCH_CHOICE_PROOF_LINKS).toContainEqual(expect.objectContaining({
       href: "/church/country",
     }));

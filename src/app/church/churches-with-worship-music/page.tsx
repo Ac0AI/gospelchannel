@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { cache } from "react";
 import { ChurchProofRouteLandingPage } from "@/components/ChurchProofRouteLandingPage";
 import { getChurchIndexPageData } from "@/lib/church";
+import { getFreshestChurchUpdatedAtAsync } from "@/lib/content";
+import { formatContentFreshness } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -56,13 +58,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ChurchesWithWorshipMusicPage() {
   const { totalCount, pageItems } = await getPageData();
-  const updated = new Date();
-  const updatedIso = updated.toISOString();
-  const updatedLabel = updated.toLocaleDateString("en-GB", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const { updatedIso, updatedLabel } = formatContentFreshness(
+    await getFreshestChurchUpdatedAtAsync(),
+  );
 
   return (
     <ChurchProofRouteLandingPage

@@ -55,7 +55,7 @@ export function buildArticleSchema(input: ArticleSchemaInput) {
       url: SITE_URL,
       logo: {
         "@type": "ImageObject",
-        url: `${SITE_URL}/icon.png`,
+        url: `${SITE_URL}/icon.svg`,
       },
     },
     ...(input.image ? { image: input.image } : {}),
@@ -101,7 +101,7 @@ export function buildGuideSchema(args: {
       ],
       mentions: args.mentions ?? [
         { name: "GospelChannel church profile database", url: `${SITE_URL}/church` },
-        { name: "Church proof routes", url: `${SITE_URL}/guides` },
+        { name: "Church proof routes", url: `${SITE_URL}/church` },
       ],
     }),
     buildBreadcrumbSchema([

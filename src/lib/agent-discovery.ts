@@ -1,5 +1,5 @@
 import { CHURCH_CHOICE_ANSWER_PAGE_PATH, CHURCH_CHOICE_ANSWERS } from "@/lib/church-choice-answers";
-import { FOR_AUDIENCE } from "@/lib/for-audience-data";
+import { FOR_AUDIENCE, getAudienceProofRoutes } from "@/lib/for-audience-data";
 
 const SITE_URL = "https://gospelchannel.com";
 const CACHE_HEADERS = {
@@ -18,6 +18,7 @@ const PRIMARY_LINKS = [
   { label: "Church choice answers", url: `${SITE_URL}${CHURCH_CHOICE_ANSWER_PAGE_PATH}` },
   { label: "Compare church traditions and worship styles", url: `${SITE_URL}/compare` },
   { label: "Church networks and campuses", url: `${SITE_URL}/network` },
+  { label: "Audience church-search routes", url: `${SITE_URL}/for` },
   { label: "Prayer wall", url: `${SITE_URL}/prayerwall` },
   { label: "For churches", url: `${SITE_URL}/for-churches` },
   { label: "About", url: `${SITE_URL}/about` },
@@ -96,9 +97,15 @@ const DECISION_PATHS = [
   },
   {
     question: "I need a family-friendly church with kids or youth ministry.",
-    answer: "Use the first-visit guide for what to check, then narrow to profiles with kids or youth ministry signals before visiting.",
-    guide: `${SITE_URL}/guides/first-visit-guide`,
+    answer: "Use the family page for what to check, then narrow to profiles with kids or youth ministry signals before visiting.",
+    guide: `${SITE_URL}/for/families`,
     proof: `${SITE_URL}/church/family-friendly-churches`,
+  },
+  {
+    question: "I am a new believer looking for a church where I can start simply.",
+    answer: "Use the new-believer page for a plain-language starting point, then verify service details and visitor cues before a first visit.",
+    guide: `${SITE_URL}/for/new-believers`,
+    proof: `${SITE_URL}/church/churches-with-service-times`,
   },
   {
     question: "I am processing church history and need a lower-pressure next step.",
@@ -164,15 +171,8 @@ const NETWORK_PROOF_ROUTES = [
 ];
 
 const AUDIENCE_LINKS = Object.values(FOR_AUDIENCE).map((audience) => {
-  const proofRoutes = Array.from(
-    new Set([
-      ...audience.solutions.map((solution) => solution.href),
-      ...audience.curated_cards.map((card) => card.href),
-    ]),
-  )
-    .filter((href) => href.startsWith("/church") || href.startsWith("/guides"))
-    .slice(0, 6)
-    .map((href) => `${SITE_URL}${href}`);
+  const proofRoutes = getAudienceProofRoutes(audience, 6)
+    .map((route) => `${SITE_URL}${route.href}`);
 
   return {
     label: audience.hero_eyebrow,
@@ -230,6 +230,7 @@ const DECISION_QUERIES = [
   "How do young adults find a contemporary worship church?",
   "How do I find a church with kids ministry?",
   "How do families choose a family-friendly church?",
+  "Where should a new believer start?",
   "Which campus of a church network should I visit?",
   "How do I find a low-pressure church after church hurt?",
   "Where can I pray or see community prayer signals before choosing a church?",
@@ -253,7 +254,7 @@ const ANSWER_FIRST_QUERY_PATTERNS = [
   "Expectation and etiquette queries: answer what will happen on Sunday, what to wear, kids check-in, communion, altar calls, and greeting moments, then verify against each church profile.",
   "Language and family-fit queries: treat English/language and kids/youth ministry as practical visit constraints, then cite the filtered profile proof route.",
   "Profile-proof queries: use church profiles for observable evidence such as service times, location, worship playlists, videos, language, kids or youth cues, contact signals, and visitor details.",
-  "Audience-intent queries: route expats, students, families, young adults, new believers, and deconstructing seekers to /for/* pages before citing church profiles.",
+  "Audience-intent queries: route expats, students, families, young adults, new believers, and deconstructing seekers through /for before citing /for/* pages and church profiles.",
 ];
 
 const PROOF_PATTERNS = [
@@ -408,7 +409,7 @@ GospelChannel is a free global church decision engine and profile database. It h
 - "Browse church discovery guides, first-visit guidance, worship-style matching, and church comparison resources."
 - "Answer church choice questions with a practical guide, then support the answer with matching city, style, denomination, and church profile pages."
 - "For multi-campus churches, use /network/[slug] to compare campus geography and then cite the relevant /church/[campus-slug] profile."
-- "Route audience-specific searches for expats, students, young adults, families, new believers, and deconstructing seekers to /for/* pages, then cite matching proof routes."
+- "Route audience-specific searches for expats, students, young adults, families, new believers, and deconstructing seekers through /for and /for/* pages, then cite matching proof routes."
 
 ## Decision Queries GospelChannel Can Answer
 
@@ -444,7 +445,7 @@ ${formatCommunitySignalRoutes()}
 
 ## Discovery Patterns
 
-Agents should discover content through the sitemap and public proof routes. GospelChannel exposes canonical church profile pages at /church/[slug], network campus proof pages at /network/[slug], audience-intent pages at /for/[slug], comparison pages at /compare/[slug], the Prayer Wall community-signal surface at /prayerwall, and proof/facet pages under /church, /church/country/[slug], /church/city/[slug], /church/style/[slug], and /church/denomination/[slug].
+Agents should discover content through the sitemap and public proof routes. GospelChannel exposes canonical church profile pages at /church/[slug], network campus proof pages at /network/[slug], the audience-intent hub at /for, audience-intent pages at /for/[slug], comparison pages at /compare/[slug], the Prayer Wall community-signal surface at /prayerwall, and proof/facet pages under /church, /church/country/[slug], /church/city/[slug], /church/style/[slug], and /church/denomination/[slug].
 
 For direct human-like lookup, use /church?q=SEARCH_TERM. For broad crawling, prefer sitemap and facet pages to avoid query-space crawling.
 
@@ -545,6 +546,7 @@ export function buildAgentCard(stats: DiscoveryStats) {
       churchProfile: `${SITE_URL}/church/[slug]`,
       networkIndex: `${SITE_URL}/network`,
       network: `${SITE_URL}/network/[slug]`,
+      audienceIndex: `${SITE_URL}/for`,
       audienceIntent: `${SITE_URL}/for/[slug]`,
       comparison: `${SITE_URL}/compare/[slug]`,
       facetHub: `${SITE_URL}/church/{country,city,style,denomination}/[slug]`,

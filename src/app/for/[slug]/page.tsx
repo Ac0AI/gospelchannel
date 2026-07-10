@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ForAudienceLayout } from "@/components/ForAudienceLayout";
-import { FOR_AUDIENCE } from "@/lib/for-audience-data";
+import { FOR_AUDIENCE, getAudienceProofRoutes } from "@/lib/for-audience-data";
 import { buildArticleSchema, buildBreadcrumbSchema, buildItemListSchema } from "@/lib/seo-schema";
 import { serializeJsonLd } from "@/lib/json-ld";
 
@@ -56,6 +56,8 @@ export default async function ForAudiencePage({
   const siblings = Object.values(FOR_AUDIENCE)
     .filter((audience) => audience.slug !== data.slug)
     .map((audience) => ({ slug: audience.slug, audience_name: audience.audience_name }));
+  const proofRoutes = getAudienceProofRoutes(data);
+  const primaryProofRoute = proofRoutes[0] ?? { href: "/church", label: "Church profiles" };
 
   const schema = [
     buildArticleSchema({
@@ -69,7 +71,7 @@ export default async function ForAudiencePage({
       ],
       mentions: [
         { name: "GospelChannel church profile database", url: `${SITE_URL}/church` },
-        { name: `${data.audience_name} church proof routes`, url },
+        { name: primaryProofRoute.label, url: `${SITE_URL}${primaryProofRoute.href}` },
       ],
     }),
     buildBreadcrumbSchema([
@@ -93,13 +95,13 @@ export default async function ForAudiencePage({
         url: `${SITE_URL}${solution.href}`,
       })),
     }),
-    ...(data.curated_cards.length > 0
+    ...(proofRoutes.length > 0
       ? [
           buildItemListSchema({
             name: `${data.audience_name} church proof routes`,
-            items: data.curated_cards.map((card) => ({
-              name: card.title,
-              url: `${SITE_URL}${card.href}`,
+            items: proofRoutes.map((route) => ({
+              name: route.label,
+              url: `${SITE_URL}${route.href}`,
             })),
           }),
         ]
