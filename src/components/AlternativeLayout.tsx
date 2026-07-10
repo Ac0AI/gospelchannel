@@ -46,7 +46,7 @@ const VISIT_STEPS = [
     title: "3. Explore church details",
     body: "Open church profiles for service times, worship music, videos, language, location, and first-visit information.",
     href: "/church",
-    label: "Open church profile",
+    label: "Browse churches",
   },
 ];
 

@@ -106,4 +106,16 @@ describe("public copy", () => {
     expect(source).not.toContain("verify fit in church profiles");
     expect(source).toContain("open church pages for service details, worship, location, and first-visit information");
   });
+
+  it("labels directory links and network lists for their destinations", () => {
+    const compareSource = readFileSync(new URL("../../app/compare/page.tsx", import.meta.url), "utf8");
+    const alternativeSource = readFileSync(new URL("../../components/AlternativeLayout.tsx", import.meta.url), "utf8");
+    const networkSource = readFileSync(new URL("../../app/network/page.tsx", import.meta.url), "utf8");
+
+    expect(compareSource).toMatch(/<Link\s+href="\/church"[\s\S]*?>\s*Browse churches\s*<\/Link>/);
+    expect(alternativeSource).toContain('href: "/church",\n    label: "Browse churches",');
+    expect(networkSource).toMatch(
+      /"@type": "ItemList",\s+name: "Church networks",[\s\S]*?itemListElement: networks\.map\([\s\S]*?url: `https:\/\/gospelchannel\.com\/network\/\$\{network\.slug\}`/,
+    );
+  });
 });

@@ -52,7 +52,7 @@ export default async function NetworkIndexPage() {
     {
       "@context": "https://schema.org",
       "@type": "ItemList",
-      name: "Church network campuses",
+      name: "Church networks",
       numberOfItems: networks.length,
       itemListElement: networks.map((network, index) => ({
         "@type": "ListItem",

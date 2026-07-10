@@ -103,7 +103,7 @@ export default function CompareHubPage() {
               href="/church"
               className="rounded-full border border-rose-gold/30 px-6 py-3 text-sm font-semibold text-espresso transition-colors hover:bg-rose-gold/[0.06]"
             >
-              Open church profile
+              Browse churches
             </Link>
           </div>
         </div>
