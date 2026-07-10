@@ -157,7 +157,7 @@ export default async function GuidesPage() {
             className="mt-3.5 m-0 max-w-[20ch] font-serif font-semibold leading-[1.05] tracking-[-0.02em] text-linen"
             style={{ fontSize: "clamp(40px, 7vw, 72px)" }}
           >
-            Answer the church question, then <em className="gc-italic">prove the fit</em>.
+            Answer the church question, then <em className="gc-italic">see what fits</em>.
           </h1>
           <p className="mt-5 max-w-[640px] text-lg leading-relaxed text-linen/75 sm:text-xl">
             Start with the decision you need to make: fit, worship, tradition, first visit, or location. Then verify it across {churchCountLabel} churches in {countryCount} countries.
@@ -165,7 +165,7 @@ export default async function GuidesPage() {
           <div className="mt-8 max-w-[860px] border-y border-blush/20 py-7">
             <p className="gc-eyebrow" style={{ color: "var(--rose-gold)" }}>Quick answer</p>
             <p className="mt-3 text-base leading-relaxed text-linen/75 sm:text-lg">
-              Use the guides to decide what kind of church to try, then use GospelChannel&rsquo;s profile database to prove the decision with real profiles, worship style tags, service details, music, location, and first-visit cues.
+              Use the guides to decide what kind of church to try, then use GospelChannel&rsquo;s church pages to check worship style tags, service details, music, location, and first-visit cues.
             </p>
           </div>
           <div className="mt-7 flex flex-wrap gap-3">
@@ -179,7 +179,7 @@ export default async function GuidesPage() {
               href="/church"
               className="rounded-full border border-linen/25 px-6 py-3 text-sm font-semibold text-linen transition-colors hover:bg-linen/10"
             >
-              Open the proof database
+              Explore churches
             </Link>
           </div>
         </div>

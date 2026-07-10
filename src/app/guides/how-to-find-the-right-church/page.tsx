@@ -195,7 +195,7 @@ export default async function HowToFindTheRightChurchPage() {
           {
             href: "/church",
             label: "Read individual profiles",
-            description: "Use service times, music, videos, contact details, and first-visit cues as the final proof.",
+            description: "Use service times, music, videos, contact details, and first-visit cues for a final check.",
           },
         ]}
       />

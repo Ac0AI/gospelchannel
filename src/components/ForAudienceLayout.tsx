@@ -74,14 +74,14 @@ export function ForAudienceLayout({ data, siblings }: Props) {
         </div>
       </section>
 
-      {/* Decision-to-proof model */}
+      {/* Audience search model */}
       <section className="mt-14 rounded-[24px] border border-rose-gold/[0.16] bg-white p-6 shadow-[0_18px_55px_rgba(72,39,24,0.06)] sm:p-8">
         <p className="gc-eyebrow">Quick answer</p>
         <h2 className="mt-3 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-3xl">
           Start with the {data.audience_name.toLowerCase()} question, then check the church details.
         </h2>
         <p className="mt-3 max-w-[820px] text-sm leading-[1.7] text-warm-brown sm:text-base">
-          This page narrows the search by intent. The profile database does the proof work after that:
+          This page narrows the search by intent. Then use church pages to check the details that matter:
           open the recommended route, compare churches in the same lane, then inspect the profile
           signals that matter before choosing a Sunday.
         </p>

@@ -244,9 +244,16 @@ const MACHINE_EVIDENCE_LABELS: Record<string, string> = {
   "campus details": "campus profile proof",
 };
 
+const MACHINE_ANSWER_COPY: Record<string, string> = {
+  "how-do-expats-find-an-english-speaking-church-abroad":
+    "Start with English-language proof, then narrow by country, city, worship style, and tradition before choosing a first Sunday.",
+  "how-do-i-find-a-church-with-kids-ministry":
+    "Use kids or youth ministry as a proof filter after you know the city and visit time, then read the profile for specific age-group and first-visit details.",
+};
+
 const ANSWER_MAP = CHURCH_CHOICE_ANSWERS.map((item) => ({
   question: item.question,
-  answer: item.answer,
+  answer: MACHINE_ANSWER_COPY[item.id] ?? item.answer,
   guide: `${SITE_URL}${item.guide.href}`,
   proof: `${SITE_URL}${item.proof.href}`,
   evidence: item.proofSignals.map((signal) => MACHINE_EVIDENCE_LABELS[signal] ?? signal),

@@ -42,3 +42,22 @@ Additional review:
 
 - The test command emits the pre-existing environment warnings for the Node engine (`22.x` requested, `26.3.0` running) and Node's `module.register()` deprecation. The test suite still completes successfully.
 - `.agents/` was left unmodified and unstaged.
+
+## Review Follow-up: Proof Architecture Copy
+
+- Searched every `guidesAndAudiences` source file for standalone `proof` occurrences.
+- Rewrote all visitor-visible architecture copy to concrete destinations or details, including `Explore churches`, `See worship details`, `Browse churches by city`, and `check the details that matter`.
+- Replaced the reported `Open proof profiles`, `does the proof work`, and `Open the proof database` strings.
+- Preserved internal `proof`, `proofSignals`, and `proof_routes` keys, route mappings, hrefs, and data IDs.
+- Added focused Task 2-only public-copy patterns for `proof profiles`, `proof database`, and `does the proof work`; these do not inspect internal object keys.
+- Added a minimal agent-discovery answer compatibility map for the two shared answer strings changed for visitors, keeping machine-facing output and its existing tests stable.
+
+Follow-up verification:
+
+```sh
+pnpm --config.engine-strict=false vitest run src/lib/__tests__/public-copy.test.ts
+pnpm --config.engine-strict=false vitest run src/lib/__tests__/public-copy.test.ts src/lib/__tests__/church-choice-answers.test.ts src/lib/__tests__/for-audience-data.test.ts src/lib/__tests__/search-suggestions.test.ts src/lib/__tests__/seo-schema.test.ts src/lib/__tests__/sitemap-data.test.ts src/lib/__tests__/agent-discovery.test.ts
+pnpm --config.engine-strict=false typecheck
+```
+
+Result: public-copy guard passed (3 tests); required suite passed (7 files, 34 tests); typecheck passed.

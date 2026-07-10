@@ -129,7 +129,7 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
         body:
           "Every church profile has a language field. Filter the profile database to English (or any other language you read) and the noise drops by 90% in non-English countries. You'll see English-speaking congregations and international fellowships first, instead of digging through hundreds of native-language results.",
         href: "/church/english-speaking-churches",
-        cta: "Open proof profiles",
+        cta: "Explore churches",
       },
       {
         title: "Browse by country, then narrow by city",
@@ -998,7 +998,7 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
         body:
           "For many in this season, the worship is the easiest entry point — it lets you sit with the room before words land. Profiles with Spotify or YouTube give you a preview. If a track lands well at your kitchen table, the Sunday is worth trying. If it doesn't, you've saved both your time and the congregation's.",
         href: "/church",
-        cta: "Open proof profiles",
+        cta: "Explore churches",
       },
       {
         title: "Pray on the prayer wall, even before you visit anywhere",

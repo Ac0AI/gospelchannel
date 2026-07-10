@@ -11,6 +11,12 @@ const FORBIDDEN_PUBLIC_COPY = [
   /\brequire evidence\b/i,
 ];
 
+const FORBIDDEN_GUIDE_AND_AUDIENCE_COPY = [
+  /\bproof profiles?\b/i,
+  /\bproof database\b/i,
+  /\bdoes the proof work\b/i,
+];
+
 const PUBLIC_COPY_GROUPS: Record<string, string[]> = {
   global: [
     "../../app/page.tsx",
@@ -51,7 +57,11 @@ describe("public copy", () => {
     it(`${group} uses visitor language instead of internal GEO terminology`, () => {
       for (const path of paths) {
         const source = readFileSync(new URL(path, import.meta.url), "utf8");
-        for (const pattern of FORBIDDEN_PUBLIC_COPY) {
+        const forbiddenPatterns = [
+          ...FORBIDDEN_PUBLIC_COPY,
+          ...(group === "guidesAndAudiences" ? FORBIDDEN_GUIDE_AND_AUDIENCE_COPY : []),
+        ];
+        for (const pattern of forbiddenPatterns) {
           expect(source, `${path} contains ${pattern}`).not.toMatch(pattern);
         }
       }
