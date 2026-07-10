@@ -36,6 +36,11 @@ const FAQS = [
     answer:
       "Yes. Most charismatic and Pentecostal churches in London hold their services in English, including Hillsong Church London, King's Church London and the Vineyard churches.",
   },
+  {
+    question: "How is this list ordered?",
+    answer:
+      "This list includes churches across Greater London in Pentecostal, Charismatic, Vineyard, or Elim traditions, or with charismatic, Pentecostal, or gospel worship details. GospelChannel orders entries by profile completeness: the amount and quality of published church information. This is not a review score, endorsement, popularity vote, or third-party recommendation.",
+  },
 ];
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -242,7 +247,9 @@ export default async function CharismaticChurchesInLondonPage() {
                   This list includes churches across Greater London in Pentecostal, Charismatic, Vineyard,
                   or Elim traditions, or with charismatic, Pentecostal, or gospel worship details. It is
                   based on published service times, worship playlists, videos, style tags, language, official
-                  sites, and location where available. This is not a ranking.
+                  sites, and location where available. GospelChannel orders entries by profile completeness:
+                  the amount and quality of published church information. This is not a review score,
+                  endorsement, popularity vote, or third-party recommendation.
                 </p>
               </div>
             </>

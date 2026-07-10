@@ -32,7 +32,7 @@ const FAQS = [
   {
     question: "How is this list put together?",
     answer:
-      "This list is based on published worship style, music, service-time, location, language, and church-profile data for churches tagged as contemporary, charismatic, or gospel worship. This is not a ranking, review, or third-party recommendation.",
+      "This list includes churches tagged as contemporary, charismatic, or gospel worship, using published worship style, music, service-time, location, language, and church-profile data. GospelChannel orders entries by profile completeness: the amount and quality of published church information. This is not a review score, endorsement, popularity vote, or third-party recommendation.",
   },
   {
     question: "Are these churches Pentecostal or charismatic?",
@@ -243,7 +243,9 @@ export default async function BestWorshipChurchesPage() {
                 <p className="mt-1 text-xs text-muted-warm">
                   This list is based on churches tagged as contemporary, charismatic, or gospel worship,
                   using published service times, worship playlists, videos, style tags, language, official
-                  sites, and location where available. This is not a ranking or an independent rating.
+                  sites, and location where available. GospelChannel orders entries by profile completeness:
+                  the amount and quality of published church information. This is not a review score,
+                  endorsement, popularity vote, or third-party recommendation.
                 </p>
               </div>
             </>
