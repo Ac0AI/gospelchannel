@@ -14,14 +14,14 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://gospelchannel.com/prayerwall" },
   openGraph: {
     title: "Prayer Wall: Community Prayers From Churches",
-    description: "Prayers from churches around the world. Use the wall as a community signal, then verify fit in church profiles.",
+    description: "Prayers from churches around the world. Use the wall as a community signal, then open church pages for service details, worship, location, and first-visit information.",
     url: "https://gospelchannel.com/prayerwall",
     images: [{ url: "https://gospelchannel.com/images/prayerwall-hero.jpg" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Prayer Wall: Community Prayers From Churches",
-    description: "Prayers from churches around the world. Use the wall as a community signal, then verify fit in church profiles.",
+    description: "Prayers from churches around the world. Use the wall as a community signal, then open church pages for service details, worship, location, and first-visit information.",
     images: ["https://gospelchannel.com/images/prayerwall-hero.jpg"],
   },
 };

@@ -36,4 +36,11 @@ describe("public copy", () => {
       }
     });
   }
+
+  it("uses concrete visitor next steps in Prayer Wall social metadata", () => {
+    const source = readFileSync(new URL("../../app/prayerwall/page.tsx", import.meta.url), "utf8");
+
+    expect(source).not.toContain("verify fit in church profiles");
+    expect(source).toContain("open church pages for service details, worship, location, and first-visit information");
+  });
 });
