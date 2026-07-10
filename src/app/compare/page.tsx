@@ -7,7 +7,7 @@ import { serializeJsonLd } from "@/lib/json-ld";
 const PAGE_URL = "https://gospelchannel.com/compare";
 const PAGE_TITLE = "Compare Church Styles and Traditions";
 const PAGE_DESCRIPTION =
-  "Compare worship styles, church traditions, and Sunday room feel, then verify the choice with matching GospelChannel proof routes.";
+  "Compare worship styles, church traditions, and Sunday room feel, then explore churches that match your choice.";
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
@@ -78,12 +78,12 @@ export default function CompareHubPage() {
             Compare worship before your <em className="gc-italic">first visit</em>.
           </h1>
           <p className="mt-5 max-w-[640px] text-lg leading-relaxed text-warm-brown">
-            These guides are written for church seekers, not insiders. Reduce uncertainty around style, tradition, and room feel, then move into church profiles that prove the direction you choose.
+            These guides are written for church seekers, not insiders. Reduce uncertainty around style, tradition, and room feel, then explore churches with the details that matter to you.
           </p>
           <div className="mt-8 max-w-[860px] border-y border-rose-gold/[0.14] py-7">
             <p className="gc-eyebrow">Quick answer</p>
             <p className="mt-3 text-base leading-relaxed text-warm-brown sm:text-lg">
-              Use comparisons when you are choosing between two church lanes, not when you already know a church name. Pick the side that makes a second visit more likely, then use the proof routes below to prove the choice with real church profiles, worship style tags, service details, and music.
+              Use comparisons when you are choosing between two church lanes, not when you already know a church name. Pick the side that makes a second visit more likely, then explore churches by worship style, service details, and music.
             </p>
           </div>
           <div className="mt-7 flex flex-wrap gap-3">
@@ -103,7 +103,7 @@ export default function CompareHubPage() {
               href="/church"
               className="rounded-full border border-rose-gold/30 px-6 py-3 text-sm font-semibold text-espresso transition-colors hover:bg-rose-gold/[0.06]"
             >
-              Open church profiles
+              Open church profile
             </Link>
           </div>
         </div>
@@ -164,12 +164,12 @@ export default function CompareHubPage() {
 
       <section className="mx-auto max-w-[1280px] px-5 pt-14 pb-24 sm:px-12 sm:pt-16">
         <div className="border-t border-rose-gold/[0.14] pt-10">
-          <p className="gc-eyebrow">Proof routes</p>
+          <p className="gc-eyebrow">Churches to explore</p>
           <h2 className="mt-2 font-serif text-3xl font-semibold tracking-[-0.01em] text-espresso sm:text-4xl">
-            Compare, then verify with church profiles.
+            Compare, then explore churches that match.
           </h2>
           <p className="mt-3 max-w-[760px] text-sm leading-[1.7] text-warm-brown sm:text-base">
-            Every comparison points into live proof routes. Use those routes to inspect actual congregations, not just the abstract difference between two traditions or styles.
+            Every comparison links to churches you can explore, not just the abstract difference between two traditions or styles.
           </p>
           <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {guides.map((guide) => (

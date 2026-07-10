@@ -29,7 +29,7 @@ type Props = {
   siblings: Array<{ slug: string; competitor_name: string }>;
 };
 
-const DECISION_PROOF_STEPS = [
+const VISIT_STEPS = [
   {
     title: "1. Understand the tradeoff",
     body: "Use this comparison to see what the other directory optimizes for: coverage, curation, theology, worship data, or profile depth.",
@@ -37,16 +37,16 @@ const DECISION_PROOF_STEPS = [
     label: "Read the church-choice guide",
   },
   {
-    title: "2. Choose your lane",
-    body: "Use the fit quiz or comparison guides to turn preference into a concrete search lane before browsing hundreds of profiles.",
+    title: "2. Choose what to explore",
+    body: "Use the fit quiz or comparison guides to find churches that match your preferences before browsing the directory.",
     href: "/guides/church-fit-quiz",
     label: "Take the fit quiz",
   },
   {
-    title: "3. Prove it in profiles",
-    body: "Open GospelChannel profiles to verify service times, worship music, videos, language, location, and first-visit cues.",
+    title: "3. Explore church details",
+    body: "Open church profiles for service times, worship music, videos, language, location, and first-visit information.",
     href: "/church",
-    label: "Open church profiles",
+    label: "Open church profile",
   },
 ];
 
@@ -70,7 +70,7 @@ export function AlternativeLayout({ data, siblings }: Props) {
             href="/church"
             className="rounded-full bg-rose-gold px-6 py-3 text-sm font-bold text-white transition-all duration-150 hover:-translate-y-px hover:bg-rose-gold-deep hover:shadow-[0_8px_24px_rgba(176,106,80,0.3)]"
           >
-            Open church profiles
+            Browse churches
           </Link>
           <Link
             href="/guides/church-fit-quiz"
@@ -81,19 +81,18 @@ export function AlternativeLayout({ data, siblings }: Props) {
         </div>
       </section>
 
-      {/* Decision path */}
+      {/* Next steps */}
       <section className="mt-14 rounded-[22px] border border-rose-gold/[0.14] bg-white p-6 shadow-sm sm:p-8">
-        <p className="gc-eyebrow">Decision path</p>
+        <p className="gc-eyebrow">Next steps</p>
         <h2 className="mt-3 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-3xl">
-          Use this alternative page to decide, then verify the answer in real profiles.
+          Use this alternative page to decide what to explore next.
         </h2>
         <p className="mt-3 max-w-[780px] text-sm leading-[1.7] text-warm-brown sm:text-base">
-          A directory comparison should not be the final answer. It should tell you which questions
-          to ask next. GospelChannel pairs the answer layer with proof routes: guides for fit,
-          then church profiles for service details, worship, language, location, and visitor signals.
+          A directory comparison should help you decide which questions to ask next. GospelChannel links
+          to guides for fit and church profiles for service details, worship, language, location, and visitor information.
         </p>
         <div className="mt-7 grid gap-4 md:grid-cols-3">
-          {DECISION_PROOF_STEPS.map((step) => (
+          {VISIT_STEPS.map((step) => (
             <article key={step.title} className="rounded-[16px] border border-rose-gold/[0.12] bg-linen-deep/35 p-5">
               <h3 className="font-serif text-lg font-semibold tracking-[-0.01em] text-espresso">
                 {step.title}
@@ -241,7 +240,7 @@ export function AlternativeLayout({ data, siblings }: Props) {
             href="/church"
             className="rounded-full bg-rose-gold px-6 py-3 text-sm font-bold text-white transition-all duration-150 hover:-translate-y-px hover:bg-rose-gold-deep hover:shadow-[0_8px_24px_rgba(176,106,80,0.3)]"
           >
-            Browse all churches
+            Browse churches
           </Link>
           <Link
             href="/guides/church-fit-quiz"
@@ -271,7 +270,7 @@ export function AlternativeLayout({ data, siblings }: Props) {
               </li>
               <li>
                 <Link href="/church/denomination" className="text-sm text-warm-brown transition-colors hover:text-rose-gold">
-                  Browse by denomination
+                  Browse churches by tradition
                 </Link>
               </li>
               <li>

@@ -10,12 +10,12 @@ const CANONICAL = "https://gospelchannel.com/network";
 export const metadata: Metadata = {
   title: "Church Networks & Campuses",
   description:
-    "Compare multi-campus church networks by location, campus pages, service details, worship evidence, and profile proof before choosing where to visit.",
+    "Compare multi-campus church networks by location, campus pages, service details, worship music, and church details before choosing where to visit.",
   alternates: { canonical: CANONICAL },
   openGraph: {
     title: "Church Networks & Campuses",
     description:
-      "Compare church networks and campus proof routes before choosing which local campus to visit.",
+      "Compare church networks and local campus details before choosing which local campus to visit.",
     url: CANONICAL,
     type: "website",
     siteName: "GospelChannel",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Church Networks & Campuses",
     description:
-      "Compare church networks and campus proof routes before choosing which local campus to visit.",
+      "Compare church networks and local campus details before choosing which local campus to visit.",
   },
 };
 
@@ -37,7 +37,7 @@ export default async function NetworkIndexPage() {
       name: "Church Networks & Campuses",
       url: CANONICAL,
       description:
-        "Network proof hub for comparing multi-campus churches before opening local campus profile evidence.",
+        "Explore multi-campus churches and local campus details before choosing where to visit.",
       isPartOf: {
         "@type": "WebSite",
         name: "GospelChannel",
@@ -46,13 +46,13 @@ export default async function NetworkIndexPage() {
       about: [
         { "@type": "Thing", name: "Church networks" },
         { "@type": "Thing", name: "Multi-campus church choice" },
-        { "@type": "Thing", name: "Campus profile proof" },
+        { "@type": "Thing", name: "Campus details" },
       ],
     },
     {
       "@context": "https://schema.org",
       "@type": "ItemList",
-      name: "Church network proof routes",
+      name: "Church network campuses",
       numberOfItems: networks.length,
       itemListElement: networks.map((network, index) => ({
         "@type": "ListItem",
@@ -77,18 +77,18 @@ export default async function NetworkIndexPage() {
               &larr; All churches
             </Link>
             <p className="mt-6 gc-eyebrow" style={{ color: "var(--rose-gold)" }}>
-              Network proof hub
+              Church networks
             </p>
             <h1
               className="mt-3.5 m-0 max-w-[16ch] font-serif font-semibold leading-[1] tracking-[-0.02em] text-linen"
               style={{ fontSize: "clamp(42px, 7vw, 84px)" }}
             >
-              Choose the campus, then prove the visit.
+              Choose the campus that fits your visit.
             </h1>
             <p className="mt-5 max-w-[720px] text-base leading-relaxed text-linen/75 sm:text-lg">
               Multi-campus churches can share a worship identity while each location feels different.
-              Use network pages to compare countries, cities, service details, language, worship evidence,
-              and campus profile links before choosing where to visit.
+              Use network pages to compare countries, cities, service details, language, worship music,
+              and church details before choosing where to visit.
             </p>
           </div>
         </section>
@@ -101,10 +101,10 @@ export default async function NetworkIndexPage() {
             </h2>
             <p className="mt-3 max-w-[820px] text-sm leading-[1.7] text-warm-brown sm:text-base">
               A network name can tell you the worship family and shared identity. The actual visit decision
-              depends on the local campus: city, address, service rhythm, language, kids cues, and profile proof.
+              depends on the local campus: city, address, service rhythm, language, kids cues, and church details.
             </p>
             <div className="mt-5 flex flex-wrap gap-2">
-              {["campus location", "service times", "worship music", "languages", "profile proof"].map((signal) => (
+              {["campus location", "service times", "worship music", "languages", "church details"].map((signal) => (
                 <span
                   key={signal}
                   className="rounded-full border border-rose-gold/20 bg-linen px-3 py-1 text-xs font-semibold text-warm-brown"
@@ -117,7 +117,7 @@ export default async function NetworkIndexPage() {
 
           <section className="mt-12">
             <h2 className="font-serif text-3xl font-semibold tracking-[-0.01em] text-espresso sm:text-4xl">
-              Church networks
+              Compare local campuses
             </h2>
             {networks.length > 0 ? (
               <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -141,7 +141,7 @@ export default async function NetworkIndexPage() {
                       </p>
                     )}
                     <span className="mt-4 inline-flex text-sm font-bold text-rose-gold">
-                      Compare campuses &rarr;
+                      See local campuses &rarr;
                     </span>
                   </Link>
                 ))}
@@ -152,13 +152,13 @@ export default async function NetworkIndexPage() {
                   Network pages are being prepared.
                 </p>
                 <p className="mt-2 max-w-[640px] text-sm leading-relaxed text-warm-brown">
-                  Use the church profile database while network campus proof routes are loading.
+                  Browse churches while local campus pages are being prepared.
                 </p>
                 <Link
                   href="/church"
                   className="mt-4 inline-flex rounded-full bg-rose-gold px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-rose-gold-deep"
                 >
-                  Browse church profiles
+                  Browse churches
                 </Link>
               </div>
             )}

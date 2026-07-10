@@ -47,14 +47,14 @@ export async function generateMetadata({ params }: NetworkPageProps): Promise<Me
   const campusLabel = campusCount > 0
     ? `${campusCount.toLocaleString("en-US")} ${campusCount === 1 ? "campus" : "campuses"}`
     : "church campuses";
-  const description = `Compare ${network.name} ${campusLabel} by country, city, service times, worship music, and profile proof before choosing where to visit.`;
+  const description = `Compare ${network.name} ${campusLabel} by country, city, service times, worship music, and church details before choosing where to visit.`;
 
   return {
-    title: `${network.name} Church Locations: Campus Fit & Profile Proof`,
+    title: `${network.name} Church Locations`,
     description,
     alternates: { canonical: pageUrl },
     openGraph: {
-      title: `${network.name} Church Locations: Campus Fit & Proof`,
+      title: `${network.name} Church Locations`,
       description,
       type: "website",
       url: pageUrl,
@@ -62,7 +62,7 @@ export async function generateMetadata({ params }: NetworkPageProps): Promise<Me
     },
     twitter: {
       card: "summary_large_image",
-      title: `${network.name} Church Locations: Campus Fit & Proof`,
+      title: `${network.name} Church Locations`,
       description,
     },
   };
@@ -111,7 +111,7 @@ export default async function NetworkPage({ params }: NetworkPageProps) {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
       name: `${network.name} church locations`,
-      description: `Network proof page for choosing a ${network.name} campus by country, city, service details, worship music, and profile evidence.`,
+      description: `Explore ${network.name} campuses by country, city, service details, worship music, and church details.`,
       url: pageUrl,
       isPartOf: {
         "@type": "WebSite",
@@ -120,8 +120,8 @@ export default async function NetworkPage({ params }: NetworkPageProps) {
       },
       about: [
         { "@type": "Thing", name: "Multi-campus church choice" },
-        { "@type": "Thing", name: "Campus profile proof" },
-        { "@type": "Thing", name: "Service times and location evidence" },
+        { "@type": "Thing", name: "Campus details" },
+        { "@type": "Thing", name: "Service times and locations" },
       ],
     },
     {
@@ -135,8 +135,8 @@ export default async function NetworkPage({ params }: NetworkPageProps) {
     {
       "@context": "https://schema.org",
       "@type": "ItemList",
-      name: `${network.name} campus proof routes`,
-      description: `Campus pages that verify ${network.name} location fit with service times, address, language, and worship evidence where available.`,
+      name: `${network.name} local campuses`,
+      description: `Campus pages with service times, addresses, languages, and worship details where available.`,
       numberOfItems: campuses.length,
       itemListElement: campuses.slice(0, 100).map((campus, index) => ({
         "@type": "ListItem",
@@ -212,12 +212,12 @@ export default async function NetworkPage({ params }: NetworkPageProps) {
       <section className="rounded-[22px] border border-rose-gold/[0.14] bg-white p-6 shadow-sm sm:p-7">
         <p className="gc-eyebrow">Quick answer</p>
         <h2 className="mt-3 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-3xl">
-          Use the network page to choose a campus, then open the profile for proof.
+          Compare local campuses, then open church details.
         </h2>
         <p className="mt-3 max-w-[820px] text-sm leading-[1.7] text-warm-brown sm:text-base">
           {network.name} may share worship identity across locations, but the visit decision is local:
           country, city, address, service rhythm, language, and first-visit details. Start here to
-          compare the campus map, then use each church profile to verify what is true for that location.
+          compare the campus map, then open each church profile for local details.
         </p>
         <div className="mt-5 flex flex-wrap gap-2">
           {["campus location", "service times", "worship music", "languages", "visitor cues"].map((signal) => (
@@ -251,7 +251,7 @@ export default async function NetworkPage({ params }: NetworkPageProps) {
       {campuses.length > 0 ? (
         <section>
           <h2 className="font-serif text-2xl font-semibold text-espresso">
-            Campuses
+            Compare local campuses
           </h2>
           <p className="mt-1 text-sm text-warm-brown">
             {network.name} has {campuses.length} {campuses.length === 1 ? "campus" : "campuses"} across {sortedCountries.length} {sortedCountries.length === 1 ? "country" : "countries"}.

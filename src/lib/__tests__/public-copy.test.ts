@@ -73,6 +73,15 @@ const PUBLIC_COPY_GROUPS: Record<string, string[]> = {
     "../../components/FacetIndexPage.tsx",
     "../../lib/church-metadata.ts",
   ],
+  comparisonsAndNetworks: [
+    "../../app/compare/page.tsx",
+    "../../app/compare/[slug]/page.tsx",
+    "../../app/network/page.tsx",
+    "../../app/network/[slug]/page.tsx",
+    "../../app/alternatives/[slug]/page.tsx",
+    "../../app/preview/[slug]/page.tsx",
+    "../../components/AlternativeLayout.tsx",
+  ],
 };
 
 describe("public copy", () => {

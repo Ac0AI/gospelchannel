@@ -97,7 +97,7 @@ export default async function CompareGuidePage({ params }: CompareGuidePageProps
       about: [
         "Church choice",
         "Church comparison guide",
-        "Church profile evidence",
+        "Church details",
       ],
       mentions: [
         { name: "GospelChannel church profile database", url: "https://gospelchannel.com/church" },
@@ -173,13 +173,13 @@ export default async function CompareGuidePage({ params }: CompareGuidePageProps
       </section>
 
       <section className="mt-12">
-        <p className="gc-eyebrow">Profile evidence</p>
+        <p className="gc-eyebrow">Churches to explore</p>
         <h2 className="mt-3 font-serif text-3xl font-semibold tracking-[-0.01em] text-espresso sm:text-4xl">
-          Compare the guide against real profiles.
+          See how this choice looks in local churches.
         </h2>
         <p className="mt-3 max-w-[680px] text-sm leading-[1.7] text-warm-brown sm:text-base">
-          These examples come from the GospelChannel profile database. Use them as proof points, then
-          open each profile for music, service details, location, videos, and first-visit signals.
+          These examples come from the GospelChannel church directory. Use them to explore worship music,
+          service details, location, videos, and first-visit information for each church.
         </p>
         <div className="mt-8 space-y-10">
           {evidenceGroups.map((group) => (

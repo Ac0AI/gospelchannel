@@ -65,7 +65,7 @@ export default async function AlternativePage({
       about: [
         "Church finder comparison",
         "Church choice",
-        "Church profile evidence",
+        "Church details",
       ],
       mentions: [
         { name: "GospelChannel church profile database", url: `${SITE_URL}/church` },
@@ -78,12 +78,12 @@ export default async function AlternativePage({
       { name: `${data.competitor_name} alternative`, url },
     ]),
     buildItemListSchema({
-      name: `${data.competitor_name} alternative decision path`,
+      name: `${data.competitor_name} alternative guide`,
       items: [
         { name: "Understand the church-finder tradeoff", url },
         { name: "Take the Church Fit Quiz", url: `${SITE_URL}/guides/church-fit-quiz` },
         { name: "Use the first-visit guide", url: `${SITE_URL}/guides/first-visit-guide` },
-        { name: "Verify the answer in church profiles", url: `${SITE_URL}/church` },
+        { name: "Explore church details", url: `${SITE_URL}/church` },
       ],
     }),
     {
