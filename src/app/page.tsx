@@ -9,6 +9,8 @@ import {
   getHomepageShowcaseChurches,
 } from "@/lib/content";
 import { getClaimedChurchSlugs } from "@/lib/church";
+import { buildItemListSchema } from "@/lib/seo-schema";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 export const revalidate = 3600;
 
@@ -30,11 +32,46 @@ const TOP_CITIES: Array<{ name: string; country: string; slug: string }> = [
   { name: "Amsterdam", country: "NL", slug: "amsterdam" },
 ];
 
+const HOME_DECISION_PATHS = [
+  {
+    question: "I'm not sure what kind of church is right for me.",
+    answer: "Take the Church Fit Quiz to narrow down what matters, then explore churches that match.",
+    guideHref: "/guides/church-fit-quiz",
+    guideLabel: "Take the Church Fit Quiz",
+    proofHref: "/church",
+    proofLabel: "Browse all churches",
+  },
+  {
+    question: "Worship style matters most to me.",
+    answer: "Find the worship style that feels familiar, then listen to music and explore matching churches.",
+    guideHref: "/guides/worship-style-match",
+    guideLabel: "Find my worship style",
+    proofHref: "/church/churches-with-worship-music",
+    proofLabel: "Churches with worship music",
+  },
+  {
+    question: "I want a church I can visit this Sunday.",
+    answer: "Find churches with published service times, then compare location and what each community is like.",
+    guideHref: "/guides/first-visit-guide",
+    guideLabel: "Plan my first visit",
+    proofHref: "/church/churches-with-service-times",
+    proofLabel: "See Sunday service times",
+  },
+  {
+    question: "Tradition or theology matters to me.",
+    answer: "Compare denominations in plain language, then explore churches in that tradition.",
+    guideHref: "/guides/denominations-comparison",
+    guideLabel: "Compare denominations",
+    proofHref: "/church/denomination",
+    proofLabel: "Browse by denomination",
+  },
+];
+
 function buildHomeFaqSchema(churchCountLabel: string, countryCount: number) {
   const questions: Array<{ q: string; a: string }> = [
     {
       q: "What is GospelChannel?",
-      a: "GospelChannel helps you find the right church before your first visit. You can compare worship style, tradition, language, service details, and community signals, then tune in to each church's page for a clearer feel before Sunday.",
+      a: "GospelChannel helps you find the right church before your first visit. Compare worship style, tradition, language, service times, location, and visitor details on each church page before Sunday.",
     },
     {
       q: "What are the best gospel songs for worship in 2026?",
@@ -50,13 +87,13 @@ function buildHomeFaqSchema(churchCountLabel: string, countryCount: number) {
     },
     {
       q: "Is GospelChannel free to browse?",
-      a: "Yes. GospelChannel is completely free. It helps you compare churches before your first visit, then tune in to each church's page through music, videos, service details, and community context.",
+      a: "Yes. GospelChannel is completely free. It helps you compare churches before your first visit, then verify each profile through music, videos, service details, and community context.",
     },
   ];
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    description: `Answers to common questions about GospelChannel — a free directory of ${churchCountLabel} churches across ${countryCount} countries, helping people compare fit before their first visit.`,
+    description: `Answers to common questions about GospelChannel — a free church directory of ${churchCountLabel} churches across ${countryCount} countries, with worship style, tradition, location, language, and service times.`,
     mainEntity: questions.map(({ q, a }) => ({
       "@type": "Question",
       name: q,
@@ -64,6 +101,48 @@ function buildHomeFaqSchema(churchCountLabel: string, countryCount: number) {
       acceptedAnswer: { "@type": "Answer", text: a },
     })),
   };
+}
+
+function buildHomeSchema(churchCountLabel: string, countryCount: number) {
+  return [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "GospelChannel",
+      url: "https://gospelchannel.com",
+      description: `A free church directory of ${churchCountLabel} churches across ${countryCount} countries.`,
+      potentialAction: {
+        "@type": "SearchAction",
+        target: "https://gospelchannel.com/church?q={search_term_string}",
+        "query-input": "required name=search_term_string",
+      },
+      about: [
+        { "@type": "Thing", name: "Church directory" },
+        { "@type": "Thing", name: "Church service times and visitor information" },
+        { "@type": "Thing", name: "Worship style" },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      name: "GospelChannel",
+      url: "https://gospelchannel.com",
+      description: `Find the right church across ${churchCountLabel} churches in ${countryCount} countries by exploring worship style, tradition, location, language, and service times.`,
+      isPartOf: {
+        "@type": "WebSite",
+        name: "GospelChannel",
+        url: "https://gospelchannel.com",
+      },
+    },
+    buildItemListSchema({
+      name: "GospelChannel church search options",
+      items: HOME_DECISION_PATHS.map((path) => ({
+        name: path.question,
+        url: `https://gospelchannel.com${path.guideHref}`,
+      })),
+    }),
+    buildHomeFaqSchema(churchCountLabel, countryCount),
+  ];
 }
 
 export default async function HomePage() {
@@ -75,14 +154,14 @@ export default async function HomePage() {
   ]);
   const churchCountLabel = stats.churchCountLabel;
   const countryCount = stats.countryCount;
-  const homeFaqSchema = buildHomeFaqSchema(churchCountLabel, countryCount);
+  const homeSchema = buildHomeSchema(churchCountLabel, countryCount);
   const featured = showcaseChurches.slice(0, 48);
   const surpriseSlugs = showcaseChurches.slice(0, 48).map((church) => church.slug);
   const churchNames = await getChurchNamesBySlugsAsync(recentPrayers.map((prayer) => prayer.churchSlug));
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homeFaqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(homeSchema) }} />
 
       {/* 1. Cinematic full-bleed hero */}
       <HomeHero surpriseSlugs={surpriseSlugs} churchCountLabel={churchCountLabel} />
@@ -97,6 +176,62 @@ export default async function HomePage() {
           Free, no ads, no tracking
         </p>
       </div>
+
+      {/* Find your church */}
+      <section className="mx-auto max-w-[1280px] px-5 pt-16 sm:px-12 sm:pt-20">
+        <div className="rounded-[28px] border border-rose-gold/[0.16] bg-white p-6 shadow-[0_18px_55px_rgba(72,39,24,0.06)] sm:p-8 lg:p-10">
+          <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+            <div>
+              <p className="gc-eyebrow">Find your church</p>
+              <h2 className="mt-3 font-serif text-3xl font-semibold tracking-[-0.01em] text-espresso sm:text-[44px]">
+                Start with what matters to you.
+              </h2>
+              <p className="mt-4 max-w-[520px] text-base leading-relaxed text-warm-brown">
+                Choose the part of church life that matters most right now, from worship style and tradition
+                to location, language, and service times. We&apos;ll help you explore churches that fit.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-2">
+                {["worship style", "location", "tradition", "this Sunday"].map((label) => (
+                  <span
+                    key={label}
+                    className="rounded-full border border-rose-gold/20 bg-linen px-3 py-1 text-xs font-semibold text-warm-brown"
+                  >
+                    {label}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {HOME_DECISION_PATHS.map((path) => (
+                <article key={path.question} className="rounded-[18px] border border-rose-gold/[0.14] bg-linen-deep p-5">
+                  <h3 className="font-serif text-xl font-semibold tracking-[-0.01em] text-espresso">
+                    {path.question}
+                  </h3>
+                  <p className="mt-2 text-sm leading-[1.65] text-warm-brown">
+                    {path.answer}
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-3">
+                    <Link
+                      href={path.guideHref}
+                      prefetch={false}
+                      className="text-sm font-bold text-rose-gold transition-colors hover:text-rose-gold-deep"
+                    >
+                      {path.guideLabel} &rarr;
+                    </Link>
+                    <Link
+                      href={path.proofHref}
+                      prefetch={false}
+                      className="text-sm font-semibold text-warm-brown transition-colors hover:text-espresso"
+                    >
+                      {path.proofLabel}
+                    </Link>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* 3. Featured churches — magazine grid */}
       <section className="mx-auto max-w-[1280px] px-5 pt-20 sm:px-12">

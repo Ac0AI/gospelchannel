@@ -20,7 +20,31 @@ const IGNORE_PATTERNS = [
   /localhost/i,
   /\.(png|jpg|jpeg|gif|svg|webp)$/i,
   /@2x\./i,
+  // Junk classes found in the 2026-07-07 DB hygiene sweep (1,823 bad rows):
+  /@threads\.net$/i,
+  /\.frontend$/i,
+  /churchemailaddress/i,
+  /^enteryour@/i,
+  /^test@/i,
+  /placeholder/i,
+  /@yourdomain/i,
+  /@yourchurch/i,
+  /^[0-9a-f]{24,}@/i, // hex tokens (Sentry-style ingest keys on any domain)
+  /^example@/i,
+  /^%/, // URL-encoded prefix (e.g. "%20info@...") — scrape artifact
 ];
+
+/**
+ * Format + junk-pattern gate only (no domain policy). Use this wherever an
+ * email is about to be persisted: it rejects scrape artifacts (image
+ * filenames, tracking keys, placeholders) without constraining which real
+ * domains are acceptable.
+ */
+export function isPlausibleContactEmail(email) {
+  const lower = String(email || "").toLowerCase().trim();
+  if (!/^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$/.test(lower)) return false;
+  return !IGNORE_PATTERNS.some((pattern) => pattern.test(lower));
+}
 
 const PUBLIC_EMAIL_DOMAIN_PATTERNS = [
   /gmail\.com$/i,

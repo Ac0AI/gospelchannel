@@ -8,6 +8,8 @@ type ChurchDirectoryEnrichmentHint = {
   serviceTimes?: string;
   summary?: string;
   languages?: string[];
+  childrenMinistry?: boolean;
+  youthMinistry?: boolean;
 };
 
 export type ChurchDirectoryEntry = {
@@ -19,6 +21,7 @@ export type ChurchDirectoryEntry = {
   location?: string;
   musicStyle?: string[];
   denomination?: string;
+  language?: string;
   displayReady?: boolean;
   promotionTier?: "promotable" | "catalog_only";
   displayScore?: number;
@@ -279,6 +282,13 @@ function hasMusicSignal(church: Pick<ChurchDirectoryEntry, "playlistCount" | "sp
   return getPlaylistCount(church) > 0 || Boolean(church.spotifyUrl);
 }
 
+function hasKidsSignal(church: Pick<ChurchDirectoryEntry, "enrichmentHint" | "description" | "name">): boolean {
+  if (church.enrichmentHint?.childrenMinistry || church.enrichmentHint?.youthMinistry) return true;
+
+  const text = normalize(`${church.name} ${church.description} ${church.enrichmentHint?.summary ?? ""}`);
+  return /\b(kids?|children|childrens|youth|students?|famil(?:y|ies)|sunday school)\b/.test(text);
+}
+
 export function buildChurchMatchReasons(church: ChurchDirectoryEntry, filters: ChurchDirectoryFilters = {}): string[] {
   const reasons: string[] = [];
   const query = filters.query?.trim();
@@ -301,7 +311,7 @@ export function buildChurchMatchReasons(church: ChurchDirectoryEntry, filters: C
     reasons.push(`${filters.language} language`);
   }
 
-  if (filters.hasKids) {
+  if (filters.hasKids && hasKidsSignal(church)) {
     reasons.push("Kids/youth ministry");
   }
 
@@ -349,6 +359,10 @@ export function filterChurchDirectory(
 
   if (options.language) {
     filtered = filtered.filter((church) => matchesLanguage(church, options.language!));
+  }
+
+  if (options.hasKids) {
+    filtered = filtered.filter((church) => hasKidsSignal(church));
   }
 
   if (options.hasServiceTimes) {

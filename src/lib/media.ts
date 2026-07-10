@@ -30,6 +30,21 @@ export function devMediaImage(src: string): string {
   return `/api/dev-media${mediaPath}`;
 }
 
+const SPOTIFY_EDGE_ART_URL = /^https:\/\/image-cdn-[a-z0-9]+\.spotifycdn\.com\/image\/([A-Za-z0-9]+)$/;
+
+/**
+ * Spotify album art is content-addressed: the same image ID is served both
+ * from the canonical i.scdn.co (in our CSP img-src allowlist) and from
+ * regional image-cdn-*.spotifycdn.com edges (not allowlisted, so browsers
+ * block them). Rewrite edge hosts to the canonical one.
+ */
+export function rewriteSpotifyArtUrl(value: string | null | undefined): string | null {
+  const trimmed = value?.trim();
+  if (!trimmed) return null;
+  const match = SPOTIFY_EDGE_ART_URL.exec(trimmed);
+  return match ? `https://i.scdn.co/image/${match[1]}` : trimmed;
+}
+
 export function rewriteLegacyMediaUrl(value: string | null | undefined): string | undefined {
   const trimmed = value?.trim();
   if (!trimmed) return undefined;

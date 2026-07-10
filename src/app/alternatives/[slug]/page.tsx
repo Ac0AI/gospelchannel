@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { AlternativeLayout } from "@/components/AlternativeLayout";
 import { ALTERNATIVES } from "@/lib/alternatives-data";
-import { buildArticleSchema, buildBreadcrumbSchema } from "@/lib/seo-schema";
+import { buildArticleSchema, buildBreadcrumbSchema, buildItemListSchema } from "@/lib/seo-schema";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 const SITE_URL = "https://gospelchannel.com";
 
@@ -32,6 +33,11 @@ export async function generateMetadata({
       siteName: "GospelChannel",
       type: "article",
     },
+    twitter: {
+      card: "summary_large_image",
+      title: data.meta_title,
+      description: data.meta_description,
+    },
   };
 }
 
@@ -56,12 +62,30 @@ export default async function AlternativePage({
       url,
       headline: `${data.competitor_name} alternative — GospelChannel`,
       description: data.meta_description,
+      about: [
+        "Church finder comparison",
+        "Church choice",
+        "Church details",
+      ],
+      mentions: [
+        { name: "GospelChannel church profile database", url: `${SITE_URL}/church` },
+        { name: "GospelChannel church decision guides", url: `${SITE_URL}/guides` },
+      ],
     }),
     buildBreadcrumbSchema([
       { name: "GospelChannel", url: SITE_URL },
       { name: "Alternatives", url: `${SITE_URL}/alternatives` },
       { name: `${data.competitor_name} alternative`, url },
     ]),
+    buildItemListSchema({
+      name: `${data.competitor_name} alternative guide`,
+      items: [
+        { name: "Understand the church-finder tradeoff", url },
+        { name: "Take the Church Fit Quiz", url: `${SITE_URL}/guides/church-fit-quiz` },
+        { name: "Use the first-visit guide", url: `${SITE_URL}/guides/first-visit-guide` },
+        { name: "Explore church details", url: `${SITE_URL}/church` },
+      ],
+    }),
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
@@ -77,7 +101,7 @@ export default async function AlternativePage({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}
       />
       <AlternativeLayout data={data} siblings={siblings} />
     </>

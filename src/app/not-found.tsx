@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Page not found – GospelChannel",
   description:
-    "This page does not exist. Head back to the homepage, search the directory, or take the church fit quiz.",
+    "This page does not exist. Head back to the homepage, search church profiles, or take the church fit quiz.",
   robots: { index: false, follow: true },
 };
 
@@ -45,7 +45,7 @@ export default function NotFound() {
               href="/church"
               className="rounded-full border border-rose-gold/30 px-7 py-3.5 text-sm font-semibold text-espresso transition-colors hover:bg-rose-gold/[0.06]"
             >
-              Search churches
+              Search church profiles
             </Link>
             <Link
               href="/guides/church-fit-quiz"

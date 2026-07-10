@@ -6,6 +6,7 @@ import {
   compositeScore,
   type CountryStats,
 } from "@/lib/european-church-tech-report";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 export const revalidate = 3600;
 
@@ -223,7 +224,7 @@ export default async function EuropeanChurchTechReportPage() {
       <script
         type="application/ld+json"
         suppressHydrationWarning
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(datasetSchema) }}
       />
       {/* ── Visual anchor: Europe map ── */}
       <div className="relative mx-auto mb-10 max-w-3xl overflow-hidden rounded-2xl">

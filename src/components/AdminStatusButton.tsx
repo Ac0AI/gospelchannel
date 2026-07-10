@@ -18,10 +18,17 @@ const variantClass = {
   neutral: "bg-gray-200 text-gray-700 hover:bg-gray-300",
 };
 
+type StatusResponse = {
+  success: true;
+  createdSlug?: string | null;
+  existingSlug?: string | null;
+};
+
 export function AdminStatusButton({ table, id, status, label, variant = "neutral" }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState<{ label: string; slug: string } | null>(null);
 
   const handleClick = async () => {
     const action = variant === "reject" ? "reject" : variant === "approve" ? "approve" : "update";
@@ -31,7 +38,15 @@ export function AdminStatusButton({ table, id, status, label, variant = "neutral
     setError("");
 
     try {
-      await postAdminAction("/api/admin/status", { table, id, status });
+      const result = await postAdminAction<{ table: string; id: string; status: string }, StatusResponse>(
+        "/api/admin/status",
+        { table, id, status },
+      );
+      if (result.createdSlug) {
+        setNotice({ label: "Church page created:", slug: result.createdSlug });
+      } else if (result.existingSlug) {
+        setNotice({ label: "Already in catalog:", slug: result.existingSlug });
+      }
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to update status");
@@ -51,6 +66,14 @@ export function AdminStatusButton({ table, id, status, label, variant = "neutral
         {loading ? "..." : label}
       </button>
       {error ? <span className="text-xs font-semibold text-red-700">{error}</span> : null}
+      {notice ? (
+        <span className="text-xs font-semibold text-emerald-700">
+          {notice.label}{" "}
+          <a href={`/church/${notice.slug}`} target="_blank" rel="noreferrer" className="underline">
+            {notice.slug}
+          </a>
+        </span>
+      ) : null}
     </div>
   );
 }

@@ -41,6 +41,7 @@ const STATIC_ROUTE_PATHS = [
   "/for-churches",
   "/church/suggest",
   "/guides",
+  "/guides/church-choice-answers",
   "/guides/church-fit-quiz",
   "/guides/first-visit-guide",
   "/guides/worship-style-match",
@@ -51,6 +52,7 @@ const STATIC_ROUTE_PATHS = [
   "/alternatives/churchfinder",
   "/alternatives/gospel-coalition",
   "/alternatives/mychurchfinder",
+  "/for",
   "/for/expats",
   "/for/students",
   "/for/young-adults",
@@ -60,6 +62,15 @@ const STATIC_ROUTE_PATHS = [
   "/guides/worship-styles-explained",
   "/guides/denominations-comparison",
   "/guides/how-to-find-the-right-church",
+  "/contact",
+  "/privacy",
+  "/church/churches-with-service-times",
+  "/church/churches-with-worship-music",
+  "/church/english-speaking-churches",
+  "/church/family-friendly-churches",
+  "/church/charismatic-churches-in-london",
+  "/church/best-worship-churches",
+  "/network",
 ] as const;
 
 export type SitemapEntry = {
@@ -520,17 +531,13 @@ export const getSitemapIndexXml = unstable_cache(
   { revalidate: 3600, tags: [CHURCH_INDEX_TAG] },
 );
 
-export const getSitemapChunkXml = unstable_cache(
-  async (id: number): Promise<string | null> => {
-    const entries = await buildSitemapEntriesForChunk(id);
-    if (entries.length === 0) {
-      return null;
-    }
-    return renderUrlsetXml(entries);
-  },
-  ["sitemap-chunk-xml-v1"],
-  { revalidate: 3600, tags: [CHURCH_INDEX_TAG] },
-);
+export async function getSitemapChunkXml(id: number): Promise<string | null> {
+  const entries = await buildSitemapEntriesForChunk(id);
+  if (entries.length === 0) {
+    return null;
+  }
+  return renderUrlsetXml(entries);
+}
 
 function escapeXml(s: string): string {
   return s

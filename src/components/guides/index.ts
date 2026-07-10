@@ -6,3 +6,5 @@ export { GuideTip } from "./GuideTip";
 export { GuideWorryCard } from "./GuideWorryCard";
 export { GuideCTA } from "./GuideCTA";
 export { GuideRelated } from "./GuideRelated";
+export { GuideProofLinks } from "./GuideProofLinks";
+export { GuideChurchEvidence, type GuideChurchEvidenceGroup } from "./GuideChurchEvidence";

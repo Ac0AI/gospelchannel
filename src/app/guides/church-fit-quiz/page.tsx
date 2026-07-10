@@ -1,33 +1,98 @@
 import type { Metadata } from "next";
-import { GuideRelated } from "@/components/guides";
+import { GuideChurchEvidence, GuideProofLinks, GuideRelated, type GuideChurchEvidenceGroup } from "@/components/guides";
 import { ChurchFitQuizClient } from "@/components/tools/ChurchFitQuizClient";
 import { ToolPageTracker } from "@/components/tools/ToolPageTracker";
-import { buildGuideSchema } from "@/lib/seo-schema";
-import { buildDiscoveryLanes } from "@/lib/tooling";
+import { getChurchIndexPageData } from "@/lib/church";
+import { buildGuideSchema, buildItemListSchema } from "@/lib/seo-schema";
+import {
+  buildDiscoveryLanes,
+  getLaneDirectoryFilters,
+  toToolChurchPreview,
+} from "@/lib/tooling";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 export const revalidate = 3600;
 
+const PAGE_URL = "https://gospelchannel.com/guides/church-fit-quiz";
+const PAGE_TITLE = "Church Fit Quiz";
+const META_DESCRIPTION =
+  "Answer seven fast questions about worship style, tradition, and Sunday priorities to find where you'll fit before your first visit.";
+
 export const metadata: Metadata = {
-  title: "Church Fit Quiz",
-  description:
-    "Answer seven fast questions about worship style, tradition, and Sunday priorities to find where you'll fit before your first visit.",
-  alternates: { canonical: "https://gospelchannel.com/guides/church-fit-quiz" },
+  title: PAGE_TITLE,
+  description: META_DESCRIPTION,
+  alternates: { canonical: PAGE_URL },
+  openGraph: {
+    title: PAGE_TITLE,
+    description: META_DESCRIPTION,
+    url: PAGE_URL,
+    siteName: "GospelChannel",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: PAGE_TITLE,
+    description: META_DESCRIPTION,
+  },
 };
 
+function buildEvidenceSchema(groups: GuideChurchEvidenceGroup[]) {
+  return groups
+    .filter((group) => group.churches.length > 0)
+    .map((group) =>
+      buildItemListSchema({
+        name: group.title,
+        items: group.churches.map((church) => ({
+          name: church.name,
+          url: `https://gospelchannel.com${church.href}`,
+        })),
+      }),
+    );
+}
+
 export default async function ChurchFitQuizPage() {
-  const lanes = buildDiscoveryLanes([]);
+  const lanes = await Promise.all(
+    buildDiscoveryLanes([]).map(async (lane) => {
+      const page = await getChurchIndexPageData({
+        filters: getLaneDirectoryFilters(lane),
+        page: 1,
+        pageSize: 4,
+      });
+
+      return {
+        ...lane,
+        sampleChurches: page.pageItems.map(toToolChurchPreview),
+      };
+    }),
+  );
+  const evidenceGroups: GuideChurchEvidenceGroup[] = lanes.slice(0, 4).map((lane) => ({
+    id: lane.id,
+    title: lane.title,
+    description: lane.whyItFits,
+    href: lane.browse.href,
+    linkLabel: lane.browse.label,
+    churches: lane.sampleChurches.slice(0, 3),
+  }));
   const schema = buildGuideSchema({
     slug: "church-fit-quiz",
     headline: "Church Fit Quiz",
-    description:
-      "Answer seven fast questions about worship style, tradition, and Sunday priorities to find where you'll fit before your first visit.",
+    description: META_DESCRIPTION,
+  });
+  const decisionLaneSchema = buildItemListSchema({
+    name: "Church fit quiz decision lanes",
+    items: lanes.map((lane) => ({
+      name: lane.title,
+      url: `https://gospelchannel.com${lane.browse.href}`,
+    })),
   });
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd([...schema, decisionLaneSchema, ...buildEvidenceSchema(evidenceGroups)]),
+        }}
       />
       <ToolPageTracker toolName="church_fit_quiz" />
 
@@ -46,11 +111,46 @@ export default async function ChurchFitQuizPage() {
         </div>
       </section>
 
+      <section className="mx-auto max-w-[980px] px-5 pt-10 sm:px-12">
+        <GuideProofLinks
+          title="The quiz suggests a direction; check the details"
+          intro="Treat the quiz result as a starting point, then browse matching churches to check worship style, denomination, service details, music, location, and visitor information."
+          links={[
+            {
+              href: "/church/style",
+              label: "Browse by worship style",
+              description: "Use this when the quiz points mainly to room sound and Sunday energy.",
+            },
+            {
+              href: "/church/denomination",
+              label: "Browse by tradition",
+              description: "Use this when the quiz points mainly to theology, structure, or church background.",
+            },
+            {
+              href: "/church/churches-with-service-times",
+              label: "Check visit-ready profiles",
+              description: "Narrow to churches that publish concrete service times before you plan a Sunday.",
+            },
+            {
+              href: "/church/churches-with-worship-music",
+              label: "See worship details",
+              description: "Open profiles with music signals so the match is not just a label.",
+            },
+          ]}
+        />
+      </section>
+
       <section className="mx-auto max-w-[1100px] px-5 py-12 sm:px-12 sm:py-14">
         <ChurchFitQuizClient lanes={lanes} />
       </section>
 
-      <section className="mx-auto max-w-[720px] px-5 pb-16 sm:px-12">
+      <section className="mx-auto max-w-[1100px] px-5 pb-16 sm:px-12">
+        <GuideChurchEvidence
+          title="Sample lanes the quiz can send you toward"
+          intro="These examples are church lists, not your quiz result. After answering, the tool opens churches that match your worship, tradition, location, and practical needs."
+          groups={evidenceGroups}
+          toolName="church_fit_quiz_guide"
+        />
         <GuideRelated current="church-fit-quiz" />
       </section>
     </>

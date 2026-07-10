@@ -1,12 +1,47 @@
 import Link from "next/link";
-import type { ForAudienceData } from "@/lib/for-audience-data";
+import { getAudienceProofRoutes, type ForAudienceData } from "@/lib/for-audience-data";
 
 type Props = {
   data: ForAudienceData;
   siblings: Array<{ slug: string; audience_name: string }>;
 };
 
+const DEFAULT_PROFILE_SIGNALS = [
+  "service times",
+  "worship music",
+  "location",
+  "tradition",
+  "language",
+  "visitor cues",
+];
+
+function getAudienceProofSignals(slug: string): string[] {
+  switch (slug) {
+    case "expats":
+      return ["language", "country", "city", "worship style", "service times", "international cues"];
+    case "students":
+      return ["city", "transport fit", "worship style", "student cues", "music", "service times"];
+    case "young-adults":
+      return ["worship style", "music", "city", "community cues", "tradition", "service rhythm"];
+    case "families":
+      return ["kids ministry", "service times", "drive fit", "tradition", "visitor details", "community cues"];
+    case "new-believers":
+      return ["first-visit cues", "plain-language profile", "service times", "tradition", "worship style", "welcome signals"];
+    case "deconstructing":
+      return ["tradition fit", "worship preview", "profile copy", "prayer options", "service rhythm", "visitor signals"];
+    default:
+      return DEFAULT_PROFILE_SIGNALS;
+  }
+}
+
 export function ForAudienceLayout({ data, siblings }: Props) {
+  const proofSignals = getAudienceProofSignals(data.slug);
+  const primarySolution = data.solutions[0];
+  const secondarySolution = data.solutions[1] ?? data.solutions[0];
+  const proofRoutes = getAudienceProofRoutes(data, 2);
+  const primaryProofRoute = proofRoutes[0] ?? { href: "/church", label: "Church profiles" };
+  const secondaryProofRoute = proofRoutes[1];
+
   return (
     <article className="mx-auto max-w-[1080px] px-5 pb-24 sm:px-12">
       {/* Hero */}
@@ -23,18 +58,96 @@ export function ForAudienceLayout({ data, siblings }: Props) {
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
-            href="/church"
+            href={primaryProofRoute.href}
             className="rounded-full bg-rose-gold px-6 py-3 text-sm font-bold text-white transition-all duration-150 hover:-translate-y-px hover:bg-rose-gold-deep hover:shadow-[0_8px_24px_rgba(176,106,80,0.3)]"
           >
-            Browse the directory
+            {primaryProofRoute.label}
           </Link>
-          <Link
-            href="/church/country"
-            className="rounded-full border border-rose-gold/30 px-6 py-3 text-sm font-semibold text-espresso transition-colors hover:bg-rose-gold/[0.06]"
-          >
-            Browse by country
-          </Link>
+          {secondaryProofRoute ? (
+            <Link
+              href={secondaryProofRoute.href}
+              className="rounded-full border border-rose-gold/30 px-6 py-3 text-sm font-semibold text-espresso transition-colors hover:bg-rose-gold/[0.06]"
+            >
+              {secondaryProofRoute.label}
+            </Link>
+          ) : null}
         </div>
+      </section>
+
+      {/* Audience search model */}
+      <section className="mt-14 rounded-[24px] border border-rose-gold/[0.16] bg-white p-6 shadow-[0_18px_55px_rgba(72,39,24,0.06)] sm:p-8">
+        <p className="gc-eyebrow">Quick answer</p>
+        <h2 className="mt-3 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-3xl">
+          Start with the {data.audience_name.toLowerCase()} question, then check the church details.
+        </h2>
+        <p className="mt-3 max-w-[820px] text-sm leading-[1.7] text-warm-brown sm:text-base">
+          Start with churches that match your situation, then compare service times, location,
+          worship, language, kids information, and visitor details before choosing a Sunday.
+        </p>
+        <div className="mt-5 flex flex-wrap gap-2">
+          {proofSignals.map((signal) => (
+            <span
+              key={signal}
+              className="rounded-full border border-rose-gold/20 bg-linen px-3 py-1 text-xs font-semibold text-warm-brown"
+            >
+              {signal}
+            </span>
+          ))}
+        </div>
+        <div className="mt-7 grid gap-4 md:grid-cols-3">
+          <article className="rounded-[18px] border border-rose-gold/[0.14] bg-linen-deep p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-mauve">Step 1</p>
+            <h3 className="mt-2 font-serif text-xl font-semibold tracking-[-0.01em] text-espresso">
+              Name the real constraint
+            </h3>
+            <p className="mt-2 text-sm leading-[1.65] text-warm-brown">
+              Use the audience guide to decide what actually drives this search: geography,
+              worship sound, life stage, family needs, language, or trust.
+            </p>
+          </article>
+          <article className="rounded-[18px] border border-rose-gold/[0.14] bg-linen-deep p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-mauve">Step 2</p>
+            <h3 className="mt-2 font-serif text-xl font-semibold tracking-[-0.01em] text-espresso">
+              Read the matching guide
+            </h3>
+            <p className="mt-2 text-sm leading-[1.65] text-warm-brown">
+              {primarySolution?.body ?? data.solution_lede}
+            </p>
+            {primarySolution ? (
+              <Link
+                href={primarySolution.href}
+                className="mt-4 inline-flex text-sm font-bold text-rose-gold transition-colors hover:text-rose-gold-deep"
+              >
+                {primarySolution.cta} &rarr;
+              </Link>
+            ) : null}
+          </article>
+          <article className="rounded-[18px] border border-rose-gold/[0.14] bg-linen-deep p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-mauve">Step 3</p>
+            <h3 className="mt-2 font-serif text-xl font-semibold tracking-[-0.01em] text-espresso">
+              Check before visiting
+            </h3>
+            <p className="mt-2 text-sm leading-[1.65] text-warm-brown">
+              Open church pages and check the practical details before spending a Sunday:
+              service details, music, location, language, and visitor fit where available.
+            </p>
+            <Link
+              href={primaryProofRoute.href}
+              className="mt-4 inline-flex text-sm font-bold text-rose-gold transition-colors hover:text-rose-gold-deep"
+            >
+              Browse matching churches &rarr;
+            </Link>
+          </article>
+        </div>
+        {secondarySolution ? (
+          <p className="mt-5 text-sm leading-[1.65] text-muted-warm">
+            Another guide to consider:{" "}
+            <Link href={secondarySolution.href} className="font-semibold text-rose-gold hover:text-rose-gold-deep">
+              {secondarySolution.title}
+            </Link>
+            .
+          </p>
+        ) : null}
       </section>
 
       {/* Pains */}
@@ -162,7 +275,7 @@ export function ForAudienceLayout({ data, siblings }: Props) {
             href="/church"
             className="rounded-full bg-rose-gold px-6 py-3 text-sm font-bold text-white transition-all duration-150 hover:-translate-y-px hover:bg-rose-gold-deep hover:shadow-[0_8px_24px_rgba(176,106,80,0.3)]"
           >
-            Browse the directory
+            Open church profiles
           </Link>
           <Link
             href="/guides/church-fit-quiz"

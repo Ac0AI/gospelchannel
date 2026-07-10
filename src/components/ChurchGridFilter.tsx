@@ -167,7 +167,7 @@ export function ChurchGridFilter({ churches, totalCount }: ChurchGridFilterProps
           prefetch={false}
           className="inline-flex rounded-full border border-blush px-6 py-2.5 text-sm font-semibold text-rose-gold transition-colors hover:border-rose-300 hover:bg-blush-light"
         >
-          Explore all {totalCount} churches →
+          Explore all {totalCount.toLocaleString("en-US")} churches →
         </Link>
       </div>
     </section>

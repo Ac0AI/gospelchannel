@@ -30,8 +30,8 @@ export async function generateMetadata({ params, searchParams }: DenominationPag
   if (!data) return { title: "Not Found" };
 
   const basePath = `https://gospelchannel.com/church/denomination/${slug}`;
-  const title = `${data.label} Churches, Playlists & Service Times`;
-  const description = `Explore ${data.totalCount.toLocaleString("en-US")} ${data.label.toLowerCase()} churches. Browse worship playlists, live videos, service times, and community pages on GospelChannel.`;
+  const title = `${data.label} Churches: Worship, Service Times & Locations`;
+  const description = `A list of ${data.totalCount.toLocaleString("en-US")} ${data.label.toLowerCase()} churches based on published worship style, service times, location, language, and visitor details.`;
 
   return {
     title,
@@ -43,6 +43,11 @@ export async function generateMetadata({ params, searchParams }: DenominationPag
       url: basePath,
       type: "website",
       siteName: "GospelChannel",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
     },
     ...(page > 1 ? { robots: { index: false, follow: true } } : {}),
   };
@@ -61,7 +66,7 @@ export default async function DenominationPage({ params, searchParams }: Denomin
     <ChurchCollectionPage
       eyebrow="Browse by Tradition"
       title={`${label} Churches`}
-      description={`Explore churches with ${label.toLowerCase()} roots, playlists, service times, and community pages.`}
+      description={`Explore churches in the ${label.toLowerCase()} tradition, then compare worship style, service times, location, and community details before visiting.`}
       basePath={basePath}
       currentPage={currentPage}
       totalPages={totalPages}

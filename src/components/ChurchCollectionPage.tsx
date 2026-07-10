@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ChurchDirectoryGrid } from "@/components/ChurchDirectoryGrid";
+import { extractCity } from "@/lib/church-directory";
 import type { HubEditorial } from "@/lib/hub-content";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 type ChurchCollectionPageItem = {
   slug: string;
@@ -53,6 +55,29 @@ function splitCollectionTitle(title: string): { lead: string; tail: string } {
   return { lead: trimmed.slice(0, space), tail: trimmed.slice(space + 1) };
 }
 
+function getCollectionTarget(title: string): string {
+  return title.trim().replace(/\s+churches$/i, "").trim();
+}
+
+function truncateText(value: string | undefined, maxLength = 140): string {
+  const normalized = value?.replace(/\s+/g, " ").trim() ?? "";
+  if (normalized.length <= maxLength) return normalized;
+  return `${normalized.slice(0, maxLength - 3).trimEnd()}...`;
+}
+
+function getChurchDetailsLine(church: ChurchCollectionPageItem): string {
+  const serviceTimes = truncateText(church.enrichmentHint?.serviceTimes, 96);
+  if (serviceTimes) return `Service times: ${serviceTimes}`;
+
+  const styles = church.musicStyle?.filter(Boolean).slice(0, 2);
+  if (styles && styles.length > 0) return `Worship style: ${styles.join(", ")}`;
+
+  const location = church.enrichmentHint?.location || church.location || church.country;
+  if (location) return `Location signal: ${location}`;
+
+  return truncateText(church.enrichmentHint?.summary || church.description, 120);
+}
+
 export function ChurchCollectionPage({
   eyebrow,
   title,
@@ -86,6 +111,24 @@ export function ChurchCollectionPage({
   // Tradition pages get the dark editorial hero; geo pages (city/country/style)
   // get the lighter linen-deep treatment with the stat strip.
   const isTradition = basePath.startsWith("/church/denomination/") || basePath.startsWith("/church/style/");
+  const decisionSections = currentPage === 1
+    ? relatedSections
+        .filter((section) => section.links.length > 0)
+        .slice(0, 3)
+        .map((section) => ({ ...section, links: section.links.slice(0, 6) }))
+    : [];
+  const quickAnswerSections = currentPage === 1
+    ? relatedSections
+        .filter((section) => section.links.length > 0)
+        .slice(0, 2)
+        .map((section) => ({ ...section, links: section.links.slice(0, 4) }))
+    : [];
+  const quickAnswerChurches = currentPage === 1 ? churches.slice(0, 3) : [];
+  const target = getCollectionTarget(title);
+  const quickAnswerLead = target
+    ? `GospelChannel lists ${totalCount.toLocaleString("en-US")} churches for ${target}. This list uses published location, worship, service-time, language, music, and visitor information where available. Open church profiles for the details that matter to your visit.`
+    : `GospelChannel lists ${totalCount.toLocaleString("en-US")} churches in this collection. This list uses published location, worship, service-time, language, music, and visitor information where available. Open church profiles for the details that matter to your visit.`;
+  const showQuickAnswer = currentPage === 1 && (quickAnswerSections.length > 0 || quickAnswerChurches.length > 0);
 
   const jsonLd: Array<Record<string, unknown>> = [
     {
@@ -95,6 +138,11 @@ export function ChurchCollectionPage({
       description,
       url: `https://gospelchannel.com${currentUrl}`,
       mainEntity: { "@id": `${canonicalUrl}#itemlist` },
+      about: [
+        { "@type": "Thing", name: "Church choice" },
+        { "@type": "Thing", name: "Church details" },
+        ...quickAnswerSections.map((section) => ({ "@type": "Thing", name: section.title })),
+      ],
       isPartOf: {
         "@type": "WebSite",
         name: "GospelChannel",
@@ -131,7 +179,7 @@ export function ChurchCollectionPage({
             ? {
                 address: {
                   "@type": "PostalAddress",
-                  ...(church.location ? { addressLocality: church.location } : {}),
+                  ...(extractCity(church.location) ? { addressLocality: extractCity(church.location) } : {}),
                   ...(church.country ? { addressCountry: church.country } : {}),
                 },
               }
@@ -155,7 +203,7 @@ export function ChurchCollectionPage({
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
 
       {/* Editorial hero */}
       {isTradition ? (
@@ -301,6 +349,116 @@ export function ChurchCollectionPage({
             {editorial.intro.map((paragraph, i) => (
               <p key={i}>{paragraph}</p>
             ))}
+          </div>
+        </section>
+      )}
+
+      {/* Quick answer */}
+      {showQuickAnswer && (
+        <section className="mx-auto max-w-[1080px] px-5 pt-12 sm:px-12 sm:pt-14">
+          <div className="border-y border-rose-gold/[0.12] py-8">
+            <p className="gc-eyebrow">Quick answer</p>
+            <h2 className="mt-2 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-3xl">
+              How to choose from this list.
+            </h2>
+            <p className="mt-3 max-w-[800px] text-sm leading-[1.7] text-warm-brown sm:text-base">
+              {quickAnswerLead}
+            </p>
+            <div className="mt-7 grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
+              {quickAnswerSections.length > 0 && (
+                <div>
+                  <h3 className="font-sans text-xs font-bold uppercase tracking-[0.16em] text-muted-warm">
+                    Best next filters
+                  </h3>
+                  <div className="mt-4 space-y-4">
+                    {quickAnswerSections.map((section) => (
+                      <div key={section.title}>
+                        <p className="text-sm font-semibold text-espresso">{section.title}</p>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {section.links.map((link) => (
+                            <Link
+                              key={link.href}
+                              href={link.href}
+                              className="inline-flex items-center gap-2 rounded-full border border-rose-gold/20 bg-white px-3.5 py-2 text-sm font-semibold text-warm-brown transition-colors hover:border-rose-gold/40 hover:text-espresso"
+                            >
+                              {link.label}
+                              {typeof link.count === "number" && (
+                                <span className="text-xs font-normal text-muted-warm">
+                                  ({link.count.toLocaleString("en-US")})
+                                </span>
+                              )}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {quickAnswerChurches.length > 0 && (
+                <div>
+                  <h3 className="font-sans text-xs font-bold uppercase tracking-[0.16em] text-muted-warm">
+                    Church details to inspect first
+                  </h3>
+                  <div className="mt-4 divide-y divide-rose-gold/[0.12] border-t border-rose-gold/[0.12]">
+                    {quickAnswerChurches.map((church) => (
+                      <div key={church.slug} className="py-3.5">
+                        <Link
+                          href={`/church/${church.slug}`}
+                          className="text-sm font-bold text-rose-gold transition-colors hover:text-rose-gold-deep"
+                        >
+                          {church.name} &rarr;
+                        </Link>
+                        <p className="mt-1 text-sm leading-[1.55] text-warm-brown">
+                          {getChurchDetailsLine(church)}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Decision filters */}
+      {decisionSections.length > 0 && (
+        <section className="mx-auto max-w-[1280px] px-5 pt-12 sm:px-12 sm:pt-14">
+          <div className="border-y border-rose-gold/[0.12] py-8">
+            <p className="gc-eyebrow">Narrow this search</p>
+            <h2 className="mt-2 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-3xl">
+              Start with the signal that matters most.
+            </h2>
+            <p className="mt-3 max-w-[700px] text-sm leading-[1.7] text-warm-brown sm:text-base">
+              Use these filters before opening individual church profiles. They turn a broad list into
+              a practical shortlist by location, worship style, tradition, and fit.
+            </p>
+            <div className="mt-7 grid gap-7 lg:grid-cols-3">
+              {decisionSections.map((section) => (
+                <div key={section.title}>
+                  <h3 className="font-sans text-xs font-bold uppercase tracking-[0.16em] text-muted-warm">
+                    {section.title}
+                  </h3>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {section.links.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className="inline-flex items-center gap-2 rounded-full border border-rose-gold/20 bg-white px-3.5 py-2 text-sm font-semibold text-warm-brown transition-colors hover:border-rose-gold/40 hover:text-espresso"
+                      >
+                        {link.label}
+                        {typeof link.count === "number" && (
+                          <span className="text-xs font-normal text-muted-warm">
+                            ({link.count.toLocaleString("en-US")})
+                          </span>
+                        )}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       )}

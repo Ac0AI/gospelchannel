@@ -1,13 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getChurchStatsAsync } from "@/lib/content";
+import { buildBreadcrumbSchema, buildItemListSchema } from "@/lib/seo-schema";
+import { serializeJsonLd } from "@/lib/json-ld";
+
+const SITE_URL = "https://gospelchannel.com";
+const PAGE_URL = `${SITE_URL}/about`;
 
 export async function generateMetadata(): Promise<Metadata> {
   const { churchCountLabel } = await getChurchStatsAsync();
   return {
     title: "About GospelChannel",
-    description: `GospelChannel helps you find the right church before your first visit by comparing worship style, tradition, language, and service details across ${churchCountLabel} churches.`,
-    alternates: { canonical: "https://gospelchannel.com/about" },
+    description: `GospelChannel helps you find the right church before a first visit with worship style, tradition, location, language, and service times across ${churchCountLabel} churches.`,
+    alternates: { canonical: PAGE_URL },
   };
 }
 
@@ -21,9 +26,54 @@ const PRINCIPLES = [
 
 export default async function AboutPage() {
   const { churchCountLabel, countryCount } = await getChurchStatsAsync();
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "AboutPage",
+      name: "About GospelChannel",
+      description: `GospelChannel is a church directory with worship style, tradition, location, language, and service times for ${churchCountLabel} churches in ${countryCount} countries.`,
+      url: PAGE_URL,
+      isPartOf: {
+        "@type": "WebSite",
+        name: "GospelChannel",
+        url: SITE_URL,
+      },
+      mainEntity: {
+        "@type": "Organization",
+        name: "GospelChannel",
+        url: SITE_URL,
+        legalName: "AC0 AI, S.L.U.",
+        taxID: "B26808741",
+        description: "Free church directory for people planning a first visit.",
+      },
+      about: [
+        { "@type": "Thing", name: "Church directory" },
+        { "@type": "Thing", name: "Church service times and visitor information" },
+        { "@type": "Thing", name: "First-visit church discovery" },
+      ],
+    },
+    buildBreadcrumbSchema([
+      { name: "GospelChannel", url: SITE_URL },
+      { name: "About", url: PAGE_URL },
+    ]),
+    buildItemListSchema({
+      name: "GospelChannel church search pages",
+      items: [
+        { name: "Church guides", url: `${SITE_URL}/guides` },
+        { name: "Church profile database", url: `${SITE_URL}/church` },
+        { name: "Church fit quiz", url: `${SITE_URL}/guides/church-fit-quiz` },
+        { name: "First-visit guide", url: `${SITE_URL}/guides/first-visit-guide` },
+      ],
+    }),
+  ];
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
+      />
+
       {/* Manifesto hero */}
       <section className="px-5 pt-24 pb-16 text-center sm:px-12 sm:pt-32 sm:pb-20">
         <div className="mx-auto max-w-[920px]">
@@ -61,7 +111,7 @@ export default async function AboutPage() {
             So we built one page. Then five. Then we asked thirty pastors if we could rebuild theirs. They said yes. Then they said please. Then they sent it to other pastors.
           </p>
           <p className="mt-5">
-            This is a directory of churches, made by people who think the front door matters. It&rsquo;s free because we think charging churches to be findable is wrong. It&rsquo;s ad-free because we think putting a Coca-Cola banner next to a prayer is also wrong.
+            This is a church directory, made by people who think the front door matters. Guides and church pages help people explore service times, music, language, location, and what to expect on a first visit. It&rsquo;s free because we think charging churches to be findable is wrong. It&rsquo;s ad-free because we think putting a Coca-Cola banner next to a prayer is also wrong.
           </p>
           <p className="mt-5">
             We&rsquo;re small. We&rsquo;re independent. We&rsquo;re <em className="text-rose-gold-deep">{churchCountLabel} churches in</em>. Most days we still can&rsquo;t believe it.
@@ -149,6 +199,8 @@ export default async function AboutPage() {
             { href: "/church/denomination", label: "Browse by denomination" },
             { href: "/church/city", label: "Browse by city" },
             { href: "/guides", label: "Free guides" },
+            { href: "/compare", label: "Compare churches" },
+            { href: "/guides/church-fit-quiz", label: "Church fit quiz" },
             { href: "/for-churches", label: "For churches" },
             { href: "/european-church-tech-2026", label: "European Church Tech 2026" },
             { href: "/alternatives/churchfinder", label: "ChurchFinder.com alternative" },

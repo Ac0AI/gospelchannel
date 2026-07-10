@@ -1,8 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getLondonCharismaticChurches } from "@/lib/discovery-churches";
+import {
+  buildDiscoveryChurchProofs,
+  formatDiscoveryLanguage,
+  formatDiscoveryStyles,
+  getLondonCharismaticChurches,
+} from "@/lib/discovery-churches";
+import { getFreshestChurchUpdatedAtAsync } from "@/lib/content";
+import { serializeJsonLd } from "@/lib/json-ld";
+import { formatContentFreshness } from "@/lib/utils";
 
-// Proof-of-concept discovery page: an answer-shaped, citeable page for the exact
+// Discovery page: an answer-shaped, citeable page for the exact
 // query AI assistants (ChatGPT/Bing/Perplexity) get asked — "charismatic /
 // gospel churches in London" — built on GospelChannel's own church data. Fully
 // dynamic so it never prerenders against the DB during the offline build.
@@ -11,35 +19,6 @@ export const dynamic = "force-dynamic";
 const PATH = "/church/charismatic-churches-in-london";
 const CANONICAL = `https://gospelchannel.com${PATH}`;
 const MIN_INDEXABLE = 3;
-
-const LANGUAGE_LABELS: Record<string, string> = {
-  en: "English",
-  english: "English",
-  es: "Spanish",
-  spanish: "Spanish",
-  fr: "French",
-  french: "French",
-  de: "German",
-  german: "German",
-  it: "Italian",
-  italian: "Italian",
-  sv: "Swedish",
-  swedish: "Swedish",
-  pt: "Portuguese",
-  portuguese: "Portuguese",
-  ko: "Korean",
-};
-
-function prettyLanguage(lang: string | null): string | null {
-  if (!lang) return null;
-  const key = lang.trim().toLowerCase();
-  return LANGUAGE_LABELS[key] ?? lang.charAt(0).toUpperCase() + lang.slice(1);
-}
-
-function prettyStyles(styles: string[] | null): string | null {
-  if (!styles || styles.length === 0) return null;
-  return styles.map((s) => s.charAt(0).toUpperCase() + s.slice(1)).join(", ");
-}
 
 const FAQS = [
   {
@@ -57,6 +36,11 @@ const FAQS = [
     answer:
       "Yes. Most charismatic and Pentecostal churches in London hold their services in English, including Hillsong Church London, King's Church London and the Vineyard churches.",
   },
+  {
+    question: "How is this list ordered?",
+    answer:
+      "This list includes churches across Greater London in Pentecostal, Charismatic, Vineyard, or Elim traditions, or with charismatic, Pentecostal, or gospel worship details. GospelChannel orders entries by profile completeness: the amount and quality of published church information. This is not a review score, endorsement, popularity vote, or third-party recommendation.",
+  },
 ];
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -73,6 +57,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description,
     alternates: { canonical: CANONICAL },
     openGraph: { title, description, url: CANONICAL, type: "website", siteName: "GospelChannel" },
+    twitter: { card: "summary_large_image", title, description },
     // noindex,follow if too thin to add value over the church detail pages.
     ...(count < MIN_INDEXABLE ? { robots: { index: false, follow: true } } : {}),
   };
@@ -92,14 +77,9 @@ export default async function CharismaticChurchesInLondonPage() {
     `fellowships. The guide below compares them by tradition, worship style and language, each linking ` +
     `to its full profile.`;
 
-  // This page is force-dynamic and reflects live directory data, so "now" is an
-  // honest as-of date — a real freshness signal for AI and search.
-  const updatedIso = new Date().toISOString();
-  const updatedLabel = new Date().toLocaleDateString("en-GB", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const { updatedIso, updatedLabel } = formatContentFreshness(
+    await getFreshestChurchUpdatedAtAsync(),
+  );
 
   const breadcrumbs = [
     { href: "/", label: "Home" },
@@ -141,6 +121,7 @@ export default async function CharismaticChurchesInLondonPage() {
           "@id": `https://gospelchannel.com/church/${church.slug}`,
           name: church.name,
           url: `https://gospelchannel.com/church/${church.slug}`,
+          description: buildDiscoveryChurchProofs(church).join("; "),
           ...(church.website ? { sameAs: church.website } : {}),
           ...(church.logo ? { image: church.logo } : {}),
           address: {
@@ -164,7 +145,7 @@ export default async function CharismaticChurchesInLondonPage() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
 
       <main className="bg-linen text-espresso">
         <div className="mx-auto max-w-[1100px] px-5 py-14 sm:px-12 sm:py-20">
@@ -214,13 +195,15 @@ export default async function CharismaticChurchesInLondonPage() {
                       <th className="px-4 py-3 font-semibold">Tradition</th>
                       <th className="px-4 py-3 font-semibold">Worship style</th>
                       <th className="px-4 py-3 font-semibold">Language</th>
+                      <th className="px-4 py-3 font-semibold">Church details</th>
                       <th className="px-4 py-3 font-semibold">Site</th>
                     </tr>
                   </thead>
                   <tbody>
                     {churches.map((church) => {
-                      const style = prettyStyles(church.musicStyle);
-                      const language = prettyLanguage(church.language);
+                      const style = formatDiscoveryStyles(church.musicStyle);
+                      const language = formatDiscoveryLanguage(church.language);
+                      const details = buildDiscoveryChurchProofs(church);
                       return (
                         <tr key={church.slug} className="border-b border-rose-gold/10 last:border-0 align-top">
                           <td className="px-4 py-3">
@@ -234,6 +217,9 @@ export default async function CharismaticChurchesInLondonPage() {
                           <td className="px-4 py-3 text-espresso/75">{church.denomination ?? "—"}</td>
                           <td className="px-4 py-3 text-espresso/75">{style ?? "—"}</td>
                           <td className="px-4 py-3 text-espresso/75">{language ?? "—"}</td>
+                          <td className="px-4 py-3 text-espresso/75">
+                            {details.length > 0 ? details.slice(0, 3).join(" · ") : "Church details available"}
+                          </td>
                           <td className="px-4 py-3">
                             {church.website ? (
                               <a
@@ -255,11 +241,17 @@ export default async function CharismaticChurchesInLondonPage() {
                 </table>
               </div>
 
-              <p className="mt-4 text-xs text-muted-warm">
-                How we chose: churches across Greater London in the Pentecostal, Charismatic, Vineyard
-                or Elim traditions, or tagged with charismatic, Pentecostal or gospel worship, ranked by
-                GospelChannel&rsquo;s directory score. Data from church profiles on GospelChannel.
-              </p>
+              <div className="mt-4">
+                <p className="gc-eyebrow">How this list works</p>
+                <p className="mt-1 text-xs text-muted-warm">
+                  This list includes churches across Greater London in Pentecostal, Charismatic, Vineyard,
+                  or Elim traditions, or with charismatic, Pentecostal, or gospel worship details. It is
+                  based on published service times, worship playlists, videos, style tags, language, official
+                  sites, and location where available. GospelChannel orders entries by profile completeness:
+                  the amount and quality of published church information. This is not a review score,
+                  endorsement, popularity vote, or third-party recommendation.
+                </p>
+              </div>
             </>
           )}
 

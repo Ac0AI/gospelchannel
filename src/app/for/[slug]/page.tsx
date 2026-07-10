@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ForAudienceLayout } from "@/components/ForAudienceLayout";
-import { FOR_AUDIENCE } from "@/lib/for-audience-data";
-import { buildArticleSchema, buildBreadcrumbSchema } from "@/lib/seo-schema";
+import { FOR_AUDIENCE, getAudienceProofRoutes } from "@/lib/for-audience-data";
+import { buildArticleSchema, buildBreadcrumbSchema, buildItemListSchema } from "@/lib/seo-schema";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 const SITE_URL = "https://gospelchannel.com";
 
@@ -32,6 +33,11 @@ export async function generateMetadata({
       siteName: "GospelChannel",
       type: "article",
     },
+    twitter: {
+      card: "summary_large_image",
+      title: data.meta_title,
+      description: data.meta_description,
+    },
   };
 }
 
@@ -50,12 +56,23 @@ export default async function ForAudiencePage({
   const siblings = Object.values(FOR_AUDIENCE)
     .filter((audience) => audience.slug !== data.slug)
     .map((audience) => ({ slug: audience.slug, audience_name: audience.audience_name }));
+  const proofRoutes = getAudienceProofRoutes(data);
+  const primaryProofRoute = proofRoutes[0] ?? { href: "/church", label: "Church profiles" };
 
   const schema = [
     buildArticleSchema({
       url,
       headline: data.hero_h1,
       description: data.meta_description,
+      about: [
+        "Church choice",
+        `${data.audience_name} church search`,
+        "Church details",
+      ],
+      mentions: [
+        { name: "GospelChannel church profile database", url: `${SITE_URL}/church` },
+        { name: primaryProofRoute.label, url: `${SITE_URL}${primaryProofRoute.href}` },
+      ],
     }),
     buildBreadcrumbSchema([
       { name: "GospelChannel", url: SITE_URL },
@@ -71,13 +88,31 @@ export default async function ForAudiencePage({
         acceptedAnswer: { "@type": "Answer", text: faq.answer },
       })),
     },
+    buildItemListSchema({
+      name: `${data.audience_name} ways to find a church`,
+      items: data.solutions.map((solution) => ({
+        name: solution.title,
+        url: `${SITE_URL}${solution.href}`,
+      })),
+    }),
+    ...(proofRoutes.length > 0
+      ? [
+          buildItemListSchema({
+            name: `${data.audience_name} matching churches`,
+            items: proofRoutes.map((route) => ({
+              name: route.label,
+              url: `${SITE_URL}${route.href}`,
+            })),
+          }),
+        ]
+      : []),
   ];
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}
       />
       <ForAudienceLayout data={data} siblings={siblings} />
     </>

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildChurchMatchReasons,
   filterChurchDirectory,
   getPrimaryDenominationFilter,
   getPrimaryStyleFilter,
@@ -22,7 +23,15 @@ const churches: ChurchDirectoryEntry[] = [
     promotionTier: "promotable" as const,
     displayScore: 82,
     qualityScore: 75,
-    enrichmentHint: { dataRichnessScore: 60, location: "London", serviceTimes: "Sunday 10:00", summary: "Hope Church" },
+    language: "English",
+    enrichmentHint: {
+      dataRichnessScore: 60,
+      location: "London",
+      serviceTimes: "Sunday 10:00",
+      summary: "Hope Church",
+      languages: ["English"],
+      childrenMinistry: true,
+    },
     spotifyPlaylistIds: ["abc"],
     additionalPlaylists: [],
     playlistCount: 2,
@@ -40,7 +49,13 @@ const churches: ChurchDirectoryEntry[] = [
     promotionTier: "catalog_only" as const,
     displayScore: 70,
     qualityScore: 68,
-    enrichmentHint: { dataRichnessScore: 45, location: "Stockholm", serviceTimes: "Sunday 11:00", summary: "Victory Church" },
+    enrichmentHint: {
+      dataRichnessScore: 45,
+      location: "Stockholm",
+      serviceTimes: "Sunday 11:00",
+      summary: "Victory Church",
+      youthMinistry: true,
+    },
     spotifyPlaylistIds: ["def"],
     additionalPlaylists: [],
     playlistCount: 1,
@@ -105,6 +120,22 @@ describe("church-directory", () => {
   it("filters by style and denomination", () => {
     expect(filterChurchDirectory([...churches], { styleSlug: "gospel" }).map((church) => church.slug)).toEqual(["grace-berlin"]);
     expect(filterChurchDirectory([...churches], { denominationSlug: "pentecostal" }).map((church) => church.slug)).toEqual(["victory-stockholm"]);
+  });
+
+  it("filters by language and kids/youth proof signals", () => {
+    expect(filterChurchDirectory([...churches], { language: "English" }).map((church) => church.slug)).toEqual(["hope-london"]);
+
+    const familyResults = filterChurchDirectory([...churches], { hasKids: true });
+    expect(familyResults.map((church) => church.slug)).toEqual(["hope-london", "victory-stockholm"]);
+    expect(familyResults[0]?.matchReasons).toBeUndefined();
+
+    const familySearchResults = filterChurchDirectory([...churches], { query: "stockholm", hasKids: true });
+    expect(familySearchResults.map((church) => church.slug)).toEqual(["victory-stockholm"]);
+  });
+
+  it("adds match reasons only when filter proof is present", () => {
+    expect(buildChurchMatchReasons(churches[0]!, { hasKids: true })).toContain("Kids/youth ministry");
+    expect(buildChurchMatchReasons(churches[2]!, { hasKids: true })).not.toContain("Kids/youth ministry");
   });
 
   it("paginates filtered results", () => {

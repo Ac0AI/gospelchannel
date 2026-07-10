@@ -10,7 +10,7 @@ import { hasServiceConfig, createAdminClient } from "@/lib/neon-client";
 import { getCampusBySlug } from "@/lib/church-networks";
 import { getApprovedProfileEditsForChurch, buildMergedProfile } from "@/lib/church-profile";
 import { calculateProfileScore } from "@/lib/profile-score";
-import { rewriteLegacyMediaUrl } from "@/lib/media";
+import { rewriteLegacyMediaUrl, rewriteSpotifyArtUrl } from "@/lib/media";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
 import {
   filterCanonicalChurchSlugRecords,
@@ -529,6 +529,8 @@ export async function getChurchEnrichment(slug: string): Promise<ChurchEnrichmen
     google_maps_url: string | null;
     latitude: number | null;
     longitude: number | null;
+    google_rating: number | null;
+    google_reviews_count: number | null;
     service_times: ChurchEnrichment["serviceTimes"] | null;
     theological_orientation: string | null;
     denomination_network: string | null;
@@ -592,6 +594,14 @@ export async function getChurchEnrichment(slug: string): Promise<ChurchEnrichmen
     googleMapsUrl: row.google_maps_url ?? undefined,
     latitude: row.latitude ?? undefined,
     longitude: row.longitude ?? undefined,
+    googleRating:
+      row.google_rating != null && Number.isFinite(Number(row.google_rating))
+        ? Number(row.google_rating)
+        : undefined,
+    googleReviewsCount:
+      row.google_reviews_count != null && Number.isFinite(Number(row.google_reviews_count))
+        ? Number(row.google_reviews_count)
+        : undefined,
     serviceTimes: row.service_times ?? undefined,
     theologicalOrientation: verified ? (row.theological_orientation ?? undefined) : undefined,
     denominationNetwork: row.denomination_network ?? undefined,
@@ -1050,7 +1060,7 @@ export async function getChurchTopSongs(slug: string): Promise<ChurchTopSong[]> 
       rank: r.rank,
       title: r.title,
       artistName: r.artist_name,
-      artUrl: r.art_url,
+      artUrl: rewriteSpotifyArtUrl(r.art_url),
       adoptionCount: r.adoption_count,
       spotifyTrackId: r.spotify_track_id,
       playlistChurchUrl: r.playlist_church_url,
@@ -1178,6 +1188,8 @@ export type ChurchIndexRow = {
 export type IndexEnrichmentHint = EnrichmentHint & {
   coverImageUrl?: string;
   logoImageUrl?: string;
+  childrenMinistry?: boolean;
+  youthMinistry?: boolean;
 };
 
 type ChurchIndexPageData = {
@@ -1203,12 +1215,14 @@ async function getEnrichmentMeta(): Promise<Map<string, IndexEnrichmentHint>> {
     instagram_url: string | null;
     facebook_url: string | null;
     youtube_url: string | null;
+    children_ministry: boolean | null;
+    youth_ministry: boolean | null;
     cover_image_url: string | null;
     logo_image_url: string | null;
   };
   const data = await fetchAllRows((sb, from, to) =>
     sb.from<EnrichmentMetaRow[]>("church_enrichments")
-      .select("church_slug, enrichment_status, summary, service_times, street_address, languages, instagram_url, facebook_url, youtube_url, cover_image_url, logo_image_url")
+      .select("church_slug, enrichment_status, summary, service_times, street_address, languages, instagram_url, facebook_url, youtube_url, children_ministry, youth_ministry, cover_image_url, logo_image_url")
       .range(from, to)
   );
   const map = new Map<string, IndexEnrichmentHint>();
@@ -1232,6 +1246,8 @@ async function getEnrichmentMeta(): Promise<Map<string, IndexEnrichmentHint>> {
       serviceTimes,
       location: normalizeDisplayText(row.street_address as string | undefined),
       languages: row.languages ?? undefined,
+      childrenMinistry: row.children_ministry ?? undefined,
+      youthMinistry: row.youth_ministry ?? undefined,
       hasSocial,
       dataRichnessScore: score,
       coverImageUrl: rewriteLegacyMediaUrl(row.cover_image_url ?? undefined),
@@ -1257,6 +1273,8 @@ export function mapEnrichmentMetaRow(row: {
   instagram_url: string | null;
   facebook_url: string | null;
   youtube_url: string | null;
+  children_ministry?: boolean | null;
+  youth_ministry?: boolean | null;
   cover_image_url: string | null;
   logo_image_url: string | null;
 }): { slug: string; hint: IndexEnrichmentHint } | null {
@@ -1281,6 +1299,8 @@ export function mapEnrichmentMetaRow(row: {
       serviceTimes,
       location: normalizeDisplayText(row.street_address as string | undefined),
       languages: row.languages ?? undefined,
+      childrenMinistry: row.children_ministry ?? undefined,
+      youthMinistry: row.youth_ministry ?? undefined,
       hasSocial,
       dataRichnessScore: score,
       coverImageUrl: rewriteLegacyMediaUrl(row.cover_image_url ?? undefined),
@@ -1302,13 +1322,15 @@ async function getEnrichmentMetaForSlugs(slugs: string[]): Promise<Map<string, I
     instagram_url: string | null;
     facebook_url: string | null;
     youtube_url: string | null;
+    children_ministry: boolean | null;
+    youth_ministry: boolean | null;
     cover_image_url: string | null;
     logo_image_url: string | null;
   };
   const lookupSlugs = Array.from(new Set(slugs.flatMap((slug) => getChurchSlugLookupCandidates(slug))));
   const { data } = await sb
     .from<EnrichmentMetaRow>("church_enrichments")
-    .select("church_slug, enrichment_status, summary, service_times, street_address, languages, instagram_url, facebook_url, youtube_url, cover_image_url, logo_image_url")
+    .select("church_slug, enrichment_status, summary, service_times, street_address, languages, instagram_url, facebook_url, youtube_url, children_ministry, youth_ministry, cover_image_url, logo_image_url")
     .in("church_slug", lookupSlugs);
 
   const map = new Map<string, IndexEnrichmentHint>();

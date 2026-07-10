@@ -334,6 +334,33 @@ export function AdminSuggestionsPanel({ suggestions }: { suggestions: ChurchSugg
                     </div>
                   </div>
                 </div>
+
+                {suggestion.enrichment ? (
+                  <div className="mt-4 rounded-2xl bg-linen p-4">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <div className="text-xs font-semibold uppercase tracking-wide text-warm-brown">Auto-Enrichment (from their website)</div>
+                      {suggestion.enrichment.quality && (
+                        <MetaPill
+                          label={`Quality: ${suggestion.enrichment.quality}`}
+                          tone={suggestion.enrichment.quality === "good" ? "good" : suggestion.enrichment.quality === "reject" ? "warn" : "info"}
+                        />
+                      )}
+                    </div>
+                    {suggestion.enrichment.description && (
+                      <p className="mt-3 max-w-4xl text-sm leading-6 text-espresso">{suggestion.enrichment.description}</p>
+                    )}
+                    <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-warm-brown">
+                      {suggestion.enrichment.city && <span>City: {suggestion.enrichment.city}</span>}
+                      {suggestion.enrichment.denomination && <span>Denomination: {suggestion.enrichment.denomination}</span>}
+                      {suggestion.enrichment.serviceTimes && <span>Services: {suggestion.enrichment.serviceTimes}</span>}
+                      {suggestion.enrichment.contactEmail && <span>Site email: {suggestion.enrichment.contactEmail}</span>}
+                      {suggestion.enrichment.nameFix && <span>Name fix: {suggestion.enrichment.nameFix}</span>}
+                    </div>
+                    {suggestion.enrichment.qualityReason && (
+                      <p className="mt-2 text-xs text-warm-brown">{suggestion.enrichment.qualityReason}</p>
+                    )}
+                  </div>
+                ) : null}
               </article>
             );
           })

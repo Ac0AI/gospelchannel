@@ -30,8 +30,8 @@ export async function generateMetadata({ params, searchParams }: StylePageProps)
   if (!data) return { title: "Not Found" };
 
   const basePath = `https://gospelchannel.com/church/style/${slug}`;
-  const title = `${data.label} Churches, Playlists & Videos`;
-  const description = `Explore ${data.totalCount.toLocaleString("en-US")} ${data.label.toLowerCase()} churches. Browse worship playlists, live videos, service times, and community pages on GospelChannel.`;
+  const title = `${data.label} Churches: Music, Service Times & Locations`;
+  const description = `A list of ${data.totalCount.toLocaleString("en-US")} churches with ${data.label.toLowerCase()} worship, based on published music, service-time, location, language, and visitor details.`;
 
   return {
     title,
@@ -43,6 +43,11 @@ export async function generateMetadata({ params, searchParams }: StylePageProps)
       url: basePath,
       type: "website",
       siteName: "GospelChannel",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
     },
     ...(page > 1 ? { robots: { index: false, follow: true } } : {}),
   };
@@ -61,7 +66,7 @@ export default async function StylePage({ params, searchParams }: StylePageProps
     <ChurchCollectionPage
       eyebrow="Browse by Worship Style"
       title={`${label} Churches`}
-      description={`Explore churches whose pages reflect ${label.toLowerCase()} music, playlists, service times, and community.`}
+      description={`Explore churches with ${label.toLowerCase()} worship, then compare music, videos, service times, location, and community details before visiting.`}
       basePath={basePath}
       currentPage={currentPage}
       totalPages={totalPages}

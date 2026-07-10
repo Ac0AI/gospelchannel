@@ -24,6 +24,25 @@ export const CONTENT_UPDATED_AT =
 export const COPYRIGHT_YEAR = 2026;
 export const CONTENT_BASE_DATE = process.env.CONTENT_BASE_DATE ?? "2026-02-27";
 
+export function formatContentFreshness(value: string | null | undefined): {
+  updatedIso: string;
+  updatedLabel: string;
+} {
+  const candidate = new Date(value ?? CONTENT_UPDATED_AT);
+  const updated = Number.isNaN(candidate.getTime())
+    ? new Date(CONTENT_UPDATED_AT)
+    : candidate;
+
+  return {
+    updatedIso: updated.toISOString(),
+    updatedLabel: updated.toLocaleDateString("en-GB", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }),
+  };
+}
+
 export function normalizeText(value: string): string {
   return value
     .toLowerCase()

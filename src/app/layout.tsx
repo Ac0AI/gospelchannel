@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { PostHogProvider } from "@/components/PostHogProvider";
 import { getChurchStatsAsync } from "@/lib/content";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 const sans = Nunito({
   subsets: ["latin"],
@@ -27,30 +28,29 @@ export const viewport: Viewport = {
 
 export async function generateMetadata(): Promise<Metadata> {
   const { churchCountLabel, countryCount } = await getChurchStatsAsync();
+  const siteDescription = `Find the right church by comparing worship style, tradition, location, language, and service times across ${churchCountLabel} churches in ${countryCount} countries.`;
   return {
     metadataBase: new URL("https://gospelchannel.com"),
     title: {
       default: "Find the Right Church Before Your First Visit",
       template: "%s | GospelChannel",
     },
-    description:
-      `Compare worship style, tradition, language, and service details across ${churchCountLabel} churches in ${countryCount} countries before your first visit.`,
+    description: siteDescription,
     keywords: [
       "gospel music",
       "worship songs",
       "gospel songs",
       "praise and worship music",
-      "christian music streaming",
-      "gospel music online",
-      "best worship songs 2026",
-      "gospel playlist",
-      "church worship songs",
-      "gospel music free",
+      "find a church",
+      "church near me",
+      "church directory",
+      "first church visit",
+      "church service times",
+      "worship style churches",
     ],
     openGraph: {
       title: "Find the Right Church Before Your First Visit",
-      description:
-        `Compare worship style, tradition, language, and service details across ${churchCountLabel} churches in ${countryCount} countries before your first visit.`,
+      description: siteDescription,
       type: "website",
       url: "https://gospelchannel.com",
       siteName: "GospelChannel",
@@ -60,7 +60,7 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
       title: "Find the Right Church Before Your First Visit",
-      description: `Compare worship style, tradition, language, and service details across ${churchCountLabel} churches before your first visit.`,
+      description: siteDescription,
       images: ["https://gospelchannel.com/hero-worship.jpg"],
     },
     alternates: {
@@ -78,17 +78,18 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const scriptChurchCopy = "Gospel helps you find the right church before your first visit. Every church has a channel you can tune into through worship, service details, and community signals.";
-  const scriptBrowseCopy = "Compare church channels by worship style, tradition, language, city, and service details before your first visit.";
+  const scriptChurchCopy = "GospelChannel helps people find the right church before a first visit by comparing worship style, tradition, location, language, service times, music, and community life.";
+  const scriptBrowseCopy = "Explore churches by worship style, tradition, language, city, service times, music, and visitor information.";
   const knowsAbout = [
     "church discovery",
+    "church search",
     "worship style",
     "church tradition",
     "denomination",
     "language",
     "service details",
     "first church visit",
-    "public church directory",
+    "public church profile database",
   ];
   return (
     <html lang="en">
@@ -106,7 +107,7 @@ export default function RootLayout({
           id="site-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify([
+            __html: serializeJsonLd([
               {
                 "@context": "https://schema.org",
                 "@type": "Organization",
@@ -142,6 +143,50 @@ export default function RootLayout({
                 about: knowsAbout,
                 isAccessibleForFree: true,
                 publisher: { "@id": "https://gospelchannel.com/#organization" },
+                hasPart: [
+                  {
+                    "@type": "Article",
+                    name: "Church choice guides",
+                    url: "https://gospelchannel.com/guides/church-choice-answers",
+                    description: "Guides that help people explore worship style, tradition, location, language, and service times.",
+                  },
+                  {
+                    "@type": "CollectionPage",
+                    name: "Church decision guides",
+                    url: "https://gospelchannel.com/guides",
+                    description: "Answer-first guides for church choice, first visits, worship style, prayer, faith questions, and denomination fit.",
+                  },
+                  {
+                    "@type": "CollectionPage",
+                    name: "Church comparison guides",
+                    url: "https://gospelchannel.com/compare",
+                    description: "Plain-language comparisons that help people choose between worship styles, traditions, and church-size tradeoffs.",
+                  },
+                  {
+                    "@type": "CollectionPage",
+                    name: "Audience church-search routes",
+                    url: "https://gospelchannel.com/for",
+                    description: "Audience-specific church-choice routes for expats, students, young adults, families, new believers, and deconstructing seekers.",
+                  },
+                  {
+                    "@type": "CollectionPage",
+                    name: "Church directory",
+                    url: "https://gospelchannel.com/church",
+                    description: "Church pages with service times, worship music, location, language, tradition, and visitor information.",
+                  },
+                  {
+                    "@type": "CollectionPage",
+                    name: "Churches with service times",
+                    url: "https://gospelchannel.com/church/churches-with-service-times",
+                    description: "Churches with published service times for people planning a Sunday visit.",
+                  },
+                  {
+                    "@type": "CollectionPage",
+                    name: "Churches with worship music",
+                    url: "https://gospelchannel.com/church/churches-with-worship-music",
+                    description: "Churches with worship music for people exploring their worship style.",
+                  },
+                ],
                 potentialAction: {
                   "@type": "SearchAction",
                   target: {

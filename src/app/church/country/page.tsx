@@ -7,7 +7,7 @@ export const revalidate = 3600;
 const CANONICAL = "https://gospelchannel.com/church/country";
 const TITLE = "Browse Churches by Country";
 const DESCRIPTION =
-  "Find churches by country. Browse worship playlists, live videos, service times, and community pages for congregations across every country we cover.";
+  "Use country hubs to map the church landscape before choosing a city. Compare regions, worship styles, traditions, service times, and church details across every country we cover.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -19,6 +19,11 @@ export const metadata: Metadata = {
     url: CANONICAL,
     type: "website",
     siteName: "GospelChannel",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
   },
 };
 

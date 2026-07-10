@@ -1,15 +1,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getBestWorshipChurches } from "@/lib/discovery-churches";
+import {
+  buildDiscoveryChurchProofs,
+  formatDiscoveryStyles,
+  getBestWorshipChurches,
+} from "@/lib/discovery-churches";
+import { getFreshestChurchUpdatedAtAsync } from "@/lib/content";
+import { serializeJsonLd } from "@/lib/json-ld";
+import { formatContentFreshness } from "@/lib/utils";
 
-// Proof-of-concept discovery page #2: intercepts the "[topic] reddit"-shaped
+// Discovery page #2: intercepts the "[topic] reddit"-shaped
 // search pattern (e.g. "best worship church reddit") the way the approved
 // GEO design doc recommends for the cautious, small-sample track — matching
 // the query intent with our own honestly-disclosed curation, NOT fabricated
 // Reddit citations. We have no way to verify real Reddit threads right now
 // (Reddit blocks anonymous search/API access), so this page never claims to
-// summarize Reddit — it's GospelChannel's own directory-score ranking, and
-// says so plainly in the methodology line below the table.
+// summarize Reddit — it uses GospelChannel's own church data and says so
+// plainly in the methodology line below the table.
 export const dynamic = "force-dynamic";
 
 const PATH = "/church/best-worship-churches";
@@ -25,7 +32,7 @@ const FAQS = [
   {
     question: "How is this list put together?",
     answer:
-      "This is GospelChannel's own curated list, ranked by our internal directory score (a measure of profile completeness and data quality), filtered to churches tagged as contemporary, charismatic or gospel worship. It is not sourced from Reddit, reviews, or any third-party ranking.",
+      "This list includes churches with contemporary, charismatic, gospel, or Pentecostal worship tags, plus churches in Pentecostal, charismatic, Elim, or Vineyard traditions. GospelChannel orders entries by its directory score for profile completeness, then by church name. This is not a review score, endorsement, popularity vote, or third-party recommendation.",
   },
   {
     question: "Are these churches Pentecostal or charismatic?",
@@ -37,17 +44,18 @@ const FAQS = [
 export async function generateMetadata(): Promise<Metadata> {
   const churches = await getBestWorshipChurches();
   const count = churches.length;
-  const title = "Best Worship Churches — What People Recommend";
+  const title = "Churches Known for Worship";
   const description =
     count > 0
-      ? `${count} churches known for their worship, from Hillsong and Planetshakers to Jesus Culture and Kensington Temple, ranked by GospelChannel's directory data.`
-      : "Churches known for their worship, ranked by GospelChannel's directory data.";
+      ? `${count} churches selected by contemporary, charismatic, gospel, or Pentecostal worship tags and related traditions, ordered by GospelChannel's directory score for profile completeness.`
+      : "Churches selected by contemporary, charismatic, gospel, or Pentecostal worship tags and related traditions, ordered by GospelChannel's directory score for profile completeness.";
 
   return {
     title,
     description,
     alternates: { canonical: CANONICAL },
     openGraph: { title, description, url: CANONICAL, type: "website", siteName: "GospelChannel" },
+    twitter: { card: "summary_large_image", title, description },
     ...(count < MIN_INDEXABLE ? { robots: { index: false, follow: true } } : {}),
   };
 }
@@ -55,35 +63,27 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function BestWorshipChurchesPage() {
   const churches = await getBestWorshipChurches();
   const count = churches.length;
-  const topNames = churches.slice(0, 2).map((c) => c.name);
-  const leadIn =
-    topNames.length === 2
-      ? `${topNames[0]} and ${topNames[1]}`
-      : topNames[0] ?? "Hillsong and Planetshakers";
   const intro =
-    `Searching for churches people recommend for worship? Here are ${count} congregations ` +
-    `known for their worship, from ${leadIn} to Kensington Temple and Jesus Culture, drawn from ` +
-    `GospelChannel's own directory and ranked by how complete and well-documented each church's ` +
-    `profile is. Each entry links to its full profile.`;
+    `GospelChannel includes ${count} churches filtered by published worship tags for contemporary, ` +
+    `charismatic, gospel, or Pentecostal worship, plus related Pentecostal, charismatic, Elim, and ` +
+    `Vineyard traditions. Entries are ordered by GospelChannel's directory score for profile completeness, ` +
+    `then by church name. Each entry links to service, worship, location, language, and visitor details.`;
 
-  const updatedIso = new Date().toISOString();
-  const updatedLabel = new Date().toLocaleDateString("en-GB", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const { updatedIso, updatedLabel } = formatContentFreshness(
+    await getFreshestChurchUpdatedAtAsync(),
+  );
 
   const breadcrumbs = [
     { href: "/", label: "Home" },
     { href: "/church", label: "Churches" },
-    { href: PATH, label: "Best worship churches" },
+    { href: PATH, label: "Churches Known for Worship" },
   ];
 
   const jsonLd: Array<Record<string, unknown>> = [
     {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
-      name: "Best Worship Churches — What People Recommend",
+      name: "Churches Known for Worship",
       url: CANONICAL,
       dateModified: updatedIso,
       mainEntity: { "@id": `${CANONICAL}#itemlist` },
@@ -102,7 +102,7 @@ export default async function BestWorshipChurchesPage() {
       "@context": "https://schema.org",
       "@type": "ItemList",
       "@id": `${CANONICAL}#itemlist`,
-      name: "Best Worship Churches",
+      name: "Churches Known for Worship",
       numberOfItems: count,
       itemListElement: churches.map((church, index) => ({
         "@type": "ListItem",
@@ -113,6 +113,7 @@ export default async function BestWorshipChurchesPage() {
           "@id": `https://gospelchannel.com/church/${church.slug}`,
           name: church.name,
           url: `https://gospelchannel.com/church/${church.slug}`,
+          description: buildDiscoveryChurchProofs(church).join("; "),
           ...(church.website ? { sameAs: church.website } : {}),
           ...(church.logo ? { image: church.logo } : {}),
           address: {
@@ -136,7 +137,7 @@ export default async function BestWorshipChurchesPage() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
 
       <main className="bg-linen text-espresso">
         <div className="mx-auto max-w-[1100px] px-5 py-14 sm:px-12 sm:py-20">
@@ -164,7 +165,7 @@ export default async function BestWorshipChurchesPage() {
             className="mt-3 mb-0 font-serif font-semibold leading-[0.95] tracking-[-0.02em]"
             style={{ fontSize: "clamp(38px, 6vw, 68px)" }}
           >
-            Best Worship <em className="gc-italic">Churches</em> — What People Recommend
+            Churches Known for <em className="gc-italic">Worship</em>
           </h1>
 
           <p className="mt-6 max-w-[760px] text-lg leading-relaxed text-espresso/80 sm:text-xl">
@@ -186,15 +187,15 @@ export default async function BestWorshipChurchesPage() {
                       <th className="px-4 py-3 font-semibold">Location</th>
                       <th className="px-4 py-3 font-semibold">Tradition</th>
                       <th className="px-4 py-3 font-semibold">Worship style</th>
+                      <th className="px-4 py-3 font-semibold">Church details</th>
                       <th className="px-4 py-3 font-semibold">Site</th>
                     </tr>
                   </thead>
                   <tbody>
                     {churches.map((church) => {
-                      const style = church.musicStyle && church.musicStyle.length > 0
-                        ? church.musicStyle.map((s) => s.charAt(0).toUpperCase() + s.slice(1)).join(", ")
-                        : null;
+                      const style = formatDiscoveryStyles(church.musicStyle);
                       const place = church.location ?? church.country ?? null;
+                      const details = buildDiscoveryChurchProofs(church);
                       return (
                         <tr key={church.slug} className="border-b border-rose-gold/10 last:border-0 align-top">
                           <td className="px-4 py-3">
@@ -208,6 +209,9 @@ export default async function BestWorshipChurchesPage() {
                           <td className="px-4 py-3 text-espresso/75">{place ?? "—"}</td>
                           <td className="px-4 py-3 text-espresso/75">{church.denomination ?? "—"}</td>
                           <td className="px-4 py-3 text-espresso/75">{style ?? "—"}</td>
+                          <td className="px-4 py-3 text-espresso/75">
+                            {details.length > 0 ? details.slice(0, 3).join(" · ") : "Church details available"}
+                          </td>
                           <td className="px-4 py-3">
                             {church.website ? (
                               <a
@@ -229,11 +233,16 @@ export default async function BestWorshipChurchesPage() {
                 </table>
               </div>
 
-              <p className="mt-4 text-xs text-muted-warm">
-                How we chose: churches tagged as contemporary, charismatic or gospel worship, ranked by
-                GospelChannel&rsquo;s own directory score (a measure of profile completeness, not an
-                independent or user-submitted rating). Data from church profiles on GospelChannel.
-              </p>
+              <div className="mt-4">
+                <p className="gc-eyebrow">How this list works</p>
+                <p className="mt-1 text-xs text-muted-warm">
+                  This list includes churches with contemporary, charismatic, gospel, or Pentecostal worship
+                  tags, plus churches in Pentecostal, charismatic, Elim, or Vineyard traditions. GospelChannel
+                  orders entries by its directory score for profile completeness, then by church name. Published
+                  service times, worship playlists, videos, language, official sites, and location appear where
+                  available. This is not a review score, endorsement, popularity vote, or third-party recommendation.
+                </p>
+              </div>
             </>
           )}
 

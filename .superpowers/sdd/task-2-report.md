@@ -1,0 +1,85 @@
+# Task 2 Report: Guides, Audiences, And Search Discovery
+
+## Scope Delivered
+
+- Extended `PUBLIC_COPY_GROUPS` with the required `guidesAndAudiences` source list.
+- Replaced internal visitor-facing terminology across guide pages, audience pages, shared guide components, quiz copy, structured data, guide data, and search suggestions.
+- Updated the church-choice guide hero to `Church choice guide` and `Find the church that fits your life` with an intro covering worship style, denomination, location, language, service times, and first-visit concerns.
+- Updated its summary to `Start with what matters most.` and added the required `Read the guide` and `Explore churches` links.
+- Rewrote search subtitles as direct destinations, including `Find churches with published service times.` and `Explore English-speaking churches.`
+
+## Contract Preservation
+
+- Kept all existing `guide`, `proof`, and `proof_routes` keys and href values unchanged.
+- Kept guide-to-church mappings, sitemap inputs, and search suggestion types unchanged.
+- Kept agent-discovery output unchanged. `src/lib/agent-discovery.ts` translates the two new visitor labels back to its established machine-facing evidence labels at serialization time; no agent-discovery tests were changed.
+
+## TDD Record
+
+1. Added the `guidesAndAudiences` public-copy group.
+2. Ran `pnpm --config.engine-strict=false vitest run src/lib/__tests__/public-copy.test.ts` and confirmed the expected red failure from visitor-facing internal terminology in `src/app/for/page.tsx`.
+3. Added exact destination subtitle assertions for service-time and English-speaking church search suggestions.
+4. Implemented the smallest contextual copy changes needed for the guard and behavior tests.
+5. Ran the required focused suite until all tests passed.
+
+## Verification
+
+Required test command:
+
+```sh
+pnpm --config.engine-strict=false vitest run src/lib/__tests__/public-copy.test.ts src/lib/__tests__/church-choice-answers.test.ts src/lib/__tests__/for-audience-data.test.ts src/lib/__tests__/search-suggestions.test.ts src/lib/__tests__/seo-schema.test.ts src/lib/__tests__/sitemap-data.test.ts src/lib/__tests__/agent-discovery.test.ts
+```
+
+Result: 7 test files passed, 34 tests passed.
+
+Additional review:
+
+- `git diff --check` passed.
+- Confirmed no changed `href` values in `src/lib/church-choice-answers.ts` or `src/lib/for-audience-data.ts`.
+- Confirmed no forbidden internal copy matches remain in the `guidesAndAudiences` guard scope.
+
+## Notes
+
+- The test command emits the pre-existing environment warnings for the Node engine (`22.x` requested, `26.3.0` running) and Node's `module.register()` deprecation. The test suite still completes successfully.
+- `.agents/` was left unmodified and unstaged.
+
+## Review Follow-up: Proof Architecture Copy
+
+- Searched every `guidesAndAudiences` source file for standalone `proof` occurrences.
+- Rewrote all visitor-visible architecture copy to concrete destinations or details, including `Explore churches`, `See worship details`, `Browse churches by city`, and `check the details that matter`.
+- Replaced the reported `Open proof profiles`, `does the proof work`, and `Open the proof database` strings.
+- Preserved internal `proof`, `proofSignals`, and `proof_routes` keys, route mappings, hrefs, and data IDs.
+- Added focused Task 2-only public-copy patterns for `proof profiles`, `proof database`, and `does the proof work`; these do not inspect internal object keys.
+- Added a minimal agent-discovery answer compatibility map for the two shared answer strings changed for visitors, keeping machine-facing output and its existing tests stable.
+
+Follow-up verification:
+
+```sh
+pnpm --config.engine-strict=false vitest run src/lib/__tests__/public-copy.test.ts
+pnpm --config.engine-strict=false vitest run src/lib/__tests__/public-copy.test.ts src/lib/__tests__/church-choice-answers.test.ts src/lib/__tests__/for-audience-data.test.ts src/lib/__tests__/search-suggestions.test.ts src/lib/__tests__/seo-schema.test.ts src/lib/__tests__/sitemap-data.test.ts src/lib/__tests__/agent-discovery.test.ts
+pnpm --config.engine-strict=false typecheck
+```
+
+Result: public-copy guard passed (3 tests); required suite passed (7 files, 34 tests); typecheck passed.
+
+## Re-review Follow-up: Agent Answer Compatibility
+
+Compared `src/lib/church-choice-answers.ts` with base commit `775e7187` and restored these five machine-facing answer strings through `MACHINE_ANSWER_COPY` only:
+
+- `where-can-i-find-charismatic-gospel-churches-in-london`: `Start with the London-specific charismatic and gospel proof route, then open individual profiles to verify tradition, worship style, language, service details, and official links.`
+- `how-do-i-find-churches-known-for-worship`: `Use worship reputation as a starting shortlist, not the final decision. Then verify each church through profile evidence: music, worship style, service context, location, and whether you can realistically visit.`
+- `how-do-young-adults-find-a-contemporary-worship-church`: `Start with contemporary or charismatic worship proof, then narrow by city and profile evidence so the first visit is more than a familiar sound.`
+- `where-can-i-pray-before-choosing-a-church`: `Use prayer as a next step, not a shortcut around evidence. Pray privately or use the Prayer Wall as a community signal, then verify any church through real profile proof before visiting.`
+- `how-do-i-find-a-low-pressure-church-after-church-hurt`: `Use the gentlest verifiable next step: compare profile evidence quietly, avoid rushing commitment, and treat prayer or one visit as enough progress for now.`
+
+Visitor-facing answer copy remains rewritten. The agent compatibility map serializes the exact legacy answer text for the agent card and `llms.txt`; routes, hrefs, and schema types are unchanged. Added exact assertions for all five legacy answers in both serialized outputs.
+
+Verification commands:
+
+```sh
+pnpm --config.engine-strict=false vitest run src/lib/__tests__/agent-discovery.test.ts
+pnpm --config.engine-strict=false vitest run src/lib/__tests__/public-copy.test.ts src/lib/__tests__/church-choice-answers.test.ts src/lib/__tests__/for-audience-data.test.ts src/lib/__tests__/search-suggestions.test.ts src/lib/__tests__/seo-schema.test.ts src/lib/__tests__/sitemap-data.test.ts src/lib/__tests__/agent-discovery.test.ts
+pnpm --config.engine-strict=false typecheck
+```
+
+Result: agent-discovery test passed (4 tests); required suite passed (7 files, 35 tests); typecheck passed.

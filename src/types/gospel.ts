@@ -112,6 +112,20 @@ export type ChurchPageVideo = YouTubeVideo & {
   lowConfidence: boolean;
 };
 
+export type SuggestionEnrichment = {
+  city?: string | null;
+  description?: string | null;
+  heroImageUrl?: string | null;
+  contactEmail?: string | null;
+  serviceTimes?: string | null;
+  denomination?: string | null;
+  languages?: string[] | null;
+  quality?: "good" | "mediocre" | "reject" | string | null;
+  qualityReason?: string | null;
+  nameFix?: string | null;
+  enrichedAt?: string | null;
+};
+
 export type ChurchSuggestion = {
   id: string;
   name: string;
@@ -125,6 +139,7 @@ export type ChurchSuggestion = {
   message: string;
   submittedAt: string;
   status: "pending" | "reviewed" | "approved" | "rejected";
+  enrichment: SuggestionEnrichment | null;
 };
 
 export type ChurchClaim = {
@@ -261,6 +276,10 @@ export type ChurchEnrichment = {
   instagramFollowers?: number;
   youtubeSubscribers?: number;
   socialStatsFetchedAt?: string;
+
+  /** Google Places rating, 1.0-5.0, harvested from Places data. Factual, not AI-generated. */
+  googleRating?: number;
+  googleReviewsCount?: number;
 
   // Level 2
   childrenMinistry?: boolean;

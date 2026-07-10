@@ -8,9 +8,9 @@ import { authClient } from "@/lib/auth/client";
 import { useMyChurchAccess } from "@/components/useMyChurchAccess";
 
 const navItems = [
-  { href: "/", label: "Home" },
   { href: "/church", label: "Churches" },
   { href: "/guides", label: "Guides" },
+  { href: "/compare", label: "Compare" },
   { href: "/prayerwall", label: "Share a Prayer" },
   { href: "/about", label: "About" },
 ];

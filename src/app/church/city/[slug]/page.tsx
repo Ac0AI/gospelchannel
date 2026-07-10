@@ -33,8 +33,8 @@ export async function generateMetadata({ params, searchParams }: CityPageProps):
   if (!data) return { title: "Not Found" };
 
   const basePath = `https://gospelchannel.com/church/city/${slug}`;
-  const title = `Churches in ${data.label}: Worship Music, Playlists & Service Times`;
-  const description = `Explore ${data.totalCount.toLocaleString("en-US")} churches in ${data.label}. Browse worship playlists, live videos, service times, and community pages on GospelChannel.`;
+  const title = `Churches in ${data.label}: Service Times, Worship & Location`;
+  const description = `A list of ${data.totalCount.toLocaleString("en-US")} churches in ${data.label} based on published location, service-time, worship, language, and visitor details.`;
 
   return {
     title,
@@ -46,6 +46,11 @@ export async function generateMetadata({ params, searchParams }: CityPageProps):
       url: basePath,
       type: "website",
       siteName: "GospelChannel",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
     },
     // noindex,follow when paginated OR when the city aggregates too few churches
     // to add value over the church detail pages it lists (kept in lockstep with
@@ -84,7 +89,7 @@ export default async function CityPage({ params, searchParams }: CityPageProps) 
     <ChurchCollectionPage
       eyebrow="Browse by City"
       title={`${label} Churches`}
-      description={`Explore worship playlists, live videos, service times, and community pages from churches in ${label}.`}
+      description={`Explore churches in ${label}, then compare location, service times, worship style, denomination, and first-visit details before choosing where to go.`}
       basePath={basePath}
       currentPage={currentPage}
       totalPages={totalPages}

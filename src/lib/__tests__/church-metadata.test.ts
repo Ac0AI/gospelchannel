@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { ChurchConfig, ChurchEnrichment } from "@/types/gospel";
 import {
   buildChurchDescription,
@@ -6,6 +6,23 @@ import {
   classifyChurchTier,
   type ChurchMetadataInput,
 } from "../church-metadata";
+
+vi.mock("@/lib/church", () => ({
+  getChurchFacetPageData: vi.fn(async ({ kind }: { kind: string }) => ({
+    label: {
+      city: "London",
+      country: "United Kingdom",
+      denomination: "Pentecostal",
+      style: "Contemporary Worship",
+    }[kind],
+    totalCount: 12,
+  })),
+}));
+
+import { generateMetadata as generateCityMetadata } from "@/app/church/city/[slug]/page";
+import { generateMetadata as generateCountryMetadata } from "@/app/church/country/[slug]/page";
+import { generateMetadata as generateDenominationMetadata } from "@/app/church/denomination/[slug]/page";
+import { generateMetadata as generateStyleMetadata } from "@/app/church/style/[slug]/page";
 
 function makeChurch(overrides: Partial<ChurchConfig> = {}): ChurchConfig {
   return {
@@ -91,7 +108,7 @@ describe("buildChurchTitle", () => {
       "Hillsong Church",
     );
     expect(buildChurchTitle(input)).toBe(
-      "Hillsong Church in London · Worship Songs, Service Times & Visit Info",
+      "Hillsong Church in London · Worship Music, Service Times & Church Details",
     );
   });
 
@@ -103,7 +120,7 @@ describe("buildChurchTitle", () => {
       "Hope Church Copenhagen",
     );
     expect(buildChurchTitle(input)).toBe(
-      "Hope Church Copenhagen · Worship Songs, Service Times & Visit Info",
+      "Hope Church Copenhagen · Worship Music, Service Times & Church Details",
     );
   });
 
@@ -115,7 +132,7 @@ describe("buildChurchTitle", () => {
       "Hope Church",
     );
     expect(buildChurchTitle(input)).toBe(
-      "Hope Church in Berlin · Service Times, Worship Style & Languages",
+      "Hope Church in Berlin · Service Times, Worship Style & Church Details",
     );
   });
 
@@ -196,6 +213,7 @@ describe("buildChurchDescription", () => {
     const desc = buildChurchDescription(input);
     expect(desc).toContain("Services Sunday 10:00");
     expect(desc).toContain("English and Swedish");
+    expect(desc).toContain("Church details");
   });
 
   it("falls back to country alone when city missing", () => {
@@ -255,6 +273,16 @@ describe("buildChurchDescription", () => {
     expect(buildChurchDescription(input)).not.toContain("Services");
   });
 
+  it("does not add first-visit details for thin profiles", () => {
+    const input = makeInput(
+      { name: "Small Church", denomination: undefined, description: "", location: undefined, country: "Greece" },
+      null,
+      null,
+      "Small Church",
+    );
+    expect(buildChurchDescription(input)).not.toContain("Church details");
+  });
+
   it("uses singular language phrasing for one language", () => {
     const input = makeInput({ name: "Test" }, { languages: ["Swedish"] } as Partial<ChurchEnrichment>);
     expect(buildChurchDescription(input)).toContain("Worship in Swedish.");
@@ -283,5 +311,32 @@ describe("buildChurchDescription", () => {
     const desc = buildChurchDescription(input);
     expect(desc).toContain("Greece Worship Center.");
     expect(desc).not.toContain("in Greece");
+  });
+});
+
+describe("facet metadata titles", () => {
+  const metadataProps = (slug: string) => ({
+    params: Promise.resolve({ slug }),
+    searchParams: Promise.resolve({}),
+  });
+
+  it("uses the required city title format", async () => {
+    const metadata = await generateCityMetadata(metadataProps("london"));
+    expect(metadata.title).toBe("Churches in London: Service Times, Worship & Location");
+  });
+
+  it("uses the required country title format", async () => {
+    const metadata = await generateCountryMetadata(metadataProps("united-kingdom"));
+    expect(metadata.title).toBe("United Kingdom Churches: Cities, Worship Styles & Service Times");
+  });
+
+  it("uses the required denomination title format", async () => {
+    const metadata = await generateDenominationMetadata(metadataProps("pentecostal"));
+    expect(metadata.title).toBe("Pentecostal Churches: Worship, Service Times & Locations");
+  });
+
+  it("uses the required worship-style title format", async () => {
+    const metadata = await generateStyleMetadata(metadataProps("contemporary-worship"));
+    expect(metadata.title).toBe("Contemporary Worship Churches: Music, Service Times & Locations");
   });
 });

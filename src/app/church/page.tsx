@@ -12,6 +12,8 @@ import {
 } from "@/lib/church-directory";
 import { getChurchIndexPageData } from "@/lib/church";
 import { getChurchStatsAsync } from "@/lib/content";
+import { buildBreadcrumbSchema } from "@/lib/seo-schema";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 export const revalidate = 3600;
 
@@ -115,28 +117,28 @@ export async function generateMetadata({ searchParams }: ChurchIndexPageProps): 
 
   if (currentPage > 1) {
     return {
-      title: "Browse Church Channels",
-      description: `Find the right fit across ${churchCountLabel} churches in ${countryCount} countries by worship style, tradition, city, language, and service details.`,
+      title: "Church Profile Database",
+      description: `Compare ${churchCountLabel} church profiles in ${countryCount} countries by worship style, tradition, city, language, service details, and church details.`,
       alternates: { canonical: "https://gospelchannel.com/church" },
       robots: { index: false, follow: true },
     };
   }
 
   return {
-    title: "Browse Church Channels",
-    description: `Find the right fit across ${churchCountLabel} churches in ${countryCount} countries by worship style, tradition, city, language, and service details.`,
+    title: "Church Profile Database",
+    description: `Compare ${churchCountLabel} church profiles in ${countryCount} countries by worship style, tradition, city, language, service details, and church details.`,
     alternates: { canonical: "https://gospelchannel.com/church" },
     openGraph: {
-      title: "Browse Church Channels",
-      description: `Find the right fit across ${churchCountLabel} churches by worship style, tradition, city, language, and service details before your first visit.`,
+      title: "Church Profile Database",
+      description: `Compare ${churchCountLabel} church profiles by worship style, tradition, city, language, service details, and church details before your first visit.`,
       url: "https://gospelchannel.com/church",
       type: "website",
       siteName: "GospelChannel",
     },
     twitter: {
       card: "summary_large_image",
-      title: "Browse Church Channels",
-      description: `Find the right fit across ${churchCountLabel} churches by worship style, tradition, city, language, and service details.`,
+      title: "Church Profile Database",
+      description: `Compare ${churchCountLabel} church profiles by worship style, tradition, city, language, service details, and church details.`,
     },
   };
 }
@@ -170,6 +172,7 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
 
   const searchSummary = query ? buildSearchSummary(query) : null;
   const filterSummary = activeFilterLabels.join(", ");
+  const showDecisionGuide = !hasActiveFilters && currentPage === 1;
 
   // Top 5 denominations + 4 styles for the chip rail (handoff "Refine:" pattern).
   const topDenominations = DENOMINATION_FILTERS.slice(0, 5);
@@ -177,24 +180,56 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
 
   const directorySchema = query
     ? null
-    : {
-        "@context": "https://schema.org",
-        "@type": "ItemList",
-        name: "Church Channels",
-        description: `Browse ${directoryCount} church channels across ${countryCount} countries and compare fit by worship style, tradition, city, and service details.`,
-        numberOfItems: pageItems.length,
-        itemListElement: pageItems.map((church, index) => ({
-          "@type": "ListItem",
-          position: index + 1,
-          name: church.name,
-          url: `https://gospelchannel.com/church/${church.slug}`,
-        })),
-      };
+    : [
+        ...(showDecisionGuide
+          ? [
+              {
+                "@context": "https://schema.org",
+                "@type": "CollectionPage",
+                name: "GospelChannel Church Profile Database",
+                description: `Compare ${directoryCount} church profiles in ${countryCount} countries by worship style, tradition, city, language, service details, worship music, and church details.`,
+                url: "https://gospelchannel.com/church",
+                isPartOf: {
+                  "@type": "WebSite",
+                  name: "GospelChannel",
+                  url: "https://gospelchannel.com",
+                  potentialAction: {
+                    "@type": "SearchAction",
+                    target: "https://gospelchannel.com/church?q={search_term_string}",
+                    "query-input": "required name=search_term_string",
+                  },
+                },
+                about: [
+                  { "@type": "Thing", name: "Church discovery" },
+                  { "@type": "Thing", name: "Worship style matching" },
+                  { "@type": "Thing", name: "First church visit planning" },
+                ],
+              },
+            buildBreadcrumbSchema([
+                { name: "GospelChannel", url: "https://gospelchannel.com" },
+                { name: "Church Profiles", url: "https://gospelchannel.com/church" },
+              ]),
+            ]
+          : []),
+        {
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: hasActiveFilters ? `Church profile results for ${filterSummary}` : "Church profile database",
+          description: `Compare ${directoryCount} church profiles across ${countryCount} countries by worship style, tradition, city, service details, and church details.`,
+          numberOfItems: pageItems.length,
+          itemListElement: pageItems.map((church, index) => ({
+            "@type": "ListItem",
+            position: (currentPage - 1) * PAGE_SIZE + index + 1,
+            name: church.name,
+            url: `https://gospelchannel.com/church/${church.slug}`,
+          })),
+        },
+      ];
 
   return (
     <>
       {directorySchema ? (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(directorySchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(directorySchema) }} />
       ) : null}
 
       {/* Search-first hero (Säker) */}
@@ -203,7 +238,7 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
         style={{ background: "linear-gradient(135deg, var(--linen-deep) 0%, var(--linen) 60%)" }}
       >
         <div className="mx-auto max-w-[1280px]">
-          <p className="gc-eyebrow">Church Directory</p>
+          <p className="gc-eyebrow">Church directory</p>
           <h1 className="mt-3 font-serif text-4xl font-semibold leading-[1] tracking-[-0.02em] text-espresso sm:text-5xl lg:text-[56px]">
             {searchSummary ? (
               <>Search results for <em className="gc-italic">{searchSummary}</em>.</>
@@ -333,6 +368,58 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
           )}
         </div>
       </section>
+
+      {showDecisionGuide && (
+        <section className="mx-auto max-w-[1280px] px-5 pt-12 sm:px-12 sm:pt-14">
+          <div className="border-b border-rose-gold/[0.12] pb-10">
+            <p className="gc-eyebrow">Start your search</p>
+            <h2 className="mt-2 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-[32px]">
+              Turn church details into a shortlist.
+            </h2>
+            <p className="mt-3 max-w-[760px] text-sm leading-[1.7] text-warm-brown sm:text-base">
+              Start with the signal you can judge before visiting, then open church profiles for
+              details: service times, music, videos, languages, location, and first-visit cues.
+            </p>
+            <div className="mt-7 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                {
+                  href: "/church/style",
+                  label: "1. Worship style",
+                  body: "Pick the room sound you are most likely to return to: contemporary, gospel, charismatic, acoustic, Latin, African, or traditional.",
+                },
+                {
+                  href: "/church/denomination",
+                  label: "2. Tradition",
+                  body: "Narrow by Baptist, Pentecostal, Anglican, Lutheran, non-denominational, charismatic, and other church families.",
+                },
+                {
+                  href: "/church/city",
+                  label: "3. City",
+                  body: "Choose a realistic city before a broad radius. A church only helps if you can actually get there on Sunday.",
+                },
+                {
+                  href: "/guides/how-to-find-the-right-church",
+                  label: "4. Visit plan",
+                  body: "Use the step-by-step guide to compare two or three strong candidates without wasting months of Sundays.",
+                },
+              ].map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="group border-t border-rose-gold/[0.14] pt-4 transition-colors hover:border-rose-gold/40"
+                >
+                  <span className="block text-sm font-bold text-rose-gold transition-colors group-hover:text-rose-gold-deep">
+                    {item.label} &rarr;
+                  </span>
+                  <span className="mt-2 block text-sm leading-[1.6] text-warm-brown">
+                    {item.body}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Results header + grid */}
       <section className="mx-auto max-w-[1280px] px-5 pt-12 sm:px-12 sm:pt-14">

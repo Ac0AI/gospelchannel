@@ -1,11 +1,145 @@
 import Link from "next/link";
 import type { FacetLink } from "@/lib/church-directory";
+import { serializeJsonLd } from "@/lib/json-ld";
+
+type FacetDecisionCard = {
+  title: string;
+  body: string;
+  href: string;
+  label: string;
+};
+
+type FacetDecisionModel = {
+  quickAnswer: string;
+  decisionCards: FacetDecisionCard[];
+  detailSignals: string[];
+};
+
+function singularizeFacetNoun(itemNoun: string): string {
+  if (itemNoun === "cities") return "city";
+  if (itemNoun === "countries") return "country";
+  if (itemNoun === "denominations") return "denomination";
+  if (itemNoun === "worship styles") return "worship style";
+  return itemNoun.replace(/s$/, "");
+}
+
+function getFacetDecisionModel(basePath: string): FacetDecisionModel {
+  if (basePath === "/church/city") {
+    return {
+      quickAnswer:
+        "Use city when the main question is whether you can realistically show up this Sunday. Pick a city first, then compare style, tradition, language, service times, and visitor information in church profiles.",
+      detailSignals: ["service times", "map/location fit", "worship music", "language cues", "first-visit details"],
+      decisionCards: [
+        {
+          title: "Start with realistic geography",
+          body: "A church only helps if the Sunday route is sustainable. City pages keep the shortlist grounded before style or denomination filters take over.",
+          href: "/church/city",
+          label: "Browse city hubs",
+        },
+        {
+          title: "Then compare worship feel",
+          body: "After the city is right, use style hubs to decide whether the room sounds contemporary, gospel, acoustic, charismatic, or rooted.",
+          href: "/church/style",
+          label: "Browse worship styles",
+        },
+        {
+          title: "Check church details",
+          body: "Open individual profiles for service times, music, videos, address context, and visitor signals before planning the visit.",
+          href: "/church/churches-with-service-times",
+          label: "See visit-ready profiles",
+        },
+      ],
+    };
+  }
+
+  if (basePath === "/church/country") {
+    return {
+      quickAnswer:
+        "Use country when you are mapping the church landscape across a region before choosing a city. Country hubs show the available cities, worship styles, and traditions, then church profiles provide visit details.",
+      detailSignals: ["country coverage", "city options", "tradition mix", "worship styles", "profile freshness"],
+      decisionCards: [
+        {
+          title: "Start with country coverage",
+          body: `Country hubs show where GospelChannel has enough coverage to support a real search path across cities, styles, and traditions.`,
+          href: "/church/country",
+          label: "Browse countries",
+        },
+        {
+          title: "Move down to cities",
+          body: "Use city hubs to turn a national search into a practical Sunday route you can actually attend.",
+          href: "/church/city",
+          label: "Browse cities",
+        },
+        {
+          title: "Check church details",
+          body: "Use profiles to confirm service details, language, worship music, location, and official links before you visit.",
+          href: "/church",
+          label: "Open church profiles",
+        },
+      ],
+    };
+  }
+
+  if (basePath === "/church/style") {
+    return {
+      quickAnswer:
+        "Use worship style when the real decision is what kind of room will help you come back. Style hubs translate sound and Sunday energy into churches, then profiles show music, videos, service details, and location.",
+      detailSignals: ["worship style tags", "playlists", "videos", "service rhythm", "profile examples"],
+      decisionCards: [
+        {
+          title: "Start with the sound",
+          body: "Choose the worship room you are most likely to enter again: contemporary, gospel, charismatic, acoustic, rooted, or global.",
+          href: "/guides/worship-styles-explained",
+          label: "Read the style guide",
+        },
+        {
+          title: "Browse matching churches",
+          body: "Open a style hub to compare churches that share the same worship language before narrowing by city or tradition.",
+          href: "/church/style",
+          label: "Browse styles",
+        },
+        {
+          title: "Verify with music",
+          body: "Use profiles with music signals when worship sound matters more than a directory label.",
+          href: "/church/churches-with-worship-music",
+          label: "See profiles with music",
+        },
+      ],
+    };
+  }
+
+  return {
+    quickAnswer:
+      "Use denomination when the decision is about theological family, governance, sacraments, or Sunday expectations. Tradition hubs narrow the field, then profiles show how each church worships, teaches, and welcomes visitors.",
+    detailSignals: ["denomination signal", "worship style", "teaching emphasis", "service times", "visitor fit"],
+    decisionCards: [
+      {
+        title: "Start with tradition",
+        body: "Use denomination hubs when Baptist, Pentecostal, Anglican, Lutheran, non-denominational, or charismatic roots matter to the decision.",
+        href: "/guides/denominations-comparison",
+        label: "Read the denomination guide",
+      },
+      {
+        title: "Compare close choices",
+        body: "If two traditions both seem plausible, use comparison pages before spending Sundays on visits.",
+        href: "/compare",
+        label: "Open comparisons",
+      },
+      {
+        title: "Check church details",
+        body: "Open church pages to confirm the tradition signal against worship style, service rhythm, music, location, and community cues.",
+        href: "/church/denomination",
+        label: "Browse denominations",
+      },
+    ],
+  };
+}
 
 /**
  * "Hub of hubs" index for a single facet kind (city / country / denomination /
- * worship style). Lists every facet value with its church count and links down
- * to the corresponding /church/{kind}/{slug} page. Reached from the homepage
- * "Browse by ..." buttons and indexed for crawl-path depth.
+ * worship style). Lists facet values with their church count and links down to
+ * the corresponding /church/{kind}/{slug} page. City can be capped because the
+ * full city set is very large and canonical crawl discovery lives in sitemap.
  */
 export function FacetIndexPage({
   eyebrow,
@@ -16,6 +150,7 @@ export function FacetIndexPage({
   breadcrumbLabel,
   itemNoun,
   links,
+  maxRenderedLinks,
 }: {
   eyebrow: string;
   titleLead: string;
@@ -25,9 +160,15 @@ export function FacetIndexPage({
   breadcrumbLabel: string;
   itemNoun: string;
   links: FacetLink[];
+  maxRenderedLinks?: number;
 }) {
   const canonicalUrl = `https://gospelchannel.com${basePath}`;
   const totalChurches = links.reduce((sum, link) => sum + link.count, 0);
+  const decisionModel = getFacetDecisionModel(basePath);
+  const singularNoun = singularizeFacetNoun(itemNoun);
+  const renderedLinks = typeof maxRenderedLinks === "number" ? links.slice(0, maxRenderedLinks) : links;
+  const hiddenLinkCount = Math.max(0, links.length - renderedLinks.length);
+  const isCapped = hiddenLinkCount > 0;
 
   const jsonLd: Array<Record<string, unknown>> = [
     {
@@ -41,6 +182,11 @@ export function FacetIndexPage({
         name: "GospelChannel",
         url: "https://gospelchannel.com",
       },
+      about: [
+        { "@type": "Thing", name: "Church discovery" },
+        { "@type": "Thing", name: "Church details" },
+        { "@type": "Thing", name: `${titleTail} church search` },
+      ],
     },
     {
       "@context": "https://schema.org",
@@ -54,19 +200,35 @@ export function FacetIndexPage({
       "@context": "https://schema.org",
       "@type": "ItemList",
       name: `${titleLead} ${titleTail}`.trim(),
+      description: isCapped
+        ? `${renderedLinks.length} ${itemNoun} that help narrow a church search before opening church details. The complete canonical city set is available through sitemap.xml and city detail pages.`
+        : `Index of ${itemNoun} that help narrow a church search before opening church details.`,
       numberOfItems: links.length,
-      itemListElement: links.map((link, index) => ({
+      itemListElement: renderedLinks.map((link, index) => ({
         "@type": "ListItem",
         position: index + 1,
         name: link.label,
         url: `https://gospelchannel.com${link.href}`,
       })),
     },
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: `${breadcrumbLabel} church search`,
+      description: decisionModel.quickAnswer,
+      numberOfItems: decisionModel.decisionCards.length,
+      itemListElement: decisionModel.decisionCards.map((card, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: card.title,
+        url: `https://gospelchannel.com${card.href}`,
+      })),
+    },
   ];
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
 
       {/* Hero */}
       <section className="border-b border-rose-gold/[0.12] bg-linen px-5 pt-14 pb-10 sm:px-12 sm:pt-16 sm:pb-12">
@@ -109,11 +271,65 @@ export function FacetIndexPage({
         </div>
       </section>
 
+      {/* Decision model */}
+      <section className="mx-auto max-w-[1280px] px-5 pt-12 sm:px-12 sm:pt-14">
+        <div className="rounded-[24px] border border-rose-gold/[0.16] bg-white p-6 shadow-[0_18px_55px_rgba(72,39,24,0.06)] sm:p-8">
+          <p className="gc-eyebrow">Quick answer</p>
+          <h2 className="mt-3 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-3xl">
+            Use this hub to narrow your search, then check church details.
+          </h2>
+          <p className="mt-3 max-w-[860px] text-sm leading-[1.7] text-warm-brown sm:text-base">
+            {decisionModel.quickAnswer}
+          </p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            {decisionModel.detailSignals.map((signal) => (
+              <span
+                key={signal}
+                className="rounded-full border border-rose-gold/20 bg-linen px-3 py-1 text-xs font-semibold text-warm-brown"
+              >
+                {signal}
+              </span>
+            ))}
+          </div>
+          <div className="mt-7 grid gap-4 md:grid-cols-3">
+            {decisionModel.decisionCards.map((card) => (
+              <article key={card.title} className="rounded-[18px] border border-rose-gold/[0.14] bg-linen-deep p-5">
+                <h3 className="font-serif text-xl font-semibold tracking-[-0.01em] text-espresso">
+                  {card.title}
+                </h3>
+                <p className="mt-2 text-sm leading-[1.65] text-warm-brown">
+                  {card.body}
+                </p>
+                <Link
+                  href={card.href}
+                  className="mt-4 inline-flex text-sm font-bold text-rose-gold transition-colors hover:text-rose-gold-deep"
+                >
+                  {card.label} &rarr;
+                </Link>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Link grid */}
       <section className="mx-auto max-w-[1280px] px-5 pt-12 sm:px-12 sm:pt-14">
+        <div className="mb-5">
+          <p className="gc-eyebrow">Church collections</p>
+          <h2 className="mt-2 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-3xl">
+            Choose a {singularNoun}, then open the churches behind it.
+          </h2>
+          <p className="mt-2 max-w-[760px] text-sm leading-[1.7] text-warm-brown sm:text-base">
+            Each link below leads to a filtered church collection with published details:
+            service details, music, videos, location, language, and visitor signals where available.
+            {isCapped
+              ? ` Showing the ${renderedLinks.length.toLocaleString("en-US")} largest ${itemNoun}; the full indexable city set remains available through sitemap.xml and city detail URLs.`
+              : ""}
+          </p>
+        </div>
         {links.length > 0 ? (
           <div className="flex flex-wrap gap-2.5">
-            {links.map((link) => (
+            {renderedLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -129,6 +345,16 @@ export function FacetIndexPage({
         ) : (
           <p className="text-warm-brown">Nothing to show here yet. Check back soon.</p>
         )}
+        {isCapped ? (
+          <div className="mt-5 rounded-[18px] border border-rose-gold/[0.14] bg-linen-deep px-5 py-4 text-sm leading-[1.65] text-warm-brown">
+            {hiddenLinkCount.toLocaleString("en-US")} smaller {itemNoun} are not rendered on this index page
+            to keep it fast for users and crawlers. They remain discoverable through{" "}
+            <Link href="/sitemap.xml" className="font-semibold text-rose-gold hover:text-rose-gold-deep">
+              sitemap.xml
+            </Link>
+            , internal profile links, and the city detail pages that meet the indexability threshold.
+          </div>
+        ) : null}
       </section>
 
       {/* Suggest CTA */}

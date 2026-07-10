@@ -2,14 +2,25 @@ import Link from "next/link";
 import { COPYRIGHT_YEAR } from "@/lib/utils";
 import { getChurchStatsAsync } from "@/lib/content";
 
-const cols = [
+export const SITE_FOOTER_COLUMNS = [
   {
     title: "Discover",
     links: [
       { label: "Browse all churches", href: "/church" },
-      { label: "Prayer Wall", href: "/prayerwall" },
       { label: "Guides", href: "/guides" },
       { label: "Compare", href: "/compare" },
+      { label: "Prayer Wall", href: "/prayerwall" },
+    ],
+  },
+  {
+    title: "Find a church",
+    links: [
+      { label: "Church Choice Answers", href: "/guides/church-choice-answers" },
+      { label: "Church Fit Quiz", href: "/guides/church-fit-quiz" },
+      { label: "Worship Style Match", href: "/guides/worship-style-match" },
+      { label: "First Visit Guide", href: "/guides/first-visit-guide" },
+      { label: "Denominations Compared", href: "/guides/denominations-comparison" },
+      { label: "Profiles with service times", href: "/church/churches-with-service-times" },
     ],
   },
   {
@@ -23,18 +34,24 @@ const cols = [
     ],
   },
   {
-    title: "For churches",
+    title: "For people",
     links: [
-      { label: "Add your church", href: "/church/suggest" },
-      { label: "Why list with us", href: "/for-churches" },
-      { label: "Church admin", href: "/church-admin/login" },
-      { label: "Contact", href: "/contact" },
+      { label: "Browse by life stage", href: "/for" },
+      { label: "For expats", href: "/for/expats" },
+      { label: "For students", href: "/for/students" },
+      { label: "For young adults", href: "/for/young-adults" },
+      { label: "For families", href: "/for/families" },
+      { label: "For new believers", href: "/for/new-believers" },
+      { label: "For deconstructing seekers", href: "/for/deconstructing" },
     ],
   },
   {
     title: "Company",
     links: [
       { label: "About", href: "/about" },
+      { label: "Add your church", href: "/church/suggest" },
+      { label: "For church teams", href: "/for-churches" },
+      { label: "Contact", href: "/contact" },
       { label: "Privacy", href: "/privacy" },
     ],
   },
@@ -45,14 +62,14 @@ export async function SiteFooter() {
   return (
     <footer className="mt-24 bg-espresso px-5 pt-20 pb-10 text-[rgba(253,248,244,0.7)] sm:px-12">
       <div className="mx-auto max-w-[1280px]">
-        <div className="grid gap-10 border-b border-[rgba(253,248,244,0.12)] pb-15 sm:grid-cols-2 sm:gap-12 lg:grid-cols-[1.5fr_1fr_1fr_1fr_1fr]">
+        <div className="grid gap-10 border-b border-[rgba(253,248,244,0.12)] pb-15 sm:grid-cols-2 sm:gap-12 lg:grid-cols-[1.45fr_repeat(5,1fr)]">
           {/* Brand col */}
           <div>
             <div className="font-serif text-[28px] font-semibold leading-tight tracking-[-0.01em] text-linen">
               GospelChannel
             </div>
             <p className="mt-3.5 max-w-[320px] text-sm leading-relaxed">
-              A directory for the world&rsquo;s churches. Free, no ads, no tracking. Built for the people who haven&rsquo;t found a church yet &mdash; and the ones already serving one.
+              Find the right church with worship style, tradition, service times, music, location, language, and visitor information.
             </p>
             <p className="mt-4 text-xs uppercase tracking-[0.08em] text-[rgba(253,248,244,0.55)]">
               {churchCountLabel} churches &middot; {countryCount} countries
@@ -63,7 +80,7 @@ export async function SiteFooter() {
           </div>
 
           {/* Link columns */}
-          {cols.map((col) => (
+          {SITE_FOOTER_COLUMNS.map((col) => (
             <div key={col.title}>
               <h4 className="font-serif text-lg font-semibold tracking-[-0.01em] text-linen">
                 {col.title}

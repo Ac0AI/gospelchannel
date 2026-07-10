@@ -1,14 +1,15 @@
 import type { ReactNode } from "react";
 
 interface GuideStepProps {
+  id?: string;
   step?: number;
   title: string;
   children: ReactNode;
 }
 
-export function GuideStep({ step, title, children }: GuideStepProps) {
+export function GuideStep({ id, step, title, children }: GuideStepProps) {
   return (
-    <section>
+    <section id={id} className="scroll-mt-24">
       {step != null && (
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-mauve">
           Step {step}

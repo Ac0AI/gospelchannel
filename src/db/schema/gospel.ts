@@ -137,6 +137,7 @@ export const churchSuggestions = pgTable("church_suggestions", {
   message: text("message"),
   submittedAt: timestamp("submitted_at", { withTimezone: true }).notNull().defaultNow(),
   status: text("status").notNull().default("pending"),
+  enrichmentData: jsonb("enrichment_data"),
 });
 
 export const searchSuggestions = pgTable(

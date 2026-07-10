@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { requireAdminRoute } from "@/lib/admin-route";
 import { revalidatePublicChurchContent } from "@/lib/content";
-import { updateStatus } from "@/lib/church-community";
+import { createChurchFromSuggestion, updateStatus } from "@/lib/church-community";
 
 const VALID_STATUSES_BY_TABLE = {
   church_suggestions: new Set(["pending", "reviewed", "approved", "rejected"]),
@@ -35,15 +35,26 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    // Approving a suggestion also creates the catalog entry (unless the
+    // church already exists) — flipping the status alone used to leave
+    // approved suggestions without a church page.
+    let createdSlug: string | null = null;
+    let existingSlug: string | null = null;
+    if (payload.table === "church_suggestions" && payload.status === "approved") {
+      const result = await createChurchFromSuggestion(payload.id);
+      createdSlug = result.createdSlug;
+      existingSlug = result.existingSlug;
+    }
+
     await updateStatus(
       payload.table as "church_suggestions" | "church_feedback" | "church_claims" | "churches",
       payload.id,
       payload.status
     );
-    if (payload.table === "churches") {
+    if (payload.table === "churches" || createdSlug) {
       revalidatePublicChurchContent();
     }
-    return admin.json({ success: true });
+    return admin.json({ success: true, createdSlug, existingSlug });
   } catch (err) {
     return admin.json({ error: (err as Error).message }, { status: 500 });
   }
