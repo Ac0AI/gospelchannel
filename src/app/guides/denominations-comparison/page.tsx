@@ -259,7 +259,7 @@ export default async function DenominationsComparisonPage() {
           {
             href: "/church/denomination/pentecostal",
             label: "Pentecostal churches",
-            description: "Browse expressive, Spirit-expectant churches and check their actual profile signals.",
+            description: "Browse expressive, Spirit-expectant churches and compare worship, service times, location, and visitor details.",
           },
           {
             href: "/compare/baptist-vs-pentecostal",

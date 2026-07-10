@@ -151,7 +151,7 @@ export default async function ChurchChoiceAnswersPage() {
       <section className="mt-14">
         <p className="gc-eyebrow">Common decisions</p>
         <h2 className="mt-3 font-serif text-3xl font-semibold tracking-[-0.01em] text-espresso sm:text-4xl">
-          Answer first. Verify second.
+          Choose what matters, then compare churches.
         </h2>
         <div className="mt-8 space-y-10">
           {CHURCH_CHOICE_ANSWERS.map((item, index) => (

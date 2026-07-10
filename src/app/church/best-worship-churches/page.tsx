@@ -76,7 +76,7 @@ export default async function BestWorshipChurchesPage() {
   const breadcrumbs = [
     { href: "/", label: "Home" },
     { href: "/church", label: "Churches" },
-    { href: PATH, label: "Best worship churches" },
+    { href: PATH, label: "Churches Known for Worship" },
   ];
 
   const jsonLd: Array<Record<string, unknown>> = [
@@ -102,7 +102,7 @@ export default async function BestWorshipChurchesPage() {
       "@context": "https://schema.org",
       "@type": "ItemList",
       "@id": `${CANONICAL}#itemlist`,
-      name: "Best Worship Churches",
+      name: "Churches Known for Worship",
       numberOfItems: count,
       itemListElement: churches.map((church, index) => ({
         "@type": "ListItem",

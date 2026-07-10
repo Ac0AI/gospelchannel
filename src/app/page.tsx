@@ -71,7 +71,7 @@ function buildHomeFaqSchema(churchCountLabel: string, countryCount: number) {
   const questions: Array<{ q: string; a: string }> = [
     {
       q: "What is GospelChannel?",
-      a: "GospelChannel helps you find the right church before your first visit. You can compare worship style, tradition, language, service details, and community signals, then verify the fit in each church profile before Sunday.",
+      a: "GospelChannel helps you find the right church before your first visit. Compare worship style, tradition, language, service times, location, and visitor details on each church page before Sunday.",
     },
     {
       q: "What are the best gospel songs for worship in 2026?",

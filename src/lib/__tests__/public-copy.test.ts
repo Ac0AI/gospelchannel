@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { createElement } from "react";
+import { createElement, type ComponentType, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import ts from "typescript";
 import { describe, expect, it, vi } from "vitest";
@@ -12,7 +12,8 @@ import BestWorshipChurchesPage, {
 } from "@/app/church/best-worship-churches/page";
 import NetworkIndexPage from "@/app/network/page";
 
-vi.mock("@/lib/content", () => ({
+vi.mock("@/lib/content", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/content")>()),
   getFreshestChurchUpdatedAtAsync: async () => "2026-07-10T00:00:00.000Z",
 }));
 
@@ -66,6 +67,12 @@ const FORBIDDEN_PUBLIC_COPY = [
   /\bproof links?\b/i,
   /\bdoes the proof work\b/i,
   /\bproved through a real church profile\b/i,
+  /\banswers you can verify\b/i,
+  /\b(?:recommended|matching) routes?\b/i,
+  /\bsame lane\b/i,
+  /\bprofile signals?\b/i,
+  /\banswer first[.!?]?\s+verify second\b/i,
+  /\bverify the fit\b/i,
 ];
 
 const SRC_ROOT = fileURLToPath(new URL("../..", import.meta.url));
@@ -191,16 +198,43 @@ describe("public copy", () => {
     expect(networkMarkup).toContain("https://gospelchannel.com/network/sample-network");
   });
 
+  it("keeps private-preview comparison columns shrinkable on mobile", async () => {
+    const previewModule = await import("@/app/preview/[slug]/page");
+    const PreviewComparisonColumn = (
+      previewModule as unknown as {
+        PreviewComparisonColumn?: ComponentType<{ children: ReactNode }>;
+      }
+    ).PreviewComparisonColumn;
+
+    expect(PreviewComparisonColumn).toBeTypeOf("function");
+    const markup = renderToStaticMarkup(
+      createElement(PreviewComparisonColumn!, null, createElement("span", null, "Preview")),
+    );
+
+    expect(markup).toBe('<div class="min-w-0"><span>Preview</span></div>');
+  });
+
   it("describes the best-worship collection by its filter and profile-completeness ordering", async () => {
     const metadata = await generateBestWorshipMetadata();
     const markup = renderToStaticMarkup(await BestWorshipChurchesPage());
+    const jsonLdMarkup = markup.match(
+      /<script type="application\/ld\+json">([\s\S]*?)<\/script>/,
+    )?.[1];
+    const jsonLd = JSON.parse(jsonLdMarkup ?? "[]") as Array<Record<string, unknown>>;
+    const breadcrumbSchema = jsonLd.find((item) => item["@type"] === "BreadcrumbList") as
+      | { itemListElement?: Array<{ name?: string }> }
+      | undefined;
+    const itemListSchema = jsonLd.find((item) => item["@type"] === "ItemList");
 
     expect(metadata.title).toBe("Churches Known for Worship");
     expect(metadata.description).toContain("contemporary, charismatic, gospel, or Pentecostal worship");
     expect(metadata.description).toContain("profile completeness");
     expect(markup).toContain("Churches Known for");
+    expect(markup).toContain(">Churches Known for Worship</span>");
     expect(markup).toContain("filtered by published worship tags");
     expect(markup).toContain("ordered by GospelChannel&#x27;s directory score for profile completeness");
     expect(markup).not.toMatch(/What People Recommend|people recommend for worship/i);
+    expect(breadcrumbSchema?.itemListElement?.at(-1)?.name).toBe("Churches Known for Worship");
+    expect(itemListSchema?.name).toBe("Churches Known for Worship");
   });
 });

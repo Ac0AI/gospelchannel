@@ -81,9 +81,8 @@ export function ForAudienceLayout({ data, siblings }: Props) {
           Start with the {data.audience_name.toLowerCase()} question, then check the church details.
         </h2>
         <p className="mt-3 max-w-[820px] text-sm leading-[1.7] text-warm-brown sm:text-base">
-          This page narrows the search by intent. Then use church pages to check the details that matter:
-          open the recommended route, compare churches in the same lane, then inspect the profile
-          signals that matter before choosing a Sunday.
+          Start with churches that match your situation, then compare service times, location,
+          worship, language, kids information, and visitor details before choosing a Sunday.
         </p>
         <div className="mt-5 flex flex-wrap gap-2">
           {proofSignals.map((signal) => (
@@ -109,7 +108,7 @@ export function ForAudienceLayout({ data, siblings }: Props) {
           <article className="rounded-[18px] border border-rose-gold/[0.14] bg-linen-deep p-5">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-mauve">Step 2</p>
             <h3 className="mt-2 font-serif text-xl font-semibold tracking-[-0.01em] text-espresso">
-              Open the matching route
+              Read the matching guide
             </h3>
             <p className="mt-2 text-sm leading-[1.65] text-warm-brown">
               {primarySolution?.body ?? data.solution_lede}
@@ -142,7 +141,7 @@ export function ForAudienceLayout({ data, siblings }: Props) {
         </div>
         {secondarySolution ? (
           <p className="mt-5 text-sm leading-[1.65] text-muted-warm">
-            Next best route:{" "}
+            Another guide to consider:{" "}
             <Link href={secondarySolution.href} className="font-semibold text-rose-gold hover:text-rose-gold-deep">
               {secondarySolution.title}
             </Link>

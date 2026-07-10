@@ -15,6 +15,10 @@ export const metadata: Metadata = {
   title: "Preview your church profile",
 };
 
+export function PreviewComparisonColumn({ children }: { children: React.ReactNode }) {
+  return <div className="min-w-0">{children}</div>;
+}
+
 async function validateToken(slug: string, token: string): Promise<boolean> {
   const sb = createAdminClient();
   const { data } = await sb
@@ -440,7 +444,7 @@ export default async function PreviewPage({
         {/* Before / After comparison */}
         <div className="mt-10 grid gap-6 lg:grid-cols-2">
           {/* TODAY */}
-          <div>
+          <PreviewComparisonColumn>
             <div className="mb-3 flex items-center gap-2">
               <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-muted-warm/20 text-[10px] font-bold text-muted-warm">
                 ✗
@@ -451,10 +455,10 @@ export default async function PreviewPage({
             <div className="rounded-2xl bg-linen-deep/40 p-4">
               <MockCurrentProfile church={church} data={mergedProfile} />
             </div>
-          </div>
+          </PreviewComparisonColumn>
 
           {/* WITH FULL PROFILE */}
-          <div>
+          <PreviewComparisonColumn>
             <div className="mb-3 flex items-center gap-2">
               <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-rose-gold text-[10px] font-bold text-white">
                 ✓
@@ -465,7 +469,7 @@ export default async function PreviewPage({
             <div className="rounded-2xl border-2 border-rose-gold/30 bg-gradient-to-br from-blush-light/30 to-linen p-4 shadow-sm">
               <MockEnrichedProfile church={church} data={mergedProfile} />
             </div>
-          </div>
+          </PreviewComparisonColumn>
         </div>
 
         {/* Completeness + CTA */}

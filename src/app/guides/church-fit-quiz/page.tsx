@@ -147,7 +147,7 @@ export default async function ChurchFitQuizPage() {
       <section className="mx-auto max-w-[1100px] px-5 pb-16 sm:px-12">
         <GuideChurchEvidence
           title="Sample lanes the quiz can send you toward"
-          intro="These examples are not the quiz result; they are church lists. After answering, the tool uses the same lane logic to open churches that match your answers."
+          intro="These examples are church lists, not your quiz result. After answering, the tool opens churches that match your worship, tradition, location, and practical needs."
           groups={evidenceGroups}
           toolName="church_fit_quiz_guide"
         />

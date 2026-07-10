@@ -6,7 +6,7 @@ import { buildBreadcrumbSchema, buildItemListSchema } from "@/lib/seo-schema";
 import { serializeJsonLd } from "@/lib/json-ld";
 
 const PAGE_URL = "https://gospelchannel.com/guides";
-const PAGE_TITLE = "Church Decision Guides to Choose and Verify the Right Church";
+const PAGE_TITLE = "Church Guides for Choosing Where to Visit";
 
 const GUIDE_DECISION_PATHS = [
   {
@@ -49,7 +49,7 @@ const GUIDE_DECISION_PATHS = [
 
 export async function generateMetadata(): Promise<Metadata> {
   const { churchCountLabel, countryCount } = await getChurchStatsAsync();
-  const description = `Decision guides for church seekers: answer the church-choice question, then verify the fit across ${churchCountLabel} profiles in ${countryCount} countries.`;
+  const description = `Practical church-choice guides followed by ${churchCountLabel} church pages with service times, location, worship, language, and visitor details across ${countryCount} countries.`;
   return {
     title: PAGE_TITLE,
     description,
@@ -160,7 +160,7 @@ export default async function GuidesPage() {
             Answer the church question, then <em className="gc-italic">see what fits</em>.
           </h1>
           <p className="mt-5 max-w-[640px] text-lg leading-relaxed text-linen/75 sm:text-xl">
-            Start with the decision you need to make: fit, worship, tradition, first visit, or location. Then verify it across {churchCountLabel} churches in {countryCount} countries.
+            Start with the decision you need to make: worship, tradition, first visit, or location. Then compare service times, language, worship, location, and visitor details across {churchCountLabel} churches in {countryCount} countries.
           </p>
           <div className="mt-8 max-w-[860px] border-y border-blush/20 py-7">
             <p className="gc-eyebrow" style={{ color: "var(--rose-gold)" }}>Quick answer</p>

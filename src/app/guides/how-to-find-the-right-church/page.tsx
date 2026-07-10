@@ -190,7 +190,7 @@ export default async function HowToFindTheRightChurchPage() {
           {
             href: "/church/city",
             label: "Pick a city before a radius",
-            description: "Open a city hub, then narrow by style, denomination, language, and church profile signals.",
+            description: "Open a city page, then compare worship style, denomination, language, service times, and location.",
           },
           {
             href: "/church",

@@ -90,7 +90,7 @@ export function HomeHero({ surpriseSlugs, churchCountLabel }: Props) {
       {/* Hero content */}
       <div className="relative z-[2] flex h-full flex-col items-center justify-center px-5 text-center sm:px-12">
         <p className="font-serif text-base italic text-white/70 sm:text-[17px]">
-          Choose a church with answers you can verify.
+          Compare service times, location, worship, and visitor details.
         </p>
         <h1 className="mt-3 max-w-[14ch] font-serif text-5xl font-semibold leading-[1.08] tracking-[-0.02em] text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.3)] sm:text-7xl lg:text-[88px]">
           Find the <em className="not-italic font-serif italic text-blush">right</em> church.
