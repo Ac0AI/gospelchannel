@@ -185,7 +185,7 @@ export default async function GuidesPage() {
         </div>
       </section>
 
-      {/* Decision paths */}
+      {/* Guide collections */}
       <section className="mx-auto max-w-[1280px] px-5 pt-16 sm:px-12 sm:pt-20">
         <p className="gc-eyebrow">Choose by question</p>
         <h2 className="mt-3 font-serif text-3xl font-semibold tracking-[-0.01em] text-espresso sm:text-4xl">
