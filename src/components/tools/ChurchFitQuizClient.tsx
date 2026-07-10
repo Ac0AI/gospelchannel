@@ -307,7 +307,7 @@ export function ChurchFitQuizClient({ lanes }: { lanes: DiscoveryLane[] }) {
             <ToolActionCard
               eyebrow="Personalized profile matches"
               title={deferredAreaQuery ? `Browse your matches near ${deferredAreaQuery}` : "Browse your personalized church matches"}
-              description="Open a filterable church profile result built from your quiz answers. The URL is shareable and loads as a normal paginated proof route."
+              description="Open a filterable church list built from your quiz answers. The URL is shareable and loads as a normal paginated result."
               href={directoryHref}
               label="Open all matching churches"
               toolName="church_fit_quiz"

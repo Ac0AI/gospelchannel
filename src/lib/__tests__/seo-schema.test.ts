@@ -37,7 +37,7 @@ describe("seo schema", () => {
     });
   });
 
-  it("marks guide schema as a church decision guide backed by profile evidence", () => {
+  it("marks guide schema as a church choice guide with church details", () => {
     const [article] = buildGuideSchema({
       slug: "first-visit-guide",
       headline: "Your First Church Visit",
@@ -49,18 +49,18 @@ describe("seo schema", () => {
       headline: "Your First Church Visit",
       about: [
         { "@type": "Thing", name: "Church choice" },
-        { "@type": "Thing", name: "Church decision guide" },
-        { "@type": "Thing", name: "Church profile evidence" },
+        { "@type": "Thing", name: "Church choice guide" },
+        { "@type": "Thing", name: "Church details" },
       ],
       mentions: [
         {
           "@type": "Thing",
-          name: "GospelChannel church profile database",
+          name: "Explore churches on GospelChannel",
           url: "https://gospelchannel.com/church",
         },
         {
           "@type": "Thing",
-          name: "Church proof routes",
+          name: "Browse matching churches",
           url: "https://gospelchannel.com/church",
         },
       ],

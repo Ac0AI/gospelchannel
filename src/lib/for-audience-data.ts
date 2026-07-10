@@ -293,7 +293,7 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       {
         title: "Sunday gets eaten by week-old laundry",
         body:
-          "It's not unbelief — it's logistics. You meant to try a church the first weekend; the bin overflowed. Then it was an essay. By week six, walking into a new congregation alone feels harder than skipping. A proof route that puts a clear option in front of you takes one excuse off the pile.",
+          "It's not unbelief — it's logistics. You meant to try a church the first weekend; the bin overflowed. Then it was an essay. By week six, walking into a new congregation alone feels harder than skipping. A church list that puts a clear option in front of you takes one excuse off the pile.",
       },
       {
         title: "You're 19 and most of the room is 60",
@@ -485,7 +485,7 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       {
         title: "Loneliness compounds when you keep trying and bouncing",
         body:
-          "Trying three new churches in three weeks and not staying anywhere is harder than not going at all. Each visit you arrive alone, leave alone, and don't go back. A proof route that points you at congregations with active 20-something communities saves the third strike.",
+          "Trying three new churches in three weeks and not staying anywhere is harder than not going at all. Each visit you arrive alone, leave alone, and don't go back. A church list that points you at congregations with active 20-something communities saves the third strike.",
       },
     ],
 

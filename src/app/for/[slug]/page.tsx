@@ -67,7 +67,7 @@ export default async function ForAudiencePage({
       about: [
         "Church choice",
         `${data.audience_name} church search`,
-        "Church profile evidence",
+        "Church details",
       ],
       mentions: [
         { name: "GospelChannel church profile database", url: `${SITE_URL}/church` },
@@ -89,7 +89,7 @@ export default async function ForAudiencePage({
       })),
     },
     buildItemListSchema({
-      name: `${data.audience_name} church decision routes`,
+      name: `${data.audience_name} ways to find a church`,
       items: data.solutions.map((solution) => ({
         name: solution.title,
         url: `${SITE_URL}${solution.href}`,
@@ -98,7 +98,7 @@ export default async function ForAudiencePage({
     ...(proofRoutes.length > 0
       ? [
           buildItemListSchema({
-            name: `${data.audience_name} church proof routes`,
+            name: `${data.audience_name} matching churches`,
             items: proofRoutes.map((route) => ({
               name: route.label,
               url: `${SITE_URL}${route.href}`,

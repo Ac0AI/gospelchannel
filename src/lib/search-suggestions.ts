@@ -125,7 +125,7 @@ const AUDIENCE_DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = Object.valu
   id: `for-${audience.slug}`,
   type: "guide",
   title: audience.hero_eyebrow,
-  subtitle: "Audience-specific guidance with matching church profile proof routes.",
+  subtitle: "Guidance for your situation, with churches to explore next.",
   href: `/for/${audience.slug}`,
   priority: 88,
   queries: [
@@ -145,7 +145,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     id: "church-choice-answers",
     type: "guide",
     title: CHURCH_CHOICE_ANSWER_PAGE_TITLE.replace(" - What Church Should I Visit?", ""),
-    subtitle: "Direct answers with a guide route and profile proof route for each decision.",
+    subtitle: "Direct answers, a guide to read, and churches to explore.",
     href: CHURCH_CHOICE_ANSWER_PAGE_PATH,
     priority: 98,
     queries: CHURCH_CHOICE_ANSWER_QUERIES,
@@ -175,7 +175,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     id: "church-fit-quiz",
     type: "guide",
     title: "Church Fit Quiz",
-    subtitle: "Answer a few questions, then open matching profile proof routes.",
+    subtitle: "Answer a few questions, then browse matching churches.",
     href: "/guides/church-fit-quiz",
     priority: 95,
     queries: [
@@ -191,7 +191,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     id: "how-to-find-the-right-church",
     type: "guide",
     title: "How to Find the Right Church",
-    subtitle: "A step-by-step church-search plan backed by profile evidence.",
+    subtitle: "A step-by-step plan for finding a church that fits.",
     href: "/guides/how-to-find-the-right-church",
     priority: 90,
     queries: [
@@ -207,7 +207,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     id: "prayer-guide",
     type: "guide",
     title: "Prayer Guide",
-    subtitle: "Pray first, then verify church choices with profile proof.",
+    subtitle: "Pray first, then check church details before visiting.",
     href: "/guides/prayer-guide",
     priority: 90,
     queries: [
@@ -223,7 +223,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     id: "prayer-wall",
     type: "guide",
     title: "Prayer Wall",
-    subtitle: "Community prayer signals alongside church profile proof.",
+    subtitle: "Community prayer requests and church details in one place.",
     href: "/prayerwall",
     priority: 99,
     queries: [
@@ -238,7 +238,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     id: "worship-style-match",
     type: "guide",
     title: "Church Sound Match",
-    subtitle: "Match your worship taste to profile proof routes.",
+    subtitle: "Match your worship taste to churches you can explore.",
     href: "/guides/worship-style-match",
     priority: 99,
     queries: [
@@ -253,7 +253,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     id: "contemporary-worship-churches",
     type: "proof_route",
     title: "Contemporary Worship Churches",
-    subtitle: "Browse profiles tagged with contemporary worship evidence.",
+    subtitle: "Find churches with contemporary worship.",
     href: "/church/style/contemporary-worship",
     priority: 92,
     queries: [
@@ -268,7 +268,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     id: "charismatic-worship-churches",
     type: "proof_route",
     title: "Charismatic Worship Churches",
-    subtitle: "Browse spirit-led worship profile proof routes.",
+    subtitle: "Explore churches with spirit-led worship.",
     href: "/church/style/charismatic",
     priority: 92,
     queries: [
@@ -283,7 +283,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     id: "gospel-worship-churches",
     type: "proof_route",
     title: "Gospel Worship Churches",
-    subtitle: "Browse churches tagged with gospel worship evidence.",
+    subtitle: "Explore churches with gospel worship.",
     href: "/church/style/gospel",
     priority: 92,
     queries: [
@@ -298,7 +298,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     id: "acoustic-worship-churches",
     type: "proof_route",
     title: "Acoustic Worship Churches",
-    subtitle: "Browse profiles with acoustic and reflective worship evidence.",
+    subtitle: "Explore churches with acoustic and reflective worship.",
     href: "/church/style/acoustic",
     priority: 92,
     queries: [
@@ -312,7 +312,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     id: "latin-worship-churches",
     type: "proof_route",
     title: "Latin Worship Churches",
-    subtitle: "Browse Latin worship profile proof routes.",
+    subtitle: "Explore churches with Latin worship.",
     href: "/church/style/latin",
     priority: 92,
     queries: [
@@ -326,7 +326,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     id: "african-worship-churches",
     type: "proof_route",
     title: "African Worship Churches",
-    subtitle: "Browse African and diaspora worship profile proof routes.",
+    subtitle: "Explore African and diaspora worship churches.",
     href: "/church/style/african",
     priority: 92,
     queries: [
@@ -405,7 +405,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     id: "denominations-comparison",
     type: "guide",
     title: "Denominations Compared",
-    subtitle: "Understand church traditions, then verify fit in profiles.",
+    subtitle: "Understand church traditions, then check the details that matter to you.",
     href: "/guides/denominations-comparison",
     priority: 75,
     queries: [
@@ -421,7 +421,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     id: "service-ready-profiles",
     type: "proof_route",
     title: "Profiles with Service Times",
-    subtitle: "Use this proof route when you are ready to plan a real Sunday.",
+    subtitle: "Find churches with published service times.",
     href: "/church/churches-with-service-times",
     priority: 99,
     queries: [
@@ -436,7 +436,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     id: "profiles-with-kids-ministry",
     type: "proof_route",
     title: "Profiles with Kids or Youth Signals",
-    subtitle: "Use this proof route when family logistics decide the first visit.",
+    subtitle: "Find churches with kids or youth information.",
     href: "/church/family-friendly-churches",
     priority: 97,
     queries: [
@@ -452,7 +452,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     id: "english-language-profiles",
     type: "proof_route",
     title: "English-Language Church Profiles",
-    subtitle: "Use this proof route when language determines whether a church is visitable.",
+    subtitle: "Explore English-speaking churches.",
     href: "/church/english-speaking-churches",
     priority: 97,
     queries: [
@@ -468,7 +468,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     id: "church-network-campuses",
     type: "proof_route",
     title: "Church Networks & Campuses",
-    subtitle: "Compare network campuses, then open the local profile proof.",
+    subtitle: "Compare network campuses and check their local church details.",
     href: "/network",
     priority: 99,
     queries: [
@@ -487,7 +487,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     id: "london-charismatic-gospel-churches",
     type: "proof_route",
     title: "Charismatic & Gospel Churches in London",
-    subtitle: "Use this London proof route for charismatic, Pentecostal, and gospel church searches.",
+    subtitle: "Explore charismatic, Pentecostal, and gospel churches in London.",
     href: "/church/charismatic-churches-in-london",
     priority: 98,
     queries: [
@@ -507,7 +507,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     id: "churches-by-city",
     type: "proof_route",
     title: "Churches by City",
-    subtitle: "Use city proof routes when geography is the main constraint.",
+    subtitle: "Find churches by city.",
     href: "/church/city",
     priority: 99,
     queries: [
@@ -526,7 +526,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     id: "profiles-with-music",
     type: "proof_route",
     title: "Profiles with Worship Music",
-    subtitle: "Listen before you visit and verify the worship sound.",
+    subtitle: "Listen to worship music before you visit.",
     href: "/church/churches-with-worship-music",
     priority: 97,
     queries: [
@@ -541,7 +541,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     id: "best-worship-churches",
     type: "proof_route",
     title: "Best Worship Churches",
-    subtitle: "A profile-evidence ranking of churches known for worship.",
+    subtitle: "Explore churches known for worship.",
     href: "/church/best-worship-churches",
     priority: 83,
     queries: [

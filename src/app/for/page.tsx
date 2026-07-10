@@ -8,7 +8,7 @@ const SITE_URL = "https://gospelchannel.com";
 const PAGE_URL = `${SITE_URL}/for`;
 const PAGE_TITLE = "Church Search by Life Stage and Situation";
 const PAGE_DESCRIPTION =
-  "Start with the person's real church-choice situation, then prove the shortlist with GospelChannel guide routes and church profile evidence.";
+  "Start with the person's real church-choice situation, then use guides and church details to build a shortlist.";
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
@@ -44,8 +44,8 @@ export default function ForIndexPage() {
       },
       about: [
         { "@type": "Thing", name: "Audience-specific church search" },
-        { "@type": "Thing", name: "Church choice decision engine" },
-        { "@type": "Thing", name: "Church profile proof" },
+        { "@type": "Thing", name: "A way to find your church" },
+        { "@type": "Thing", name: "Church details" },
       ],
     },
     buildBreadcrumbSchema([
@@ -75,19 +75,19 @@ export default function ForIndexPage() {
             className="mt-4 max-w-[18ch] font-serif font-semibold leading-[1.03] tracking-[-0.02em] text-espresso"
             style={{ fontSize: "clamp(42px, 7vw, 78px)" }}
           >
-            Start with the person. Prove the church.
+            Start with the person. Find their church.
           </h1>
           <p className="mt-6 max-w-[720px] text-base leading-relaxed text-warm-brown sm:text-lg">
-            Different people need different evidence before a first visit. These routes turn
+            Different people need different details before a first visit. These routes turn
             expat, student, family, young-adult, new-believer, and low-pressure searches into a
-            guide answer first, then a church profile proof step.
+            a real-life question into a guide and churches to explore.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/guides/church-choice-answers"
               className="rounded-full bg-rose-gold px-6 py-3 text-sm font-bold text-white transition-all duration-150 hover:-translate-y-px hover:bg-rose-gold-deep hover:shadow-[0_8px_24px_rgba(176,106,80,0.3)]"
             >
-              Open answer map
+              Church choice guide
             </Link>
             <Link
               href="/church"
@@ -103,7 +103,7 @@ export default function ForIndexPage() {
             {[
               ["1", "Name the situation", "Language, campus life, children, trust, worship sound, or a fresh start."],
               ["2", "Use the matching guide", "Each audience page gives the answer shape before filters enter the conversation."],
-              ["3", "Verify the proof", "Open profile routes for service times, location, language, worship, and visitor cues."],
+              ["3", "Check the details", "Open church pages for service times, location, language, worship, and visitor information."],
             ].map(([num, title, body]) => (
               <div key={num} className="border-l border-rose-gold/[0.18] pl-5">
                 <p className="font-serif text-3xl font-semibold text-rose-gold">{num}</p>

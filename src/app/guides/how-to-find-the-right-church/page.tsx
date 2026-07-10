@@ -175,7 +175,7 @@ export default async function HowToFindTheRightChurchPage() {
 
       <GuideProofLinks
         title="Turn the framework into a shortlist"
-        intro="Use the guide for the order of decisions, then use GospelChannel's proof routes to validate each decision with real churches, worship styles, locations, service details, and music links."
+        intro="Use the guide for the order of decisions, then explore churches with real worship styles, locations, service details, and music links."
         links={[
           {
             href: "/church/style",
@@ -407,7 +407,7 @@ export default async function HowToFindTheRightChurchPage() {
             <p className="mt-2 text-sm leading-relaxed text-warm-brown sm:text-base">
               Go gentle. Slow the process down, lean on broader traditions in step 3, and give
               yourself permission to leave a visit early without judgement on the congregation.
-              The /for/deconstructing page describes how profile proof can fit this season.
+              The /for/deconstructing page describes how church details can support this season.
             </p>
             <Link
               href="/for/deconstructing"

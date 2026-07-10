@@ -23,6 +23,27 @@ const PUBLIC_COPY_GROUPS: Record<string, string[]> = {
     "../../components/HomeHero.tsx",
     "../../components/SiteFooter.tsx",
   ],
+  guidesAndAudiences: [
+    "../../app/for/page.tsx",
+    "../../app/for/[slug]/page.tsx",
+    "../../app/guides/page.tsx",
+    "../../app/guides/church-choice-answers/page.tsx",
+    "../../app/guides/church-fit-quiz/page.tsx",
+    "../../app/guides/denominations-comparison/page.tsx",
+    "../../app/guides/first-visit-guide/page.tsx",
+    "../../app/guides/how-to-find-the-right-church/page.tsx",
+    "../../app/guides/prayer-guide/page.tsx",
+    "../../app/guides/worship-styles-explained/page.tsx",
+    "../../components/ForAudienceLayout.tsx",
+    "../../components/guides/GuideChurchEvidence.tsx",
+    "../../components/guides/GuideProofLinks.tsx",
+    "../../components/tools/ChurchFitQuizClient.tsx",
+    "../../lib/church-choice-answers.ts",
+    "../../lib/for-audience-data.ts",
+    "../../lib/search-suggestions.ts",
+    "../../lib/seo-schema.ts",
+    "../../lib/tooling.ts",
+  ],
 };
 
 describe("public copy", () => {

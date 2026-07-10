@@ -78,7 +78,7 @@ export function ForAudienceLayout({ data, siblings }: Props) {
       <section className="mt-14 rounded-[24px] border border-rose-gold/[0.16] bg-white p-6 shadow-[0_18px_55px_rgba(72,39,24,0.06)] sm:p-8">
         <p className="gc-eyebrow">Quick answer</p>
         <h2 className="mt-3 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-3xl">
-          Start with the {data.audience_name.toLowerCase()} question, then prove the fit in profiles.
+          Start with the {data.audience_name.toLowerCase()} question, then check the church details.
         </h2>
         <p className="mt-3 max-w-[820px] text-sm leading-[1.7] text-warm-brown sm:text-base">
           This page narrows the search by intent. The profile database does the proof work after that:
@@ -126,17 +126,17 @@ export function ForAudienceLayout({ data, siblings }: Props) {
           <article className="rounded-[18px] border border-rose-gold/[0.14] bg-linen-deep p-5">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-mauve">Step 3</p>
             <h3 className="mt-2 font-serif text-xl font-semibold tracking-[-0.01em] text-espresso">
-              Verify before visiting
+              Check before visiting
             </h3>
             <p className="mt-2 text-sm leading-[1.65] text-warm-brown">
-              Open profile pages and confirm the practical evidence before spending a Sunday:
+              Open church pages and check the practical details before spending a Sunday:
               service details, music, location, language, and visitor fit where available.
             </p>
             <Link
               href={primaryProofRoute.href}
               className="mt-4 inline-flex text-sm font-bold text-rose-gold transition-colors hover:text-rose-gold-deep"
             >
-              Open proof route &rarr;
+              Browse matching churches &rarr;
             </Link>
           </article>
         </div>

@@ -239,12 +239,17 @@ const DECISION_QUERIES = [
   "Which churches have public worship playlists, service details, and first-visit information?",
 ];
 
+const MACHINE_EVIDENCE_LABELS: Record<string, string> = {
+  "church details": "profile evidence",
+  "campus details": "campus profile proof",
+};
+
 const ANSWER_MAP = CHURCH_CHOICE_ANSWERS.map((item) => ({
   question: item.question,
   answer: item.answer,
   guide: `${SITE_URL}${item.guide.href}`,
   proof: `${SITE_URL}${item.proof.href}`,
-  evidence: item.proofSignals,
+  evidence: item.proofSignals.map((signal) => MACHINE_EVIDENCE_LABELS[signal] ?? signal),
 }));
 
 const ANSWER_FIRST_QUERY_PATTERNS = [

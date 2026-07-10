@@ -227,7 +227,7 @@ export default async function WorshipStylesExplainedPage() {
 
       <GuideProofLinks
         title="Hear the guide inside real church pages"
-        intro="Each style below links to a live proof route. Use those routes to move from definition to real churches, then open profiles with worship playlists, videos, service details, and location context."
+        intro="Each style below links to matching churches. Use them to move from definition to real churches, then open pages with worship playlists, videos, service details, and location context."
         links={[
           {
             href: "/church/style",

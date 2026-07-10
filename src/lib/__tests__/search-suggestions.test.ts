@@ -159,6 +159,17 @@ describe("search suggestions", () => {
     });
   });
 
+  it("describes search destinations in visitor language", () => {
+    expect(getDecisionSearchSuggestions("service times")[0]).toMatchObject({
+      href: "/church/churches-with-service-times",
+      subtitle: "Find churches with published service times.",
+    });
+    expect(getDecisionSearchSuggestions("english speaking church near me")).toContainEqual(expect.objectContaining({
+      href: "/church/english-speaking-churches",
+      subtitle: "Explore English-speaking churches.",
+    }));
+  });
+
   it("matches natural decision queries even when words are reordered or shortened", () => {
     expect(getDecisionSearchSuggestions("wear church")[0]).toMatchObject({
       href: "/guides/first-visit-guide",

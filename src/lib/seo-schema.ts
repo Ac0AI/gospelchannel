@@ -96,12 +96,12 @@ export function buildGuideSchema(args: {
       image: args.image,
       about: args.about ?? [
         "Church choice",
-        "Church decision guide",
-        "Church profile evidence",
+        "Church choice guide",
+        "Church details",
       ],
       mentions: args.mentions ?? [
-        { name: "GospelChannel church profile database", url: `${SITE_URL}/church` },
-        { name: "Church proof routes", url: `${SITE_URL}/church` },
+        { name: "Explore churches on GospelChannel", url: `${SITE_URL}/church` },
+        { name: "Browse matching churches", url: `${SITE_URL}/church` },
       ],
     }),
     buildBreadcrumbSchema([

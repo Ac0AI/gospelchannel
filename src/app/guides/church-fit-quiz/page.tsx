@@ -113,8 +113,8 @@ export default async function ChurchFitQuizPage() {
 
       <section className="mx-auto max-w-[980px] px-5 pt-10 sm:px-12">
         <GuideProofLinks
-          title="The quiz chooses a lane; profiles prove it"
-          intro="Treat the quiz result as a decision shortcut, then open the matching proof route to check real profile evidence: worship style, denomination, service details, music, location, and visitor cues."
+          title="The quiz suggests a direction; check the details"
+          intro="Treat the quiz result as a starting point, then browse matching churches to check worship style, denomination, service details, music, location, and visitor information."
           links={[
             {
               href: "/church/style",
@@ -147,7 +147,7 @@ export default async function ChurchFitQuizPage() {
       <section className="mx-auto max-w-[1100px] px-5 pb-16 sm:px-12">
         <GuideChurchEvidence
           title="Sample lanes the quiz can send you toward"
-          intro="These examples are not the quiz result; they are indexable proof routes. After answering, the tool uses the same lane logic to open churches that match your answers."
+          intro="These examples are not the quiz result; they are church lists. After answering, the tool uses the same lane logic to open churches that match your answers."
           groups={evidenceGroups}
           toolName="church_fit_quiz_guide"
         />

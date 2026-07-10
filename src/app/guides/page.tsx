@@ -11,19 +11,19 @@ const PAGE_TITLE = "Church Decision Guides to Choose and Verify the Right Church
 const GUIDE_DECISION_PATHS = [
   {
     title: "I just need a direct answer",
-    body: "Use the answer map for common church-choice questions, then open the matching proof route.",
-    guide: { href: "/guides/church-choice-answers", label: "Read church choice answers" },
-    proof: { href: "/church", label: "Open church profiles" },
+    body: "Use the church choice guide for common questions, then explore churches that fit.",
+    guide: { href: "/guides/church-choice-answers", label: "Read the guide" },
+    proof: { href: "/church", label: "Explore churches" },
   },
   {
     title: "I need a full church-search plan",
-    body: "Start with the capstone guide, then open proof routes to turn the plan into a shortlist.",
+    body: "Start with the full guide, then explore churches to turn the plan into a shortlist.",
     guide: { href: "/guides/how-to-find-the-right-church", label: "How to find the right church" },
-    proof: { href: "/church", label: "Prove it in profiles" },
+    proof: { href: "/church", label: "Explore churches" },
   },
   {
     title: "I am choosing a worship sound",
-    body: "Use the worship guide for vocabulary, then open live style proof routes with real churches.",
+    body: "Use the worship guide for vocabulary, then browse real churches by style.",
     guide: { href: "/guides/worship-styles-explained", label: "Worship styles explained" },
     proof: { href: "/church/style", label: "Browse worship styles" },
   },
@@ -41,7 +41,7 @@ const GUIDE_DECISION_PATHS = [
   },
   {
     title: "I want a faster match",
-    body: "Use the quiz or worship match, then check the recommendations against profile evidence.",
+    body: "Use the quiz or worship match, then check the church details.",
     guide: { href: "/guides/church-fit-quiz", label: "Take the fit quiz" },
     proof: { href: "/church/churches-with-worship-music", label: "Profiles with worship music" },
   },
@@ -79,7 +79,7 @@ export default async function GuidesPage() {
     "@context": "https://schema.org",
     "@type": "ItemList",
     "@id": `${PAGE_URL}#decision-paths`,
-    name: "Guide-to-proof church decision paths",
+    name: "Ways to find your church",
     numberOfItems: GUIDE_DECISION_PATHS.length,
     itemListElement: GUIDE_DECISION_PATHS.map((path, index) => ({
       "@type": "ListItem",
@@ -107,7 +107,7 @@ export default async function GuidesPage() {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
       name: PAGE_TITLE,
-      description: `Step-by-step decision guides for finding the right fit across ${churchCountLabel} profiles in ${countryCount} countries, with proof routes for each answer.`,
+      description: `Step-by-step guides for finding the right fit across ${churchCountLabel} churches in ${countryCount} countries, with matching churches for each question.`,
       url: PAGE_URL,
       mainEntity: { "@id": `${PAGE_URL}#itemlist` },
       about: [
@@ -192,7 +192,7 @@ export default async function GuidesPage() {
           Start with the decision you need to make.
         </h2>
         <p className="mt-3 max-w-[760px] text-sm leading-[1.7] text-warm-brown sm:text-base">
-          Each guide answers one practical question. Each proof route opens the part of the church database that can verify the answer.
+          Each guide answers one practical question. Then you can explore churches with the details that matter to you.
         </p>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {GUIDE_DECISION_PATHS.map((path) => (

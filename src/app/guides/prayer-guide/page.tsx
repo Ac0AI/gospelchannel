@@ -151,7 +151,7 @@ export default function PrayerGuidePage() {
 
       <GuideProofLinks
         title="Use prayer as a next step, not a dead end"
-        intro="This guide helps you start privately. When you are ready to try church, use profile proof to choose a room that fits the way you want to pray, listen, and participate."
+        intro="This guide helps you start privately. When you are ready to try church, use church details to choose a room that fits the way you want to pray, listen, and participate."
         links={PRAYER_PROOF_LINKS}
       />
 

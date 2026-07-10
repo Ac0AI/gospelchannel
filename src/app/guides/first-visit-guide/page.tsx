@@ -388,7 +388,7 @@ export default async function FirstVisitGuidePage() {
 
       <GuideChurchEvidence
         title="Turn the first visit into a short list"
-        intro="These examples show the kind of profile evidence to check before you walk in: published service times, worship previews, and lower-friction starting points."
+        intro="These examples show the church details to check before you walk in: published service times, worship previews, and lower-friction starting points."
         groups={evidenceGroups}
         toolName="first_visit_guide"
       />

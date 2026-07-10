@@ -27,7 +27,7 @@ export function GuideChurchEvidence({
 
   return (
     <section className="mt-14">
-      <p className="gc-eyebrow">Profile evidence</p>
+      <p className="gc-eyebrow">Church details</p>
       <h2 className="mt-3 font-serif text-3xl font-semibold tracking-[-0.01em] text-espresso sm:text-4xl">
         {title}
       </h2>

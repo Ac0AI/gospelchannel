@@ -244,7 +244,7 @@ export default async function DenominationsComparisonPage() {
 
       <GuideProofLinks
         title="Compare traditions against real church profiles"
-        intro="The denomination label is only the starting point. Use these proof routes to see actual churches, then inspect profile details, worship style, playlists, and first-visit information before deciding where to visit."
+        intro="The denomination label is only the starting point. Explore churches, then inspect church details, worship style, playlists, and first-visit information before deciding where to visit."
         links={[
           {
             href: "/church/denomination",

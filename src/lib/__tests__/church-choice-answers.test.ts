@@ -152,7 +152,7 @@ describe("church choice answers", () => {
       question: "Where can I pray or see community prayer signals before choosing a church?",
       guide: expect.objectContaining({ href: "/guides/prayer-guide" }),
       proof: expect.objectContaining({ href: "/church/churches-with-service-times" }),
-      proofSignals: expect.arrayContaining(["community signal", "service times", "profile evidence"]),
+      proofSignals: expect.arrayContaining(["community signal", "service times", "church details"]),
     }));
     expect(CHURCH_CHOICE_ANSWERS).toEqual(expect.arrayContaining([
       expect.objectContaining({

@@ -7,7 +7,7 @@ type GuideProofLink = {
 };
 
 export function GuideProofLinks({
-  title = "Use profile proof as evidence",
+  title = "Check the practical details",
   intro,
   links,
 }: {
@@ -17,7 +17,7 @@ export function GuideProofLinks({
 }) {
   return (
     <section className="mt-12 rounded-[18px] border border-rose-gold/[0.14] bg-linen-deep p-6 sm:p-7">
-      <p className="gc-eyebrow">Profile proof</p>
+      <p className="gc-eyebrow">Church details</p>
       <h2 className="mt-3 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-3xl">
         {title}
       </h2>

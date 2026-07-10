@@ -50,8 +50,8 @@ function buildFaqSchema() {
           item.answer,
           item.detail,
           `Guide: https://gospelchannel.com${item.guide.href}.`,
-          `Database proof: https://gospelchannel.com${item.proof.href}.`,
-          `Evidence: ${item.proofSignals.join(", ")}.`,
+          `Explore churches: https://gospelchannel.com${item.proof.href}.`,
+          `What you can check: ${item.proofSignals.join(", ")}.`,
         ].join(" "),
       },
     })),
@@ -98,14 +98,14 @@ export default async function ChurchChoiceAnswersPage() {
       description: CHURCH_CHOICE_ANSWER_PAGE_DESCRIPTION,
     }),
     buildItemListSchema({
-      name: "Church choice answer map",
+      name: "Church choice guide",
       items: CHURCH_CHOICE_ANSWERS.map((item) => ({
         name: item.question,
         url: `${CHURCH_CHOICE_ANSWER_PAGE_URL}#${item.id}`,
       })),
     }),
     buildItemListSchema({
-      name: "Church choice proof routes",
+      name: "Churches to explore",
       items: CHURCH_CHOICE_PROOF_LINKS.map((link) => ({
         name: link.label,
         url: `https://gospelchannel.com${link.href}`,
@@ -123,22 +123,29 @@ export default async function ChurchChoiceAnswersPage() {
       />
 
       <GuideHero
-        eyebrow="Answer map"
-        title="Church choice answers"
-        titleAccent="with profile proof"
-        intro="Short answers to the questions people ask before choosing a church. Each answer points to the guide that explains the decision and the profile route that can prove it."
+        eyebrow="Church choice guide"
+        title="Find the church that fits your life"
+        intro="Start with worship style, denomination, location, language, service times, and first-visit concerns. Then explore churches with the details that matter to you."
       />
 
       <section className="mx-auto mt-8 max-w-[820px] rounded-[18px] border border-rose-gold/[0.14] bg-linen-deep p-6 sm:p-8">
         <p className="gc-eyebrow">Quick answer</p>
         <h2 className="mt-3 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-3xl">
-          Start with one decision, then require evidence.
+          Start with what matters most.
         </h2>
         <p className="mt-3 text-sm leading-[1.7] text-warm-brown sm:text-base">
           A good church search does not start with every possible filter. It starts with the question
           you actually need answered: fit, worship, denomination, size, first visit, or location.
-          Use the answer to choose a lane, then use church profiles as the proof layer before Sunday.
+          Use the guide to narrow your options, then check church details before Sunday.
         </p>
+        <div className="mt-5 flex flex-wrap gap-3">
+          <Link href="/guides/how-to-find-the-right-church" className="text-sm font-bold text-rose-gold transition-colors hover:text-rose-gold-deep">
+            Read the guide &rarr;
+          </Link>
+          <Link href="/church" className="text-sm font-bold text-rose-gold transition-colors hover:text-rose-gold-deep">
+            Explore churches &rarr;
+          </Link>
+        </div>
       </section>
 
       <section className="mt-14">
@@ -169,7 +176,7 @@ export default async function ChurchChoiceAnswersPage() {
                   className="group border-t border-rose-gold/[0.14] pt-4"
                 >
                   <span className="block text-xs font-bold uppercase tracking-[0.14em] text-muted-warm">
-                    Guide answer
+                    Read the guide
                   </span>
                   <span className="mt-2 block text-sm font-bold text-rose-gold transition-colors group-hover:text-rose-gold-deep">
                     {item.guide.label} &rarr;
@@ -180,7 +187,7 @@ export default async function ChurchChoiceAnswersPage() {
                   className="group border-t border-rose-gold/[0.14] pt-4"
                 >
                   <span className="block text-xs font-bold uppercase tracking-[0.14em] text-muted-warm">
-                    Database proof
+                    Explore churches
                   </span>
                   <span className="mt-2 block text-sm font-bold text-rose-gold transition-colors group-hover:text-rose-gold-deep">
                     {item.proof.label} &rarr;
@@ -203,14 +210,14 @@ export default async function ChurchChoiceAnswersPage() {
       </section>
 
       <GuideProofLinks
-        title="Open the proof layer"
-        intro="These routes are the database side of the decision engine. Use them after a guide has answered the question, so the final recommendation is grounded in real church profiles."
+        title="Explore churches that fit"
+        intro="Use these church lists after a guide has answered your question, then check the details that matter before you visit."
         links={CHURCH_CHOICE_PROOF_LINKS}
       />
 
       <GuideChurchEvidence
-        title="Proof examples from the live profile database"
-        intro="These examples are loaded from the same profile database the answer map points to. Use them as examples of what to verify before recommending or visiting a church."
+        title="Examples from church pages"
+        intro="These examples are loaded from the same church lists the guide points to. Use them to see what to check before recommending or visiting a church."
         groups={evidenceGroups}
         toolName="church_choice_answers"
       />
