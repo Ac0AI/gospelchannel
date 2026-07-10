@@ -61,3 +61,25 @@ pnpm --config.engine-strict=false typecheck
 ```
 
 Result: public-copy guard passed (3 tests); required suite passed (7 files, 34 tests); typecheck passed.
+
+## Re-review Follow-up: Agent Answer Compatibility
+
+Compared `src/lib/church-choice-answers.ts` with base commit `775e7187` and restored these five machine-facing answer strings through `MACHINE_ANSWER_COPY` only:
+
+- `where-can-i-find-charismatic-gospel-churches-in-london`: `Start with the London-specific charismatic and gospel proof route, then open individual profiles to verify tradition, worship style, language, service details, and official links.`
+- `how-do-i-find-churches-known-for-worship`: `Use worship reputation as a starting shortlist, not the final decision. Then verify each church through profile evidence: music, worship style, service context, location, and whether you can realistically visit.`
+- `how-do-young-adults-find-a-contemporary-worship-church`: `Start with contemporary or charismatic worship proof, then narrow by city and profile evidence so the first visit is more than a familiar sound.`
+- `where-can-i-pray-before-choosing-a-church`: `Use prayer as a next step, not a shortcut around evidence. Pray privately or use the Prayer Wall as a community signal, then verify any church through real profile proof before visiting.`
+- `how-do-i-find-a-low-pressure-church-after-church-hurt`: `Use the gentlest verifiable next step: compare profile evidence quietly, avoid rushing commitment, and treat prayer or one visit as enough progress for now.`
+
+Visitor-facing answer copy remains rewritten. The agent compatibility map serializes the exact legacy answer text for the agent card and `llms.txt`; routes, hrefs, and schema types are unchanged. Added exact assertions for all five legacy answers in both serialized outputs.
+
+Verification commands:
+
+```sh
+pnpm --config.engine-strict=false vitest run src/lib/__tests__/agent-discovery.test.ts
+pnpm --config.engine-strict=false vitest run src/lib/__tests__/public-copy.test.ts src/lib/__tests__/church-choice-answers.test.ts src/lib/__tests__/for-audience-data.test.ts src/lib/__tests__/search-suggestions.test.ts src/lib/__tests__/seo-schema.test.ts src/lib/__tests__/sitemap-data.test.ts src/lib/__tests__/agent-discovery.test.ts
+pnpm --config.engine-strict=false typecheck
+```
+
+Result: agent-discovery test passed (4 tests); required suite passed (7 files, 35 tests); typecheck passed.

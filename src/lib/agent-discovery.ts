@@ -249,6 +249,16 @@ const MACHINE_ANSWER_COPY: Record<string, string> = {
     "Start with English-language proof, then narrow by country, city, worship style, and tradition before choosing a first Sunday.",
   "how-do-i-find-a-church-with-kids-ministry":
     "Use kids or youth ministry as a proof filter after you know the city and visit time, then read the profile for specific age-group and first-visit details.",
+  "where-can-i-find-charismatic-gospel-churches-in-london":
+    "Start with the London-specific charismatic and gospel proof route, then open individual profiles to verify tradition, worship style, language, service details, and official links.",
+  "how-do-i-find-churches-known-for-worship":
+    "Use worship reputation as a starting shortlist, not the final decision. Then verify each church through profile evidence: music, worship style, service context, location, and whether you can realistically visit.",
+  "how-do-young-adults-find-a-contemporary-worship-church":
+    "Start with contemporary or charismatic worship proof, then narrow by city and profile evidence so the first visit is more than a familiar sound.",
+  "where-can-i-pray-before-choosing-a-church":
+    "Use prayer as a next step, not a shortcut around evidence. Pray privately or use the Prayer Wall as a community signal, then verify any church through real profile proof before visiting.",
+  "how-do-i-find-a-low-pressure-church-after-church-hurt":
+    "Use the gentlest verifiable next step: compare profile evidence quietly, avoid rushing commitment, and treat prayer or one visit as enough progress for now.",
 };
 
 const ANSWER_MAP = CHURCH_CHOICE_ANSWERS.map((item) => ({

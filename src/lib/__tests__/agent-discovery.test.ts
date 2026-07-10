@@ -4,6 +4,38 @@ import { buildAgentCard, buildLlmsFullTxt, buildLlmsTxt } from "@/lib/agent-disc
 const stats = { churchCountLabel: "12,345", countryCount: 42 };
 
 describe("agent discovery", () => {
+  it("keeps legacy machine answers for visitor-rewritten church-choice guidance", () => {
+    const legacyAnswers = [
+      [
+        "Where can I find charismatic, Pentecostal, or gospel churches in London?",
+        "Start with the London-specific charismatic and gospel proof route, then open individual profiles to verify tradition, worship style, language, service details, and official links.",
+      ],
+      [
+        "How do I find churches known for worship?",
+        "Use worship reputation as a starting shortlist, not the final decision. Then verify each church through profile evidence: music, worship style, service context, location, and whether you can realistically visit.",
+      ],
+      [
+        "How do young adults find a contemporary worship church?",
+        "Start with contemporary or charismatic worship proof, then narrow by city and profile evidence so the first visit is more than a familiar sound.",
+      ],
+      [
+        "Where can I pray or see community prayer signals before choosing a church?",
+        "Use prayer as a next step, not a shortcut around evidence. Pray privately or use the Prayer Wall as a community signal, then verify any church through real profile proof before visiting.",
+      ],
+      [
+        "How do I find a low-pressure church after church hurt?",
+        "Use the gentlest verifiable next step: compare profile evidence quietly, avoid rushing commitment, and treat prayer or one visit as enough progress for now.",
+      ],
+    ] as const;
+    const card = buildAgentCard(stats);
+    const llms = buildLlmsTxt(stats);
+
+    for (const [question, answer] of legacyAnswers) {
+      expect(card.answer_map).toContainEqual(expect.objectContaining({ question, answer }));
+      expect(llms).toContain(`${question} Answer: ${answer}`);
+    }
+  });
+
   it("exposes church choice decision queries in llms.txt", () => {
     const text = buildLlmsTxt(stats);
 
