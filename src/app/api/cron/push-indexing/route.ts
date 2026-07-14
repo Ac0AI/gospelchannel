@@ -4,6 +4,7 @@ import { hasServiceConfig, createAdminClient } from "@/lib/neon-client";
 const SITE_URL = "https://gospelchannel.com";
 const BATCH_SIZE = 200;
 const CHECKPOINT_KEY = "indexing_push_checkpoint";
+const INDEXNOW_MARKER_KEY = "indexnow_last_push";
 
 // IndexNow (Bing, Yandex, Seznam, Naver). Key file lives at
 // /public/<key>.txt and is already served at the domain root. Override via
@@ -75,6 +76,7 @@ async function getAccessToken(): Promise<string> {
 
 type Church = { slug: string; priority: number };
 type KvRow = { key: string; value: { pushed: number; total?: number } };
+type IndexNowMarkerRow = { key: string; value: { lastPush?: string } };
 
 // /sitemap.xml is now a <sitemapindex> pointing at /sitemap-chunk/N.xml.
 // Walk the tree so we end up with page URLs, not chunk URLs. Depth cap is a
@@ -160,11 +162,10 @@ async function pushUrl(accessToken: string, url: string): Promise<"OK" | "QUOTA"
 }
 
 // Submit URLs to IndexNow (Bing/Yandex/Seznam/Naver) in 9,000-URL chunks (the
-// API max is 10 000). IndexNow has NO auth and NO quota, so — unlike Google's
-// 200/day walk — we announce the ENTIRE indexable catalog every run. Called
-// before the Google loop so Bing gets everything even if Google auth/quota
-// fails. Returns per-chunk HTTP statuses (2xx = accepted) plus the accepted
-// URL count so the cron response surfaces exactly how many Bing took.
+// API max is 10 000). Normally receives only the changed set (~150-200 URLs a
+// day); the chunking survives as a guard for bulk days. Returns per-chunk
+// HTTP statuses (2xx = accepted) plus the accepted URL count so the cron
+// response surfaces exactly how many Bing took.
 async function submitToIndexNow(urls: string[]): Promise<{ accepted: number; total: number; chunks: string[] }> {
   const CHUNK = 9000;
   const chunks: string[] = [];
@@ -205,20 +206,43 @@ export async function GET(request: NextRequest) {
     const sitemapUrls = await fetchSitemapUrls(`${SITE_URL}/sitemap.xml`);
     const allUrls = await buildUrlList(db, sitemapUrls);
 
-    // IndexNow (Bing/Yandex/…) has no quota, so announce the FULL indexable
-    // catalog every run — not the 200-URL Google slice. The indexable set is
-    // core + network + sitemap URLs (the sitemap already excludes noindexed
-    // stubs). Done first so Bing gets everything even if Google auth/quota
-    // fails below.
-    const seenIndexNow = new Set<string>();
-    const indexNowUrls: string[] = [];
-    for (const url of [...coreAndNetworkUrls(), ...sitemapUrls]) {
-      if (!seenIndexNow.has(url)) {
-        seenIndexNow.add(url);
-        indexNowUrls.push(url);
-      }
+    // IndexNow (Bing/Yandex/…) is a change notification, not a crawl feed:
+    // Bing Webmaster Tools flags recurring full-catalog dumps as "batch mode"
+    // and deprioritizes them. Submit only what changed since the last
+    // successful push — approved churches touched after the marker, plus the
+    // core and network pages the daily data refresh rewrites. Done first so
+    // Bing gets the changes even if Google auth/quota fails below.
+    const indexNowRunStart = new Date().toISOString();
+    const { data: markerRows } = await db.from<IndexNowMarkerRow[]>("app_kv")
+      .select("key,value")
+      .eq("key", INDEXNOW_MARKER_KEY);
+    const lastPush = markerRows?.[0]?.value?.lastPush;
+
+    let indexNowUrls: string[];
+    if (lastPush) {
+      const { data: changed } = await db.from<Church[]>("churches")
+        .select("slug")
+        .eq("status", "approved")
+        .gte("updated_at", lastPush);
+      const changedUrls = (changed ?? []).map((c) => `${SITE_URL}/church/${c.slug}`);
+      indexNowUrls = [...new Set([...coreAndNetworkUrls(), ...changedUrls])];
+    } else {
+      // First run in changed-only mode: months of daily full dumps mean the
+      // catalog is already announced — start the marker from the core pages
+      // instead of re-dumping 70k+ URLs.
+      indexNowUrls = coreAndNetworkUrls();
     }
     const indexNowStatus = await submitToIndexNow(indexNowUrls);
+    // Advance the marker only when every chunk was accepted; a failed run
+    // resubmits the same (small) set next time instead of losing it.
+    if (indexNowStatus.accepted === indexNowStatus.total) {
+      await db.from("app_kv")
+        .upsert({
+          key: INDEXNOW_MARKER_KEY,
+          value: JSON.stringify({ lastPush: indexNowRunStart }),
+          updated_at: new Date().toISOString(),
+        }, { onConflict: "key" });
+    }
 
     // Load checkpoint (Google's 200/day walk)
     const { data: kvRows } = await db.from<KvRow[]>("app_kv")
