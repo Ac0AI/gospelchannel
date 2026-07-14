@@ -31,6 +31,29 @@ const HTML_EDGE_CACHE_TTL_SECONDS = 86400;
 const HTML_EDGE_CACHE_SWR_SECONDS = 604800;
 const AUTH_COOKIE_PATTERN = /(?:^|;\s*)(?:better-auth|session|auth)/i;
 
+// Edge caches must not survive a deploy: cached HTML references build-hashed
+// chunk files that stop existing when a new build ships, so stale entries
+// break the site (MIME errors, ChunkLoadError) for up to their full TTL.
+// Scoping the cache name by BUILD_ID gives every deploy a fresh cache and
+// lets orphaned entries age out on their own. Read once per isolate from the
+// assets binding (BUILD_ID is uploaded with the static assets).
+let cachedBuildId: Promise<string> | null = null;
+function getBuildId(env: CloudflareEnv): Promise<string> {
+  cachedBuildId ??= (async () => {
+    try {
+      const response = await env.ASSETS.fetch("https://assets.internal/BUILD_ID");
+      if (response.ok) {
+        const id = (await response.text()).trim();
+        if (id) return id;
+      }
+    } catch {
+      // fall through — worst case is the shared (pre-deploy) cache behavior
+    }
+    return "no-build-id";
+  })();
+  return cachedBuildId;
+}
+
 // OpenNext on Cloudflare returns 200 OK even when Next.js notFound() triggers
 // from inside server components. The rendered HTML carries the not-found.tsx
 // content but the status line stays 200, which Google reads as low-quality
@@ -183,7 +206,7 @@ async function fetchWithHtmlEdgeCache(
   env: CloudflareEnv,
   ctx: WorkerExecutionContext,
 ): Promise<Response> {
-  const edgeCache = await caches.open(HTML_EDGE_CACHE_NAME);
+  const edgeCache = await caches.open(`${HTML_EDGE_CACHE_NAME}-${await getBuildId(env)}`);
   const cacheKey = new Request(request.url, { method: "GET" });
 
   const cached = await edgeCache.match(cacheKey);
@@ -252,7 +275,7 @@ async function fetchWithSitemapEdgeCache(
     return openNextWorker.fetch(request, env, ctx);
   }
 
-  const edgeCache = await caches.open(SITEMAP_EDGE_CACHE_NAME);
+  const edgeCache = await caches.open(`${SITEMAP_EDGE_CACHE_NAME}-${await getBuildId(env)}`);
   const cacheKey = new Request(request.url, { method: "GET" });
   const cached = await edgeCache.match(cacheKey);
   if (cached) {
