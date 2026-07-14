@@ -9,7 +9,7 @@ Context for humans (batch 2): plan 008 fixes a stored-XSS vector in JSON-LD plus
 | Plan | Title | Priority | Effort | Depends on | Status |
 |------|-------|----------|--------|------------|--------|
 | 001  | Internationalize denomination options | P1 | S | — | DONE (commit 1779f5f9, branch advisor/improve-batch-1, reviewed+approved 2026-06-12) |
-| 002  | Cron endpoints fail closed | P1 | S | — | DONE (commit fb541279 — DEPLOY GATE: set CRON_SECRET first) |
+| 002  | Cron endpoints fail closed | P1 | S | — | DONE (commit fb541279; deployed 2026-07-14 version 61b20a62, CRON_SECRET was already set, verified 401 unauth on both endpoints; NOTE: local .env.local/.dev.vars CRON_SECRET values do NOT match production — rotate or resync before relying on smoke-test cron leg) |
 | 003  | Next.js security patch + dep hygiene | P1 | M | — | DONE (commit 034ceb35, audit 85→31 vulns, reviewed+approved 2026-06-12) |
 | 004  | PostHog waitUntil + claim_verified event | P1 | S | — | DONE (commit dddc0f75, reviewed+approved 2026-06-12) |
 | 005  | Claim-flow route tests | P2 | M | 004, 006 | DONE (commit 7e1f4fd5, +19 tests, reviewed+approved 2026-06-12) |
