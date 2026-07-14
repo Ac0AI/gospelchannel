@@ -7,6 +7,7 @@ import { getApprovedProfileEditsForChurch, buildMergedProfile } from "@/lib/chur
 import { calculateProfileScore } from "@/lib/profile-score";
 import { getProfileOptionLabel } from "@/lib/profile-fields";
 import Link from "next/link";
+import { PreviewComparisonColumn } from "./preview-comparison-column";
 
 export const dynamic = "force-dynamic";
 
@@ -14,10 +15,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
   title: "Preview your church profile",
 };
-
-export function PreviewComparisonColumn({ children }: { children: React.ReactNode }) {
-  return <div className="min-w-0">{children}</div>;
-}
 
 async function validateToken(slug: string, token: string): Promise<boolean> {
   const sb = createAdminClient();

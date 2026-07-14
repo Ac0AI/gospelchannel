@@ -199,7 +199,7 @@ describe("public copy", () => {
   });
 
   it("keeps private-preview comparison columns shrinkable on mobile", async () => {
-    const previewModule = await import("@/app/preview/[slug]/page");
+    const previewModule = await import("@/app/preview/[slug]/preview-comparison-column");
     const PreviewComparisonColumn = (
       previewModule as unknown as {
         PreviewComparisonColumn?: ComponentType<{ children: ReactNode }>;
