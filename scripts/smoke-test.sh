@@ -65,7 +65,9 @@ curl -fsS "$BASE_URL/api/church/vote/top?period=30d&limit=8" >/dev/null
 if [[ "${SMOKE_WITH_CRON:-0}" == "1" ]] && grep -Eq "^CRON_SECRET=.+" .env.local 2>/dev/null; then
   CRON_SECRET="$(grep -E '^CRON_SECRET=' .env.local | tail -n1 | cut -d= -f2-)"
   if [[ -n "$CRON_SECRET" ]]; then
-    curl -fsS "$BASE_URL/api/cron/sync?secret=${CRON_SECRET}" >/dev/null
+    # The cron endpoints only accept the secret via Authorization header
+    # (the ?secret= query form was removed when they went fail-closed)
+    curl -fsS -H "Authorization: Bearer ${CRON_SECRET}" "$BASE_URL/api/cron/sync" >/dev/null
   fi
 fi
 
