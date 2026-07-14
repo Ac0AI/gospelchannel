@@ -4,6 +4,7 @@ import {
   buildChurchDescription,
   buildChurchTitle,
   classifyChurchTier,
+  getChurchSearchAliases,
   type ChurchMetadataInput,
 } from "../church-metadata";
 
@@ -108,7 +109,7 @@ describe("buildChurchTitle", () => {
       "Hillsong Church",
     );
     expect(buildChurchTitle(input)).toBe(
-      "Hillsong Church in London · Worship Music, Service Times & Church Details",
+      "Hillsong Church in London · Worship Music & Church Info",
     );
   });
 
@@ -120,7 +121,7 @@ describe("buildChurchTitle", () => {
       "Hope Church Copenhagen",
     );
     expect(buildChurchTitle(input)).toBe(
-      "Hope Church Copenhagen · Worship Music, Service Times & Church Details",
+      "Hope Church Copenhagen · Worship Music & Church Info",
     );
   });
 
@@ -132,7 +133,7 @@ describe("buildChurchTitle", () => {
       "Hope Church",
     );
     expect(buildChurchTitle(input)).toBe(
-      "Hope Church in Berlin · Service Times, Worship Style & Church Details",
+      "Hope Church in Berlin · Church Info",
     );
   });
 
@@ -164,6 +165,33 @@ describe("buildChurchTitle", () => {
       "Mystery Church",
     );
     expect(buildChurchTitle(input)).toBe("Mystery Church · Church Profile");
+  });
+
+  it("prioritizes service times and address for local-intent searches", () => {
+    const input = makeInput(
+      { name: "Stone Edge Church", location: "Macon", country: "United States" },
+      {
+        streetAddress: "5659 Zebulon Rd",
+        serviceTimes: [{ day: "Sunday", time: "10:30" }],
+      },
+    );
+    expect(buildChurchTitle(input)).toBe("Stone Edge Church in Macon · Service Times & Address");
+  });
+
+  it("prefers curated location over a district inferred from the street address", () => {
+    const input = makeInput(
+      { name: "Église Source de Siloé", slug: "not-overridden", location: "Gisors", country: "France" },
+      { streetAddress: "17 Route De Delincourt, Zone Industrielle, 27140 Gisors, France" },
+      { city: "Zone Industrielle" },
+    );
+    expect(buildChurchTitle(input)).toContain("in Gisors");
+    expect(buildChurchTitle(input)).not.toContain("Zone Industrielle");
+  });
+
+  it("uses reviewed query variants for specific ranking church pages", () => {
+    const input = makeInput({ slug: "every-nation-dalung-bali", name: "Every Nation Dalung, Bali" });
+    expect(buildChurchTitle(input)).toBe("Every Nation Dalung, Bali · Church in Kabupaten Badung");
+    expect(getChurchSearchAliases(input.church.slug)).toContain("Every Nation Dalung Kabupaten Badung");
   });
 });
 
@@ -213,7 +241,20 @@ describe("buildChurchDescription", () => {
     const desc = buildChurchDescription(input);
     expect(desc).toContain("Services Sunday 10:00");
     expect(desc).toContain("English and Swedish");
-    expect(desc).toContain("Church details");
+    expect(desc).not.toContain("Church details");
+  });
+
+  it("includes the exact address before generic profile copy", () => {
+    const input = makeInput(
+      { name: "The Fountain Apostolic Church", location: "Ventura", country: "United States" },
+      {
+        streetAddress: "1000 N Ventura Ave, Ventura, CA 93001",
+        serviceTimes: [{ day: "Sunday", time: "10AM" }],
+      },
+    );
+    const desc = buildChurchDescription(input);
+    expect(desc).toContain("Address: 1000 N Ventura Ave, Ventura, CA 93001.");
+    expect(desc).toContain("Services Sunday 10AM.");
   });
 
   it("falls back to country alone when city missing", () => {
@@ -284,7 +325,7 @@ describe("buildChurchDescription", () => {
   });
 
   it("uses singular language phrasing for one language", () => {
-    const input = makeInput({ name: "Test" }, { languages: ["Swedish"] } as Partial<ChurchEnrichment>);
+    const input = makeInput({ name: "Test" }, { languages: ["swedish"] } as Partial<ChurchEnrichment>);
     expect(buildChurchDescription(input)).toContain("Worship in Swedish.");
   });
 

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { buildMergedProfile } from "../church-profile";
 import {
   assessChurchVideoRelevance,
+  buildChurchAliases,
   buildChurchPageProfile,
   resolveChurchPublicDescription,
   resolveChurchPrimaryImage,
@@ -21,6 +22,17 @@ describe("church page quality", () => {
     youtubeChannelId: "UC123",
     instagramUrl: "https://www.instagram.com/soschurchmanual/",
   };
+
+  it("preserves accented names in search aliases", () => {
+    const aliases = buildChurchAliases({
+      ...church,
+      name: "Église Source de Siloé de Gisors",
+      aliases: ["ÉGLISE SOURCE DE SILOÉ DE GISORS"],
+    });
+
+    expect(aliases).toContain("Église Source de Siloé de Gisors");
+    expect(aliases.some((alias) => alias.startsWith("glise"))).toBe(false);
+  });
 
   it("uses claimed edits before enrichment before manual social fallback", () => {
     const merged = buildMergedProfile(

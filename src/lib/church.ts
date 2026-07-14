@@ -405,7 +405,7 @@ function getDerivedVerifiedAt(church: ChurchConfig): string {
 
 function normalizeAlias(value: string): string {
   return value
-    .replace(/[^a-zA-Z0-9\s]/g, " ")
+    .replace(/[^\p{L}\p{N}\s]/gu, " ")
     .replace(/\s+/g, " ")
     .trim();
 }

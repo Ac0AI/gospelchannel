@@ -46,7 +46,7 @@ import { HeroImage } from "@/components/HeroImage";
 import { isRenderableImageUrl } from "@/lib/media";
 import { resolveCanonicalChurchSlug } from "@/lib/church-slugs";
 import { CHURCH_SIZE_LABELS, getProfileOptionLabel } from "@/lib/profile-fields";
-import { buildChurchDescription, buildChurchTitle } from "@/lib/church-metadata";
+import { buildChurchDescription, buildChurchTitle, getChurchSearchAliases } from "@/lib/church-metadata";
 import { serializeJsonLd } from "@/lib/json-ld";
 import { buildOpeningHours } from "@/lib/seo-schema";
 
@@ -183,6 +183,7 @@ export async function generateMetadata({ params }: ChurchPageProps): Promise<Met
   const seoDesc = buildChurchDescription(metadataInput);
 
   const aliases = buildChurchAliases(church);
+  const searchAliases = getChurchSearchAliases(church.slug);
   const keywordSet = new Set<string>([
     `${church.name} church`, `${church.name} worship`, `${church.name} music`,
     ...(hasPlaylists ? [`${church.name} playlist`, `${church.name} worship playlist`, `${church.name} spotify`] : []),
@@ -191,6 +192,10 @@ export async function generateMetadata({ params }: ChurchPageProps): Promise<Met
   for (const alias of aliases) {
     keywordSet.add(`${alias} church`);
     keywordSet.add(`${alias} music`);
+  }
+  for (const alias of searchAliases) {
+    keywordSet.add(alias);
+    keywordSet.add(`${alias} church`);
   }
 
   const pageUrl = `https://gospelchannel.com/church/${church.slug}`;
@@ -207,7 +212,9 @@ export async function generateMetadata({ params }: ChurchPageProps): Promise<Met
   });
 
   return {
-    title,
+    // Church-name queries need the identity and useful facts to fit in the
+    // title. Avoid the root "| GospelChannel" suffix on these detail pages.
+    title: { absolute: title },
     description: seoDesc,
     keywords: Array.from(keywordSet).slice(0, 20),
     alternates: { canonical: pageUrl },
@@ -286,13 +293,26 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
     : undefined;
   const websiteHostLabel = getPublicHostLabel(websiteUrl);
   const displayName = pickDisplayChurchName(church.name, enrichment?.officialChurchName);
+  const metadataInput = { church, enrichment, mergedProfile, displayName };
+  const seoTitle = buildChurchTitle(metadataInput);
+  const seoDescription = buildChurchDescription(metadataInput);
+  const seenStructuredAliases = new Set([displayName.toLocaleLowerCase()]);
+  const structuredAliases = Array.from(new Set([
+    ...buildChurchAliases(church),
+    ...getChurchSearchAliases(church.slug),
+  ])).filter((alias) => {
+    const key = alias.toLocaleLowerCase();
+    if (seenStructuredAliases.has(key)) return false;
+    seenStructuredAliases.add(key);
+    return true;
+  });
   const { first: nameFirst, rest: nameRest } = splitDisplayName(displayName);
   const serviceTimes = sanitizeServiceTimes(
     (mergedProfile.serviceTimes as import("@/types/gospel").ServiceTime[] | undefined) || enrichment?.serviceTimes
   );
   const serviceTimeLabel = getFirstServiceTimeLabel(serviceTimes);
   const streetAddress = normalizeDisplayText((mergedProfile.streetAddress as string | undefined) || enrichment?.streetAddress);
-  const city = normalizeDisplayText(mergedProfile.city as string | undefined) || extractCity(church.location);
+  const city = extractCity(church.location) || normalizeDisplayText(mergedProfile.city as string | undefined);
   const mapsHref = buildGoogleMapsHref({
     googleMapsUrl: isValidPublicUrl(enrichment?.googleMapsUrl) ? enrichment?.googleMapsUrl : undefined,
     name: displayName,
@@ -528,24 +548,25 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
-      name: `${church.name} Playlist`,
-      description: `Stream ${church.name} worship playlist. Curated songs, videos, and gospel music.`,
+      "@id": `${pageUrl}#webpage`,
+      name: seoTitle,
+      description: seoDescription,
       url: pageUrl,
+      mainEntity: { "@id": `${pageUrl}#church` },
       // Real freshness signal for AI/search — only when we have a verified date.
       ...(church.verifiedAt && !Number.isNaN(Date.parse(String(church.verifiedAt))) && {
         dateModified: new Date(church.verifiedAt).toISOString(),
       }),
-      about: {
-        "@type": "Organization",
-        name: church.name,
-        ...(websiteUrl && { url: websiteUrl }),
-      },
+      about: { "@id": `${pageUrl}#church` },
     },
     {
       "@context": "https://schema.org",
       "@type": "Church",
+      "@id": `${pageUrl}#church`,
       name: displayName,
-      ...(websiteUrl && { url: websiteUrl }),
+      url: pageUrl,
+      mainEntityOfPage: { "@id": `${pageUrl}#webpage` },
+      ...(structuredAliases.length > 0 && { alternateName: structuredAliases }),
       ...(streetAddress && {
         address: {
           "@type": "PostalAddress",
@@ -591,7 +612,9 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
         const openingHours = buildOpeningHours(serviceTimes);
         return openingHours.length > 0 ? { openingHoursSpecification: openingHours } : {};
       })()),
-      ...(socialLinks.length > 0 && { sameAs: socialLinks.map((link) => link.url) }),
+      ...((websiteUrl || socialLinks.length > 0) && {
+        sameAs: Array.from(new Set([websiteUrl, ...socialLinks.map((link) => link.url)].filter(Boolean))),
+      }),
       ...(pastorName && {
         employee: {
           "@type": "Person",
@@ -610,7 +633,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
     ...(allPlaylists.length > 0 && videos.length > 0 ? [{
       "@context": "https://schema.org",
       "@type": "MusicPlaylist",
-      name: `${church.name} Worship Playlist 2026`,
+      name: `${church.name} Worship Playlist`,
       description: aboutDescription,
       url: pageUrl,
       numTracks: videos.length,
