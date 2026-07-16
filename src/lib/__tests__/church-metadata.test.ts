@@ -193,6 +193,21 @@ describe("buildChurchTitle", () => {
     expect(buildChurchTitle(input)).toBe("Every Nation Dalung, Bali · Church in Kabupaten Badung");
     expect(getChurchSearchAliases(input.church.slug)).toContain("Every Nation Dalung Kabupaten Badung");
   });
+
+  it("keeps ICF Zurich focused on church visit intent", () => {
+    const input = makeInput({
+      slug: "icf-zurich",
+      name: "ICF Zurich",
+      location: "Dübendorf, Switzerland",
+      spotifyPlaylistIds: ["pl1"],
+    });
+
+    expect(buildChurchTitle(input)).toBe(
+      "ICF Church Zurich · Service Times, Address & Church Info",
+    );
+    expect(buildChurchDescription(input)).toContain("service times, address, visitor details");
+    expect(getChurchSearchAliases(input.church.slug)).toContain("ICF Church Zürich");
+  });
 });
 
 describe("buildChurchDescription", () => {

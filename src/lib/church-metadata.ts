@@ -41,8 +41,8 @@ const SEARCH_QUERY_OVERRIDES: Record<string, ChurchSearchOverride> = {
     aliases: ["Église évangélique de Gisors", "Église évangélique de Gisors Eure"],
   },
   "icf-zurich": {
-    title: "ICF Church Zurich · Worship Music & Service Details",
-    description: "ICF Church Zurich (ICF Zürich) in Dübendorf, Switzerland. Explore worship music, service details, address and official church links.",
+    title: "ICF Church Zurich · Service Times, Address & Church Info",
+    description: "ICF Church Zurich (ICF Zürich) in Dübendorf, Switzerland. Find service times, address, visitor details and official church links.",
     aliases: ["ICF Church Zurich", "ICF Church Zürich", "ICF Zürich", "ICF Zuerich"],
   },
   "international-central-gospel-church-hosanna-temple-teshie": {
