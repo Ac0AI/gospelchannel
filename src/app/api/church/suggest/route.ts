@@ -6,6 +6,24 @@ import { captureServerEvent } from "@/lib/posthog-server";
 import { enrichFromWebsite, saveEnrichmentToSuggestion } from "@/lib/auto-enrich";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 
+const CORS_ORIGINS = new Set(["https://playlist.church", "https://www.playlist.church"]);
+
+function corsHeaders(request: NextRequest): Record<string, string> {
+  const origin = request.headers.get("origin") || "";
+  return CORS_ORIGINS.has(origin)
+    ? { "Access-Control-Allow-Origin": origin, "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type", Vary: "Origin" }
+    : { Vary: "Origin" };
+}
+
+function json(request: NextRequest, body: unknown, init?: { status?: number }) {
+  return NextResponse.json(body, { ...init, headers: corsHeaders(request) });
+}
+
+export function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, { status: 204, headers: corsHeaders(request) });
+}
+
 function sanitize(value: string, maxLen: number): string {
   return value.trim().slice(0, maxLen);
 }
@@ -14,6 +32,19 @@ function isValidUrl(value: string): boolean {
   try {
     const url = new URL(value);
     return url.protocol === "https:" || url.protocol === "http:";
+  } catch {
+    return false;
+  }
+}
+
+function isValidPlaylistUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    const host = url.hostname.toLowerCase().replace(/^www\./, "");
+    if (!/^https?:$/.test(url.protocol)) return false;
+    if (host === "open.spotify.com") return /^\/(?:intl-[a-z]{2}\/)?playlist\/[a-zA-Z0-9]{22}\/?$/.test(url.pathname);
+    if (host === "music.apple.com") return /^\/[a-z]{2}\/playlist\//i.test(url.pathname);
+    return (host === "youtube.com" || host === "m.youtube.com") && url.pathname === "/playlist" && !!url.searchParams.get("list");
   } catch {
     return false;
   }
@@ -38,11 +69,11 @@ export async function POST(request: NextRequest) {
   } | null;
 
   if (!payload) {
-    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+    return json(request, { error: "Invalid request" }, { status: 400 });
   }
 
   if (isBotTrapFilled(payload.companyWebsite)) {
-    return NextResponse.json({
+    return json(request, {
       success: true,
       message: "Thank you! Your church suggestion has been received.",
     });
@@ -61,23 +92,23 @@ export async function POST(request: NextRequest) {
   const rateLimitKey = ip ? `church:suggest:${ip}` : null;
 
   if (!name || name.length < 2) {
-    return NextResponse.json({ error: "Church name is required (min 2 characters)" }, { status: 400 });
+    return json(request, { error: "Church name is required (min 2 characters)" }, { status: 400 });
   }
 
   if (!website || !isValidUrl(website)) {
-    return NextResponse.json({ error: "A valid church website URL is required" }, { status: 400 });
+    return json(request, { error: "A valid church website URL is required" }, { status: 400 });
   }
 
   if (!contactEmail || !isValidEmail(contactEmail)) {
-    return NextResponse.json({ error: "A valid contact email is required" }, { status: 400 });
+    return json(request, { error: "A valid contact email is required" }, { status: 400 });
   }
 
-  if (!playlistUrl || !isValidUrl(playlistUrl)) {
-    return NextResponse.json({ error: "A valid playlist URL is required (Spotify or YouTube)" }, { status: 400 });
+  if (!playlistUrl || !isValidPlaylistUrl(playlistUrl)) {
+    return json(request, { error: "A valid playlist URL is required (Spotify, Apple Music, or YouTube)" }, { status: 400 });
   }
 
   if (rateLimitKey && await hasKvRateLimit(rateLimitKey)) {
-    return NextResponse.json({ error: "Please wait a bit before sending another suggestion" }, { status: 429 });
+    return json(request, { error: "Please wait a bit before sending another suggestion" }, { status: 429 });
   }
 
   const suggestion = await addChurchSuggestion({
@@ -121,7 +152,7 @@ export async function POST(request: NextRequest) {
     // Background tasks are best-effort; don't fail the suggestion
   }
 
-  return NextResponse.json({
+  return json(request, {
     success: true,
     id: suggestion.id,
     message: "Thank you! Your church suggestion has been received.",

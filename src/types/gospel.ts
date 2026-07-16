@@ -73,7 +73,7 @@ export type ChurchFeedback = {
   message: string;
   submittedAt: string;
   status: "pending" | "reviewed" | "applied" | "rejected";
-  source?: "public" | "claimed_owner";
+  source?: "public" | "claimed_owner" | "auto_discovery";
   submittedByName?: string;
   submittedByEmail?: string;
 };

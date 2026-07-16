@@ -442,6 +442,8 @@ export function AdminFeedbackPanel({ feedback }: { feedback: ChurchFeedback[] })
         ) : (
           visibleFeedback.map((entry) => {
             const canDecision = entry.status === "pending" || entry.status === "reviewed";
+            const isSpotifyPlaylist = entry.kind !== "playlist_addition" ||
+              /open\.spotify\.com\/playlist\/[a-zA-Z0-9]{22}/.test(entry.playlistUrl || "");
 
             return (
               <article key={entry.id} className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-rose-200/70">
@@ -457,6 +459,8 @@ export function AdminFeedbackPanel({ feedback }: { feedback: ChurchFeedback[] })
                       <MetaPill label={entry.kind === "playlist_addition" ? "Playlist addition" : "Data issue"} tone={entry.kind === "playlist_addition" ? "good" : "warn"} />
                       {entry.field && <MetaPill label={`Field: ${entry.field}`} tone="info" />}
                       {entry.source === "claimed_owner" && <MetaPill label="Claimed owner" tone="good" />}
+                      {entry.source === "auto_discovery" && <MetaPill label="Auto-discovered" tone="info" />}
+                      {entry.kind === "playlist_addition" && !isSpotifyPlaylist && <MetaPill label="Needs Spotify mapping" tone="warn" />}
                     </div>
 
                     <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-warm-brown">
@@ -472,7 +476,7 @@ export function AdminFeedbackPanel({ feedback }: { feedback: ChurchFeedback[] })
                     {entry.status === "pending" && (
                       <AdminStatusButton table="church_feedback" id={entry.id} status="reviewed" label="Mark reviewed" variant="neutral" />
                     )}
-                    {canDecision && (
+                    {canDecision && isSpotifyPlaylist && (
                       <AdminStatusButton table="church_feedback" id={entry.id} status="applied" label="Apply" variant="approve" />
                     )}
                     {canDecision && (

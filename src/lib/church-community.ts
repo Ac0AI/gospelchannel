@@ -14,6 +14,7 @@ import type {
 import { CONTENT_BASE_DATE } from "@/lib/utils";
 import { slugify } from "@/lib/slugify";
 import { deriveDisplayAssessment, isValidPublicEmail } from "@/lib/content-quality";
+import { extractSpotifyPlaylistId, uniqueSpotifyPlaylistIds } from "@/lib/spotify-playlist";
 
 type SuggestionRow = {
   id: string;
@@ -43,6 +44,12 @@ type FeedbackRow = {
   source: ChurchFeedback["source"] | null;
   submitted_by_name: string | null;
   submitted_by_email: string | null;
+};
+
+type ChurchPlaylistRow = {
+  slug: string;
+  spotify_url: string | null;
+  spotify_playlist_ids: string[] | null;
 };
 
 type ClaimRow = {
@@ -223,6 +230,42 @@ function isAdminEnabled(): boolean {
   return hasServiceConfig();
 }
 
+async function attachSpotifyPlaylistToChurch(
+  client: ReturnType<typeof createAdminClient>,
+  churchSlug: string,
+  playlistUrl: string | null | undefined
+): Promise<boolean> {
+  const playlistId = extractSpotifyPlaylistId(playlistUrl);
+  if (!playlistId) return false;
+
+  const { data: church, error: churchError } = await client
+    .from<ChurchPlaylistRow>("churches")
+    .select("slug,spotify_url,spotify_playlist_ids")
+    .eq("slug", churchSlug)
+    .single();
+  if (churchError || !church) {
+    throw new Error(churchError?.message ?? "Church not found");
+  }
+
+  const spotifyPlaylistIds = uniqueSpotifyPlaylistIds([
+    ...(church.spotify_playlist_ids ?? []),
+    playlistId,
+  ]);
+  const spotifyUrl = extractSpotifyPlaylistId(church.spotify_url)
+    ? church.spotify_url
+    : `https://open.spotify.com/playlist/${playlistId}`;
+  const { error } = await client
+    .from("churches")
+    .update({
+      spotify_playlist_ids: spotifyPlaylistIds,
+      spotify_url: spotifyUrl,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("slug", churchSlug);
+  if (error) throw new Error(error.message);
+  return true;
+}
+
 /* ── Church suggestions ── */
 
 export async function getChurchSuggestions(): Promise<ChurchSuggestion[]> {
@@ -333,6 +376,7 @@ export async function createChurchFromSuggestion(suggestionId: string): Promise<
     .eq("slug", slug)
     .maybeSingle();
   if (bySlug?.slug) {
+    await attachSpotifyPlaylistToChurch(client, bySlug.slug, row.playlist_url);
     return { createdSlug: null, existingSlug: bySlug.slug };
   }
 
@@ -354,6 +398,7 @@ export async function createChurchFromSuggestion(suggestionId: string): Promise<
           .maybeSingle();
     const hostMatch = byHost?.slug ?? byWwwHost?.slug ?? null;
     if (hostMatch) {
+      await attachSpotifyPlaylistToChurch(client, hostMatch, row.playlist_url);
       return { createdSlug: null, existingSlug: hostMatch };
     }
   }
@@ -363,7 +408,8 @@ export async function createChurchFromSuggestion(suggestionId: string): Promise<
     .find((value) => isValidPublicEmail(value)) ?? null;
   const serviceTime = enrichment?.serviceTimes?.trim() || null;
   const languageCode = SUGGESTION_LANGUAGE_CODES[(row.language ?? "").trim().toLowerCase()] ?? null;
-  const spotifyUrl = getWebsiteHost(row.playlist_url) === "open.spotify.com" ? row.playlist_url : null;
+  const spotifyPlaylistId = extractSpotifyPlaylistId(row.playlist_url);
+  const spotifyUrl = spotifyPlaylistId ? `https://open.spotify.com/playlist/${spotifyPlaylistId}` : null;
 
   const assessment = deriveDisplayAssessment({
     description: description ?? undefined,
@@ -387,6 +433,7 @@ export async function createChurchFromSuggestion(suggestionId: string): Promise<
     email: contactEmail,
     language: languageCode,
     spotify_url: spotifyUrl,
+    spotify_playlist_ids: spotifyPlaylistId ? [spotifyPlaylistId] : null,
     service_times: serviceTime ? [serviceTime] : null,
     source_kind: "suggested",
     status: "approved",
@@ -444,6 +491,48 @@ export async function addChurchFeedback(
     throw new Error(error?.message ?? "Failed to insert feedback");
   }
   return mapFeedback(data);
+}
+
+/**
+ * Applies an approved feedback item to the catalog. Playlist additions are
+ * intentionally limited to Spotify because the public song corpus currently
+ * uses Spotify playlist IDs as its canonical ingestion key. Apple Music and
+ * YouTube links remain useful review evidence, but need mapping first.
+ */
+export async function applyChurchFeedback(feedbackId: string): Promise<{ churchSlug: string }> {
+  if (!isAdminEnabled()) {
+    throw new Error("Admin client is not configured");
+  }
+  const client = createAdminClient();
+  const { data: feedback, error: feedbackError } = await client
+    .from<FeedbackRow>("church_feedback")
+    .select()
+    .eq("id", feedbackId)
+    .single();
+  if (feedbackError || !feedback) {
+    throw new Error(feedbackError?.message ?? "Feedback not found");
+  }
+  if (feedback.status === "rejected") {
+    throw new Error("Rejected feedback cannot be applied");
+  }
+
+  if (feedback.kind === "playlist_addition") {
+    const playlistId = extractSpotifyPlaylistId(feedback.playlist_url);
+    if (!playlistId) {
+      throw new Error("Map this Apple Music or YouTube source to a Spotify playlist before applying it");
+    }
+
+    await attachSpotifyPlaylistToChurch(client, feedback.church_slug, playlistId);
+  }
+
+  const { error: statusError } = await client
+    .from("church_feedback")
+    .update({ status: "applied" })
+    .eq("id", feedbackId);
+  if (statusError) {
+    throw new Error(statusError.message);
+  }
+  return { churchSlug: feedback.church_slug };
 }
 
 /* ── Church claims ── */
