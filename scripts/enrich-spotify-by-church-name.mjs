@@ -159,6 +159,17 @@ function normalizedContainsAll(container, needle) {
   return tokens.every((t) => haystack.has(t));
 }
 
+function locationTokens(location) {
+  return coreTokens(location).filter((token) => token.length >= 3);
+}
+
+function candidateContainsLocation(church, ...values) {
+  const expected = locationTokens(church.location);
+  if (expected.length === 0) return false;
+  const candidate = new Set(coreTokens(values.filter(Boolean).join(" ")));
+  return expected.some((token) => candidate.has(token));
+}
+
 /**
  * True when `candidate` is a legitimate specialization of `church`.
  *
@@ -289,6 +300,10 @@ async function spotifyGetArtistPlaylists(token, artistId) {
 /* ── Scoring ── */
 
 function scoreArtist(church, artist) {
+  if (church.ambiguousName && !candidateContainsLocation(church, artist.name)) {
+    return 0;
+  }
+
   const similarity = tokenSetSimilarity(church.name, artist.name);
   // Strong match rules:
   //  - Artist must be a tight specialization of the church (all church tokens
@@ -323,6 +338,13 @@ function scorePlaylist(church, playlist) {
   const ownerId = playlist.owner?.id || "";
   const playlistName = playlist.name || "";
 
+  if (
+    church.ambiguousName &&
+    !candidateContainsLocation(church, playlistName, playlist.description, ownerName)
+  ) {
+    return 0;
+  }
+
   // Hard reject: Spotify-curated editorial lists. These are never owned by
   // the church and linking to them falsely suggests ownership.
   if (ownerId === "spotify" || ownerName.toLowerCase() === "spotify") return 0;
@@ -344,14 +366,10 @@ function scorePlaylist(church, playlist) {
   let score = ownerSimilarity;
   if (ownerStrong) score = Math.max(score, 0.85);
 
-  // Secondary: playlist title is a tight specialization of the church name.
-  // Weaker than an owner match — editors can put anything in a playlist
-  // title — so we cap it at 0.78 and only apply when the tight-specialization
-  // rule passes (filters out noise playlists like "Blackwell's Westgate Playlist").
-  const playlistTight =
-    isTightSpecialization(church.name, playlistName) &&
-    (churchCoreCount >= 2 || tokenSetSimilarity(church.name, playlistName) >= 0.6);
-  if (playlistTight) score = Math.max(score, 0.78);
+  // A matching playlist title is not enough to establish ownership. Any user
+  // can create a playlist named after a church, and short names such as "SOS"
+  // are especially collision-prone. Automatic matches therefore require the
+  // owner identity itself to match the church.
 
   // Worship keyword in playlist name — mild boost, not enough to single-handedly clear threshold
   const lowerPlaylist = playlistName.toLowerCase();
@@ -404,10 +422,9 @@ async function loadTargets(sql, options) {
   }
   if (options.revalidateLegacy) {
     // Legacy matches: spotify_url set by the old discover flow but never
-    // verified by this strict matcher (spotify_searched_at IS NULL).
-    // Re-runs the matcher against every such row. Kept as-is when the new
-    // best match equals the existing URL, replaced when a better one wins,
-    // cleared when nothing passes minScore.
+    // checked by this matcher (spotify_searched_at IS NULL). Existing links
+    // may be manually curated, so revalidation is intentionally non-destructive:
+    // it records the search timestamp but never replaces or clears the URL.
     return sql`
       SELECT slug, name, location, country, website, spotify_url, spotify_searched_at
       FROM churches
@@ -485,18 +502,6 @@ async function markSearched(sql, slug) {
   await sql`UPDATE churches SET spotify_searched_at = NOW(), updated_at = NOW() WHERE slug = ${slug}`;
 }
 
-async function clearMatch(sql, slug) {
-  await sql`
-    UPDATE churches
-    SET spotify_url = NULL,
-        spotify_playlist_ids = ARRAY[]::text[],
-        spotify_artist_ids = NULL,
-        spotify_owner_id = NULL,
-        updated_at = NOW()
-    WHERE slug = ${slug}
-  `;
-}
-
 async function writeMatch(sql, slug, match) {
   if (match.type === "artist") {
     await sql`
@@ -544,7 +549,10 @@ async function mapWithConcurrency(items, limit, worker) {
 function buildQuery(church) {
   // The most distinctive query is the full name. Spotify search is
   // token-aware, so we pass the whole name and let scoring do the filtering.
-  return church.name;
+  // Repeated generic names need the location to avoid cross-city matches.
+  return church.ambiguousName && church.location
+    ? `${church.name} ${church.location}`
+    : church.name;
 }
 
 async function main() {
@@ -559,6 +567,20 @@ async function main() {
   console.log(`Targets: ${targets.length} churches`);
   if (targets.length === 0) return;
 
+  const targetNames = [...new Set(targets.map((church) => church.name.toLowerCase()))];
+  const duplicateNames = await sql`
+    SELECT lower(name) AS name
+    FROM churches
+    WHERE status = 'approved'
+      AND lower(name) = ANY(${targetNames}::text[])
+    GROUP BY lower(name)
+    HAVING count(*) > 1
+  `;
+  const ambiguousNames = new Set(duplicateNames.map((row) => row.name));
+  for (const church of targets) {
+    church.ambiguousName = ambiguousNames.has(church.name.toLowerCase());
+  }
+
   await getSpotifyToken();
   console.log("Spotify authenticated.");
 
@@ -571,8 +593,6 @@ async function main() {
     errors: 0,
     written: 0,
     kept: 0,
-    replaced: 0,
-    cleared: 0,
   };
   const matches = [];
 
@@ -633,13 +653,12 @@ async function main() {
       if (!best) summary.noMatch += 1;
       else summary.belowThreshold += 1;
 
-      // Legacy revalidation: existing URL is now declared bad, clear it.
+      // A search miss cannot prove that an existing curated URL is wrong.
       if (options.revalidateLegacy && church.spotify_url) {
-        recordMatch("cleared");
-        summary.cleared += 1;
+        recordMatch("unverified");
+        summary.kept += 1;
         if (rowUpdated) {
           try {
-            await clearMatch(sql, church.slug);
             await markSearched(sql, church.slug);
           } catch {
             summary.errors += 1;
@@ -656,15 +675,14 @@ async function main() {
     if (best.type === "artist") summary.matchedArtist += 1;
     else summary.matchedPlaylist += 1;
 
-    // Legacy revalidation: distinguish kept vs replaced for clarity.
+    // Never let an automated search overwrite an existing curated URL. A
+    // different high-scoring result is reported as a conflict for review.
     if (options.revalidateLegacy) {
       const isSame = church.spotify_url === best.url;
-      recordMatch(isSame ? "kept" : "replaced");
-      if (isSame) summary.kept += 1;
-      else { summary.replaced += 1; summary.written += 1; }
+      recordMatch(isSame ? "kept" : "conflict");
+      summary.kept += 1;
       if (!options.dryRun) {
         try {
-          if (!isSame) await writeMatch(sql, church.slug, best);
           await markSearched(sql, church.slug);
         } catch {
           summary.errors += 1;
@@ -691,26 +709,26 @@ async function main() {
   console.log(JSON.stringify(summary, null, 2));
 
   if (options.revalidateLegacy) {
-    const replaced = matches.filter((m) => m.action === "replaced");
+    const conflicts = matches.filter((m) => m.action === "conflict");
     const kept = matches.filter((m) => m.action === "kept");
-    const cleared = matches.filter((m) => m.action === "cleared");
+    const unverified = matches.filter((m) => m.action === "unverified");
 
-    console.log(`\nReplaced (${replaced.length}) — strict matcher found a better candidate:`);
-    for (const m of replaced.slice(0, 30)) {
+    console.log(`\nConflicts (${conflicts.length}) — kept existing URL; matcher found a different candidate:`);
+    for (const m of conflicts.slice(0, 30)) {
       console.log(`  ${m.best.score.toFixed(2)} [${m.best.type}] ${m.name}`);
-      console.log(`        old: ${m.existingUrl}`);
-      console.log(`        new: ${m.best.url} (${m.best.label})`);
+      console.log(`        existing:  ${m.existingUrl}`);
+      console.log(`        candidate: ${m.best.url} (${m.best.label})`);
     }
-    if (replaced.length > 30) console.log(`  ...and ${replaced.length - 30} more`);
+    if (conflicts.length > 30) console.log(`  ...and ${conflicts.length - 30} more`);
 
-    console.log(`\nCleared (${cleared.length}) — no candidate above threshold:`);
-    for (const m of cleared.slice(0, 30)) {
+    console.log(`\nUnverified (${unverified.length}) — kept existing URL; no candidate above threshold:`);
+    for (const m of unverified.slice(0, 30)) {
       const top = m.best ? `${m.best.score.toFixed(2)} [${m.best.type}] → ${m.best.label}` : "(no candidate)";
       console.log(`  ${m.name}`);
-      console.log(`        old: ${m.existingUrl}`);
+      console.log(`        existing: ${m.existingUrl}`);
       console.log(`        top: ${top}`);
     }
-    if (cleared.length > 30) console.log(`  ...and ${cleared.length - 30} more`);
+    if (unverified.length > 30) console.log(`  ...and ${unverified.length - 30} more`);
 
     console.log(`\nKept (${kept.length}) — existing match validated by strict matcher:`);
     for (const m of kept.slice(0, 10)) {
