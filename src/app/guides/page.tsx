@@ -5,6 +5,9 @@ import { COMPARE_CARDS, GUIDE_CARDS } from "@/lib/tooling";
 import { buildBreadcrumbSchema, buildItemListSchema } from "@/lib/seo-schema";
 import { serializeJsonLd } from "@/lib/json-ld";
 
+// ISR so build-time fallback church stats never get baked in permanently.
+export const revalidate = 3600;
+
 const PAGE_URL = "https://gospelchannel.com/guides";
 const PAGE_TITLE = "Church Guides for Choosing Where to Visit";
 

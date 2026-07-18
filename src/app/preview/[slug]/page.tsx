@@ -6,8 +6,17 @@ import { getChurchEnrichment } from "@/lib/church";
 import { getApprovedProfileEditsForChurch, buildMergedProfile } from "@/lib/church-profile";
 import { calculateProfileScore } from "@/lib/profile-score";
 import { getProfileOptionLabel } from "@/lib/profile-fields";
+import { isRenderableImageUrl, rewriteLegacyMediaUrl } from "@/lib/media";
 import Link from "next/link";
 import { PreviewComparisonColumn } from "./preview-comparison-column";
+
+// Hero URLs can point at hosts that block hotlinking (Wix, squarespace, …), which
+// renders as a broken image on the very page we email to churches. Run the same
+// rewrite + allowlist the profile page uses and drop anything unrenderable.
+function sanitizeCoverImageUrl(value: unknown): string | undefined {
+  const candidate = rewriteLegacyMediaUrl(typeof value === "string" ? value : undefined);
+  return isRenderableImageUrl(candidate) ? candidate : undefined;
+}
 
 export const dynamic = "force-dynamic";
 
@@ -83,7 +92,7 @@ function MockCurrentProfile({
   const languages = data.languages as string[] | undefined;
   const goodFitTags = data.goodFitTags as string[] | undefined;
   const visitorFaq = data.visitorFaq as { question: string; answer: string }[] | undefined;
-  const coverImageUrl = data.coverImageUrl as string | undefined;
+  const coverImageUrl = sanitizeCoverImageUrl(data.coverImageUrl);
 
   return (
     <div className="space-y-3">
@@ -259,7 +268,7 @@ function MockEnrichedProfile({
   const pastorName = (data.pastorName as string | undefined) || SAMPLE.pastorName;
   const pastorTitle = (data.pastorTitle as string | undefined) || SAMPLE.pastorTitle;
   const pastorWelcome = SAMPLE.pastorWelcome; // Always use the warm sample welcome text
-  const coverImageUrl = (data.coverImageUrl as string | undefined) || SAMPLE_HERO;
+  const coverImageUrl = sanitizeCoverImageUrl(data.coverImageUrl) ?? SAMPLE_HERO;
   const whatToExpect = (data.whatToExpect as string | undefined) || SAMPLE.whatToExpect;
   const serviceDuration = (data.serviceDurationMinutes as number | undefined) || SAMPLE.serviceDuration;
   const parking = (data.parkingInfo as string | undefined) || SAMPLE.parking;

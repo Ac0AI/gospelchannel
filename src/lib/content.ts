@@ -656,32 +656,36 @@ const getApprovedChurchDirectorySeedCached = cache(async (): Promise<ChurchDirec
   }
 });
 
-const getApprovedChurchStatsCached = unstable_cache(
-  async () => {
-    if (isOfflinePublicBuild() || !hasServiceConfig()) {
-      const churches = getFallbackChurchDirectorySeed();
-      return {
-        churchCount: churches.length,
-        churchCountLabel: formatChurchCountLabel(churches.length),
-        countryCount: new Set(churches.map((church) => church.country).filter(Boolean)).size,
-      };
-    }
-
-    try {
-      return await fetchApprovedChurchStatsFromDb();
-    } catch (error) {
-      logChurchSnapshotFallback("church-stats", error);
-      const churches = getFallbackChurchDirectorySeed();
-      return {
-        churchCount: churches.length,
-        churchCountLabel: formatChurchCountLabel(churches.length),
-        countryCount: new Set(churches.map((church) => church.country).filter(Boolean)).size,
-      };
-    }
-  },
-  ["approved-church-stats-v2"],
+const getApprovedChurchStatsFromDbCached = unstable_cache(
+  async () => fetchApprovedChurchStatsFromDb(),
+  ["approved-church-stats-v3"],
   { revalidate: 3600, tags: [CHURCH_CONTENT_TAG, CHURCH_STATS_TAG] }
 );
+
+function getFallbackChurchStats() {
+  const churches = getFallbackChurchDirectorySeed();
+  return {
+    churchCount: churches.length,
+    churchCountLabel: formatChurchCountLabel(churches.length),
+    countryCount: new Set(churches.map((church) => church.country).filter(Boolean)).size,
+  };
+}
+
+// Fallback stats (the small bundled snapshot) must never enter the persistent
+// cache: a build-time or transient-DB render would otherwise pin "3,330+
+// churches" on marketing pages until the next revalidation.
+async function getApprovedChurchStatsCached() {
+  if (isOfflinePublicBuild() || !hasServiceConfig()) {
+    return getFallbackChurchStats();
+  }
+
+  try {
+    return await getApprovedChurchStatsFromDbCached();
+  } catch (error) {
+    logChurchSnapshotFallback("church-stats", error);
+    return getFallbackChurchStats();
+  }
+}
 
 // Full church payload now exceeds Next's 2 MB data-cache ceiling, so keep it
 // memoized in-process for a request/build and reserve unstable_cache for slimmer projections.

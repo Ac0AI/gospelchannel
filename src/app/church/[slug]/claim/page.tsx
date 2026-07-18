@@ -75,20 +75,20 @@ export default async function ClaimChurchPage({ params }: ClaimPageProps) {
       {/* Editorial hero */}
       <section className="px-5 pt-14 text-center sm:px-12 sm:pt-16">
         <div className="mx-auto max-w-[720px]">
-          <p className="gc-eyebrow">Claim a church &middot; Verify</p>
+          <p className="gc-eyebrow">Claim a church</p>
           <h1
             className="mx-auto mt-3.5 m-0 max-w-[18ch] font-serif font-semibold leading-[1] tracking-[-0.02em] text-espresso"
             style={{ fontSize: "clamp(40px, 6vw, 64px)" }}
           >
-            How should we <em className="gc-italic">verify</em> you?
+            Claim <em className="gc-italic">{church.name}</em>.
           </h1>
           <p className="mx-auto mt-5 max-w-[520px] text-base leading-relaxed text-warm-brown sm:text-lg">
-            You&rsquo;re claiming <strong className="text-espresso">{church.name}</strong>. Pick a verification path and we&rsquo;ll review within 48 hours.
+            Tell us who you are and we&rsquo;ll verify your claim within 48 hours. Free, and takes about two minutes.
           </p>
         </div>
       </section>
 
-      <section className="mx-auto max-w-[720px] px-5 py-12 sm:px-12 sm:py-14">
+      <section className="mx-auto max-w-[720px] px-5 py-10 sm:px-12 sm:py-12">
         <ClaimChurchForm slug={church.slug} churchName={church.name} />
       </section>
     </>

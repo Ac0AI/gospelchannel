@@ -669,9 +669,24 @@ function mapRowToSuggestion(row: SearchSuggestionRow): ChurchSearchSuggestion | 
 // Below this, word_similarity() on short strings is too noisy to be useful.
 const FUZZY_MIN_QUERY_LENGTH = 4;
 
+// "lev church downey" should still find LEV Church (search_key "lev church",
+// city "downey"): people naturally append city/state after the name. We match
+// every word-boundary prefix of the query as an exact key so trailing
+// qualifiers never hide the church the query started with.
+function getWordBoundaryPrefixes(query: string): string[] {
+  const words = query.split(" ");
+  const prefixes: string[] = [];
+  for (let end = words.length - 1; end >= 1; end--) {
+    const prefix = words.slice(0, end).join(" ");
+    if (prefix.length >= SEARCH_SUGGEST_MIN_QUERY_LENGTH) prefixes.push(prefix);
+  }
+  return prefixes;
+}
+
 async function getDatabaseSuggestions(query: string, limit: number): Promise<ChurchSearchSuggestion[]> {
   const pattern = `${escapeLikePattern(query)}%`;
   const innerLimit = Math.max(limit * 10, 80);
+  const wordPrefixes = getWordBoundaryPrefixes(query);
   const rows = (await getSql().query(
     `
       WITH prefix_matches AS (
@@ -688,6 +703,22 @@ async function getDatabaseSuggestions(query: string, limit: number): Promise<Chu
         FROM search_suggestions
         WHERE search_key LIKE $2 ESCAPE '\\'
         ORDER BY match_rank ASC, popularity DESC, key_length ASC, title ASC
+        LIMIT $3
+      ),
+      word_prefix_matches AS (
+        SELECT
+          target_type,
+          target_id,
+          title,
+          subtitle,
+          slug,
+          popularity,
+          1 AS match_rank,
+          char_length(search_key) AS key_length,
+          0.9::real AS sim
+        FROM search_suggestions
+        WHERE search_key = ANY($5::text[])
+        ORDER BY popularity DESC, key_length DESC, title ASC
         LIMIT $3
       ),
       -- Typo-tolerant fallback: word_similarity() finds the best-matching word/
@@ -713,6 +744,8 @@ async function getDatabaseSuggestions(query: string, limit: number): Promise<Chu
       combined AS (
         SELECT * FROM prefix_matches
         UNION ALL
+        SELECT * FROM word_prefix_matches
+        UNION ALL
         SELECT * FROM fuzzy_matches
       ),
       deduped AS (
@@ -734,7 +767,7 @@ async function getDatabaseSuggestions(query: string, limit: number): Promise<Chu
       ORDER BY match_rank ASC, sim DESC, popularity DESC, key_length ASC, title ASC
       LIMIT $4
     `,
-    [query, pattern, innerLimit, limit],
+    [query, pattern, innerLimit, limit, wordPrefixes],
   )) as SearchSuggestionRow[];
 
   return rows.map(mapRowToSuggestion).filter((row): row is ChurchSearchSuggestion => Boolean(row));
@@ -794,7 +827,13 @@ export function getLocalSearchSuggestionsFromChurches(
       const values = getSearchValues(church).map(({ value, score }) => ({ value: normalizeSuggestionQuery(value ?? ""), score }));
 
       const prefixMatch = values
-        .filter(({ value }) => value.startsWith(normalized))
+        .filter(
+          ({ value }) =>
+            value.startsWith(normalized) ||
+            // Reverse word-boundary prefix: "lev church downey" still matches
+            // the name key "lev church" when a city/state is appended.
+            (value.length >= SEARCH_SUGGEST_MIN_QUERY_LENGTH && normalized.startsWith(`${value} `)),
+        )
         .sort((a, b) => b.score - a.score || a.value.length - b.value.length)[0];
 
       // Typo-tolerant fallback only when no exact prefix match exists, and

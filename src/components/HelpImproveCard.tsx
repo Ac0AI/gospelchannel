@@ -137,7 +137,10 @@ export function HelpImproveCard({
         </button>
         <p className="mt-3 text-xs text-muted-warm">
           {footerCta.body}{" "}
-          <Link href={footerCta.href} className="font-semibold text-rose-gold transition-colors hover:text-rose-gold-deep">
+          <Link
+            href={footerCta.href}
+            className="relative inline-block py-2 font-semibold text-rose-gold transition-colors before:absolute before:-inset-x-2 before:-inset-y-1 before:content-[''] hover:text-rose-gold-deep"
+          >
             {footerCta.label}
           </Link>
         </p>

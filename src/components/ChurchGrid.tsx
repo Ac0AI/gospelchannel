@@ -122,6 +122,21 @@ function getTextMatchScore(church: ChurchItem, query: string): number {
   if (church.location?.toLowerCase().includes(q)) score = Math.max(score, 40);
   if ((church.musicStyle ?? []).some((style) => style.toLowerCase().includes(q))) score = Math.max(score, 30);
 
+  // Multi-word queries like "lev church downey" mix name and city, so no single
+  // field contains the whole string. Match when every token appears somewhere.
+  if (score === 0) {
+    const tokens = q.split(/\s+/).filter((token) => token.length >= 2);
+    if (tokens.length > 1) {
+      const haystack = [
+        name,
+        ...(church.aliases ?? []).map((alias) => alias.toLowerCase()),
+        church.location?.toLowerCase() ?? "",
+        church.country.toLowerCase(),
+      ].join(" ");
+      if (tokens.every((token) => haystack.includes(token))) score = 55;
+    }
+  }
+
   return score;
 }
 

@@ -825,7 +825,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
             )}
           </h1>
 
-          {(isClaimed || (isCampus && network)) && (
+          {(isClaimed || (isCampus && network) || claimCtaMode === "unclaimed") && (
             <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
               {isClaimed && (
                 <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/20 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-blue-100">
@@ -834,6 +834,15 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                   </svg>
                   Verified
                 </span>
+              )}
+              {claimCtaMode === "unclaimed" && (
+                <Link
+                  href={`/church/${church.slug}/claim`}
+                  className="relative inline-flex min-h-[36px] items-center gap-1.5 rounded-full bg-white/[0.12] px-3.5 py-1.5 text-xs font-semibold text-white/90 backdrop-blur-sm transition-colors before:absolute before:-inset-1.5 before:content-[''] hover:bg-white/25"
+                >
+                  Is this your church?{" "}
+                  <span className="underline decoration-white/50 underline-offset-2">Claim this page</span>
+                </Link>
               )}
               {isCampus && network && (
                 <Link
@@ -1024,10 +1033,10 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
             <div className="border-y border-rose-gold/[0.14] py-8">
               <p className="gc-eyebrow">Church details</p>
               <h2 className="mt-2 font-serif text-3xl font-semibold tracking-[-0.01em] text-espresso sm:text-4xl">
-                Why this profile belongs in a shortlist.
+                The details that decide a first visit.
               </h2>
               <p className="mt-3 max-w-[760px] text-sm leading-[1.7] text-warm-brown sm:text-base">
-                Use these details to check service times, music, location, tradition, language, and first-visit information before you visit.
+                Service times, music, location, tradition, and language, gathered in one place so you know what you are walking into.
               </p>
               <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {profileEvidenceSignals.slice(0, 9).map((signal) => {

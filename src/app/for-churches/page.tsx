@@ -4,6 +4,10 @@ import { getChurchStatsAsync } from "@/lib/content";
 import { buildBreadcrumbSchema, buildItemListSchema } from "@/lib/seo-schema";
 import { serializeJsonLd } from "@/lib/json-ld";
 
+// Without ISR this page is prerendered once at build time, where the DB is
+// unreachable — baking the tiny fallback church count into the HTML forever.
+export const revalidate = 3600;
+
 const SITE_URL = "https://gospelchannel.com";
 const PAGE_URL = `${SITE_URL}/for-churches`;
 const PAGE_TITLE = "Claim Your Church Page";
@@ -47,33 +51,40 @@ const WHY = [
 ];
 
 const FEATURES = [
-  { ic: "01", t: "Music & playlists", d: "Embed Spotify, Apple Music, YouTube. Visitors hear your sound before they walk in." },
-  { ic: "02", t: "Sermons & live", d: "YouTube embeds, latest series, livestream link surfaced when you go live Sunday morning." },
-  { ic: "03", t: "Service times that update", d: "Multiple gatherings, holiday hours, language tracks — all editable from your dashboard." },
+  { ic: "01", t: "Music & playlists", d: "Your worship on Spotify and YouTube, right on the page. Visitors hear your sound before they walk in." },
+  { ic: "02", t: "Sermons & live", d: "YouTube sermons on your page, plus a livestream link you control from your dashboard." },
+  { ic: "03", t: "Service times that update", d: "Service times, languages, and service length. All editable from your dashboard." },
   { ic: "04", t: "Map & directions", d: "One tap to walking, transit or driving directions. Parking notes for first-timers." },
   { ic: "05", t: "Verified badge", d: "Once you claim and confirm, visitors see the verified mark. Trust-signal for new faces." },
-  { ic: "06", t: "Prayer wall integration", d: "Receive prayers from your wall, respond from one inbox. Volunteers can moderate together." },
-  { ic: "07", t: "Team & pastor profiles", d: "Faces and short bios. New visitors arrive knowing who they'll meet." },
-  { ic: "08", t: "Multilingual", d: "Mark languages spoken at services. Show your page in Swedish, Spanish, Arabic, Mandarin and more." },
+  { ic: "06", t: "Visitor questions, answered", d: "Publish answers to what first-timers actually ask: what to wear, kids programs, parking." },
+  { ic: "07", t: "Pastor & welcome", d: "A face, a title, and a short welcome from your leader. New visitors arrive knowing who they'll meet." },
+  { ic: "08", t: "Multilingual", d: "Mark the languages spoken at your services so expats and internationals can find you." },
 ];
 
 const STEPS = [
   { n: "1", t: "Find or add", d: "Search for your church. If we have it, claim it. If not, add it in 2 minutes." },
-  { n: "2", t: "Verify", d: "We check your claim against the church's official email or website and approve it, usually within a day." },
-  { n: "3", t: "Polish", d: "Add photos, music links, service times. Live preview as you go." },
+  { n: "2", t: "Verify", d: "Every claim gets a human review. We check it against your church's website or email and get back within 48 hours." },
+  { n: "3", t: "Polish", d: "Add photos, service times, a pastor welcome, and visitor details from your dashboard." },
   { n: "4", t: "Publish", d: "Your page is live from day one. Submit edits anytime and we publish them after a quick review." },
 ];
 
 const FAQ = [
-  { q: "Who runs GospelChannel?", a: "A small team based in Stockholm with backgrounds in tech and ministry. We're independent and not affiliated with any single denomination or network." },
-  { q: "What if my church doesn't have great photos?", a: "Use the no-photo layout — we generate a beautiful color page using your tradition's palette. Many small churches choose this even when they have photos." },
-  { q: "Can I edit the page anytime?", a: "Yes. Submit changes anytime and they go live after a quick review, usually the same day. You can also add multiple admins from your team." },
-  { q: "Will you email my visitors?", a: "Never. Visitors who tap your contact button go to your channels, not ours. We don't have a newsletter to push them into." },
-  { q: "What about prayer requests?", a: "If you turn on the wall, prayers come into a moderation inbox you control. Volunteers from your church can moderate together." },
-  { q: "Can I delete my church anytime?", a: "Yes. One click in the dashboard. The page disappears. We don't keep an archive." },
+  { q: "Who runs GospelChannel?", a: "A small independent team in Sweden. We're not affiliated with any single denomination or network." },
+  { q: "What if my church doesn't have great photos?", a: "No problem. Pages without photos get a clean color layout based on your tradition's palette, and you can add photos whenever you're ready." },
+  { q: "Can I edit the page anytime?", a: "Yes. Submit changes anytime from your dashboard and they go live after a quick review." },
+  { q: "Will you email my visitors?", a: "Never. When a visitor contacts your church through the page, the message goes to you, not to a list. We don't run a newsletter." },
+  { q: "What about prayer requests?", a: "Our community Prayer Wall lets visitors share a request and lets others mark that they prayed. It's open to everyone, your congregation included." },
+  { q: "Can I delete my church anytime?", a: "Yes. One message to us and the page comes down. We don't keep a public archive." },
 ];
 
 const TRUST_NAMES = ["Hillsong", "Bethel", "Elevation", "Holy Trinity", "Passion City", "Redeemer"];
+
+// Real verified claims, shown instead of testimonials we don't have yet.
+const CLAIMED_SHOWCASE = [
+  { slug: "korskyrkan-umea", name: "Korskyrkan Umeå", place: "Umeå, Sweden" },
+  { slug: "grace-church-stockholm", name: "Grace Church Stockholm", place: "Stockholm, Sweden" },
+  { slug: "malaga-christian-church", name: "Malaga Christian Center", place: "Málaga, Spain" },
+];
 
 export default async function ForChurchesPage() {
   const { churchCountLabel, countryCount } = await getChurchStatsAsync();
@@ -149,11 +160,11 @@ export default async function ForChurchesPage() {
               The page your church <em className="gc-italic">deserves</em>.
             </h1>
             <p className="mt-6 max-w-[540px] text-lg leading-relaxed text-warm-brown sm:text-xl">
-              A complete church page with Spotify, YouTube, service times, and a prayer wall in one place. Free forever. No ads. No tracking. Built so first-time visitors can learn what to expect before Sunday.
+              A complete church page with Spotify, YouTube, service times, and visitor details in one place. Free forever. No ads. No tracking. Built so first-time visitors can learn what to expect before Sunday.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
-                href="/church"
+                href="/church?intent=claim"
                 className="rounded-full bg-rose-gold px-7 py-4 text-sm font-bold text-white transition-all duration-150 hover:-translate-y-px hover:bg-rose-gold-deep hover:shadow-[0_8px_24px_rgba(176,106,80,0.3)]"
               >
                 Claim your church page
@@ -165,7 +176,7 @@ export default async function ForChurchesPage() {
                 Add a new church
               </Link>
             </div>
-            <p className="mt-4 text-xs text-muted-warm">Free forever. Claiming takes about 4 minutes.</p>
+            <p className="mt-4 text-xs text-muted-warm">Free forever. Claiming takes about two minutes.</p>
           </div>
 
           <div className="relative">
@@ -177,10 +188,10 @@ export default async function ForChurchesPage() {
               }}
             />
             <div className="absolute -bottom-6 -left-6 max-w-[280px] rounded-[18px] border border-rose-gold/[0.10] bg-white px-6 py-5 shadow-[var(--shadow)]">
+              <p className="m-0 text-[10px] font-bold uppercase tracking-[0.18em] text-mauve">Before Sunday</p>
               <p className="m-0 mt-1.5 font-serif text-xl font-semibold leading-[1.2] text-espresso">
-                &ldquo;12 new visitors found us last month through GospelChannel.&rdquo;
+                Service times, worship, and what to expect. In one place, before they visit.
               </p>
-              <p className="mt-2 text-xs text-muted-warm">— Jonas, Pastor, London</p>
             </div>
           </div>
         </div>
@@ -265,23 +276,37 @@ export default async function ForChurchesPage() {
         </div>
       </section>
 
-      {/* Pastor quote */}
+      {/* Verified churches showcase */}
       <section className="mx-auto mt-24 max-w-[920px] px-5 text-center sm:px-12 sm:mt-28">
-        <p className="gc-eyebrow">A pastor told us</p>
-        <p
-          className="m-0 mt-5 font-serif font-medium italic leading-[1.3] tracking-[-0.01em] text-espresso"
+        <p className="gc-eyebrow">Already claimed</p>
+        <h2
+          className="mt-3 m-0 font-serif font-semibold tracking-[-0.01em] text-espresso"
           style={{ fontSize: "clamp(28px, 4.5vw, 44px)" }}
         >
-          &ldquo;We&rsquo;ve had a website for 11 years. The GospelChannel page does what ours never did &mdash; it makes us look like a place you&rsquo;d want to walk into.&rdquo;
-        </p>
-        <p className="mt-6 text-sm tracking-[0.06em] text-warm-brown">
-          Pastor Daniel · Trinity Anglican · Auckland
-        </p>
+          Churches already running their <em className="gc-italic">own</em> page.
+        </h2>
+        <div className="mt-10 grid gap-4 sm:grid-cols-3">
+          {CLAIMED_SHOWCASE.map((c) => (
+            <Link
+              key={c.slug}
+              href={`/church/${c.slug}`}
+              className="group rounded-2xl border border-rose-gold/[0.12] bg-white px-6 py-7 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:border-rose-gold/30 hover:shadow-md"
+            >
+              <span className="inline-flex items-center rounded-full bg-blue-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-blue-600">
+                Verified
+              </span>
+              <p className="m-0 mt-3 font-serif text-xl font-semibold text-espresso transition-colors group-hover:text-rose-gold-deep">
+                {c.name}
+              </p>
+              <p className="m-0 mt-1 text-sm text-warm-brown">{c.place}</p>
+            </Link>
+          ))}
+        </div>
       </section>
 
       {/* How it works */}
       <section className="mx-auto mt-24 max-w-[1280px] px-5 sm:px-12 sm:mt-28">
-        <p className="gc-eyebrow text-center">The four-minute setup</p>
+        <p className="gc-eyebrow text-center">The four-step setup</p>
         <h2
           className="mt-3 text-center font-serif font-semibold tracking-[-0.01em] text-espresso"
           style={{ fontSize: "clamp(32px, 5vw, 44px)" }}
@@ -314,10 +339,10 @@ export default async function ForChurchesPage() {
             Free. Forever. <em className="gc-italic">Truly</em>.
           </h2>
           <p className="mx-auto mt-5 max-w-[560px] text-base leading-relaxed text-linen/75 sm:text-[17px]">
-            We take a small donation from supporting churches who want to. We don&rsquo;t run ads. We don&rsquo;t sell data. We don&rsquo;t gate features. The same page Hillsong has, your village parish has.
+            We take a small donation from supporting churches who want to. We don&rsquo;t run ads. We don&rsquo;t sell data. We don&rsquo;t gate features. The same page a city megachurch gets, your village parish gets.
           </p>
           <Link
-            href="/church"
+            href="/church?intent=claim"
             className="mt-8 inline-flex rounded-full bg-linen px-7 py-4 text-sm font-bold text-espresso transition-all duration-150 hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(255,255,255,0.15)]"
           >
             Claim your church page
@@ -367,7 +392,7 @@ export default async function ForChurchesPage() {
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link
-            href="/church"
+            href="/church?intent=claim"
             className="rounded-full bg-rose-gold px-7 py-4 text-sm font-bold text-white transition-all duration-150 hover:-translate-y-px hover:bg-rose-gold-deep hover:shadow-[0_8px_24px_rgba(176,106,80,0.3)]"
           >
             Claim your church page

@@ -148,6 +148,7 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
   const filters = readDirectoryFilters(params);
   const query = filters.query ?? "";
   const requestedPage = readPositivePage(params.page);
+  const claimIntent = readStringParam(params.intent).trim().toLowerCase() === "claim";
 
   const [{ churchCount, countryCount }, directoryPage] = await Promise.all([
     getChurchStatsAsync(),
@@ -214,8 +215,8 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
         {
           "@context": "https://schema.org",
           "@type": "ItemList",
-          name: hasActiveFilters ? `Church profile results for ${filterSummary}` : "Church profile database",
-          description: `Compare ${directoryCount} church profiles across ${countryCount} countries by worship style, tradition, city, service details, and church details.`,
+          name: hasActiveFilters ? `Churches matching ${filterSummary}` : "All churches on GospelChannel",
+          description: `Compare ${directoryCount} churches across ${countryCount} countries by worship style, tradition, city, and service times.`,
           numberOfItems: pageItems.length,
           itemListElement: pageItems.map((church, index) => ({
             "@type": "ListItem",
@@ -238,17 +239,31 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
         style={{ background: "linear-gradient(135deg, var(--linen-deep) 0%, var(--linen) 60%)" }}
       >
         <div className="mx-auto max-w-[1280px]">
-          <p className="gc-eyebrow">Church directory</p>
+          <p className="gc-eyebrow">{claimIntent ? "For church leaders" : "Church directory"}</p>
           <h1 className="mt-3 font-serif text-4xl font-semibold leading-[1] tracking-[-0.02em] text-espresso sm:text-5xl lg:text-[56px]">
             {searchSummary ? (
               <>Search results for <em className="gc-italic">{searchSummary}</em>.</>
+            ) : claimIntent ? (
+              <>Find your church to <em className="gc-italic">claim</em> it.</>
             ) : (
               <>Find your <em className="gc-italic">church</em>.</>
             )}
           </h1>
 
+          {claimIntent ? (
+            <p className="mt-4 max-w-[640px] text-base leading-relaxed text-warm-brown">
+              Search for your church below, open its page, and tap{" "}
+              <strong className="font-semibold text-espresso">&ldquo;Claim this page&rdquo;</strong>. Not listed yet?{" "}
+              <Link href="/church/suggest" className="font-semibold text-rose-gold hover:text-rose-gold-deep">
+                Add your church
+              </Link>
+              .
+            </p>
+          ) : null}
+
           {/* Premium search pill */}
           <form action="/church" method="get" className="mt-7 max-w-[760px]">
+            {claimIntent ? <input type="hidden" name="intent" value="claim" /> : null}
             {filters.styleSlug ? <input type="hidden" name="style" value={filters.styleSlug} /> : null}
             {filters.denominationSlug ? <input type="hidden" name="denomination" value={filters.denominationSlug} /> : null}
             {filters.language ? <input type="hidden" name="language" value={filters.language} /> : null}
@@ -265,6 +280,7 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
                 defaultValue={query}
                 placeholder={`Search ${directoryCount.toLocaleString("en-US")} churches by name, city, or country`}
                 extraSearchParams={{
+                  intent: claimIntent ? "claim" : undefined,
                   style: filters.styleSlug,
                   denomination: filters.denominationSlug,
                   language: filters.language,

@@ -4,6 +4,9 @@ import { getChurchStatsAsync } from "@/lib/content";
 import { buildBreadcrumbSchema, buildItemListSchema } from "@/lib/seo-schema";
 import { serializeJsonLd } from "@/lib/json-ld";
 
+// ISR so build-time fallback church stats never get baked in permanently.
+export const revalidate = 3600;
+
 const SITE_URL = "https://gospelchannel.com";
 const PAGE_URL = `${SITE_URL}/about`;
 
@@ -60,7 +63,7 @@ export default async function AboutPage() {
       name: "GospelChannel church search pages",
       items: [
         { name: "Church guides", url: `${SITE_URL}/guides` },
-        { name: "Church profile database", url: `${SITE_URL}/church` },
+        { name: "All churches", url: `${SITE_URL}/church` },
         { name: "Church fit quiz", url: `${SITE_URL}/guides/church-fit-quiz` },
         { name: "First-visit guide", url: `${SITE_URL}/guides/first-visit-guide` },
       ],

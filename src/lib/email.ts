@@ -173,18 +173,18 @@ export async function sendClaimReceivedEmail(params: {
     <div style="font-family: Georgia, serif; max-width: 560px; margin: 0 auto; color: #3b2f2f; line-height: 1.55;">
       <p style="margin-top: 0;">Hi ${greeting},</p>
       <p>
-        Welcome to GospelChannel — and thanks for claiming
+        Welcome to GospelChannel, and thanks for claiming
         <strong><a href="${churchUrl}" style="color: #b06a50; text-decoration: none;">${params.churchName}</a></strong>.
         Your request just landed in my inbox.
       </p>
       <p>
-        Every claim goes through a quick human review (usually within <strong>48 hours</strong>)
+        Every claim goes through a quick human review (within <strong>48 hours</strong>)
         so we can make sure the listing ends up in the right hands. You'll get an email from me
         the moment it's approved. After that you'll be able to:
       </p>
       <ul style="padding-left: 20px; margin: 12px 0;">
         <li style="margin-bottom: 6px;">Update the hero image, description, and service times</li>
-        <li style="margin-bottom: 6px;">Link Spotify playlists and YouTube videos</li>
+        <li style="margin-bottom: 6px;">Add a pastor welcome, visitor Q&amp;A, and your social and livestream links</li>
         <li style="margin-bottom: 6px;">Receive messages from visitors through the contact form</li>
         <li style="margin-bottom: 6px;">Get the Verified Church badge on your listing</li>
       </ul>
@@ -197,7 +197,7 @@ export async function sendClaimReceivedEmail(params: {
         </a>
       </p>
       <p>
-        Questions? Just hit reply — I read every one.
+        Questions? Just hit reply. I read every one.
       </p>
       <p style="margin-bottom: 4px;">Talk soon,</p>
       <p style="margin-top: 0;">
@@ -206,7 +206,7 @@ export async function sendClaimReceivedEmail(params: {
       </p>
       <hr style="border: none; border-top: 1px solid #e8d8d0; margin: 28px 0 16px;" />
       <p style="font-size: 13px; color: #9a8a7a; margin-bottom: 0;">
-        If you didn't submit this claim, no worries — you can safely ignore this email.
+        If you didn't submit this claim, no worries. You can safely ignore this email.
       </p>
     </div>
   `.trim();

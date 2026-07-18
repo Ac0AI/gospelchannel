@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import posthog from "posthog-js";
 
@@ -14,6 +14,12 @@ type Props = {
 export function ClaimChurchForm({ slug, churchName }: Props) {
   const [state, setState] = useState<FormState>("idle");
   const [errorMsg, setErrorMsg] = useState("");
+
+  useEffect(() => {
+    if (state === "success") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [state]);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -58,14 +64,14 @@ export function ClaimChurchForm({ slug, churchName }: Props) {
 
   if (state === "success") {
     return (
-      <div className="mx-auto max-w-lg px-4 py-16 text-center">
+      <div className="mx-auto max-w-lg px-4 py-8 text-center">
         <div className="rounded-3xl border border-rose-200/60 bg-gradient-to-br from-white to-blush-light/40 p-10 shadow-sm">
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
             <svg className="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="font-serif text-2xl font-semibold text-espresso">Claim Submitted!</h2>
+          <h2 className="font-serif text-2xl font-semibold text-espresso">Claim submitted.</h2>
           <p className="mt-3 text-warm-brown">
             We&apos;ll review your claim within 48 hours and notify you via email. Once approved, you can sign in with the same email to manage your church&apos;s profile.
           </p>
@@ -81,16 +87,16 @@ export function ClaimChurchForm({ slug, churchName }: Props) {
   }
 
   const inputClass =
-    "w-full rounded-xl border border-rose-200/80 bg-linen px-4 py-3 text-sm text-espresso placeholder:text-muted-warm/60 transition focus:border-rose-gold focus:outline-none focus:ring-2 focus:ring-rose-gold/20";
+    "w-full rounded-xl border border-rose-200/80 bg-linen px-4 py-3 text-base text-espresso placeholder:text-muted-warm/60 transition focus:border-rose-gold focus:outline-none focus:ring-2 focus:ring-rose-gold/20";
 
   return (
-    <div className="mx-auto w-full max-w-lg px-4 py-16">
+    <div className="mx-auto w-full max-w-lg px-4 py-2">
       <Link href={`/church/${slug}`} className="mb-6 inline-flex text-sm font-medium text-rose-gold hover:text-rose-gold-deep">
         ← Back to {churchName}
       </Link>
 
       <div className="rounded-3xl border border-rose-200/60 bg-white/80 p-8 shadow-sm backdrop-blur-sm">
-        <h1 className="font-serif text-2xl font-bold text-espresso">Claim {churchName}</h1>
+        <h2 className="font-serif text-2xl font-bold text-espresso">Tell us who you are</h2>
         <p className="mt-2 text-sm text-warm-brown">
           Part of this church&apos;s leadership or worship team? Let us know so you can manage your page.
         </p>
@@ -129,6 +135,9 @@ export function ClaimChurchForm({ slug, churchName }: Props) {
               Email <span className="text-rose-gold">*</span>
             </label>
             <input id="email" name="email" type="email" required maxLength={200} placeholder="you@church.com" className={inputClass} />
+            <p className="mt-1.5 text-xs text-muted-warm">
+              Use your church email if you have one. It lets us verify your claim faster.
+            </p>
           </div>
 
           <div>
@@ -141,7 +150,7 @@ export function ClaimChurchForm({ slug, churchName }: Props) {
               rows={3}
               maxLength={500}
               placeholder="Tell us how you're connected to this church..."
-              className="w-full resize-none rounded-xl border border-rose-200/80 bg-linen px-4 py-3 text-sm text-espresso placeholder:text-muted-warm/60 transition focus:border-rose-gold focus:outline-none focus:ring-2 focus:ring-rose-gold/20"
+              className="w-full resize-none rounded-xl border border-rose-200/80 bg-linen px-4 py-3 text-base text-espresso placeholder:text-muted-warm/60 transition focus:border-rose-gold focus:outline-none focus:ring-2 focus:ring-rose-gold/20"
             />
           </div>
 
