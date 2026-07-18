@@ -100,7 +100,7 @@ export default async function CompareGuidePage({ params }: CompareGuidePageProps
         "Church details",
       ],
       mentions: [
-        { name: "GospelChannel church profile database", url: "https://gospelchannel.com/church" },
+        { name: "All churches on GospelChannel", url: "https://gospelchannel.com/church" },
         { name: "Church comparison guides", url: "https://gospelchannel.com/compare" },
       ],
     }),

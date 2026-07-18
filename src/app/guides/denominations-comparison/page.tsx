@@ -142,7 +142,7 @@ const DENOMINATION_EVIDENCE = [
   {
     id: "baptist",
     title: "Baptist church examples",
-    description: "Grounded, teaching-forward profiles where the denomination label can be checked against worship style and visitor signals.",
+    description: "Grounded, teaching-forward churches where the denomination label can be checked against worship style and first-visit details.",
     href: "/church/denomination/baptist",
     linkLabel: "Browse Baptist churches",
     filters: { denominationSlug: "baptist" },
@@ -227,7 +227,7 @@ export default async function DenominationsComparisonPage() {
           labels can be intimidating if you didn't grow up using them, and the differences can
           feel bigger from a distance than they often are inside a Sunday morning. This guide
           describes each major free-church and evangelical tradition in plain language so you can
-          read the profile database with the right vocabulary in hand.
+          compare churches with the right vocabulary in hand.
         </p>
         <p className="mt-4 text-base leading-relaxed text-warm-brown sm:text-lg">
           What you'll see below: a short summary of each tradition's shape, the kind of worship
@@ -270,7 +270,7 @@ export default async function DenominationsComparisonPage() {
       />
 
       <GuideChurchEvidence
-        intro="These examples come from the profile database, not from the guide copy. Use them to test the denomination label against worship style, service context, location, and profile richness before you visit."
+        intro="These are real churches, not examples we made up. Use them to test the denomination label against how each church actually worships: style, service times, and location, before you visit."
         groups={evidenceGroups}
         toolName="denominations_guide"
       />

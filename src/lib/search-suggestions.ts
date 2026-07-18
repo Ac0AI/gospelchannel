@@ -420,7 +420,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
   {
     id: "service-ready-profiles",
     type: "proof_route",
-    title: "Profiles with Service Times",
+    title: "Churches with Service Times",
     subtitle: "Find churches with published service times.",
     href: "/church/churches-with-service-times",
     priority: 99,
@@ -435,7 +435,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
   {
     id: "profiles-with-kids-ministry",
     type: "proof_route",
-    title: "Profiles with Kids or Youth Signals",
+    title: "Churches with Kids or Youth Ministry",
     subtitle: "Find churches with kids or youth information.",
     href: "/church/family-friendly-churches",
     priority: 97,
@@ -525,7 +525,7 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
   {
     id: "profiles-with-music",
     type: "proof_route",
-    title: "Profiles with Worship Music",
+    title: "Churches with Worship Music",
     subtitle: "Listen to worship music before you visit.",
     href: "/church/churches-with-worship-music",
     priority: 97,

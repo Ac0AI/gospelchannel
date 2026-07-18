@@ -16,17 +16,17 @@ const FAQS = [
   {
     question: "How do I hear a church's worship before visiting?",
     answer:
-      "Start with churches that have music details on their profile, then open the individual church page for playlists, style tags, videos, service context, and location. These details help you judge whether the room will be easy to participate in.",
+      "Start with churches that share their music, then open each church's page for playlists, videos, worship style, service times, and location. Listening first makes it much easier to know whether you'll feel at home in the room.",
   },
   {
     question: "Does worship music mean a church is the right fit?",
     answer:
-      "No. Worship music is one signal. Use it alongside service times, location, language, denomination, kids or youth needs, and first-visit cues before choosing where to visit.",
+      "No. The music is one piece. Weigh it alongside service times, location, language, denomination, and kids or youth needs before choosing where to visit.",
   },
   {
     question: "Why use a worship-music list?",
     answer:
-      "Many people ask for churches by sound: contemporary, gospel, charismatic, acoustic, Latin, or African worship. This list connects that preference to church profiles with published music details rather than a generic style label.",
+      "Many people ask for churches by sound: contemporary, gospel, charismatic, acoustic, Latin, or African worship. This list connects that preference to churches that have published their actual music, rather than a generic style label.",
   },
 ];
 
@@ -43,8 +43,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = "Churches with Worship Music";
   const description =
     totalCount > 0
-      ? `${totalCount.toLocaleString("en-US")} church profiles with worship music details, playlists, style tags, service context, and church details.`
-      : "Church profiles with worship music details, playlists, style tags, service context, and church details.";
+      ? `${totalCount.toLocaleString("en-US")} churches where you can hear the worship first: playlists, videos, and service times before your first visit.`
+      : "Churches where you can hear the worship first: playlists, videos, and service times before your first visit.";
 
   return {
     title,
@@ -68,9 +68,9 @@ export default async function ChurchesWithWorshipMusicPage() {
       eyebrow="Worship music"
       title="Churches with"
       titleAccent="Worship Music"
-      description="A list of church profiles with published worship music details for people who want to hear the sound before a first visit."
-      answer={`Trying to hear the room before visiting? GospelChannel currently lists ${totalCount.toLocaleString("en-US")} profiles with worship music details. Open church profiles for playlists, style tags, videos, service times, language, location, and visitor context.`}
-      methodology="This list is based on published worship music data such as playlists, music links, or related profile details. This is not a ranking; inspect each church profile before deciding where to visit."
+      description="Churches that share their worship music, for people who want to hear the sound before a first visit."
+      answer={`Trying to hear the room before visiting? GospelChannel currently lists ${totalCount.toLocaleString("en-US")} churches that share their worship music. Open any of them for playlists, videos, service times, language, and location.`}
+      methodology="This list is based on worship music the churches themselves have published: playlists, music links, and videos. It is not a ranking; look at each church before deciding where to visit."
       count={totalCount}
       churches={pageItems}
       updatedIso={updatedIso}

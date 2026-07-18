@@ -215,7 +215,7 @@ export default function FaithFaqPage() {
 
       <GuideProofLinks
         title="Turn answers into a church search"
-        intro="Some faith questions are personal. Others point toward the kind of church tradition you should visit first. Use the answers here for language, then use the profile database to compare real churches shaped by those emphases."
+        intro="Some faith questions are personal. Others point toward the kind of church tradition you should visit first. Use the answers here for language, then browse real churches shaped by those emphases."
         links={FAITH_PROOF_LINKS}
       />
 

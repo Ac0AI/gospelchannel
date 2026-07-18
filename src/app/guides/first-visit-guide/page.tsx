@@ -30,15 +30,15 @@ const META_DESCRIPTION =
 const FIRST_VISIT_EVIDENCE = [
   {
     id: "service-ready",
-    title: "Profiles with service times",
+    title: "Churches with service times",
     description: "Use these when the question is no longer abstract and you need a real Sunday plan.",
     href: "/church/churches-with-service-times",
-    linkLabel: "Browse service-ready profiles",
+    linkLabel: "Browse churches with service times",
     filters: { hasServiceTimes: true },
   },
   {
     id: "music-preview",
-    title: "Profiles with worship music",
+    title: "Churches with worship music",
     description: "Listen before you visit so the worship set is less surprising when you walk in.",
     href: "/church/churches-with-worship-music",
     linkLabel: "Browse churches with music",
@@ -46,8 +46,8 @@ const FIRST_VISIT_EVIDENCE = [
   },
   {
     id: "low-friction",
-    title: "Modern first-visit starting points",
-    description: "Contemporary churches often make first visits easier to decode with clearer host moments and familiar worship language.",
+    title: "Easy first-visit starting points",
+    description: "Contemporary churches are often the easiest to walk into for the first time: someone welcomes you, and the music feels familiar.",
     href: "/church/style/contemporary-worship",
     linkLabel: "Browse contemporary churches",
     filters: { styleSlug: "contemporary-worship" },
@@ -220,17 +220,17 @@ export default async function FirstVisitGuidePage() {
         links={[
           {
             href: "/church/churches-with-service-times",
-            label: "Profiles with service times",
+            label: "Churches with service times",
             description: "Best when you are ready to choose an actual Sunday and avoid vague visit details.",
           },
           {
             href: "/church/churches-with-worship-music",
-            label: "Profiles with worship music",
-            description: "Use music and videos to reduce surprise before the first worship set.",
+            label: "Churches with worship music",
+            description: "Listen to the music and watch the videos so the first worship set holds fewer surprises.",
           },
           {
             href: "/church/family-friendly-churches",
-            label: "Profiles with kids or youth signals",
+            label: "Churches with kids and youth ministry",
             description: "Useful if check-in, age groups, or family confidence affect whether you can visit.",
           },
           {
@@ -388,7 +388,7 @@ export default async function FirstVisitGuidePage() {
 
       <GuideChurchEvidence
         title="Turn the first visit into a short list"
-        intro="These examples show the church details to check before you walk in: published service times, worship previews, and lower-friction starting points."
+        intro="These examples show the details to check before you walk in: service times, worship you can listen to first, and churches that are easy to try."
         groups={evidenceGroups}
         toolName="first_visit_guide"
       />

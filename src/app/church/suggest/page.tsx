@@ -46,7 +46,7 @@ export default function SuggestChurchPage() {
       about: [
         { "@type": "Thing", name: "Church details" },
         { "@type": "Thing", name: "First-visit information" },
-        { "@type": "Thing", name: "Church profile database coverage" },
+        { "@type": "Thing", name: "Churches listed worldwide" },
       ],
     },
     buildItemListSchema({

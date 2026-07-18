@@ -35,10 +35,10 @@ describe("discovery churches", () => {
 
   it("builds compact proof lines from real profile signals", () => {
     expect(buildDiscoveryChurchProofs(makeChurch())).toEqual([
-      "Service time listed: Sunday 10:30",
+      "Meets Sunday 10:30",
       "2 worship playlists",
       "4 worship videos",
-      "Tagged Charismatic worship, Gospel",
+      "Known for Charismatic worship, Gospel",
     ]);
   });
 
@@ -52,6 +52,6 @@ describe("discovery churches", () => {
           musicStyle: null,
         }),
       ),
-    ).toEqual(["Language: English", "Official site linked", "Location: London, United Kingdom"]);
+    ).toEqual(["Services in English", "Official website available", "In London, United Kingdom"]);
   });
 });

@@ -117,28 +117,28 @@ export async function generateMetadata({ searchParams }: ChurchIndexPageProps): 
 
   if (currentPage > 1) {
     return {
-      title: "Church Profile Database",
-      description: `Compare ${churchCountLabel} church profiles in ${countryCount} countries by worship style, tradition, city, language, service details, and church details.`,
+      title: "Find a Church",
+      description: `Compare ${churchCountLabel} churches in ${countryCount} countries by worship style, tradition, city, language, and service times.`,
       alternates: { canonical: "https://gospelchannel.com/church" },
       robots: { index: false, follow: true },
     };
   }
 
   return {
-    title: "Church Profile Database",
-    description: `Compare ${churchCountLabel} church profiles in ${countryCount} countries by worship style, tradition, city, language, service details, and church details.`,
+    title: "Find a Church",
+    description: `Compare ${churchCountLabel} churches in ${countryCount} countries by worship style, tradition, city, language, and service times.`,
     alternates: { canonical: "https://gospelchannel.com/church" },
     openGraph: {
-      title: "Church Profile Database",
-      description: `Compare ${churchCountLabel} church profiles by worship style, tradition, city, language, service details, and church details before your first visit.`,
+      title: "Find a Church",
+      description: `Compare ${churchCountLabel} churches by worship style, tradition, city, language, and service times before your first visit.`,
       url: "https://gospelchannel.com/church",
       type: "website",
       siteName: "GospelChannel",
     },
     twitter: {
       card: "summary_large_image",
-      title: "Church Profile Database",
-      description: `Compare ${churchCountLabel} church profiles by worship style, tradition, city, language, service details, and church details.`,
+      title: "Find a Church",
+      description: `Compare ${churchCountLabel} churches by worship style, tradition, city, language, and service times.`,
     },
   };
 }
@@ -187,8 +187,8 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
               {
                 "@context": "https://schema.org",
                 "@type": "CollectionPage",
-                name: "GospelChannel Church Profile Database",
-                description: `Compare ${directoryCount} church profiles in ${countryCount} countries by worship style, tradition, city, language, service details, worship music, and church details.`,
+                name: "Find a Church on GospelChannel",
+                description: `Compare ${directoryCount} churches in ${countryCount} countries by worship style, tradition, city, language, service times, and worship music.`,
                 url: "https://gospelchannel.com/church",
                 isPartOf: {
                   "@type": "WebSite",

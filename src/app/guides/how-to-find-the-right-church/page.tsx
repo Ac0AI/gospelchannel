@@ -37,8 +37,8 @@ const HOW_TO_STEPS = [
   },
   {
     id: "read-profiles-listen-to-music",
-    title: "Read profile copy and listen to the music",
-    text: "Use each church profile's description, service details, playlists, and videos to understand what Sunday actually sounds and feels like.",
+    title: "Read how each church describes itself, and listen to the music",
+    text: "Use each church's description, service times, playlists, and videos to understand what Sunday actually sounds and feels like.",
   },
   {
     id: "visit-two-or-three",
@@ -55,24 +55,24 @@ const HOW_TO_STEPS = [
 const CHURCH_SEARCH_EVIDENCE = [
   {
     id: "music-first",
-    title: "Music-first profile examples",
-    description: "Profiles with worship music available, so you can hear the room before using a Sunday morning.",
+    title: "Churches you can listen to first",
+    description: "Churches with worship music available, so you can hear the room before spending a Sunday morning.",
     href: "/church/churches-with-worship-music",
     linkLabel: "Browse churches with music",
     filters: { hasMusic: true },
   },
   {
     id: "service-ready",
-    title: "Profiles with service times",
+    title: "Churches with service times",
     description: "Churches with concrete visit details, useful when you are turning a shortlist into a real Sunday plan.",
     href: "/church/churches-with-service-times",
-    linkLabel: "Browse service-ready profiles",
+    linkLabel: "Browse churches with service times",
     filters: { hasServiceTimes: true },
   },
   {
     id: "contemporary-starting-points",
     title: "Contemporary worship starting points",
-    description: "A common first lane for people who want a modern, lower-friction worship environment.",
+    description: "A common starting point for people who want modern worship that is easy to step into.",
     href: "/church/style/contemporary-worship",
     linkLabel: "Browse contemporary churches",
     filters: { styleSlug: "contemporary-worship" },
@@ -202,14 +202,14 @@ export default async function HowToFindTheRightChurchPage() {
 
       <GuideChurchEvidence
         title="Use real profiles to test the plan"
-        intro="The framework is only useful if it produces churches you can actually compare. These examples come from the profile database and show the kinds of signals to inspect before visiting."
+        intro="The framework is only useful if it produces churches you can actually compare. These are real churches, and they show the kinds of details worth checking before visiting."
         groups={evidenceGroups}
         toolName="find_right_church_guide"
       />
 
       <GuideStep id={HOW_TO_STEPS[0].id} step={1} title={HOW_TO_STEPS[0].title}>
         <p>
-          Before you open any church profile database, write down what a good Sunday morning looks like for
+          Before you start browsing churches, write down what a good Sunday morning looks like for
           you in this season. Three or four sentences, not a manifesto. Worship style. Length of
           service. Whether you want a big room or a small one. Whether you want kids ministry,
           and how integrated you want it to be. Whether you want preaching that's expositional,
@@ -294,16 +294,16 @@ export default async function HowToFindTheRightChurchPage() {
           audio or video.
         </p>
         <p>
-          The profile copy tells you what the church wants you to know about itself. The music
+          The church&apos;s own description tells you what it wants you to know about itself. The music
           tells you what Sunday actually sounds like. Together they let you eliminate two or
           three churches that wouldn't have worked, before you spend a Sunday morning finding
           out the slower way.
         </p>
         <GuideTip label="Look for specifics">
           <p>
-            Profiles with specifics — what to expect on a first visit, kids ministry details,
-            service times, what a normal Sunday looks like — are usually run by congregations
-            that put thought into welcoming visitors. That's a positive signal, not a
+            Church pages with specifics — what to expect on a first visit, kids ministry details,
+            service times, what a normal Sunday looks like — usually belong to congregations
+            that put thought into welcoming visitors. That's a good sign, not a
             requirement.
           </p>
         </GuideTip>
@@ -429,7 +429,7 @@ export default async function HowToFindTheRightChurchPage() {
           the most common reasons people end up at the wrong church.
         </p>
         <p className="mt-4 text-base leading-relaxed text-warm-brown">
-          Everything else is execution. The profile database, the worship-styles guide, the
+          Everything else is execution. The church pages, the worship-styles guide, the
           denominations guide, the fit quiz, and the audience-specific pages are tools for the
           same job: finding a Sunday morning you'd want to keep coming back to. None of them
           replaces the visit; they just make sure the visit is worth the morning.

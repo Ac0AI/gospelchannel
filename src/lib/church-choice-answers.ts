@@ -44,7 +44,7 @@ export const CHURCH_CHOICE_ANSWERS = [
       "Do not start with the most impressive church name. Start with visit friction: service time, city, transport, language, kids needs, and whether the worship room feels possible for you.",
     guide: { href: "/guides/first-visit-guide", label: "Read the first-visit guide" },
     proof: { href: "/church/churches-with-service-times", label: "Open profiles with service times" },
-    proofSignals: ["service times", "location", "visitor cues", "music or video"],
+    proofSignals: ["service times", "location", "first-visit details", "music or video"],
   },
   {
     id: "how-do-i-find-the-right-church",
@@ -66,7 +66,7 @@ export const CHURCH_CHOICE_ANSWERS = [
       "Start with geography and service times, then narrow by worship style, language, tradition, kids needs, and church details. A nearby church that fits your real Sunday is usually better than a famous church you will not attend consistently.",
     guide: { href: "/guides/how-to-find-the-right-church", label: "Follow the church-search guide" },
     proof: { href: "/church/city", label: "Browse churches by city" },
-    proofSignals: ["city", "service times", "worship fit", "language", "visitor friction"],
+    proofSignals: ["city", "service times", "worship fit", "language", "ease of visiting"],
   },
   {
     id: "which-campus-of-a-church-network-should-i-visit",
@@ -88,7 +88,7 @@ export const CHURCH_CHOICE_ANSWERS = [
       "For expats, students, and international families, language is not a soft preference. It decides whether you can follow the sermon, ask questions, understand kids check-in, and return without depending on translation every week.",
     guide: { href: "/guides/how-to-find-the-right-church", label: "Use the church-search guide" },
     proof: { href: "/church/english-speaking-churches", label: "Explore English-speaking churches" },
-    proofSignals: ["language", "country or city", "service times", "visitor cues"],
+    proofSignals: ["language", "country or city", "service times", "first-visit details"],
   },
   {
     id: "how-do-expats-find-an-english-speaking-church-abroad",
@@ -99,7 +99,7 @@ export const CHURCH_CHOICE_ANSWERS = [
       "For expats, the first decision is usually comprehension before preference. Use the expat guidance to frame the search, then check the church details for language, country or city, service details, and whether the church is realistically visitable from your new home.",
     guide: { href: "/for/expats", label: "Use the expat church-search guide" },
     proof: { href: "/church/english-speaking-churches", label: "Explore English-speaking churches" },
-    proofSignals: ["English language", "country or city", "service times", "international cues", "church details"],
+    proofSignals: ["English language", "country or city", "service times", "international community", "church details"],
   },
   {
     id: "how-do-i-find-a-church-with-kids-ministry",
@@ -132,18 +132,18 @@ export const CHURCH_CHOICE_ANSWERS = [
       "Contemporary, charismatic, gospel, acoustic, liturgical, Latin, and African worship can all be faithful rooms. The right first route is the one that lowers the barrier to a second visit.",
     guide: { href: "/guides/worship-styles-explained", label: "Understand worship styles" },
     proof: { href: "/church/style", label: "Browse matching churches" },
-    proofSignals: ["style tags", "playlists", "videos", "room feel"],
+    proofSignals: ["worship styles", "playlists", "videos", "room feel"],
   },
   {
     id: "traditional-or-contemporary-worship",
     question: "Should I choose traditional or contemporary worship?",
     answer:
-      "Choose traditional worship if structure, continuity, and steadier pacing help you trust the room. Choose contemporary worship if modern song language and a lower-friction first visit make you more likely to return.",
+      "Choose traditional worship if structure, continuity, and steadier pacing help you trust the room. Choose contemporary worship if modern songs and an easy first visit make you more likely to return.",
     detail:
-      "This is a room-feel decision before it is a quality judgement. Use the comparison guide to name the tradeoff, then verify real churches by worship style, service shape, music, location, and whether the profile gives enough evidence for a first Sunday.",
+      "This is a room-feel decision before it is a quality judgement. Use the comparison guide to name the tradeoff, then look at real churches: their worship style, service shape, music, and location, and whether the page tells you enough to plan a first Sunday.",
     guide: { href: "/compare/traditional-vs-contemporary-worship", label: "Compare traditional and contemporary worship" },
     proof: { href: "/church/style", label: "Browse worship styles" },
-    proofSignals: ["worship style tags", "service rhythm", "music or video", "tradition cues", "church details"],
+    proofSignals: ["worship style", "service times", "music or video", "tradition", "church details"],
   },
   {
     id: "liturgical-or-free-worship",
@@ -154,7 +154,7 @@ export const CHURCH_CHOICE_ANSWERS = [
       "The better first visit is the one that lowers resistance to showing up again. Liturgical and freer worship rooms can both be warm or difficult, so use the compare guide first and then verify profiles for service shape, tradition, worship style, and visitor clarity.",
     guide: { href: "/compare/liturgical-vs-free-worship", label: "Compare liturgical and free worship" },
     proof: { href: "/church/style", label: "Browse worship styles" },
-    proofSignals: ["service structure", "worship style", "tradition cues", "prayer response", "church details"],
+    proofSignals: ["service structure", "worship style", "tradition", "prayer response", "church details"],
   },
   {
     id: "can-i-listen-to-a-church-before-visiting",
@@ -165,7 +165,7 @@ export const CHURCH_CHOICE_ANSWERS = [
       "Hearing worship before Sunday is useful when music or room feel could decide whether you can participate. Do not treat a playlist as the whole church; use it alongside service details, tradition, language, and visit feasibility.",
     guide: { href: "/guides/worship-style-match", label: "Match the worship sound" },
     proof: { href: "/church/churches-with-worship-music", label: "Open profiles with worship music" },
-    proofSignals: ["worship playlists", "videos", "style tags", "service context", "visit feasibility"],
+    proofSignals: ["worship playlists", "videos", "worship styles", "service times", "easy to visit"],
   },
   {
     id: "where-can-i-find-charismatic-gospel-churches-in-london",
@@ -187,7 +187,7 @@ export const CHURCH_CHOICE_ANSWERS = [
       "A famous worship name can help discovery, but it does not prove fit. The safer path is to understand the worship sound you need, then explore churches known for worship and check the details before visiting.",
     guide: { href: "/guides/worship-style-match", label: "Match worship fit first" },
     proof: { href: "/church/best-worship-churches", label: "Explore churches known for worship" },
-    proofSignals: ["worship reputation", "music or video", "style tags", "profile completeness", "visit feasibility"],
+    proofSignals: ["worship reputation", "music or video", "worship styles", "detailed pages", "easy to visit"],
   },
   {
     id: "how-do-young-adults-find-a-contemporary-worship-church",
@@ -198,7 +198,7 @@ export const CHURCH_CHOICE_ANSWERS = [
       "Young-adult fit is often discovered through worship style, but check the church profile for the practical details: music or video, service context, location, ministries, and whether the room looks like a place you can return to after the first Sunday.",
     guide: { href: "/for/young-adults", label: "Use the young-adult church-search guide" },
     proof: { href: "/church/style/contemporary-worship", label: "Explore contemporary worship churches" },
-    proofSignals: ["contemporary worship", "music or video", "city", "young-adult cues", "church details"],
+    proofSignals: ["contemporary worship", "music or video", "city", "young adults", "church details"],
   },
   {
     id: "which-denomination-should-i-choose",
@@ -217,7 +217,7 @@ export const CHURCH_CHOICE_ANSWERS = [
     answer:
       "Choose Baptist if grounded teaching, steadier room energy, and a stable weekly rhythm matter most. Choose Pentecostal if expressive worship, prayer response, and visible expectancy make faith easier to participate in.",
     detail:
-      "Do not decide from the label alone. Baptist and Pentecostal churches vary widely by city and congregation, so use the comparison guide to understand the tradeoff and then verify actual profiles by denomination, worship style, service details, and visitor cues.",
+      "Do not decide from the label alone. Baptist and Pentecostal churches vary widely by city and congregation, so use the comparison guide to understand the tradeoff, then look at real churches: their denomination, worship style, service times, and what a first visit is like.",
     guide: { href: "/compare/baptist-vs-pentecostal", label: "Compare Baptist and Pentecostal" },
     proof: { href: "/church/denomination", label: "Browse churches by denomination" },
     proofSignals: ["denomination", "teaching emphasis", "worship expression", "service details", "church details"],
@@ -231,7 +231,7 @@ export const CHURCH_CHOICE_ANSWERS = [
       "This is not a quality ranking. It is a social and practical fit decision. Your season of life may make either room the wiser first visit.",
     guide: { href: "/compare/big-church-vs-small-church", label: "Compare big vs small church" },
     proof: { href: "/church", label: "Explore church details" },
-    proofSignals: ["room size cues", "ministries", "service rhythm", "community signals"],
+    proofSignals: ["church size", "ministries", "service times", "community"],
   },
   {
     id: "what-should-i-wear-to-church",
@@ -275,7 +275,7 @@ export const CHURCH_CHOICE_ANSWERS = [
       "Look for service times, location, worship style, denomination or tradition, language, kids or youth cues, visitor expectations, and whether the church details match what the guide or recommendation promised.",
     guide: { href: "/guides/how-to-find-the-right-church", label: "Use the church-search checklist" },
     proof: { href: "/church/churches-with-service-times", label: "Open visit-ready profiles" },
-    proofSignals: ["service times", "location", "tradition", "kids or youth cues", "church details"],
+    proofSignals: ["service times", "location", "tradition", "kids and youth", "church details"],
   },
   {
     id: "how-many-churches-should-i-visit",
@@ -292,12 +292,12 @@ export const CHURCH_CHOICE_ANSWERS = [
     id: "where-can-i-pray-before-choosing-a-church",
     question: "Where can I pray or see community prayer signals before choosing a church?",
     answer:
-      "Use prayer as a next step, not a shortcut around practical details. Pray privately or use the Prayer Wall as a community signal, then check any church page before visiting.",
+      "Use prayer as a next step, not a shortcut around practical details. Pray privately or use the Prayer Wall to sense the community, then check any church page before visiting.",
     detail:
-      "A prayer post can show spiritual life around a community, but it is not a score, endorsement, or replacement for church details. Use the prayer guide to slow the decision down, then check service times, location, worship style, language, and visitor cues before choosing a Sunday.",
+      "A prayer post can show spiritual life around a community, but it is not a score, endorsement, or replacement for church details. Use the prayer guide to slow the decision down, then check service times, location, worship style, and language before choosing a Sunday.",
     guide: { href: "/guides/prayer-guide", label: "Use prayer before choosing" },
     proof: { href: "/church/churches-with-service-times", label: "Find churches with service times" },
-    proofSignals: ["prayer guide", "community signal", "service times", "location", "church details"],
+    proofSignals: ["prayer guide", "community", "service times", "location", "church details"],
   },
   {
     id: "how-do-students-find-a-church-near-campus",
@@ -308,7 +308,7 @@ export const CHURCH_CHOICE_ANSWERS = [
       "Student church search is a logistics problem before it is a preference problem. A strong option is close enough to actually attend, familiar enough in worship to make the first visit possible, and clear enough in its profile that Sunday does not get postponed again.",
     guide: { href: "/for/students", label: "Use the student church-search guide" },
     proof: { href: "/church/city", label: "Browse churches by city" },
-    proofSignals: ["city", "transport friction", "service times", "worship style", "student-friendly cues"],
+    proofSignals: ["city", "getting there", "service times", "worship style", "student-friendly"],
   },
   {
     id: "where-should-new-believers-start",
@@ -319,7 +319,7 @@ export const CHURCH_CHOICE_ANSWERS = [
       "If prayer, baptism, salvation, or Bible questions are still new, choose a church where you can ask without needing insider language first.",
     guide: { href: "/for/new-believers", label: "Use the new-believer church-search guide" },
     proof: { href: "/church/churches-with-service-times", label: "Find churches with service times" },
-    proofSignals: ["plain-language cues", "visitor welcome", "service details", "community rhythm"],
+    proofSignals: ["plain language", "visitor welcome", "service times", "community life"],
   },
   {
     id: "how-do-i-find-a-low-pressure-church-after-church-hurt",
@@ -330,15 +330,15 @@ export const CHURCH_CHOICE_ANSWERS = [
       "After church hurt or deconstruction, the database should not force a verdict. Use guides for language and prayer, then inspect profiles for tradition, worship style, public expectations, service details, and enough transparency to decide whether a single visit is worth trying.",
     guide: { href: "/for/deconstructing", label: "Use the low-pressure church-search guide" },
     proof: { href: "/church", label: "Explore churches" },
-    proofSignals: ["tradition", "worship style", "profile copy", "service details", "community signal"],
+    proofSignals: ["tradition", "worship style", "church description", "service times", "community"],
   },
 ] satisfies ChurchChoiceAnswer[];
 
 export const CHURCH_CHOICE_PROOF_LINKS = [
   {
     href: "/church",
-    label: "All church profiles",
-    description: "Use the full profile database when the decision is still open.",
+    label: "All churches",
+    description: "Browse everything when the decision is still open.",
   },
   {
     href: "/church/city",
@@ -372,12 +372,12 @@ export const CHURCH_CHOICE_PROOF_LINKS = [
   },
   {
     href: "/church/churches-with-service-times",
-    label: "Profiles with service times",
+    label: "Churches with service times",
     description: "Use this when you are turning a shortlist into a real Sunday plan.",
   },
   {
     href: "/church/churches-with-worship-music",
-    label: "Profiles with worship music",
+    label: "Churches with worship music",
     description: "Use this when you need to hear the worship sound before visiting.",
   },
   {
@@ -387,7 +387,7 @@ export const CHURCH_CHOICE_PROOF_LINKS = [
   },
   {
     href: "/church/family-friendly-churches",
-    label: "Profiles with kids or youth signals",
+    label: "Churches with kids or youth ministry",
     description: "Use this when family logistics and age-group ministry are decisive before a first visit.",
   },
   {
@@ -414,9 +414,9 @@ export const CHURCH_CHOICE_EVIDENCE_GROUPS = [
   {
     id: "worship-proof",
     title: "Churches with worship music",
-    description: "Profiles with music signals so worship-style advice can be checked against actual church sound.",
+    description: "Churches that share their actual music, so worship-style advice can be checked against real church sound.",
     href: "/church/churches-with-worship-music",
-    linkLabel: "Browse profiles with music",
+    linkLabel: "Browse churches with music",
     filters: { hasMusic: true },
   },
   {
@@ -430,7 +430,7 @@ export const CHURCH_CHOICE_EVIDENCE_GROUPS = [
   {
     id: "family-proof",
     title: "Churches with kids or youth information",
-    description: "Profiles with kids or youth ministry signals for families turning a church search into a Sunday plan.",
+    description: "Churches with kids or youth ministry, for families turning a church search into a Sunday plan.",
     href: "/church/family-friendly-churches",
     linkLabel: "Browse family-ready profiles",
     filters: { hasKids: true },
@@ -438,7 +438,7 @@ export const CHURCH_CHOICE_EVIDENCE_GROUPS = [
   {
     id: "english-language-proof",
     title: "English-speaking churches",
-    description: "Profiles with English-language signals for expats, students, and international visitors.",
+    description: "Churches with services in English, for expats, students, and international visitors.",
     href: "/church/english-speaking-churches",
     linkLabel: "Browse English-language profiles",
     filters: { language: "English" },

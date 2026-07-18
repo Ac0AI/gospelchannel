@@ -40,13 +40,13 @@ const GUIDE_DECISION_PATHS = [
     title: "I am nervous about a first visit",
     body: "Read the first-visit guide, then prioritize profiles with service details before Sunday.",
     guide: { href: "/guides/first-visit-guide", label: "First-visit guide" },
-    proof: { href: "/church/churches-with-service-times", label: "Profiles with service times" },
+    proof: { href: "/church/churches-with-service-times", label: "Churches with service times" },
   },
   {
     title: "I want a faster match",
     body: "Use the quiz or worship match, then check the church details.",
     guide: { href: "/guides/church-fit-quiz", label: "Take the fit quiz" },
-    proof: { href: "/church/churches-with-worship-music", label: "Profiles with worship music" },
+    proof: { href: "/church/churches-with-worship-music", label: "Churches with worship music" },
   },
 ] as const;
 
@@ -168,7 +168,7 @@ export default async function GuidesPage() {
           <div className="mt-8 max-w-[860px] border-y border-blush/20 py-7">
             <p className="gc-eyebrow" style={{ color: "var(--rose-gold)" }}>Quick answer</p>
             <p className="mt-3 text-base leading-relaxed text-linen/75 sm:text-lg">
-              Use the guides to decide what kind of church to try, then use GospelChannel&rsquo;s church pages to check worship style tags, service details, music, location, and first-visit cues.
+              Use the guides to decide what kind of church to try, then use GospelChannel&rsquo;s church pages to check worship style, service times, music, location, and what a first visit is like.
             </p>
           </div>
           <div className="mt-7 flex flex-wrap gap-3">

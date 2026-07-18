@@ -167,8 +167,8 @@ export default async function FilteredPrayerWallPage({
   }
 
   const subtitles: Record<string, string> = {
-    country: `Prayers from churches in ${filter.displayName}. Read them as a community signal, then use church pages for visit details.`,
-    city: `Prayers from churches in ${filter.displayName}. Read them as a community signal, then use church pages for visit details.`,
+    country: `Prayers from churches in ${filter.displayName}. Read them to sense the life in each community, then use church pages for visit details.`,
+    city: `Prayers from churches in ${filter.displayName}. Read them to sense the life in each community, then use church pages for visit details.`,
     church: `Pray for ${filter.displayName} and use the church page for service times, worship, location, and first-visit information.`,
   };
 
@@ -190,7 +190,7 @@ export default async function FilteredPrayerWallPage({
           name: "Church profiles with service times",
           url: "https://gospelchannel.com/church/churches-with-service-times",
           href: "/church/churches-with-service-times",
-          label: "Profiles with service times",
+          label: "Churches with service times",
         };
 
   const jsonLd = [
@@ -206,7 +206,7 @@ export default async function FilteredPrayerWallPage({
         url: "https://gospelchannel.com",
       },
       about: [
-        { "@type": "Thing", name: "Church community signal" },
+        { "@type": "Thing", name: "Church community life" },
         { "@type": "Thing", name: "Prayer and first-visit discernment" },
         { "@type": "Thing", name: "Church page details" },
       ],
@@ -230,7 +230,7 @@ export default async function FilteredPrayerWallPage({
   const supportTitle =
     filter.type === "church"
       ? "Prayer is one signal; check the church details before you visit."
-      : "Use prayer as a community signal, then explore church pages.";
+      : "Let the prayers show you the community, then explore church pages.";
 
   return (
     <>

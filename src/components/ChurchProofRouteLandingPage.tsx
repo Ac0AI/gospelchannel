@@ -39,7 +39,7 @@ function buildChurchDetails(church: ChurchDirectoryEntry): string[] {
     church.enrichmentHint?.youthMinistry ? "Youth ministry" : null,
     formatLanguages(church) ? `Language: ${formatLanguages(church)}` : null,
     church.musicStyle?.[0] ? `Worship: ${church.musicStyle.slice(0, 2).join(", ")}` : null,
-    church.playlistCount && church.playlistCount > 0 ? `${church.playlistCount} music signal${church.playlistCount === 1 ? "" : "s"}` : null,
+    church.playlistCount && church.playlistCount > 0 ? `${church.playlistCount} worship playlist${church.playlistCount === 1 ? "" : "s"}` : null,
     church.enrichmentHint?.location || church.location ? `Location: ${truncate(church.enrichmentHint?.location || church.location)}` : null,
   ].filter((value): value is string => Boolean(value));
 

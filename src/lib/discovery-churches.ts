@@ -66,13 +66,13 @@ function formatCount(count: number, singular: string, plural: string): string {
 
 export function buildDiscoveryChurchProofs(church: DiscoveryChurch): string[] {
   const proofs = [
-    church.serviceTimeLabel ? `Service time listed: ${church.serviceTimeLabel}` : null,
+    church.serviceTimeLabel ? `Meets ${church.serviceTimeLabel}` : null,
     church.playlistCount > 0 ? formatCount(church.playlistCount, "worship playlist", "worship playlists") : null,
     church.videoCount > 0 ? formatCount(church.videoCount, "worship video", "worship videos") : null,
-    church.musicStyle && church.musicStyle.length > 0 ? `Tagged ${formatDiscoveryStyles(church.musicStyle)}` : null,
-    formatDiscoveryLanguage(church.language) ? `Language: ${formatDiscoveryLanguage(church.language)}` : null,
-    church.website ? "Official site linked" : null,
-    church.location || church.country ? `Location: ${[church.location, church.country].filter(Boolean).join(", ")}` : null,
+    church.musicStyle && church.musicStyle.length > 0 ? `Known for ${formatDiscoveryStyles(church.musicStyle)}` : null,
+    formatDiscoveryLanguage(church.language) ? `Services in ${formatDiscoveryLanguage(church.language)}` : null,
+    church.website ? "Official website available" : null,
+    church.location || church.country ? `In ${[church.location, church.country].filter(Boolean).join(", ")}` : null,
   ].filter((proof): proof is string => Boolean(proof));
 
   return proofs.slice(0, 4);

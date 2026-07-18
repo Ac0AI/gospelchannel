@@ -116,8 +116,8 @@ export default async function WorshipStyleMatchPage() {
           },
           {
             href: "/church/churches-with-worship-music",
-            label: "Profiles with music",
-            description: "Use actual music signals when the worship sound is the deciding factor.",
+            label: "Churches with music",
+            description: "Listen to the actual songs when the worship sound is the deciding factor.",
           },
         ]}
       />

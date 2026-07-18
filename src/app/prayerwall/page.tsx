@@ -10,18 +10,18 @@ import { serializeJsonLd } from "@/lib/json-ld";
 export const metadata: Metadata = {
   title: "Prayer Wall: Community Prayers From Churches",
   description:
-    "Prayers from churches around the world. Use the wall as a gentle community signal, then open church pages for service details, worship, location, and first-visit information.",
+    "Prayers from churches around the world. Use the wall to sense the life in these communities, then open church pages for service times, worship, location, and first-visit information.",
   alternates: { canonical: "https://gospelchannel.com/prayerwall" },
   openGraph: {
     title: "Prayer Wall: Community Prayers From Churches",
-    description: "Prayers from churches around the world. Use the wall as a community signal, then open church pages for service details, worship, location, and first-visit information.",
+    description: "Prayers from churches around the world. Use the wall to sense the life in these communities, then open church pages for service times, worship, location, and first-visit information.",
     url: "https://gospelchannel.com/prayerwall",
     images: [{ url: "https://gospelchannel.com/images/prayerwall-hero.jpg" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Prayer Wall: Community Prayers From Churches",
-    description: "Prayers from churches around the world. Use the wall as a community signal, then open church pages for service details, worship, location, and first-visit information.",
+    description: "Prayers from churches around the world. Use the wall to sense the life in these communities, then open church pages for service times, worship, location, and first-visit information.",
     images: ["https://gospelchannel.com/images/prayerwall-hero.jpg"],
   },
 };
@@ -58,7 +58,7 @@ export default async function PrayerWallPage() {
         url: "https://gospelchannel.com",
       },
       about: [
-        { "@type": "Thing", name: "Church community signal" },
+        { "@type": "Thing", name: "Church community life" },
         { "@type": "Thing", name: "Prayer and first-visit discernment" },
         { "@type": "Thing", name: "Church page details" },
       ],
@@ -83,7 +83,7 @@ export default async function PrayerWallPage() {
       <PrayerWallHero
         title="Carry someone's prayer today."
         accentWord="prayer"
-        subtitle="Real prayers, posted by real people, from churches around the world. Read them as a community signal, then use church pages for practical details before a first visit."
+        subtitle="Real prayers, posted by real people, from churches around the world. Read them to sense the life in each community, then use church pages for practical details before a first visit."
       />
 
       {/* Sticky filter bar */}
@@ -100,7 +100,7 @@ export default async function PrayerWallPage() {
       {/* Visitor information */}
       <section className="mx-auto max-w-[1280px] px-5 pt-10 sm:px-12 sm:pt-12">
         <div className="rounded-[22px] border border-rose-gold/[0.14] bg-white p-6 shadow-sm sm:p-7">
-          <p className="gc-eyebrow">Community signal</p>
+          <p className="gc-eyebrow">Community life</p>
           <h2 className="mt-3 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-3xl">
             Prayer can show life around a church, but check the church details before you visit.
           </h2>
@@ -120,7 +120,7 @@ export default async function PrayerWallPage() {
               href="/church/churches-with-service-times"
               className="rounded-full border border-rose-gold/30 px-5 py-2.5 text-sm font-semibold text-espresso transition-colors hover:bg-rose-gold/[0.06]"
             >
-              Profiles with service times
+              Churches with service times
             </Link>
           </div>
         </div>

@@ -73,13 +73,25 @@ const FORBIDDEN_PUBLIC_COPY = [
   /\bprofile signals?\b/i,
   /\banswer first[.!?]?\s+verify second\b/i,
   /\bverify the fit\b/i,
+  /\bprofile database\b/i,
+  /\bprofile copy\b/i,
+  /\b(?:visitor|music|church|community|welcome) signals?\b/i,
+  /\blower-friction\b/i,
+  /\bvisitor (?:cues|fit)\b/i,
+  /\b(?:transport|visitor) friction\b/i,
+  /\bstyle tags\b/i,
+  /\bindexab(?:le|ility)\b/i,
+  /sitemap\.xml/i,
+  /\bTagged [A-Z]/,
 ];
 
 const SRC_ROOT = fileURLToPath(new URL("../..", import.meta.url));
 const PUBLIC_ROOTS = ["app", "components"];
 const PUBLIC_COPY_LIBS = [
+  "lib/alternatives-data.ts",
   "lib/church-choice-answers.ts",
   "lib/church-metadata.ts",
+  "lib/discovery-churches.ts",
   "lib/for-audience-data.ts",
   "lib/search-suggestions.ts",
   "lib/seo-schema.ts",
@@ -89,6 +101,7 @@ const EXCLUDED_PUBLIC_DIRECTORIES = new Set([
   "app/.well-known",
   "app/admin",
   "app/api",
+  "app/robots.ts",
   "app/church-admin",
   "app/index.md",
   "app/llms-full.txt",
@@ -111,7 +124,7 @@ function collectSourceFiles(relativeDirectory: string): string[] {
   return readdirSync(`${SRC_ROOT}/${relativeDirectory}`, { withFileTypes: true }).flatMap((entry) => {
     const relativePath = `${relativeDirectory}/${entry.name}`;
     if (entry.isDirectory()) return collectSourceFiles(relativePath);
-    return /\.(?:ts|tsx)$/.test(entry.name) ? [relativePath] : [];
+    return /\.(?:ts|tsx)$/.test(entry.name) && !isExcluded(relativePath) ? [relativePath] : [];
   });
 }
 

@@ -231,7 +231,7 @@ const DISCOVERY_LANE_DEFINITIONS: DiscoveryLaneDefinition[] = [
     id: "anthem-contemporary",
     title: "Contemporary & Welcoming",
     shortTitle: "Contemporary",
-    description: "A modern worship lane with clear entry points, familiar song language, and low-friction first visits.",
+    description: "Modern worship that is easy to step into: familiar songs and a clear welcome for first-time visitors.",
     whyItFits: "This lane fits people who want a warm modern service without needing to decode lots of tradition first.",
     browse: { href: "/church/style/contemporary-worship", label: "See contemporary churches" },
     secondary: { href: "/compare/traditional-vs-contemporary-worship", label: "Compare worship styles" },
@@ -359,7 +359,7 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
       },
       {
         value: "modern",
-        label: "Mostly modern and low-friction",
+        label: "Mostly modern and easy to step into",
         description: "I want something easy to understand on day one.",
         weights: { "anthem-contemporary": 3, "spirit-led": 1, "acoustic-reflective": 1 },
       },
@@ -740,7 +740,7 @@ const COMPARE_GUIDE_DEFINITIONS: CompareGuideDefinition[] = [
     intro: "This comparison is for church seekers who are not deciding doctrine first. They are deciding what kind of room helps them relax, listen, and actually come back next week.",
     checklist: [
       "Choose traditional if structure, liturgy, and steadier pacing help you trust the room.",
-      "Choose contemporary if modern music language and a lower-friction first visit matter most.",
+      "Choose contemporary if modern music and an easy first visit matter most.",
       "Use the compare page as a direction, not a guarantee. Individual churches still vary a lot.",
     ],
     sections: [
@@ -780,7 +780,7 @@ const COMPARE_GUIDE_DEFINITIONS: CompareGuideDefinition[] = [
       {
         id: "contemporary",
         title: "Start with contemporary churches",
-        description: "Best for people who want modern worship language and a lower-friction first visit.",
+        description: "Best for people who want modern worship and a first visit that is easy to step into.",
         bestFor: "You want a room that is easier to decode on your first Sunday.",
         browse: { href: "/church/style/contemporary-worship", label: "See contemporary churches" },
         secondary: { href: "/guides/church-fit-quiz", label: "Take the fit quiz" },

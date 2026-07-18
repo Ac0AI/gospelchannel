@@ -89,7 +89,7 @@ export default function RootLayout({
     "language",
     "service details",
     "first church visit",
-    "public church profile database",
+    "church directory",
   ];
   return (
     <html lang="en">

@@ -68,7 +68,7 @@ export default async function AlternativePage({
         "Church details",
       ],
       mentions: [
-        { name: "GospelChannel church profile database", url: `${SITE_URL}/church` },
+        { name: "All churches on GospelChannel", url: `${SITE_URL}/church` },
         { name: "GospelChannel church decision guides", url: `${SITE_URL}/guides` },
       ],
     }),

@@ -7,7 +7,7 @@ export const revalidate = 3600;
 const CANONICAL = "https://gospelchannel.com/church/country";
 const TITLE = "Browse Churches by Country";
 const DESCRIPTION =
-  "Use country hubs to map the church landscape before choosing a city. Compare regions, worship styles, traditions, service times, and church details across every country we cover.";
+  "Browse churches by country and see which cities, worship styles, and traditions are represented before narrowing down to a city. Useful before a move or a trip.";
 
 export const metadata: Metadata = {
   title: TITLE,

@@ -12,23 +12,23 @@ const DEFAULT_PROFILE_SIGNALS = [
   "location",
   "tradition",
   "language",
-  "visitor cues",
+  "first-visit details",
 ];
 
 function getAudienceProofSignals(slug: string): string[] {
   switch (slug) {
     case "expats":
-      return ["language", "country", "city", "worship style", "service times", "international cues"];
+      return ["language", "country", "city", "worship style", "service times", "international community"];
     case "students":
-      return ["city", "transport fit", "worship style", "student cues", "music", "service times"];
+      return ["city", "getting there", "worship style", "student life", "music", "service times"];
     case "young-adults":
-      return ["worship style", "music", "city", "community cues", "tradition", "service rhythm"];
+      return ["worship style", "music", "city", "community", "tradition", "service times"];
     case "families":
-      return ["kids ministry", "service times", "drive fit", "tradition", "visitor details", "community cues"];
+      return ["kids ministry", "service times", "drive time", "tradition", "first-visit details", "community"];
     case "new-believers":
-      return ["first-visit cues", "plain-language profile", "service times", "tradition", "worship style", "welcome signals"];
+      return ["first-visit details", "plain language", "service times", "tradition", "worship style", "welcome"];
     case "deconstructing":
-      return ["tradition fit", "worship preview", "profile copy", "prayer options", "service rhythm", "visitor signals"];
+      return ["tradition", "worship preview", "no pressure", "prayer options", "service times", "first-visit details"];
     default:
       return DEFAULT_PROFILE_SIGNALS;
   }
@@ -98,11 +98,11 @@ export function ForAudienceLayout({ data, siblings }: Props) {
           <article className="rounded-[18px] border border-rose-gold/[0.14] bg-linen-deep p-5">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-mauve">Step 1</p>
             <h3 className="mt-2 font-serif text-xl font-semibold tracking-[-0.01em] text-espresso">
-              Name the real constraint
+              Start with what actually matters
             </h3>
             <p className="mt-2 text-sm leading-[1.65] text-warm-brown">
-              Use the audience guide to decide what actually drives this search: geography,
-              worship sound, life stage, family needs, language, or trust.
+              Is it distance, worship sound, life stage, family needs, language, or trust?
+              Naming the real question makes the search much smaller.
             </p>
           </article>
           <article className="rounded-[18px] border border-rose-gold/[0.14] bg-linen-deep p-5">
@@ -129,7 +129,7 @@ export function ForAudienceLayout({ data, siblings }: Props) {
             </h3>
             <p className="mt-2 text-sm leading-[1.65] text-warm-brown">
               Open church pages and check the practical details before spending a Sunday:
-              service details, music, location, language, and visitor fit where available.
+              service times, music, location, language, and what a first visit is like.
             </p>
             <Link
               href={primaryProofRoute.href}

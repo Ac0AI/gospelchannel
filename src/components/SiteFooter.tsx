@@ -20,7 +20,7 @@ export const SITE_FOOTER_COLUMNS = [
       { label: "Worship Style Match", href: "/guides/worship-style-match" },
       { label: "First Visit Guide", href: "/guides/first-visit-guide" },
       { label: "Denominations Compared", href: "/guides/denominations-comparison" },
-      { label: "Profiles with service times", href: "/church/churches-with-service-times" },
+      { label: "Churches with service times", href: "/church/churches-with-service-times" },
     ],
   },
   {

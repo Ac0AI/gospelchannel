@@ -134,7 +134,7 @@ export default async function ChurchFitQuizPage() {
             {
               href: "/church/churches-with-worship-music",
               label: "See worship details",
-              description: "Open profiles with music signals so the match is not just a label.",
+              description: "Open churches that share their actual music, so the match is not just a label.",
             },
           ]}
         />

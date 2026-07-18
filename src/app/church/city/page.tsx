@@ -7,7 +7,7 @@ export const revalidate = 3600;
 const CANONICAL = "https://gospelchannel.com/church/city";
 const TITLE = "Browse Churches by City";
 const DESCRIPTION =
-  "Use city hubs to narrow a practical Sunday search. Compare location, service times, worship style, denomination, and church details for churches in cities around the world.";
+  "Find churches in your city and compare service times, worship style, denomination, and location before choosing where to go on Sunday. Cities around the world.";
 const MAX_RENDERED_CITY_LINKS = 500;
 
 export const metadata: Metadata = {

@@ -87,7 +87,7 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
 
     meta_title: "English-Speaking Churches Abroad — GospelChannel for Expats",
     meta_description:
-      "Find an English-speaking, free-church or evangelical congregation in your new country. Global profile database of 72,000+ churches across 104 countries.",
+      "Find an English-speaking, free-church or evangelical congregation in your new country. 72,000+ churches across 104 countries, searchable by language, worship style, and tradition.",
 
     hero_eyebrow: "For expats",
     hero_h1: "Find an English-speaking church in your new country",
@@ -127,7 +127,7 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       {
         title: "Filter by language",
         body:
-          "Every church profile has a language field. Filter the profile database to English (or any other language you read) and the noise drops by 90% in non-English countries. You'll see English-speaking congregations and international fellowships first, instead of digging through hundreds of native-language results.",
+          "Every church page lists its language. Filter to English (or any other language you read) and the noise drops by 90% in non-English countries. You'll see English-speaking congregations and international fellowships first, instead of digging through hundreds of native-language results.",
         href: "/church/english-speaking-churches",
         cta: "Explore churches",
       },
@@ -148,7 +148,7 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       {
         title: "Built around free-church traditions",
         body:
-          "If you grew up evangelical, charismatic, Pentecostal, non-denominational, Baptist, or Vineyard, GospelChannel is positioned around those traditions worldwide. You don't have to translate your background into a local state-church or Catholic frame — the profile database speaks free-church natively across borders.",
+          "If you grew up evangelical, charismatic, Pentecostal, non-denominational, Baptist, or Vineyard, GospelChannel is positioned around those traditions worldwide. You don't have to translate your background into a local state-church or Catholic frame. GospelChannel speaks free-church natively across borders.",
         href: "/church/denomination",
         cta: "Browse denominations",
       },
@@ -234,7 +234,7 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       {
         question: "Does GospelChannel only list English-speaking churches?",
         answer:
-          "No. We list churches in any language a congregation reports — the profile database is global. The language filter is what lets expats narrow to English-speaking options specifically. If you read other languages, you can filter on those too.",
+          "No. We list churches in any language a congregation reports, all over the world. The language filter is what lets expats narrow to English-speaking options specifically. If you read other languages, you can filter on those too.",
       },
       {
         question: "How do I find an English-speaking church in a non-English country?",
@@ -244,7 +244,7 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       {
         question: "Is GospelChannel free to use abroad?",
         answer:
-          "Yes. The profile database is free to browse from anywhere in the world. No paywall, no signup required, and no regional restrictions. Pastors of free-church congregations can also claim and edit their profile for free, wherever the church is located.",
+          "Yes. GospelChannel is free to browse from anywhere in the world. No paywall, no signup required, and no regional restrictions. Pastors of free-church congregations can also claim and edit their profile for free, wherever the church is located.",
       },
       {
         question: "What kinds of churches does GospelChannel focus on?",
@@ -303,13 +303,13 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       {
         title: "The worship at home doesn't always translate",
         body:
-          "You grew up with contemporary worship, gospel, or charismatic. You walk into a 15th-century stone building and there's an organ and three verses of a hymn you've never sung. Both styles are loved by their congregations — they're just not interchangeable, and you can't always tell from outside which a specific Sunday will be. A profile database that lets you filter on style saves the guesswork.",
+          "You grew up with contemporary worship, gospel, or charismatic. You walk into a 15th-century stone building and there's an organ and three verses of a hymn you've never sung. Both styles are loved by their congregations — they're just not interchangeable, and you can't always tell from outside which a specific Sunday will be. Being able to filter churches by style saves the guesswork.",
       },
     ],
 
     solution_h2: "How GospelChannel helps students find a Sunday",
     solution_lede:
-      "Four ways the profile database shrinks the surface area between you and a church that fits — fast enough that Sunday doesn't slip into Monday again.",
+      "Four ways GospelChannel shrinks the distance between you and a church that fits, fast enough that Sunday doesn't slip into Monday again.",
     solutions: [
       {
         title: "Browse by city, not by radius",
@@ -426,17 +426,17 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       {
         question: "Are there churches specifically for students?",
         answer:
-          "Some congregations explicitly run student work or are unusually student-heavy; others are mixed-age congregations that students attend alongside everyone else. The profile database doesn't have a binary student/non-student flag, but in university cities you can usually spot the student-strong churches from the profile copy and music.",
+          "Some congregations explicitly run student work or are unusually student-heavy; others are mixed-age congregations that students attend alongside everyone else. There is no student/non-student filter, but in university cities you can usually spot the student-strong churches from how they describe themselves and the music they share.",
       },
       {
         question: "Is GospelChannel free for students?",
         answer:
-          "Yes. The profile database is free to browse, the church fit quiz is free, and there's no paywall. You don't need to sign up to use any of it. If you're a pastor or student leader involved with a church, you can also claim and edit the profile for free.",
+          "Yes. GospelChannel is free to browse, the church fit quiz is free, and there's no paywall. You don't need to sign up to use any of it. If you're a pastor or student leader involved with a church, you can also claim and edit the profile for free.",
       },
       {
         question: "What kinds of churches will I find?",
         answer:
-          "Free-church, evangelical, charismatic, Pentecostal, non-denominational, Baptist, Vineyard, and similar gospel- and worship-oriented traditions are the focus. The wider profile database also lists congregations from other traditions, but our positioning and filters lean toward the free-church segment that most evangelical students come from.",
+          "Free-church, evangelical, charismatic, Pentecostal, non-denominational, Baptist, Vineyard, and similar gospel- and worship-oriented traditions are the focus. The wider directory also lists congregations from other traditions, but our focus and filters lean toward the free-church segment that most evangelical students come from.",
       },
       {
         question: "What if my home church's tradition doesn't exist in my college town?",
@@ -475,7 +475,7 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       {
         title: "Most directories surface family churches first",
         body:
-          "Generic church-finders implicitly optimize for families because that's their primary audience. The contemporary, charismatic, or young-adult-heavy congregations in your city are there too, but you have to hunt. The profile database should be able to tell you where the 20-somethings actually go.",
+          "Generic church-finders implicitly optimize for families because that's their primary audience. The contemporary, charismatic, or young-adult-heavy congregations in your city are there too, but you have to hunt. A good church search should tell you where the 20-somethings actually go.",
       },
       {
         title: "Different worship styles fit different seasons",
@@ -496,7 +496,7 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       {
         title: "Filter by worship style first",
         body:
-          "Contemporary, gospel, charismatic, Hillsong-style, Bethel-style, hymn-led, blended — pick the sound that matches what you actually want to sing on Sunday morning. None is better than the others; the profile database just helps you start at the style that fits.",
+          "Contemporary, gospel, charismatic, Hillsong-style, Bethel-style, hymn-led, blended — pick the sound that matches what you actually want to sing on Sunday morning. None is better than the others; the style filter just helps you start where you fit.",
         href: "/church/style",
         cta: "Browse worship styles",
       },
@@ -637,7 +637,7 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       {
         title: "You want teaching that fits your family's posture",
         body:
-          "Every parent has a sense of the texture they want — how questions are handled, how Scripture is taught, how the room handles complexity. Church websites don't always make that texture easy to read. The profile database's filters and profile copy help you spot the fit without committing a Sunday to find out.",
+          "Every parent has a sense of the texture they want — how questions are handled, how Scripture is taught, how the room handles complexity. Church websites don't always make that texture easy to read. GospelChannel's filters and church descriptions help you spot the fit without committing a Sunday to find out.",
       },
       {
         title: "Music for kids vs music for the rest of the room",
@@ -647,13 +647,13 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       {
         title: "Saturday-night logistics already eat your week",
         body:
-          "Two kids' bedtimes, packing the Sunday bag, finding shoes. The last thing you need is a church-search that takes ten clicks and produces a list of congregations 40 minutes away. The profile database needs to give you a usable short list before bedtime so you can actually go in the morning.",
+          "Two kids' bedtimes, packing the Sunday bag, finding shoes. The last thing you need is a church-search that takes ten clicks and produces a list of congregations 40 minutes away. GospelChannel needs to give you a usable short list before bedtime so you can actually go in the morning.",
       },
     ],
 
     solution_h2: "How GospelChannel helps families pick a Sunday",
     solution_lede:
-      "Four ways the profile database makes the family-fit decision faster — without pretending the dimensions of family fit are simple.",
+      "Four ways GospelChannel makes the family-fit decision faster, without pretending family fit is simple.",
     solutions: [
       {
         title: "Browse by city to keep the drive realistic",
@@ -745,7 +745,7 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       {
         question: "How do I read a church's kids ministry before visiting?",
         answer:
-          "Look for specifics in the church's profile copy and on its own website — age groups, room locations, what happens during the main service, sign-in procedures. Specifics usually signal a well-resourced ministry; warmer general language is common at smaller or newer congregations that are still growing the programme. Either can be the right fit — visiting once is the most honest way to know.",
+          "Look for specifics on the church's page and on its own website — age groups, room locations, what happens during the main service, sign-in procedures. Specifics usually signal a well-resourced ministry; warmer general language is common at smaller or newer congregations that are still growing the programme. Either can be the right fit — visiting once is the most honest way to know.",
       },
       {
         question: "What denominations are most family-friendly?",
@@ -942,7 +942,7 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
 
     meta_title: "Church for Post-Evangelical Seekers — GospelChannel",
     meta_description:
-      "Looking for a free-church or evangelical congregation while processing your church history? A broader, non-graded profile database that lets you set the filter.",
+      "Looking for a free-church or evangelical congregation while processing your church history? A broader directory that doesn't grade churches and lets you set the filter.",
 
     hero_eyebrow: "For deconstructing seekers",
     hero_h1: "A church for people processing their church history",
@@ -977,26 +977,26 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
 
     solution_h2: "How GospelChannel works for someone still working it out",
     solution_lede:
-      "Four ways the profile database is shaped to be usable when you're processing rather than shopping.",
+      "Four ways GospelChannel is shaped to be usable when you're processing rather than shopping.",
     solutions: [
       {
         title: "No theological grading on our side",
         body:
-          "We list churches across the free-church spectrum without confessional gates. You decide what's a deal-breaker. No score, no ranking, no implicit \"approved.\" That makes the profile database broader than some, which is exactly the point when you're calibrating from scratch.",
+          "We list churches across the free-church spectrum without confessional gates. You decide what's a deal-breaker. No score, no ranking, no implicit \"approved.\" That makes the directory broader than some, which is exactly the point when you're calibrating from scratch.",
         href: "/church",
         cta: "Open church profiles",
       },
       {
         title: "Filter by tradition you already trust",
         body:
-          "If the wider Vineyard or Baptist or Anglican feel of things sits well with you right now and another tradition feels tender, that's an honest filter. Use what works for this season; revisit later when other things stop being raw. The profile database doesn't judge the filter choice.",
+          "If the wider Vineyard or Baptist or Anglican feel of things sits well with you right now and another tradition feels tender, that's an honest filter. Use what works for this season; revisit later when other things stop being raw. No filter choice is judged here.",
         href: "/church/denomination",
         cta: "Browse denominations",
       },
       {
         title: "Hear the music first",
         body:
-          "For many in this season, the worship is the easiest entry point — it lets you sit with the room before words land. Profiles with Spotify or YouTube give you a preview. If a track lands well at your kitchen table, the Sunday is worth trying. If it doesn't, you've saved both your time and the congregation's.",
+          "For many in this season, the worship is the easiest entry point — it lets you sit with the room before words land. Churches with Spotify or YouTube links give you a preview. If a track lands well at your kitchen table, the Sunday is worth trying. If it doesn't, you've saved both your time and the congregation's.",
         href: "/church",
         cta: "Explore churches",
       },
@@ -1009,7 +1009,7 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       },
     ],
 
-    curated_h2: "Lower-friction starting points",
+    curated_h2: "Gentle starting points",
     curated_lede:
       "Six pages chosen because they tend to host congregations that handle questions, doubt, and church history with less reactivity. Each links to every church in that bucket.",
     curated_cards: [
@@ -1069,12 +1069,12 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       {
         question: "Is GospelChannel deconstruction-friendly?",
         answer:
-          "We're broad rather than aligned. We don't grade churches against a confessional rubric, we don't assume everyone has the same theology, and we cover the wider free-church spectrum from charismatic to Reformed Baptist. That makes the profile database usable when you're processing church history, even though we're not specifically a deconstruction project.",
+          "We're broad rather than aligned. We don't grade churches against a confessional rubric, we don't assume everyone has the same theology, and we cover the wider free-church spectrum from charismatic to Reformed Baptist. That makes GospelChannel usable when you're processing church history, even though we're not specifically a deconstruction project.",
       },
       {
         question: "How do I avoid landing somewhere that feels like the place I came from?",
         answer:
-          "The denomination filter, the worship-style filter, and the church's own profile copy are the main tools. If a specific tradition feels tender right now, browse a different tradition first — Anglican, Vineyard, and broader non-denominational congregations are common starting points for people who want a softer entry. Visiting once and not returning is a fine response if a specific Sunday doesn't fit; that's not a judgement on the church, just a fit signal for you.",
+          "The denomination filter, the worship-style filter, and the church's own description are the main tools. If a specific tradition feels tender right now, browse a different tradition first — Anglican, Vineyard, and broader non-denominational congregations are common starting points for people who want a softer entry. Visiting once and not returning is a fine response if a specific Sunday doesn't fit; that's not a judgement on the church, just a sign of what fits you.",
       },
       {
         question: "Do I have to be sure of what I believe to use GospelChannel?",
@@ -1084,7 +1084,7 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
       {
         question: "Is the prayer wall a substitute for going to a church?",
         answer:
-          "It can be a bridge rather than a substitute. Some seekers use it to keep a thread of prayer alive while they're not attending anywhere. Others use it alongside a church they're starting to try again. It's not a replacement and we don't pitch it as one; it's a separate, lower-friction surface.",
+          "It can be a bridge rather than a substitute. Some seekers use it to keep a thread of prayer alive while they're not attending anywhere. Others use it alongside a church they're starting to try again. It's not a replacement and we don't pitch it as one; it's a separate, gentler way in.",
       },
       {
         question: "What if I don't want to go back to church at all right now?",
@@ -1095,6 +1095,6 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
 
     cta_h2: "Take the next step at your own pace",
     cta_lede:
-      "Use the profile database, the prayer wall, or the guides at whatever depth you want. None of them require an account or push you somewhere you're not ready to be.",
+      "Use the church search, the prayer wall, or the guides at whatever depth you want. None of them require an account or push you somewhere you're not ready to be.",
   },
 };

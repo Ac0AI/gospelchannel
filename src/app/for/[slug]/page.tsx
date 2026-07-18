@@ -70,7 +70,7 @@ export default async function ForAudiencePage({
         "Church details",
       ],
       mentions: [
-        { name: "GospelChannel church profile database", url: `${SITE_URL}/church` },
+        { name: "All churches on GospelChannel", url: `${SITE_URL}/church` },
         { name: primaryProofRoute.label, url: `${SITE_URL}${primaryProofRoute.href}` },
       ],
     }),

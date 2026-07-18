@@ -220,7 +220,7 @@ export default async function NetworkPage({ params }: NetworkPageProps) {
           compare the campus map, then open each church profile for local details.
         </p>
         <div className="mt-5 flex flex-wrap gap-2">
-          {["campus location", "service times", "worship music", "languages", "visitor cues"].map((signal) => (
+          {["campus location", "service times", "worship music", "languages", "first-visit details"].map((signal) => (
             <span
               key={signal}
               className="rounded-full border border-rose-gold/20 bg-linen px-3 py-1 text-xs font-semibold text-warm-brown"

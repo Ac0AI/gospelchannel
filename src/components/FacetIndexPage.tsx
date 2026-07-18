@@ -27,26 +27,26 @@ function getFacetDecisionModel(basePath: string): FacetDecisionModel {
   if (basePath === "/church/city") {
     return {
       quickAnswer:
-        "Use city when the main question is whether you can realistically show up this Sunday. Pick a city first, then compare style, tradition, language, service times, and visitor information in church profiles.",
-      detailSignals: ["service times", "map/location fit", "worship music", "language cues", "first-visit details"],
+        "Start with the city you can actually get to on a Sunday morning. Pick yours first, then compare worship style, tradition, language, and service times on each church's page.",
+      detailSignals: ["service times", "location", "worship music", "language", "first-visit details"],
       decisionCards: [
         {
           title: "Start with realistic geography",
-          body: "A church only helps if the Sunday route is sustainable. City pages keep the shortlist grounded before style or denomination filters take over.",
+          body: "A church only helps if you can keep showing up. Start with your city so the shortlist stays close to home before style or tradition narrows it further.",
           href: "/church/city",
-          label: "Browse city hubs",
+          label: "Browse by city",
         },
         {
           title: "Then compare worship feel",
-          body: "After the city is right, use style hubs to decide whether the room sounds contemporary, gospel, acoustic, charismatic, or rooted.",
+          body: "Once the city is right, decide how you want Sunday to sound: contemporary, gospel, acoustic, charismatic, or rooted in hymns.",
           href: "/church/style",
           label: "Browse worship styles",
         },
         {
-          title: "Check church details",
-          body: "Open individual profiles for service times, music, videos, address context, and visitor signals before planning the visit.",
+          title: "Check the practical details",
+          body: "Open each church's page for service times, music, videos, directions, and what a first visit is like.",
           href: "/church/churches-with-service-times",
-          label: "See visit-ready profiles",
+          label: "See churches with service times",
         },
       ],
     };
@@ -55,26 +55,26 @@ function getFacetDecisionModel(basePath: string): FacetDecisionModel {
   if (basePath === "/church/country") {
     return {
       quickAnswer:
-        "Use country when you are mapping the church landscape across a region before choosing a city. Country hubs show the available cities, worship styles, and traditions, then church profiles provide visit details.",
-      detailSignals: ["country coverage", "city options", "tradition mix", "worship styles", "profile freshness"],
+        "Start with a country when you are getting to know the church landscape of a whole region, maybe before a move. See which cities, worship styles, and traditions are represented, then narrow down to a city.",
+      detailSignals: ["cities covered", "traditions", "worship styles", "languages", "service times"],
       decisionCards: [
         {
-          title: "Start with country coverage",
-          body: `Country hubs show where GospelChannel has enough coverage to support a real search path across cities, styles, and traditions.`,
+          title: "Start with the country",
+          body: `See where churches are listed across a country: which cities, which traditions, and which worship styles you will find there.`,
           href: "/church/country",
           label: "Browse countries",
         },
         {
           title: "Move down to cities",
-          body: "Use city hubs to turn a national search into a practical Sunday route you can actually attend.",
+          body: "Pick the city you will actually live in or near. That turns a country-sized question into a Sunday morning you can plan.",
           href: "/church/city",
           label: "Browse cities",
         },
         {
-          title: "Check church details",
-          body: "Use profiles to confirm service details, language, worship music, location, and official links before you visit.",
+          title: "Check the practical details",
+          body: "Open each church's page for service times, language, worship music, location, and the church's own website before you visit.",
           href: "/church",
-          label: "Open church profiles",
+          label: "Browse all churches",
         },
       ],
     };
@@ -83,26 +83,26 @@ function getFacetDecisionModel(basePath: string): FacetDecisionModel {
   if (basePath === "/church/style") {
     return {
       quickAnswer:
-        "Use worship style when the real decision is what kind of room will help you come back. Style hubs translate sound and Sunday energy into churches, then profiles show music, videos, service details, and location.",
-      detailSignals: ["worship style tags", "playlists", "videos", "service rhythm", "profile examples"],
+        "Start with worship style when the real question is what kind of room will make you want to come back. Pick the sound first, then check each church's music, videos, service times, and location.",
+      detailSignals: ["worship styles", "playlists", "videos", "service times", "real examples"],
       decisionCards: [
         {
           title: "Start with the sound",
-          body: "Choose the worship room you are most likely to enter again: contemporary, gospel, charismatic, acoustic, rooted, or global.",
+          body: "Choose the worship you are most likely to return to: contemporary, gospel, charismatic, acoustic, rooted, or global.",
           href: "/guides/worship-styles-explained",
           label: "Read the style guide",
         },
         {
           title: "Browse matching churches",
-          body: "Open a style hub to compare churches that share the same worship language before narrowing by city or tradition.",
+          body: "Compare churches that worship the same way before narrowing by city or tradition.",
           href: "/church/style",
           label: "Browse styles",
         },
         {
-          title: "Verify with music",
-          body: "Use profiles with music signals when worship sound matters more than a directory label.",
+          title: "Listen before you visit",
+          body: "Many churches share their actual playlists and worship videos. Hearing them tells you more than any label.",
           href: "/church/churches-with-worship-music",
-          label: "See profiles with music",
+          label: "Hear churches with music",
         },
       ],
     };
@@ -110,24 +110,24 @@ function getFacetDecisionModel(basePath: string): FacetDecisionModel {
 
   return {
     quickAnswer:
-      "Use denomination when the decision is about theological family, governance, sacraments, or Sunday expectations. Tradition hubs narrow the field, then profiles show how each church worships, teaches, and welcomes visitors.",
-    detailSignals: ["denomination signal", "worship style", "teaching emphasis", "service times", "visitor fit"],
+      "Start with denomination when theology, governance, sacraments, or Sunday expectations drive the decision. Narrow by tradition first, then see how each church actually worships, teaches, and welcomes visitors.",
+    detailSignals: ["tradition", "worship style", "teaching emphasis", "service times", "first-visit details"],
     decisionCards: [
       {
         title: "Start with tradition",
-        body: "Use denomination hubs when Baptist, Pentecostal, Anglican, Lutheran, non-denominational, or charismatic roots matter to the decision.",
+        body: "Browse by denomination when Baptist, Pentecostal, Anglican, Lutheran, non-denominational, or charismatic roots matter to you.",
         href: "/guides/denominations-comparison",
         label: "Read the denomination guide",
       },
       {
         title: "Compare close choices",
-        body: "If two traditions both seem plausible, use comparison pages before spending Sundays on visits.",
+        body: "If two traditions both seem plausible, read a side-by-side comparison before spending Sundays finding out the hard way.",
         href: "/compare",
         label: "Open comparisons",
       },
       {
-        title: "Check church details",
-        body: "Open church pages to confirm the tradition signal against worship style, service rhythm, music, location, and community cues.",
+        title: "Check the practical details",
+        body: "A label only says so much. Open each church's page to see its worship style, service times, music, location, and community.",
         href: "/church/denomination",
         label: "Browse denominations",
       },
@@ -201,8 +201,8 @@ export function FacetIndexPage({
       "@type": "ItemList",
       name: `${titleLead} ${titleTail}`.trim(),
       description: isCapped
-        ? `${renderedLinks.length} ${itemNoun} that help narrow a church search before opening church details. The complete canonical city set is available through sitemap.xml and city detail pages.`
-        : `Index of ${itemNoun} that help narrow a church search before opening church details.`,
+        ? `The ${renderedLinks.length} largest of ${links.length.toLocaleString("en-US")} ${itemNoun}, each linking to the churches there.`
+        : `Index of ${itemNoun}, each linking to the churches there.`,
       numberOfItems: links.length,
       itemListElement: renderedLinks.map((link, index) => ({
         "@type": "ListItem",
@@ -276,7 +276,7 @@ export function FacetIndexPage({
         <div className="rounded-[24px] border border-rose-gold/[0.16] bg-white p-6 shadow-[0_18px_55px_rgba(72,39,24,0.06)] sm:p-8">
           <p className="gc-eyebrow">Quick answer</p>
           <h2 className="mt-3 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-3xl">
-            Use this hub to narrow your search, then check church details.
+            Narrow it down here, then open the churches that fit.
           </h2>
           <p className="mt-3 max-w-[860px] text-sm leading-[1.7] text-warm-brown sm:text-base">
             {decisionModel.quickAnswer}
@@ -320,10 +320,10 @@ export function FacetIndexPage({
             Choose a {singularNoun}, then open the churches behind it.
           </h2>
           <p className="mt-2 max-w-[760px] text-sm leading-[1.7] text-warm-brown sm:text-base">
-            Each link below leads to a filtered church collection with published details:
-            service details, music, videos, location, language, and visitor signals where available.
+            Each link below opens the churches that match, with the practical details filled in
+            where we have them: service times, music, videos, location, and language.
             {isCapped
-              ? ` Showing the ${renderedLinks.length.toLocaleString("en-US")} largest ${itemNoun}; the full indexable city set remains available through sitemap.xml and city detail URLs.`
+              ? ` We show the ${renderedLinks.length.toLocaleString("en-US")} largest ${itemNoun} here; smaller ones have their own pages too.`
               : ""}
           </p>
         </div>
@@ -347,12 +347,12 @@ export function FacetIndexPage({
         )}
         {isCapped ? (
           <div className="mt-5 rounded-[18px] border border-rose-gold/[0.14] bg-linen-deep px-5 py-4 text-sm leading-[1.65] text-warm-brown">
-            {hiddenLinkCount.toLocaleString("en-US")} smaller {itemNoun} are not rendered on this index page
-            to keep it fast for users and crawlers. They remain discoverable through{" "}
-            <Link href="/sitemap.xml" className="font-semibold text-rose-gold hover:text-rose-gold-deep">
-              sitemap.xml
+            {hiddenLinkCount.toLocaleString("en-US")} smaller {itemNoun} have their own pages too;
+            this list just shows the largest. The fastest way to a smaller one is{" "}
+            <Link href="/church" className="font-semibold text-rose-gold hover:text-rose-gold-deep">
+              searching for the city or church by name
             </Link>
-            , internal profile links, and the city detail pages that meet the indexability threshold.
+            .
           </div>
         ) : null}
       </section>

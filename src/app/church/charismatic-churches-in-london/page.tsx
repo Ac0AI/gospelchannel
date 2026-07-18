@@ -246,9 +246,9 @@ export default async function CharismaticChurchesInLondonPage() {
                 <p className="mt-1 text-xs text-muted-warm">
                   This list includes churches across Greater London in Pentecostal, Charismatic, Vineyard,
                   or Elim traditions, or with charismatic, Pentecostal, or gospel worship details. It is
-                  based on published service times, worship playlists, videos, style tags, language, official
-                  sites, and location where available. GospelChannel orders entries by profile completeness:
-                  the amount and quality of published church information. This is not a review score,
+                  based on published service times, worship playlists, videos, worship styles, language, official
+                  sites, and location where available. GospelChannel orders entries by how much verified
+                  information each church page holds. This is not a review score,
                   endorsement, popularity vote, or third-party recommendation.
                 </p>
               </div>

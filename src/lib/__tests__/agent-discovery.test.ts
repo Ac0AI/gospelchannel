@@ -110,7 +110,7 @@ describe("agent discovery", () => {
     expect(text).toContain("Proof: https://gospelchannel.com/church/charismatic-churches-in-london");
     expect(text).toContain("Proof: https://gospelchannel.com/church/best-worship-churches");
     expect(text).toContain("Proof: https://gospelchannel.com/network");
-    expect(text).toContain("Evidence: service times, location, visitor cues, music or video.");
+    expect(text).toContain("Evidence: service times, location, first-visit details, music or video.");
     expect(text).toContain("## Answer-First Query Patterns");
     expect(text).toContain("church-search checklist");
     expect(text).toContain("Use guides and comparison pages for the direct answer.");
@@ -200,7 +200,7 @@ describe("agent discovery", () => {
       question: "What church should I visit first?",
       guide: "https://gospelchannel.com/guides/first-visit-guide",
       proof: "https://gospelchannel.com/church/churches-with-service-times",
-      evidence: ["service times", "location", "visitor cues", "music or video"],
+      evidence: ["service times", "location", "first-visit details", "music or video"],
     }));
     expect(card.answer_map).toContainEqual(expect.objectContaining({
       question: "Which denomination should I choose?",
@@ -217,37 +217,37 @@ describe("agent discovery", () => {
       question: "Can I listen to a church before visiting?",
       guide: "https://gospelchannel.com/guides/worship-style-match",
       proof: "https://gospelchannel.com/church/churches-with-worship-music",
-      evidence: ["worship playlists", "videos", "style tags", "service context", "visit feasibility"],
+      evidence: ["worship playlists", "videos", "worship styles", "service times", "easy to visit"],
     }));
     expect(card.answer_map).toContainEqual(expect.objectContaining({
       question: "How do expats find an English-speaking church abroad?",
       guide: "https://gospelchannel.com/for/expats",
       proof: "https://gospelchannel.com/church/english-speaking-churches",
-      evidence: ["English language", "country or city", "service times", "international cues", "profile evidence"],
+      evidence: ["English language", "country or city", "service times", "international community", "profile evidence"],
     }));
     expect(card.answer_map).toContainEqual(expect.objectContaining({
       question: "How do students find a church near campus?",
       guide: "https://gospelchannel.com/for/students",
       proof: "https://gospelchannel.com/church/city",
-      evidence: ["city", "transport friction", "service times", "worship style", "student-friendly cues"],
+      evidence: ["city", "getting there", "service times", "worship style", "student-friendly"],
     }));
     expect(card.answer_map).toContainEqual(expect.objectContaining({
       question: "How do young adults find a contemporary worship church?",
       guide: "https://gospelchannel.com/for/young-adults",
       proof: "https://gospelchannel.com/church/style/contemporary-worship",
-      evidence: ["contemporary worship", "music or video", "city", "young-adult cues", "profile evidence"],
+      evidence: ["contemporary worship", "music or video", "city", "young adults", "profile evidence"],
     }));
     expect(card.answer_map).toContainEqual(expect.objectContaining({
       question: "Should I choose traditional or contemporary worship?",
       guide: "https://gospelchannel.com/compare/traditional-vs-contemporary-worship",
       proof: "https://gospelchannel.com/church/style",
-      evidence: ["worship style tags", "service rhythm", "music or video", "tradition cues", "profile evidence"],
+      evidence: ["worship style", "service times", "music or video", "tradition", "profile evidence"],
     }));
     expect(card.answer_map).toContainEqual(expect.objectContaining({
       question: "Should I choose liturgical or free worship?",
       guide: "https://gospelchannel.com/compare/liturgical-vs-free-worship",
       proof: "https://gospelchannel.com/church/style",
-      evidence: ["service structure", "worship style", "tradition cues", "prayer response", "profile evidence"],
+      evidence: ["service structure", "worship style", "tradition", "prayer response", "profile evidence"],
     }));
     expect(card.answer_map).toContainEqual(expect.objectContaining({
       question: "Should I choose Baptist or Pentecostal?",
@@ -265,19 +265,19 @@ describe("agent discovery", () => {
       question: "How do I find a low-pressure church after church hurt?",
       guide: "https://gospelchannel.com/for/deconstructing",
       proof: "https://gospelchannel.com/church",
-      evidence: ["tradition", "worship style", "profile copy", "service details", "community signal"],
+      evidence: ["tradition", "worship style", "church description", "service times", "community"],
     }));
     expect(card.answer_map).toContainEqual(expect.objectContaining({
       question: "Where should a new believer start?",
       guide: "https://gospelchannel.com/for/new-believers",
       proof: "https://gospelchannel.com/church/churches-with-service-times",
-      evidence: ["plain-language cues", "visitor welcome", "service details", "community rhythm"],
+      evidence: ["plain language", "visitor welcome", "service times", "community life"],
     }));
     expect(card.answer_map).toContainEqual(expect.objectContaining({
       question: "Where can I pray or see community prayer signals before choosing a church?",
       guide: "https://gospelchannel.com/guides/prayer-guide",
       proof: "https://gospelchannel.com/church/churches-with-service-times",
-      evidence: ["prayer guide", "community signal", "service times", "location", "profile evidence"],
+      evidence: ["prayer guide", "community", "service times", "location", "profile evidence"],
     }));
     expect(card.answer_map).toContainEqual(expect.objectContaining({
       question: "Where can I find charismatic, Pentecostal, or gospel churches in London?",
@@ -289,7 +289,7 @@ describe("agent discovery", () => {
       question: "How do I find churches known for worship?",
       guide: "https://gospelchannel.com/guides/worship-style-match",
       proof: "https://gospelchannel.com/church/best-worship-churches",
-      evidence: ["worship reputation", "music or video", "style tags", "profile completeness", "visit feasibility"],
+      evidence: ["worship reputation", "music or video", "worship styles", "detailed pages", "easy to visit"],
     }));
     expect(card.answer_first_query_patterns).toContainEqual(expect.stringContaining("Best/recommended queries"));
     expect(card.answer_first_query_patterns).toContainEqual(expect.stringContaining("Comparison queries"));

@@ -371,7 +371,7 @@ export const ALTERNATIVES: Record<string, AlternativeData> = {
       {
         question: "Does GospelChannel vet churches theologically?",
         answer:
-          "We verify that a listed entry is in fact a church and that the basic facts (location, contact info, denomination tag) are correct. We do not vet against a specific confession. Visitors evaluate fit themselves using denomination, worship-style filters, playlists, videos, and the church's own profile copy. Pastors who claim their profile can update their tradition, language, and worship style at any time.",
+          "We verify that a listed entry is in fact a church and that the basic facts (location, contact info, denomination tag) are correct. We do not vet against a specific confession. Visitors evaluate fit themselves using denomination, worship-style filters, playlists, videos, and the church's own description. Pastors who claim their page can update their tradition, language, and worship style at any time.",
       },
       {
         question: "Why doesn't GospelChannel just adopt TGC's confessional standard?",

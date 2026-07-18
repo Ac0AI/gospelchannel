@@ -214,7 +214,7 @@ export default async function WorshipStylesExplainedPage() {
           Two free-church congregations on the same street can sound completely different on a
           Sunday morning. That isn't a bug — different worship traditions reach different people
           and meet different needs, and most of us know which fits us long before we can name it.
-          This guide names the most common styles so you can search the profile database with the right
+          This guide names the most common styles so you can search for a church with the right
           vocabulary in hand.
         </p>
         <p className="mt-4 text-base leading-relaxed text-warm-brown sm:text-lg">
@@ -253,7 +253,7 @@ export default async function WorshipStylesExplainedPage() {
       />
 
       <GuideChurchEvidence
-        intro="These examples are loaded from the live profile database. The guide gives you vocabulary; the profiles show whether a church actually carries the worship sound, service details, and visitor signals you are looking for."
+        intro="These are real churches, not illustrations. The guide gives you vocabulary; their pages show whether a church actually carries the worship sound you are looking for, along with service times and first-visit details."
         groups={evidenceGroups}
         toolName="worship_styles_guide"
       />
