@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { buildMergedProfile } from "../church-profile";
 import {
@@ -190,5 +191,14 @@ describe("church page quality", () => {
     });
 
     expect(description).toBe("Aarhus Domkirke is a lutheran church in Denmark. Explore their worship and community details before your first visit.");
+  });
+
+  it("does not emit unsupported Google review markup for Church nodes", () => {
+    const pageSource = readFileSync(
+      new URL("../../app/church/[slug]/page.tsx", import.meta.url),
+      "utf8",
+    );
+
+    expect(pageSource).not.toContain("aggregateRating");
   });
 });

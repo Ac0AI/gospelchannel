@@ -599,15 +599,6 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
       ...(serviceDurationMinutes && { eventSchedule: { "@type": "Schedule", duration: `PT${serviceDurationMinutes}M` } }),
       ...(parkingInfo && { amenityFeature: { "@type": "LocationFeatureSpecification", name: "Parking", value: parkingInfo } }),
       ...(goodFitTags && goodFitTags.length > 0 && { keywords: goodFitTags.join(", ") }),
-      ...(showGoogleRating && {
-        aggregateRating: {
-          "@type": "AggregateRating",
-          ratingValue: googleRating,
-          reviewCount: googleReviewsCount,
-          bestRating: 5,
-          worstRating: 1,
-        },
-      }),
       ...(serviceTimes.length > 0 && (() => {
         const openingHours = buildOpeningHours(serviceTimes);
         return openingHours.length > 0 ? { openingHoursSpecification: openingHours } : {};
