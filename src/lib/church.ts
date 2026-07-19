@@ -1220,9 +1220,15 @@ async function getEnrichmentMeta(): Promise<Map<string, IndexEnrichmentHint>> {
     cover_image_url: string | null;
     logo_image_url: string | null;
   };
+  // Total order (church_slug is near-unique, id breaks the few ties): range
+  // pagination without ORDER BY has no stable row order in Postgres, so page
+  // boundaries dropped/duplicated rows between runs — enrichment hints (and
+  // with them dataRichnessScore → directory ordering) flapped run-to-run.
   const data = await fetchAllRows((sb, from, to) =>
     sb.from<EnrichmentMetaRow[]>("church_enrichments")
       .select("church_slug, enrichment_status, summary, service_times, street_address, languages, instagram_url, facebook_url, youtube_url, children_ministry, youth_ministry, cover_image_url, logo_image_url")
+      .order("church_slug")
+      .order("id")
       .range(from, to)
   );
   const map = new Map<string, IndexEnrichmentHint>();
@@ -1354,6 +1360,7 @@ async function getChurchIndexRows(): Promise<ChurchIndexRow[]> {
       .select("slug, name, description, spotify_playlist_ids, additional_playlists, logo, website, spotify_url, country, denomination, location, music_style, email, header_image, verified_at, last_researched, aliases, language, source_kind")
       .eq("status", "approved")
       .order("name")
+      .order("slug")
       .range(from, to)
   );
   return filterExplicitNonChurchRows(rows);
@@ -1766,13 +1773,15 @@ export async function fetchFacetRelatedLinks(
   );
 
   // City links: city_slug is materialized; the label is extractCity(location)
-  // of a representative row (deterministic via ORDER BY slug in array_agg),
-  // mirroring getCityLinks (which keys by slugify(extractCity(location)) and
-  // labels with the first-seen extracted city).
+  // of a representative row. getCityLinks labels with the FIRST-SEEN extracted
+  // city while iterating the browse-ordered array, i.e. the top-ranked
+  // church's spelling — so sample in the same order (directory_rank, slug),
+  // not alphabetically, or label spellings diverge ("Saint Denis" vs
+  // "Saint-Denis") whenever churches write the city differently.
   const cityRows = (await sql.query(
     `SELECT city_slug,
             count(*)::int AS count,
-            (array_agg(location ORDER BY slug))[1] AS sample_location
+            (array_agg(location ORDER BY directory_rank ASC NULLS LAST, slug ASC))[1] AS sample_location
      FROM churches
      WHERE ${where.sql} AND city_slug IS NOT NULL AND city_slug <> ''
      GROUP BY city_slug`,

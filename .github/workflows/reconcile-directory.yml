@@ -1,0 +1,45 @@
+name: Nightly directory reconciliation
+
+# 02:33 UTC daily: after the 01:03 Spotify enrichment (which changes playlist
+# counts and thus directory scores) and before the site's 04:00 cache flush,
+# so the flushed caches re-fill with freshly reconciled ranks.
+#
+# Why this exists: churches.directory_rank and related_church_slugs are
+# materialized snapshots of the live browse comparator. The code always
+# assumed a nightly reconciliation ("reconcile after imports/bulk-approve +
+# nightly") but nothing ran it, so ranks drifted daily and the reciprocity
+# invariant (every indexable church receives >=1 inlink) eroded to 43k
+# orphans by 2026-07-19. Both are Node-only jobs that cannot run as Worker
+# crons (isolate OOM), hence GitHub Actions.
+on:
+  schedule:
+    - cron: '33 2 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: reconcile-directory
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Reconcile facet columns (directory_rank, directory_score, city_slug)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
+        run: pnpm exec tsx scripts/backfill-facet-columns.ts
+
+      - name: Reconcile related churches (reciprocity invariant)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
+        run: pnpm exec tsx scripts/backfill-related-churches.ts

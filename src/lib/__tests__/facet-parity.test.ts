@@ -87,6 +87,20 @@ const linksEqual = (a: FacetLink[], b: FacetLink[]) =>
   a.length === b.length &&
   a.every((x, i) => x.slug === b[i].slug && x.label === b[i].label && x.count === b[i].count);
 
+function expectLinksEqual(kind: string, slug: string, linkKind: string, next: FacetLink[], old: FacetLink[]) {
+  if (!linksEqual(next, old)) {
+    const firstDiff = old.findIndex(
+      (x, i) => !next[i] || x.slug !== next[i].slug || x.label !== next[i].label || x.count !== next[i].count,
+    );
+    const at = firstDiff === -1 ? old.length : firstDiff;
+    console.log(
+      `\n[LINKDIFF ${kind}/${slug} ${linkKind}] oldLen=${old.length} newLen=${next.length}` +
+        ` firstDiff@${at}: old=${JSON.stringify(old[at])} new=${JSON.stringify(next[at])}`,
+    );
+  }
+  expect(linksEqual(next, old), `${kind}/${slug} relatedLinks.${linkKind}`).toBe(true);
+}
+
 async function assertParity(kind: string, slug: string, filter: any) {
   const filtered = m.filterChurchDirectory(all, filter);
   if (filtered.length === 0) return; // old path 404s; facade returns null too
@@ -112,10 +126,10 @@ async function assertParity(kind: string, slug: string, filter: any) {
   expect(newSlugs).toEqual(oldSlugs);
   expect(next.totalCount).toBe(filtered.length);
   expect(next.totalPages).toBe(oldPage.totalPages);
-  if (kind !== "country") expect(linksEqual(next.relatedLinks.country, m.getCountryLinks(filtered, 12))).toBe(true);
-  if (kind !== "city") expect(linksEqual(next.relatedLinks.city, m.getCityLinks(filtered, 12))).toBe(true);
-  if (kind !== "style") expect(linksEqual(next.relatedLinks.style, m.getStyleLinks(filtered, 8))).toBe(true);
-  if (kind !== "denomination") expect(linksEqual(next.relatedLinks.denomination, m.getDenominationLinks(filtered, 8))).toBe(true);
+  if (kind !== "country") expectLinksEqual(kind, slug, "country", next.relatedLinks.country, m.getCountryLinks(filtered, 12));
+  if (kind !== "city") expectLinksEqual(kind, slug, "city", next.relatedLinks.city, m.getCityLinks(filtered, 12));
+  if (kind !== "style") expectLinksEqual(kind, slug, "style", next.relatedLinks.style, m.getStyleLinks(filtered, 8));
+  if (kind !== "denomination") expectLinksEqual(kind, slug, "denomination", next.relatedLinks.denomination, m.getDenominationLinks(filtered, 8));
 }
 
 describe.skipIf(!hasDb)("facet parity: old in-memory path vs new SQL path", () => {

@@ -193,6 +193,32 @@ function shouldSkipWarm() {
   return process.argv.slice(2).some((arg) => SKIP_WARM_FLAGS.has(arg));
 }
 
+// The offline build seeds the incremental cache with empty data (facet lists,
+// stats) that otherwise lingers until each entry's hourly TTL or the 04:00
+// cron. Flush everything right after deploy so the prewarm below re-renders
+// with live Neon data instead of baking the empty entries into the edge.
+async function revalidateAfterDeploy() {
+  const secret = (process.env.CRON_SECRET || "").trim();
+  if (!secret) {
+    console.warn("[deploy] CRON_SECRET missing in env; skipping post-deploy revalidation (facet/stat pages stay empty until their hourly TTL).");
+    return;
+  }
+  try {
+    const response = await fetch(`${SITE_URL}/api/cron/sync?full=true`, {
+      headers: { authorization: `Bearer ${secret}` },
+    });
+    if (response.ok) {
+      console.log("[deploy] Post-deploy revalidation OK (full cache flush).");
+    } else if (response.status === 401) {
+      console.warn("[deploy] Post-deploy revalidation got 401: CRON_SECRET in .env.local does not match the deployed secret. Sync it with: grep '^CRON_SECRET=' .env.local | cut -d= -f2- | pnpm exec wrangler secret put CRON_SECRET");
+    } else {
+      console.warn(`[deploy] Post-deploy revalidation failed with ${response.status}: ${(await response.text().catch(() => "")).slice(0, 200)}`);
+    }
+  } catch (error) {
+    console.warn(`[deploy] Post-deploy revalidation errored: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
 console.log("[deploy] Building Cloudflare bundle...");
 assertSuccess(runCommand("pnpm", ["run", "cf:build"]), "cf:build");
 
@@ -208,6 +234,8 @@ if (openNextDeploy.status !== 0) {
     "wrangler deploy",
   );
 }
+
+await revalidateAfterDeploy();
 
 if (shouldSkipWarm()) {
   console.log("[deploy] Skipping post-deploy prewarm.");

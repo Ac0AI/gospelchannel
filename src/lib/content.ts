@@ -939,6 +939,10 @@ export function revalidatePublicChurchContent(): void {
   revalidatePath("/church");
   revalidatePath("/church/[slug]", "page");
   revalidatePath("/church/[slug]/claim", "page");
+  revalidatePath("/church/country");
+  revalidatePath("/church/city");
+  revalidatePath("/church/style");
+  revalidatePath("/church/denomination");
   revalidatePath("/church/country/[slug]", "page");
   revalidatePath("/church/city/[slug]", "page");
   revalidatePath("/church/style/[slug]", "page");
