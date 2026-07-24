@@ -23,6 +23,15 @@ export const SERVER_INSTRUCTIONS = [
   "the church, and never invent a time. Link people to each church's page URL.",
 ].join(" ");
 
+// Every tool is a read-only lookup over our own church directory: no writes,
+// nothing destructive, no public-internet side effects. Declared so ChatGPT's
+// reviewer and clients can trust the safety surface.
+const READ_ONLY_ANNOTATIONS = {
+  readOnlyHint: true,
+  destructiveHint: false,
+  openWorldHint: false,
+} as const;
+
 function asNumber(value: unknown): number | undefined {
   if (typeof value === "number" && Number.isFinite(value)) return value;
   if (typeof value === "string" && value.trim() !== "") {
@@ -74,14 +83,13 @@ function summarizeList(churches: ChurchResult[], heading: string): string {
 const findChurchesNearTool: McpToolDefinition = {
   name: "find_churches_near",
   title: "Find churches near a place",
+  annotations: READ_ONLY_ANNOTATIONS,
   description:
-    "Find Christian worship churches near a location, ranked by distance. Use when the person is new in a place or traveling. If latitude/longitude are omitted, the user's location from the ChatGPT context is used; if only a city is known, it searches that city. Filter by worship style, denomination, or language.",
+    "Find Christian worship churches near the user, ranked by distance. Use when the person is new in a place or traveling. Uses the coarse location ChatGPT shares; if only a city is named, it searches that city. Filter by worship style, denomination, or language.",
   inputSchema: {
     type: "object",
     properties: {
-      latitude: { type: "number", description: "Latitude of the search center." },
-      longitude: { type: "number", description: "Longitude of the search center." },
-      city: { type: "string", description: "City name, used when latitude/longitude are unknown." },
+      city: { type: "string", description: "City name to search in, when a specific city is mentioned." },
       worship_style: {
         type: "string",
         description: "Preferred worship style, e.g. contemporary, gospel, charismatic, traditional, hillsong.",
@@ -96,9 +104,11 @@ const findChurchesNearTool: McpToolDefinition = {
     },
   },
   handler: async (args, { meta }) => {
+    // Coordinates come only from ChatGPT's shared coarse location, never the
+    // input schema — per Apps SDK guidelines we don't request precise location.
     const metaLoc = extractMetaLocation(meta);
-    const lat = asNumber(args.latitude) ?? metaLoc.lat;
-    const lng = asNumber(args.longitude) ?? metaLoc.lng;
+    const lat = metaLoc.lat;
+    const lng = metaLoc.lng;
     const filters = {
       worshipStyle: asString(args.worship_style),
       denomination: asString(args.denomination),
@@ -121,7 +131,7 @@ const findChurchesNearTool: McpToolDefinition = {
     }
 
     return textResult(
-      "I need a location to search — a latitude/longitude or a city name.",
+      "I need a location - share your location or name a city.",
       { churches: [] },
       true,
     );
@@ -131,6 +141,7 @@ const findChurchesNearTool: McpToolDefinition = {
 const findChurchesInCityTool: McpToolDefinition = {
   name: "find_churches_in_city",
   title: "Find churches in a city",
+  annotations: READ_ONLY_ANNOTATIONS,
   description:
     "Find Christian worship churches in a named city, ranked by directory quality. Filter by worship style, denomination, or language.",
   inputSchema: {
@@ -170,6 +181,7 @@ const findChurchesInCityTool: McpToolDefinition = {
 const getChurchTool: McpToolDefinition = {
   name: "get_church",
   title: "Get a church profile",
+  annotations: READ_ONLY_ANNOTATIONS,
   description:
     "Get the full profile for one church by its slug (the last path segment of its gospelchannel.com/church/<slug> URL): worship styles, denomination, language, description, top worship songs, contact, and recorded service times if available.",
   inputSchema: {
