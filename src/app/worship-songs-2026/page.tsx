@@ -10,6 +10,7 @@ export const revalidate = 86400;
 const PAGE_URL = "https://gospelchannel.com/worship-songs-2026";
 const JSON_URL = "https://gospelchannel.com/api/worship-songs-2026.json";
 const PLAYLIST_CHURCH = "https://playlist.church";
+const HF_DATASET = "https://huggingface.co/datasets/ac0ai/worship-songs-2026";
 
 const META_TITLE =
   "The Worship Songs Churches Actually Sing (2026): A Data Study";
@@ -147,7 +148,7 @@ export default function WorshipSongs2026Page() {
       "A church is counted as singing a song when the track appears in one of its public Spotify worship playlists. " +
       "Observed data, not a survey and not AI-inferred.",
     url: PAGE_URL,
-    sameAs: [PLAYLIST_CHURCH],
+    sameAs: [PLAYLIST_CHURCH, HF_DATASET],
     creator: {
       "@type": "Organization",
       name: "GospelChannel",
@@ -576,7 +577,14 @@ export default function WorshipSongs2026Page() {
             className="underline decoration-rose-gold/40 underline-offset-2 hover:decoration-rose-gold"
           >
             /api/worship-songs-2026.json
-          </Link>
+          </Link>{" "}
+          and as a full dataset (CSVs) on{" "}
+          <a
+            href={HF_DATASET}
+            className="underline decoration-rose-gold/40 underline-offset-2 hover:decoration-rose-gold"
+          >
+            Hugging Face
+          </a>
           . Per-church playlists stay with the churches. For methodology
           questions or a deeper cut of the data, write to press at gospelchannel
           dot com.

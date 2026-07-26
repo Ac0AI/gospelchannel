@@ -124,3 +124,6 @@ docs/design/
 
 # Prospect audit reports (contact data — internal)
 data/audits/
+
+# Worship dataset build artifact (regenerate: scripts/export-worship-songs-dataset.mjs)
+data-release-worship/
