@@ -11,6 +11,9 @@ const PAGE_URL = "https://gospelchannel.com/worship-songs-2026";
 const JSON_URL = "https://gospelchannel.com/api/worship-songs-2026.json";
 const PLAYLIST_CHURCH = "https://playlist.church";
 const HF_DATASET = "https://huggingface.co/datasets/ac0ai/worship-songs-2026";
+const KAGGLE_DATASET = "https://www.kaggle.com/datasets/gospelchannel/worship-songs-2026";
+const ZENODO_DOI = "10.5281/zenodo.21603991";
+const ZENODO_URL = `https://doi.org/${ZENODO_DOI}`;
 
 const META_TITLE =
   "The Worship Songs Churches Actually Sing (2026): A Data Study";
@@ -148,7 +151,11 @@ export default function WorshipSongs2026Page() {
       "A church is counted as singing a song when the track appears in one of its public Spotify worship playlists. " +
       "Observed data, not a survey and not AI-inferred.",
     url: PAGE_URL,
-    sameAs: [PLAYLIST_CHURCH, HF_DATASET],
+    sameAs: [PLAYLIST_CHURCH, HF_DATASET, KAGGLE_DATASET, ZENODO_URL],
+    identifier: [
+      { "@type": "PropertyValue", propertyID: "DOI", value: ZENODO_DOI },
+    ],
+    citation: ZENODO_URL,
     creator: {
       "@type": "Organization",
       name: "GospelChannel",
@@ -577,22 +584,44 @@ export default function WorshipSongs2026Page() {
             className="underline decoration-rose-gold/40 underline-offset-2 hover:decoration-rose-gold"
           >
             /api/worship-songs-2026.json
-          </Link>{" "}
-          and as a full dataset (CSVs) on{" "}
+          </Link>
+          . The full dataset (CSVs) is mirrored on{" "}
           <a
             href={HF_DATASET}
             className="underline decoration-rose-gold/40 underline-offset-2 hover:decoration-rose-gold"
           >
             Hugging Face
           </a>
-          . Per-church playlists stay with the churches. For methodology
-          questions or a deeper cut of the data, write to press at gospelchannel
-          dot com.
+          ,{" "}
+          <a
+            href={KAGGLE_DATASET}
+            className="underline decoration-rose-gold/40 underline-offset-2 hover:decoration-rose-gold"
+          >
+            Kaggle
+          </a>
+          , and{" "}
+          <a
+            href={ZENODO_URL}
+            className="underline decoration-rose-gold/40 underline-offset-2 hover:decoration-rose-gold"
+          >
+            Zenodo
+          </a>{" "}
+          with a citable DOI. Per-church playlists stay with the churches. For
+          methodology questions or a deeper cut of the data, write to press at
+          gospelchannel dot com. The live, always-current chart lives at{" "}
+          <a
+            href={PLAYLIST_CHURCH}
+            className="underline decoration-rose-gold/40 underline-offset-2 hover:decoration-rose-gold"
+          >
+            playlist.church
+          </a>
+          .
         </p>
         <p className="mt-4 text-xs text-muted-warm">
-          Generated {data.generatedAt} · Data version {data.version} ·
-          Corroboration: Worship Leader Research, "After the Big 4" (2023);
-          benchmark: CCLI Top 100.
+          Cite: GospelChannel (2026), <em>Worship Songs 2026: church-playlist
+          adoption across 825 churches</em>. doi:{ZENODO_DOI}. · Data version{" "}
+          {data.version} · Corroboration: Worship Leader Research, "After the Big
+          4" (2023); benchmark: CCLI Top 100.
         </p>
       </section>
 
