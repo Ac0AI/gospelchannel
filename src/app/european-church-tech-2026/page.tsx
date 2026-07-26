@@ -740,6 +740,17 @@ export default async function EuropeanChurchTechReportPage() {
           Generated {formatDate(data.generatedAt)} · Data version{" "}
           {data.version} · Coverage updates as enrichment runs land.
         </p>
+
+        <p className="mt-6 text-base leading-relaxed text-espresso/80">
+          Companion data study:{" "}
+          <Link
+            href="/worship-songs-2026"
+            className="underline decoration-mauve/40 underline-offset-2 hover:decoration-mauve"
+          >
+            the worship songs churches actually sing
+          </Link>
+          , measured across 825 churches from their real Spotify playlists.
+        </p>
       </section>
 
       {/* ── CTA ── */}

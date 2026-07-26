@@ -1,0 +1,859 @@
+{
+  "version": "2026.07",
+  "generatedAt": "2026-07-18",
+  "builtOn": "2026-07-18",
+  "denominatorChurches": 825,
+  "corpus": {
+    "churches": 905,
+    "churchesSinging": 825,
+    "countries": 31,
+    "playlistCountries": 34,
+    "playlists": 1017,
+    "worshipSongs": 9720,
+    "worshipSongGroups": 5927,
+    "songChurchEdges": 36593
+  },
+  "topSongs": [
+    {
+      "rank": 1,
+      "title": "Great Are You Lord",
+      "fullTitle": "Great Are You Lord - Live",
+      "artist": "All Sons & Daughters, Leslie Jordan, David Leonard",
+      "churches": 194,
+      "pct": 23.5
+    },
+    {
+      "rank": 2,
+      "title": "What A Beautiful Name",
+      "fullTitle": "What A Beautiful Name - Live",
+      "artist": "Hillsong Worship, Brooke Ligertwood",
+      "churches": 194,
+      "pct": 23.5
+    },
+    {
+      "rank": 3,
+      "title": "Goodness of God",
+      "fullTitle": "Goodness of God - Live",
+      "artist": "Bethel Music, Jenn Johnson",
+      "churches": 183,
+      "pct": 22.2
+    },
+    {
+      "rank": 4,
+      "title": "Praise",
+      "fullTitle": "Praise (feat. Brandon Lake, Chris Brown & Chandler Moore)",
+      "artist": "Elevation Worship, Brandon Lake, Chris Brown, Chandler Moore",
+      "churches": 181,
+      "pct": 21.9
+    },
+    {
+      "rank": 5,
+      "title": "King Of Kings",
+      "fullTitle": "King Of Kings",
+      "artist": "Hillsong Worship, Brooke Ligertwood",
+      "churches": 165,
+      "pct": 20
+    },
+    {
+      "rank": 6,
+      "title": "Living Hope",
+      "fullTitle": "Living Hope",
+      "artist": "Phil Wickham",
+      "churches": 155,
+      "pct": 18.8
+    },
+    {
+      "rank": 7,
+      "title": "Gratitude",
+      "fullTitle": "Gratitude",
+      "artist": "Brandon Lake",
+      "churches": 153,
+      "pct": 18.5
+    },
+    {
+      "rank": 8,
+      "title": "O Praise The Name (Anástasis)",
+      "fullTitle": "O Praise The Name (Anástasis)",
+      "artist": "Hillsong Worship",
+      "churches": 151,
+      "pct": 18.3
+    },
+    {
+      "rank": 9,
+      "title": "I Speak Jesus",
+      "fullTitle": "I Speak Jesus",
+      "artist": "Charity Gayle, Steven Musso",
+      "churches": 147,
+      "pct": 17.8
+    },
+    {
+      "rank": 10,
+      "title": "O Come to the Altar (Live)",
+      "fullTitle": "O Come to the Altar (Live)",
+      "artist": "Elevation Worship",
+      "churches": 124,
+      "pct": 15
+    },
+    {
+      "rank": 11,
+      "title": "Graves Into Gardens (Live)",
+      "fullTitle": "Graves Into Gardens (Live)",
+      "artist": "Elevation Worship, Brandon Lake",
+      "churches": 119,
+      "pct": 14.4
+    },
+    {
+      "rank": 12,
+      "title": "Holy Forever",
+      "fullTitle": "Holy Forever",
+      "artist": "Chris Tomlin",
+      "churches": 118,
+      "pct": 14.3
+    },
+    {
+      "rank": 13,
+      "title": "Cornerstone",
+      "fullTitle": "Cornerstone - Live",
+      "artist": "Hillsong Worship, David Ware",
+      "churches": 116,
+      "pct": 14.1
+    },
+    {
+      "rank": 14,
+      "title": "This Is Amazing Grace",
+      "fullTitle": "This Is Amazing Grace",
+      "artist": "Phil Wickham",
+      "churches": 116,
+      "pct": 14.1
+    },
+    {
+      "rank": 15,
+      "title": "Who You Say I Am",
+      "fullTitle": "Who You Say I Am - Live",
+      "artist": "Hillsong Worship, Brooke Ligertwood, Reuben Morgan",
+      "churches": 116,
+      "pct": 14.1
+    },
+    {
+      "rank": 16,
+      "title": "Yet Not I but Through Christ in Me",
+      "fullTitle": "Yet Not I but Through Christ in Me",
+      "artist": "CityAlight",
+      "churches": 115,
+      "pct": 13.9
+    },
+    {
+      "rank": 17,
+      "title": "Way Maker",
+      "fullTitle": "Way Maker - Live",
+      "artist": "Leeland",
+      "churches": 114,
+      "pct": 13.8
+    },
+    {
+      "rank": 18,
+      "title": "Battle Belongs",
+      "fullTitle": "Battle Belongs",
+      "artist": "Phil Wickham",
+      "churches": 110,
+      "pct": 13.3
+    },
+    {
+      "rank": 19,
+      "title": "House Of The Lord",
+      "fullTitle": "House Of The Lord",
+      "artist": "Phil Wickham",
+      "churches": 107,
+      "pct": 13
+    },
+    {
+      "rank": 20,
+      "title": "Raise a Hallelujah",
+      "fullTitle": "Raise a Hallelujah - Live",
+      "artist": "Bethel Music, Jonathan David Helser, Melissa Helser",
+      "churches": 105,
+      "pct": 12.7
+    },
+    {
+      "rank": 21,
+      "title": "Who Else",
+      "fullTitle": "Who Else - Live",
+      "artist": "Gateway Worship, Claire Smith",
+      "churches": 105,
+      "pct": 12.7
+    },
+    {
+      "rank": 22,
+      "title": "10,000 Reasons (Bless The Lord)",
+      "fullTitle": "10,000 Reasons (Bless The Lord) - Live",
+      "artist": "Matt Redman",
+      "churches": 103,
+      "pct": 12.5
+    },
+    {
+      "rank": 23,
+      "title": "Same God",
+      "fullTitle": "Same God (feat. Jonsal Barrientes)",
+      "artist": "Elevation Worship, Jonsal Barrientes",
+      "churches": 103,
+      "pct": 12.5
+    },
+    {
+      "rank": 24,
+      "title": "Trust In God",
+      "fullTitle": "Trust In God (feat. Chris Brown)",
+      "artist": "Elevation Worship, Chris Brown",
+      "churches": 100,
+      "pct": 12.1
+    },
+    {
+      "rank": 25,
+      "title": "How Great Is Our God",
+      "fullTitle": "How Great Is Our God",
+      "artist": "Chris Tomlin",
+      "churches": 98,
+      "pct": 11.9
+    },
+    {
+      "rank": 26,
+      "title": "Firm Foundation (He Won’t)",
+      "fullTitle": "Firm Foundation (He Won’t)",
+      "artist": "Cody Carnes",
+      "churches": 94,
+      "pct": 11.4
+    },
+    {
+      "rank": 27,
+      "title": "No Longer Slaves",
+      "fullTitle": "No Longer Slaves - Live",
+      "artist": "Bethel Music, Jonathan David Helser, Melissa Helser",
+      "churches": 94,
+      "pct": 11.4
+    },
+    {
+      "rank": 28,
+      "title": "All Hail King Jesus",
+      "fullTitle": "All Hail King Jesus - Live",
+      "artist": "Bethel Music, Bethany Wohrle",
+      "churches": 92,
+      "pct": 11.2
+    },
+    {
+      "rank": 29,
+      "title": "Holy Forever",
+      "fullTitle": "Holy Forever",
+      "artist": "Bethel Music, Jenn Johnson",
+      "churches": 91,
+      "pct": 11
+    },
+    {
+      "rank": 30,
+      "title": "Build My Life",
+      "fullTitle": "Build My Life",
+      "artist": "Housefires",
+      "churches": 90,
+      "pct": 10.9
+    },
+    {
+      "rank": 31,
+      "title": "Do It Again",
+      "fullTitle": "Do It Again",
+      "artist": "Elevation Worship",
+      "churches": 89,
+      "pct": 10.8
+    },
+    {
+      "rank": 32,
+      "title": "Glorious Day",
+      "fullTitle": "Glorious Day - Live",
+      "artist": "Passion, Kristian Stanfill",
+      "churches": 89,
+      "pct": 10.8
+    },
+    {
+      "rank": 33,
+      "title": "Lord, I Need You",
+      "fullTitle": "Lord, I Need You",
+      "artist": "Matt Maher",
+      "churches": 89,
+      "pct": 10.8
+    },
+    {
+      "rank": 34,
+      "title": "Great Things",
+      "fullTitle": "Great Things",
+      "artist": "Phil Wickham",
+      "churches": 86,
+      "pct": 10.4
+    },
+    {
+      "rank": 35,
+      "title": "Behold Our God",
+      "fullTitle": "Behold Our God",
+      "artist": "Sovereign Grace Music",
+      "churches": 85,
+      "pct": 10.3
+    },
+    {
+      "rank": 36,
+      "title": "Amazing Grace (My Chains Are Gone)",
+      "fullTitle": "Amazing Grace (My Chains Are Gone)",
+      "artist": "Chris Tomlin",
+      "churches": 84,
+      "pct": 10.2
+    },
+    {
+      "rank": 37,
+      "title": "Worthy",
+      "fullTitle": "Worthy",
+      "artist": "Elevation Worship",
+      "churches": 83,
+      "pct": 10.1
+    },
+    {
+      "rank": 38,
+      "title": "Build My Life",
+      "fullTitle": "Build My Life",
+      "artist": "Pat Barrett",
+      "churches": 81,
+      "pct": 9.8
+    },
+    {
+      "rank": 39,
+      "title": "King of My Heart",
+      "fullTitle": "King of My Heart - Live",
+      "artist": "Bethel Music, Steffany Gretzinger",
+      "churches": 80,
+      "pct": 9.7
+    },
+    {
+      "rank": 40,
+      "title": "Reckless Love",
+      "fullTitle": "Reckless Love",
+      "artist": "Cory Asbury",
+      "churches": 80,
+      "pct": 9.7
+    },
+    {
+      "rank": 41,
+      "title": "Nothing Else",
+      "fullTitle": "Nothing Else",
+      "artist": "Cody Carnes",
+      "churches": 79,
+      "pct": 9.6
+    },
+    {
+      "rank": 42,
+      "title": "Only a Holy God",
+      "fullTitle": "Only a Holy God",
+      "artist": "CityAlight",
+      "churches": 79,
+      "pct": 9.6
+    },
+    {
+      "rank": 43,
+      "title": "This I Believe (The Creed)",
+      "fullTitle": "This I Believe (The Creed) - Live",
+      "artist": "Hillsong Worship, Matt Crocker",
+      "churches": 79,
+      "pct": 9.6
+    },
+    {
+      "rank": 44,
+      "title": "Firm Foundation (He Won't)[Feat. Chandler Moore]",
+      "fullTitle": "Firm Foundation (He Won't)[Feat. Chandler Moore]",
+      "artist": "Maverick City Music, Cody Carnes, Chandler Moore",
+      "churches": 77,
+      "pct": 9.3
+    },
+    {
+      "rank": 45,
+      "title": "Good Good Father",
+      "fullTitle": "Good Good Father",
+      "artist": "Chris Tomlin",
+      "churches": 77,
+      "pct": 9.3
+    }
+  ],
+  "topArtists": [
+    {
+      "rank": 1,
+      "artist": "Phil Wickham",
+      "churchReach": 320,
+      "songs": 48,
+      "pct": 38.8
+    },
+    {
+      "rank": 2,
+      "artist": "Elevation Worship",
+      "churchReach": 310,
+      "songs": 75,
+      "pct": 37.6
+    },
+    {
+      "rank": 3,
+      "artist": "Hillsong Worship, Brooke Ligertwood",
+      "churchReach": 291,
+      "songs": 19,
+      "pct": 35.3
+    },
+    {
+      "rank": 4,
+      "artist": "Chris Tomlin",
+      "churchReach": 288,
+      "songs": 42,
+      "pct": 34.9
+    },
+    {
+      "rank": 5,
+      "artist": "Hillsong Worship",
+      "churchReach": 282,
+      "songs": 114,
+      "pct": 34.2
+    },
+    {
+      "rank": 6,
+      "artist": "Passion, Kristian Stanfill",
+      "churchReach": 245,
+      "songs": 31,
+      "pct": 29.7
+    },
+    {
+      "rank": 7,
+      "artist": "Bethel Music, Jenn Johnson",
+      "churchReach": 245,
+      "songs": 13,
+      "pct": 29.7
+    },
+    {
+      "rank": 8,
+      "artist": "Cody Carnes",
+      "churchReach": 211,
+      "songs": 16,
+      "pct": 25.6
+    },
+    {
+      "rank": 9,
+      "artist": "Matt Redman",
+      "churchReach": 203,
+      "songs": 31,
+      "pct": 24.6
+    },
+    {
+      "rank": 10,
+      "artist": "Shane & Shane",
+      "churchReach": 201,
+      "songs": 64,
+      "pct": 24.4
+    },
+    {
+      "rank": 11,
+      "artist": "Brandon Lake",
+      "churchReach": 197,
+      "songs": 24,
+      "pct": 23.9
+    },
+    {
+      "rank": 12,
+      "artist": "The Worship Initiative, Shane & Shane",
+      "churchReach": 193,
+      "songs": 81,
+      "pct": 23.4
+    },
+    {
+      "rank": 13,
+      "artist": "CityAlight",
+      "churchReach": 175,
+      "songs": 44,
+      "pct": 21.2
+    },
+    {
+      "rank": 14,
+      "artist": "Bethel Music, Jonathan David Helser, Melissa Helser",
+      "churchReach": 175,
+      "songs": 9,
+      "pct": 21.2
+    },
+    {
+      "rank": 15,
+      "artist": "Elevation Worship, Brandon Lake, Chris Brown, Chandler Moore",
+      "churchReach": 173,
+      "songs": 1,
+      "pct": 21
+    },
+    {
+      "rank": 16,
+      "artist": "Leeland",
+      "churchReach": 165,
+      "songs": 13,
+      "pct": 20
+    },
+    {
+      "rank": 17,
+      "artist": "Sovereign Grace Music",
+      "churchReach": 149,
+      "songs": 124,
+      "pct": 18.1
+    },
+    {
+      "rank": 18,
+      "artist": "Elevation Worship, Chris Brown",
+      "churchReach": 142,
+      "songs": 7,
+      "pct": 17.2
+    },
+    {
+      "rank": 19,
+      "artist": "Charity Gayle, Steven Musso",
+      "churchReach": 128,
+      "songs": 1,
+      "pct": 15.5
+    },
+    {
+      "rank": 20,
+      "artist": "Housefires",
+      "churchReach": 121,
+      "songs": 18,
+      "pct": 14.7
+    },
+    {
+      "rank": 21,
+      "artist": "Charity Gayle",
+      "churchReach": 119,
+      "songs": 18,
+      "pct": 14.4
+    },
+    {
+      "rank": 22,
+      "artist": "Vertical Worship",
+      "churchReach": 117,
+      "songs": 33,
+      "pct": 14.2
+    },
+    {
+      "rank": 23,
+      "artist": "Kari Jobe Carnes",
+      "churchReach": 116,
+      "songs": 21,
+      "pct": 14.1
+    },
+    {
+      "rank": 24,
+      "artist": "Keith & Kristyn Getty",
+      "churchReach": 115,
+      "songs": 42,
+      "pct": 13.9
+    },
+    {
+      "rank": 25,
+      "artist": "Bethel Music, Bethany Wohrle",
+      "churchReach": 114,
+      "songs": 7,
+      "pct": 13.8
+    }
+  ],
+  "houses": [
+    {
+      "name": "Hillsong",
+      "churchesReached": 497,
+      "pct": 60
+    },
+    {
+      "name": "Elevation",
+      "churchesReached": 454,
+      "pct": 55
+    },
+    {
+      "name": "Bethel",
+      "churchesReached": 414,
+      "pct": 50
+    },
+    {
+      "name": "Passion",
+      "churchesReached": 381,
+      "pct": 46
+    }
+  ],
+  "houseConcentration": {
+    "bigInTop50": 26,
+    "outOf": 50
+  },
+  "usChart": {
+    "churches": 395,
+    "songs": [
+      {
+        "rank": 1,
+        "title": "Great Are You Lord",
+        "artist": "All Sons & Daughters, Leslie Jordan, David Leonard",
+        "churches": 115
+      },
+      {
+        "rank": 2,
+        "title": "What A Beautiful Name",
+        "artist": "Hillsong Worship, Brooke Ligertwood",
+        "churches": 105
+      },
+      {
+        "rank": 3,
+        "title": "Goodness of God",
+        "artist": "Bethel Music, Jenn Johnson",
+        "churches": 94
+      },
+      {
+        "rank": 4,
+        "title": "Living Hope",
+        "artist": "Phil Wickham",
+        "churches": 90
+      },
+      {
+        "rank": 5,
+        "title": "Gratitude",
+        "artist": "Brandon Lake",
+        "churches": 86
+      },
+      {
+        "rank": 6,
+        "title": "Praise",
+        "artist": "Elevation Worship, Brandon Lake, Chris Brown, Chandler Moore",
+        "churches": 86
+      },
+      {
+        "rank": 7,
+        "title": "King Of Kings",
+        "artist": "Hillsong Worship, Brooke Ligertwood",
+        "churches": 83
+      },
+      {
+        "rank": 8,
+        "title": "Graves Into Gardens (Live)",
+        "artist": "Elevation Worship, Brandon Lake",
+        "churches": 78
+      },
+      {
+        "rank": 9,
+        "title": "I Speak Jesus",
+        "artist": "Charity Gayle, Steven Musso",
+        "churches": 76
+      },
+      {
+        "rank": 10,
+        "title": "O Praise The Name (Anástasis)",
+        "artist": "Hillsong Worship",
+        "churches": 75
+      },
+      {
+        "rank": 11,
+        "title": "Same God",
+        "artist": "Elevation Worship, Jonsal Barrientes",
+        "churches": 73
+      },
+      {
+        "rank": 12,
+        "title": "Holy Forever",
+        "artist": "Chris Tomlin",
+        "churches": 72
+      }
+    ]
+  },
+  "ukChart": {
+    "churches": 176,
+    "songs": [
+      {
+        "rank": 1,
+        "title": "King Of Kings",
+        "artist": "Hillsong Worship, Brooke Ligertwood",
+        "churches": 51
+      },
+      {
+        "rank": 2,
+        "title": "Great Are You Lord",
+        "artist": "All Sons & Daughters, Leslie Jordan, David Leonard",
+        "churches": 50
+      },
+      {
+        "rank": 3,
+        "title": "What A Beautiful Name",
+        "artist": "Hillsong Worship, Brooke Ligertwood",
+        "churches": 49
+      },
+      {
+        "rank": 4,
+        "title": "O Praise The Name (Anástasis)",
+        "artist": "Hillsong Worship",
+        "churches": 44
+      },
+      {
+        "rank": 5,
+        "title": "Goodness of God",
+        "artist": "Bethel Music, Jenn Johnson",
+        "churches": 41
+      },
+      {
+        "rank": 6,
+        "title": "Praise",
+        "artist": "Elevation Worship, Brandon Lake, Chris Brown, Chandler Moore",
+        "churches": 41
+      },
+      {
+        "rank": 7,
+        "title": "Cornerstone",
+        "artist": "Hillsong Worship, David Ware",
+        "churches": 40
+      },
+      {
+        "rank": 8,
+        "title": "Gratitude",
+        "artist": "Brandon Lake",
+        "churches": 40
+      },
+      {
+        "rank": 9,
+        "title": "Living Hope",
+        "artist": "Phil Wickham",
+        "churches": 40
+      },
+      {
+        "rank": 10,
+        "title": "This Is Amazing Grace",
+        "artist": "Phil Wickham",
+        "churches": 38
+      },
+      {
+        "rank": 11,
+        "title": "10,000 Reasons (Bless The Lord)",
+        "artist": "Matt Redman",
+        "churches": 37
+      },
+      {
+        "rank": 12,
+        "title": "Yet Not I but Through Christ in Me",
+        "artist": "CityAlight",
+        "churches": 37
+      }
+    ]
+  },
+  "themes": [
+    {
+      "theme": "Adoration",
+      "songs": 1592
+    },
+    {
+      "theme": "Majesty",
+      "songs": 1112
+    },
+    {
+      "theme": "God's Presence",
+      "songs": 1021
+    },
+    {
+      "theme": "Grace",
+      "songs": 973
+    },
+    {
+      "theme": "God's Love",
+      "songs": 833
+    },
+    {
+      "theme": "Redemption",
+      "songs": 762
+    },
+    {
+      "theme": "Faithfulness",
+      "songs": 659
+    },
+    {
+      "theme": "Surrender",
+      "songs": 612
+    },
+    {
+      "theme": "Name of Jesus",
+      "songs": 525
+    },
+    {
+      "theme": "Kingship",
+      "songs": 441
+    },
+    {
+      "theme": "Hope",
+      "songs": 433
+    },
+    {
+      "theme": "Victory",
+      "songs": 431
+    }
+  ],
+  "countries": [
+    {
+      "country": "United States",
+      "churches": 433
+    },
+    {
+      "country": "United Kingdom",
+      "churches": 197
+    },
+    {
+      "country": "Germany",
+      "churches": 83
+    },
+    {
+      "country": "France",
+      "churches": 35
+    },
+    {
+      "country": "Switzerland",
+      "churches": 26
+    },
+    {
+      "country": "Australia",
+      "churches": 23
+    },
+    {
+      "country": "Sweden",
+      "churches": 23
+    },
+    {
+      "country": "Norway",
+      "churches": 15
+    },
+    {
+      "country": "Denmark",
+      "churches": 10
+    },
+    {
+      "country": "Brazil",
+      "churches": 9
+    },
+    {
+      "country": "Netherlands",
+      "churches": 8
+    },
+    {
+      "country": "Philippines",
+      "churches": 8
+    },
+    {
+      "country": "Spain",
+      "churches": 8
+    },
+    {
+      "country": "South Africa",
+      "churches": 6
+    },
+    {
+      "country": "Canada",
+      "churches": 2
+    },
+    {
+      "country": "Finland",
+      "churches": 2
+    },
+    {
+      "country": "Ireland",
+      "churches": 2
+    },
+    {
+      "country": "Israel",
+      "churches": 2
+    }
+  ]
+}

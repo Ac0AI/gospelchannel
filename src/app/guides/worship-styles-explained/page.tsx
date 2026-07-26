@@ -320,6 +320,16 @@ export default async function WorshipStylesExplainedPage() {
           the fastest filter — and the one most directories ignore. Use it as a starting point,
           not a verdict on a congregation you haven't visited.
         </p>
+        <p className="mt-4 max-w-[720px] text-base leading-relaxed text-warm-brown">
+          Want to see the contemporary style in practice? We read the worship playlists of{" "}
+          <Link
+            href="/worship-songs-2026"
+            className="font-semibold text-rose-gold underline decoration-rose-gold/40 underline-offset-2 hover:text-rose-gold-deep"
+          >
+            825 churches to find the songs they actually sing
+          </Link>
+          , and which handful of worship houses most of them have in common.
+        </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
             href="/church/style"
