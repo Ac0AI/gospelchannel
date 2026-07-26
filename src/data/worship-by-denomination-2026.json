@@ -1,0 +1,381 @@
+{
+  "version": "2026.07",
+  "generatedAt": "2026-07-26",
+  "builtOn": "2026-07-18",
+  "population": {
+    "churches": 597,
+    "reportableChurches": 258,
+    "countries": [
+      "United States",
+      "USA",
+      "United Kingdom",
+      "Australia",
+      "Canada",
+      "Ireland",
+      "New Zealand"
+    ],
+    "minFamilySize": 25,
+    "note": "English-speaking-country churches with >=1 worship-flagged song in a public Spotify playlist; reportableChurches = those in a denomination family of >=25."
+  },
+  "method": "Denomination from directory/import metadata; song adoption from church playlists (not the AI worship-style classifier). Hymn/anthem indices classify by PUBLISHING HOUSE, not song form.",
+  "hymnHouses": [
+    "CityAlight",
+    "Keith & Kristyn Getty",
+    "Sovereign Grace Music"
+  ],
+  "anthemHouses": [
+    "Hillsong",
+    "Bethel Music",
+    "Elevation Worship",
+    "Passion"
+  ],
+  "overall": {
+    "churches": 258,
+    "modernHymnPct": 40,
+    "megachurchAnthemPct": 73,
+    "topSongs": [
+      {
+        "title": "Great Are You Lord",
+        "artist": "All Sons & Daughters, Leslie Jordan, David Leonard",
+        "pct": 24
+      },
+      {
+        "title": "King Of Kings",
+        "artist": "Hillsong Worship, Brooke Ligertwood",
+        "pct": 23
+      },
+      {
+        "title": "Praise",
+        "artist": "Elevation Worship, Brandon Lake, Chris Brown, Chandler Moore",
+        "pct": 22
+      },
+      {
+        "title": "What A Beautiful Name",
+        "artist": "Hillsong Worship, Brooke Ligertwood",
+        "pct": 22
+      },
+      {
+        "title": "O Praise The Name (Anástasis)",
+        "artist": "Hillsong Worship",
+        "pct": 22
+      },
+      {
+        "title": "Goodness of God",
+        "artist": "Bethel Music, Jenn Johnson",
+        "pct": 22
+      },
+      {
+        "title": "Living Hope",
+        "artist": "Phil Wickham",
+        "pct": 21
+      },
+      {
+        "title": "Yet Not I but Through Christ in Me",
+        "artist": "CityAlight",
+        "pct": 21
+      },
+      {
+        "title": "Gratitude",
+        "artist": "Brandon Lake",
+        "pct": 20
+      },
+      {
+        "title": "I Speak Jesus",
+        "artist": "Charity Gayle, Steven Musso",
+        "pct": 19
+      }
+    ]
+  },
+  "families": [
+    {
+      "family": "Evangelical (general)",
+      "churches": 80,
+      "modernHymnPct": 50,
+      "megachurchAnthemPct": 71,
+      "topSongs": [
+        {
+          "title": "Behold Our God",
+          "artist": "Sovereign Grace Music",
+          "pct": 34
+        },
+        {
+          "title": "Yet Not I but Through Christ in Me",
+          "artist": "CityAlight",
+          "pct": 33
+        },
+        {
+          "title": "Living Hope",
+          "artist": "Phil Wickham",
+          "pct": 25
+        },
+        {
+          "title": "Only a Holy God",
+          "artist": "CityAlight",
+          "pct": 25
+        },
+        {
+          "title": "This Is Amazing Grace",
+          "artist": "Phil Wickham",
+          "pct": 24
+        },
+        {
+          "title": "All I Have Is Christ",
+          "artist": "Sovereign Grace Music",
+          "pct": 23
+        },
+        {
+          "title": "10,000 Reasons (Bless The Lord)",
+          "artist": "Matt Redman",
+          "pct": 23
+        },
+        {
+          "title": "Man Of Sorrows",
+          "artist": "Hillsong Worship",
+          "pct": 21
+        },
+        {
+          "title": "King Of Kings",
+          "artist": "Hillsong Worship, Brooke Ligertwood",
+          "pct": 21
+        },
+        {
+          "title": "Cornerstone",
+          "artist": "Hillsong Worship, David Ware",
+          "pct": 21
+        }
+      ]
+    },
+    {
+      "family": "Non-denominational",
+      "churches": 68,
+      "modernHymnPct": 24,
+      "megachurchAnthemPct": 84,
+      "topSongs": [
+        {
+          "title": "Praise",
+          "artist": "Elevation Worship, Brandon Lake, Chris Brown, Chandler Moore",
+          "pct": 34
+        },
+        {
+          "title": "What A Beautiful Name",
+          "artist": "Hillsong Worship, Brooke Ligertwood",
+          "pct": 34
+        },
+        {
+          "title": "Goodness of God",
+          "artist": "Bethel Music, Jenn Johnson",
+          "pct": 29
+        },
+        {
+          "title": "I Speak Jesus",
+          "artist": "Charity Gayle, Steven Musso",
+          "pct": 29
+        },
+        {
+          "title": "All Hail King Jesus",
+          "artist": "Bethel Music, Bethany Wohrle",
+          "pct": 29
+        },
+        {
+          "title": "Graves Into Gardens (Live)",
+          "artist": "Elevation Worship, Brandon Lake",
+          "pct": 29
+        },
+        {
+          "title": "O Praise The Name (Anástasis)",
+          "artist": "Hillsong Worship",
+          "pct": 28
+        },
+        {
+          "title": "Gratitude",
+          "artist": "Brandon Lake",
+          "pct": 28
+        },
+        {
+          "title": "Same God",
+          "artist": "Elevation Worship, Jonsal Barrientes",
+          "pct": 28
+        },
+        {
+          "title": "O Come to the Altar (Live)",
+          "artist": "Elevation Worship",
+          "pct": 26
+        }
+      ]
+    },
+    {
+      "family": "Baptist",
+      "churches": 50,
+      "modernHymnPct": 60,
+      "megachurchAnthemPct": 66,
+      "topSongs": [
+        {
+          "title": "Great Are You Lord",
+          "artist": "All Sons & Daughters, Leslie Jordan, David Leonard",
+          "pct": 28
+        },
+        {
+          "title": "Yet Not I but Through Christ in Me",
+          "artist": "CityAlight",
+          "pct": 28
+        },
+        {
+          "title": "Holy Forever",
+          "artist": "Chris Tomlin",
+          "pct": 26
+        },
+        {
+          "title": "Behold Our God",
+          "artist": "Sovereign Grace Music",
+          "pct": 24
+        },
+        {
+          "title": "All Creatures of Our God and King",
+          "artist": "Sovereign Grace Music",
+          "pct": 22
+        },
+        {
+          "title": "Living Hope",
+          "artist": "Phil Wickham",
+          "pct": 22
+        },
+        {
+          "title": "What A Beautiful Name",
+          "artist": "Hillsong Worship, Brooke Ligertwood",
+          "pct": 20
+        },
+        {
+          "title": "Only a Holy God",
+          "artist": "CityAlight",
+          "pct": 20
+        },
+        {
+          "title": "All I Have Is Christ",
+          "artist": "Sovereign Grace Music",
+          "pct": 18
+        },
+        {
+          "title": "In Christ Alone",
+          "artist": "Keith & Kristyn Getty",
+          "pct": 18
+        }
+      ]
+    },
+    {
+      "family": "Pentecostal",
+      "churches": 35,
+      "modernHymnPct": 11,
+      "megachurchAnthemPct": 74,
+      "topSongs": [
+        {
+          "title": "Praise",
+          "artist": "Elevation Worship, Brandon Lake, Chris Brown, Chandler Moore",
+          "pct": 29
+        },
+        {
+          "title": "How Great Is Our God",
+          "artist": "Chris Tomlin",
+          "pct": 26
+        },
+        {
+          "title": "I Speak Jesus",
+          "artist": "Charity Gayle, Steven Musso",
+          "pct": 26
+        },
+        {
+          "title": "Great Are You Lord",
+          "artist": "All Sons & Daughters, Leslie Jordan, David Leonard",
+          "pct": 23
+        },
+        {
+          "title": "King Of Kings",
+          "artist": "Hillsong Worship, Brooke Ligertwood",
+          "pct": 23
+        },
+        {
+          "title": "O Praise The Name (Anástasis)",
+          "artist": "Hillsong Worship",
+          "pct": 23
+        },
+        {
+          "title": "What A Beautiful Name",
+          "artist": "Hillsong Worship, Brooke Ligertwood",
+          "pct": 20
+        },
+        {
+          "title": "GOODBYE YESTERDAY",
+          "artist": "ELEVATION RHYTHM, Gracie Binion",
+          "pct": 20
+        },
+        {
+          "title": "Way Maker",
+          "artist": "Leeland",
+          "pct": 20
+        },
+        {
+          "title": "Goodness of God",
+          "artist": "Bethel Music, Jenn Johnson",
+          "pct": 20
+        }
+      ]
+    },
+    {
+      "family": "Anglican / Episcopal",
+      "churches": 25,
+      "modernHymnPct": 48,
+      "megachurchAnthemPct": 60,
+      "topSongs": [
+        {
+          "title": "King Of Kings",
+          "artist": "Hillsong Worship, Brooke Ligertwood",
+          "pct": 36
+        },
+        {
+          "title": "Christ Is Mine Forevermore",
+          "artist": "CityAlight",
+          "pct": 28
+        },
+        {
+          "title": "O Praise The Name (Anástasis)",
+          "artist": "Hillsong Worship",
+          "pct": 28
+        },
+        {
+          "title": "Goodness of God",
+          "artist": "Bethel Music, Jenn Johnson",
+          "pct": 28
+        },
+        {
+          "title": "Yet Not I but Through Christ in Me",
+          "artist": "CityAlight",
+          "pct": 24
+        },
+        {
+          "title": "Praise",
+          "artist": "Elevation Worship, Brandon Lake, Chris Brown, Chandler Moore",
+          "pct": 24
+        },
+        {
+          "title": "Gratitude",
+          "artist": "Brandon Lake",
+          "pct": 24
+        },
+        {
+          "title": "All Creatures of Our God and King",
+          "artist": "Sovereign Grace Music",
+          "pct": 20
+        },
+        {
+          "title": "God Is for Us",
+          "artist": "CityAlight",
+          "pct": 20
+        },
+        {
+          "title": "Cornerstone",
+          "artist": "Hillsong Worship, David Ware",
+          "pct": 20
+        }
+      ]
+    }
+  ]
+}

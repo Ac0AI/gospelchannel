@@ -337,6 +337,18 @@ export default async function DenominationsComparisonPage() {
           younger visitors and people moving between countries. If you want to filter on that
           first, the worship-styles guide is a better entry point. The two work together.
         </p>
+        <p className="mt-4 max-w-[760px] text-base leading-relaxed text-warm-brown">
+          Denomination does shape one thing measurably: the songs. We checked the real playlists
+          of hundreds of churches and found that{" "}
+          <Link
+            href="/worship-by-denomination"
+            className="font-semibold text-rose-gold underline decoration-rose-gold/40 underline-offset-2 hover:text-rose-gold-deep"
+          >
+            different traditions sing different worship songs
+          </Link>
+          , with Baptist and Reformed churches leaning to modern hymns and Pentecostal and
+          non-denominational churches to megachurch anthems.
+        </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
             href="/church/denomination"

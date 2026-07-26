@@ -690,7 +690,13 @@ export default function WorshipSongs2026Page() {
           >
             worship style match
           </Link>
-          .
+          . Or see how the songbook splits by tradition in{" "}
+          <Link
+            href="/worship-by-denomination"
+            className="font-semibold text-rose-gold underline decoration-rose-gold/40 underline-offset-2 hover:text-rose-gold-deep"
+          >
+            do different denominations sing different songs?
+          </Link>
         </p>
       </section>
     </article>
