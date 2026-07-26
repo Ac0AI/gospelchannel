@@ -16,7 +16,7 @@ export default function PrivacyPage() {
       >
         Privacy <em className="gc-italic">Policy</em>.
       </h1>
-      <p className="mt-4 text-sm text-muted-warm">Last updated: March 31, 2026</p>
+      <p className="mt-4 text-sm text-muted-warm">Last updated: July 26, 2026</p>
 
       <div className="mt-12 space-y-10 font-serif text-lg leading-[1.7] text-espresso">
         <section>
@@ -54,6 +54,20 @@ export default function PrivacyPage() {
             <li><strong className="text-espresso">YouTube</strong> (via youtube-nocookie.com) &mdash; for embedded worship videos. YouTube&rsquo;s privacy policy applies when you interact with embedded videos.</li>
             <li><strong className="text-espresso">Spotify</strong> &mdash; for embedded playlist players. Spotify&rsquo;s privacy policy applies when you interact with embedded playlists.</li>
             <li><strong className="text-espresso">PostHog</strong> &mdash; for cookieless, anonymous analytics. No personal data is sent and no cookies are set. We use it to understand aggregated usage patterns and improve the site.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="m-0 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso">Assistant app (ChatGPT, Claude, and other AI assistants)</h2>
+          <p className="mt-3 text-base text-warm-brown">
+            GospelChannel offers a read-only church-finder app over the Model Context Protocol at{" "}
+            <a href="https://gospelchannel.com/mcp" className="font-bold text-rose-gold transition-colors hover:text-rose-gold-deep">gospelchannel.com/mcp</a>,
+            usable inside AI assistants such as ChatGPT and Claude. When you use it:
+          </p>
+          <ul className="mt-3 list-disc space-y-2 pl-6 text-base text-warm-brown">
+            <li><strong className="text-espresso">What it receives</strong>: your search terms (city, worship style, denomination, language) and, only if your assistant chooses to share it, an approximate location. We never request your precise GPS location.</li>
+            <li><strong className="text-espresso">What it does</strong>: looks up matching churches in our public directory and returns their public profiles. It is read-only. It cannot change anything, and it never invents details such as service times.</li>
+            <li><strong className="text-espresso">What we store</strong>: nothing personal. We do not save your location, tie queries to you, or require an account. The assistant you use has its own privacy policy for the conversation itself.</li>
           </ul>
         </section>
 
