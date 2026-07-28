@@ -1,5 +1,6 @@
 import { ToolTrackedLink } from "@/components/tools/ToolTrackedLink";
 import type { ToolChurchPreview } from "@/lib/tooling";
+import { proxyYouTubeThumbnailUrl } from "@/lib/video-thumbnail";
 
 type ToolActionCardProps = {
   eyebrow?: string;
@@ -72,7 +73,7 @@ function ToolChurchCard({
       <div className="relative mb-3 h-32 overflow-hidden rounded-xl bg-gradient-to-br from-[#f8ede8] to-[#e7d2c6]">
         {church.thumbnailUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={church.thumbnailUrl} alt={church.name} className="h-full w-full object-cover" />
+          <img src={proxyYouTubeThumbnailUrl(church.thumbnailUrl)} alt={church.name} className="h-full w-full object-cover" />
         ) : church.logo ? (
           <div className="flex h-full items-center justify-center bg-white/85 p-5">
             {/* eslint-disable-next-line @next/next/no-img-element */}

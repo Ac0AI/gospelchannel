@@ -48,6 +48,7 @@ import { resolveCanonicalChurchSlug } from "@/lib/church-slugs";
 import { CHURCH_SIZE_LABELS, getProfileOptionLabel } from "@/lib/profile-fields";
 import { buildChurchDescription, buildChurchTitle, getChurchSearchAliases } from "@/lib/church-metadata";
 import { serializeJsonLd } from "@/lib/json-ld";
+import { getVideoThumbnailPath, proxyYouTubeThumbnailUrl } from "@/lib/video-thumbnail";
 import { buildOpeningHours } from "@/lib/seo-schema";
 
 type ChurchPageProps = {
@@ -270,21 +271,22 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   const styles = church.musicStyle?.slice(0, 5) ?? [];
   const topArtists = church.notableArtists?.slice(0, 6) ?? [];
   const primaryStyleFilter = getPrimaryStyleFilter(church);
-  const heroImageCandidates = resolveChurchImageCandidates({
+  const rawHeroImageCandidates = resolveChurchImageCandidates({
     headerImage: church.headerImage,
     videos,
     coverImageUrl: (mergedProfile.coverImageUrl as string | undefined) || enrichment?.coverImageUrl,
   }).filter(isRenderableImageUrl);
+  const heroImageCandidates = rawHeroImageCandidates.map((src) => proxyYouTubeThumbnailUrl(src));
   // R2-mirrored Google Places gallery. Photo 0 is usually the same shot as the
   // hero (both come from the Places main photo), so secondary slots start at 1
   // and everything falls back to the hero for churches with no gallery yet.
   const galleryPhotos = (enrichment?.photoUrls ?? []).filter(isRenderableImageUrl);
-  const heroImage = heroImageCandidates[0] || galleryPhotos[0] || "";
+  const heroImage = proxyYouTubeThumbnailUrl(heroImageCandidates[0] || galleryPhotos[0]) || "";
   const aboutImage = galleryPhotos[1] || heroImage;
   const expectImage = galleryPhotos[2] || heroImage;
   const closingImage = galleryPhotos[3] || heroImage;
   const galleryStrip = galleryPhotos.slice(4, 8);
-  const heroIsVideoThumb = /(?:^|\.)(ytimg|youtube)\.com/i.test(heroImage);
+  const heroIsVideoThumb = /(?:^|\.)(ytimg|youtube)\.com/i.test(rawHeroImageCandidates[0] || "");
   const churchLogo = isRenderableImageUrl((mergedProfile.logoUrl as string | undefined) || enrichment?.logoImageUrl || church.logo)
     ? ((mergedProfile.logoUrl as string | undefined) || enrichment?.logoImageUrl || church.logo)!
     : null;
@@ -641,7 +643,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
         position: index + 1,
         name: video.title,
         description: `${video.title} from ${video.channelTitle || displayName} on GospelChannel.`,
-        thumbnailUrl: video.thumbnailUrl,
+        thumbnailUrl: `https://gospelchannel.com${getVideoThumbnailPath(video.videoId)}`,
         uploadDate: video.publishedAt,
         embedUrl: `https://www.youtube.com/embed/${video.videoId}`,
         url: `https://www.youtube.com/watch?v=${video.videoId}`,
@@ -709,7 +711,9 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
               "@type": "MusicRecording",
               name: song.title,
               byArtist: { "@type": "MusicGroup", name: song.artistName },
-              url: song.playlistChurchUrl,
+              ...(song.spotifyTrackId
+                ? { url: `https://open.spotify.com/track/${song.spotifyTrackId}` }
+                : {}),
             },
           })),
         }]
@@ -1377,7 +1381,6 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
               title={`The songs ${church.name} actually sings`}
               subtitle={`From their real worship playlists, ranked by how many churches worldwide sing each song.${pageData.isCampus && pageData.parentChurchName ? ` Music from ${pageData.parentChurchName}, shared across all campuses.` : ""}`}
               songs={topSongs}
-              chartHref={`https://playlist.church/church/${pageData.isCampus && pageData.network?.parentChurchSlug ? pageData.network.parentChurchSlug : church.slug}/`}
             />
           </section>
         </ScrollReveal>
@@ -1519,7 +1522,6 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                 videos={videos.map((v) => ({
                   videoId: v.videoId,
                   title: v.title,
-                  thumbnailUrl: v.thumbnailUrl,
                   channelTitle: v.channelTitle,
                 }))}
               />

@@ -118,7 +118,6 @@ export default function RootLayout({
                 url: "https://gospelchannel.com",
                 description: scriptChurchCopy,
                 knowsAbout,
-                isAccessibleForFree: true,
                 address: {
                   "@type": "PostalAddress",
                   streetAddress: "Maestranza 25, planta 1",

@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useReducer, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { proxyYouTubeThumbnailUrl } from "@/lib/video-thumbnail";
 
 type ChurchOption = {
   slug: string;
@@ -86,7 +87,7 @@ export function MyChurchPrompt({ churches }: { churches: ChurchOption[] }) {
         <div className="flex items-center gap-3">
           {savedChurch.thumbnailUrl ? (
             <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full ring-2 ring-rose-200/60">
-              <Image src={savedChurch.thumbnailUrl} alt={savedChurch.name} fill className="object-cover" sizes="40px" />
+              <Image src={proxyYouTubeThumbnailUrl(savedChurch.thumbnailUrl)} alt={savedChurch.name} fill className="object-cover" sizes="40px" />
             </div>
           ) : savedChurch.logoUrl ? (
             <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full ring-2 ring-rose-200/60 bg-white">
@@ -155,7 +156,7 @@ export function MyChurchPrompt({ churches }: { churches: ChurchOption[] }) {
                   >
                     {church.thumbnailUrl ? (
                       <div className="relative h-8 w-12 shrink-0 overflow-hidden rounded-lg">
-                        <Image src={church.thumbnailUrl} alt={church.name} fill className="object-cover" sizes="48px" />
+                        <Image src={proxyYouTubeThumbnailUrl(church.thumbnailUrl)} alt={church.name} fill className="object-cover" sizes="48px" />
                       </div>
                     ) : church.logoUrl ? (
                       <div className="relative h-8 w-12 shrink-0 overflow-hidden rounded-lg bg-white">

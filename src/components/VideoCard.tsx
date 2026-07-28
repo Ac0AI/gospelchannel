@@ -3,16 +3,16 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import { getMusicPlatformLinks } from "@/lib/music-platform";
+import { getVideoThumbnailPath } from "@/lib/video-thumbnail";
 
 type VideoCardProps = {
   videoId: string;
   title: string;
   channelTitle?: string;
-  thumbnailUrl: string;
   rank?: number;
 };
 
-export function VideoCard({ videoId, title, channelTitle, thumbnailUrl, rank }: VideoCardProps) {
+export function VideoCard({ videoId, title, channelTitle, rank }: VideoCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [saveOpen, setSaveOpen] = useState(false);
   const [thumbnailFailed, setThumbnailFailed] = useState(false);
@@ -20,7 +20,9 @@ export function VideoCard({ videoId, title, channelTitle, thumbnailUrl, rank }: 
   const likelyBlockedByRights = /vevo/i.test(channelTitle ?? "");
   const canEmbed = validVideoId && !likelyBlockedByRights;
   const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
-  const effectiveThumbnail = thumbnailFailed ? "/placeholders/video-fallback.svg" : thumbnailUrl;
+  const effectiveThumbnail = thumbnailFailed
+    ? "/placeholders/video-fallback.svg"
+    : getVideoThumbnailPath(videoId);
   const platformLinks = useMemo(
     () => getMusicPlatformLinks({ title, channelTitle }),
     [title, channelTitle]

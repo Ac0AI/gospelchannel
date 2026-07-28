@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { cfImage, isRenderableImageUrl } from "@/lib/media";
+import { proxyYouTubeThumbnailUrl } from "@/lib/video-thumbnail";
 
 type ChurchCardImageProps = {
   initials: string;
@@ -16,7 +17,9 @@ const CARD_IMG_WIDTH = 700;
 const CARD_IMG_HEIGHT = 224;
 
 export function ChurchCardImage({ initials, gradient, thumbnailUrl, logoUrl }: ChurchCardImageProps) {
-  const renderableThumbnailUrl = isRenderableImageUrl(thumbnailUrl) ? thumbnailUrl : undefined;
+  const renderableThumbnailUrl = isRenderableImageUrl(thumbnailUrl)
+    ? proxyYouTubeThumbnailUrl(thumbnailUrl)
+    : undefined;
   const renderableLogoUrl = isRenderableImageUrl(logoUrl) ? logoUrl : undefined;
   const [imageUrl, setImageUrl] = useState<string | undefined>(renderableThumbnailUrl || renderableLogoUrl);
   const showImage = Boolean(imageUrl);

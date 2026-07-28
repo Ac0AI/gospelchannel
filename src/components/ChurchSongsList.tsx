@@ -6,7 +6,6 @@ type ChurchSongsListProps = {
   title: string;
   subtitle?: string;
   songs: ChurchTopSong[];
-  chartHref: string;
 };
 
 /**
@@ -14,7 +13,7 @@ type ChurchSongsListProps = {
  * playlist.church corpus (church_songs, synced by the playlists repo).
  * Presentational only; renders nothing when the list is empty.
  */
-export function ChurchSongsList({ eyebrow, title, subtitle, songs, chartHref }: ChurchSongsListProps) {
+export function ChurchSongsList({ eyebrow, title, subtitle, songs }: ChurchSongsListProps) {
   if (songs.length === 0) {
     return null;
   }
@@ -43,14 +42,20 @@ export function ChurchSongsList({ eyebrow, title, subtitle, songs, chartHref }: 
               <span className="h-12 w-12 shrink-0 rounded-lg border border-rose-100 bg-blush-light" aria-hidden />
             )}
             <div className="min-w-0 flex-1">
-              <a
-                href={song.playlistChurchUrl}
-                target="_blank"
-                rel="noopener"
-                className="block truncate font-serif text-base font-semibold text-espresso hover:text-rose-gold-deep"
-              >
-                {song.title}
-              </a>
+              {song.spotifyTrackId ? (
+                <a
+                  href={`https://open.spotify.com/track/${song.spotifyTrackId}`}
+                  target="_blank"
+                  rel="noopener"
+                  className="block truncate font-serif text-base font-semibold text-espresso hover:text-rose-gold-deep"
+                >
+                  {song.title}
+                </a>
+              ) : (
+                <span className="block truncate font-serif text-base font-semibold text-espresso">
+                  {song.title}
+                </span>
+              )}
               <p className="truncate text-xs text-muted-warm">{song.artistName}</p>
             </div>
             <span className="hidden shrink-0 rounded-full bg-blush-light px-2.5 py-1 text-[11px] font-semibold text-rose-gold-deep sm:inline-flex">
@@ -59,17 +64,6 @@ export function ChurchSongsList({ eyebrow, title, subtitle, songs, chartHref }: 
           </li>
         ))}
       </ol>
-
-      <p className="mt-4 text-sm">
-        <a
-          href={chartHref}
-          target="_blank"
-          rel="noopener"
-          className="font-semibold text-rose-gold-deep hover:underline"
-        >
-          See the full chart on playlist.church →
-        </a>
-      </p>
     </section>
   );
 }

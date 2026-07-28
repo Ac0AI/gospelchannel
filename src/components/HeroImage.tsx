@@ -2,11 +2,13 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { devMediaImage } from "@/lib/media";
+import { proxyYouTubeThumbnailUrl } from "@/lib/video-thumbnail";
 
 function uniqueSources(src: string, fallbackSrcs: string[] = []): string[] {
   const seen = new Set<string>();
   return [src, ...fallbackSrcs]
     .map((value) => value.trim())
+    .map((value) => proxyYouTubeThumbnailUrl(value))
     .map(devMediaImage)
     .filter((value) => {
       if (!value || seen.has(value)) return false;

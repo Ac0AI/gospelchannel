@@ -6,7 +6,6 @@ import { VideoCard } from "@/components/VideoCard";
 type VideoGridItem = {
   videoId: string;
   title: string;
-  thumbnailUrl: string;
   channelTitle?: string;
 };
 
@@ -31,7 +30,6 @@ export function VideoGrid({ videos, ranked }: VideoGridProps) {
               videoId={video.videoId}
               title={video.title}
               channelTitle={video.channelTitle}
-              thumbnailUrl={video.thumbnailUrl}
               rank={ranked ? index + 1 : undefined}
             />
           </div>

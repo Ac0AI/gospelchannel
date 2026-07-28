@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { proxyYouTubeThumbnailUrl } from "@/lib/video-thumbnail";
 
 type ChurchOption = {
   slug: string;
@@ -43,7 +44,7 @@ export function QuickAccessRow({ churches }: { churches: ChurchOption[] }) {
           <div className={`relative h-14 w-14 overflow-hidden rounded-full ring-2 ring-rose-200/60 ${church.thumbnailUrl || church.logoUrl ? "" : `flex items-center justify-center bg-gradient-to-br ${getGradient(church.name)}`}`}>
             {church.thumbnailUrl || church.logoUrl ? (
               <Image
-                src={church.thumbnailUrl || church.logoUrl || "/churches/default-church.svg"}
+                src={proxyYouTubeThumbnailUrl(church.thumbnailUrl) || church.logoUrl || "/churches/default-church.svg"}
                 alt={church.name}
                 fill
                 className={church.thumbnailUrl ? "object-cover" : "object-contain p-2"}
