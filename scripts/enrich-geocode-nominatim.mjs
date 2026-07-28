@@ -27,37 +27,34 @@ const DEFAULT_LIMIT = 0;
 const THROTTLE_MS = 1100; // 1 req/sec + safety
 
 function parseArgs(argv) {
-  const o = { dryRun: false, limit: DEFAULT_LIMIT };
+  const o = { dryRun: false, limit: DEFAULT_LIMIT, country: "" };
   for (const a of argv) {
     if (a === "--dry-run") o.dryRun = true;
     else if (a.startsWith("--limit=")) o.limit = Math.max(0, Number(a.split("=")[1]) || 0);
+    else if (a.startsWith("--country=")) o.country = a.split("=")[1].trim();
   }
   return o;
 }
 
-async function loadTargets(sql, limit) {
+async function loadTargets(sql, { limit, country }) {
   // Churches with an address but no coordinates
-  if (limit > 0) {
-    return sql`
-      SELECT c.slug, c.name, c.country, c.location, e.street_address
-      FROM churches c
-      JOIN church_enrichments e ON e.church_slug = c.slug
-      WHERE c.status = 'approved'
-        AND (e.latitude IS NULL OR e.longitude IS NULL)
-        AND e.street_address IS NOT NULL AND e.street_address != ''
-      ORDER BY c.slug
-      LIMIT ${limit}
-    `;
+  const params = [];
+  let where =
+    "c.status = 'approved' AND (e.latitude IS NULL OR e.longitude IS NULL) " +
+    "AND e.street_address IS NOT NULL AND e.street_address <> ''";
+  if (country) {
+    params.push(country);
+    where += ` AND c.country = $${params.length}`;
   }
-  return sql`
-    SELECT c.slug, c.name, c.country, c.location, e.street_address
-    FROM churches c
-    JOIN church_enrichments e ON e.church_slug = c.slug
-    WHERE c.status = 'approved'
-      AND (e.latitude IS NULL OR e.longitude IS NULL)
-      AND e.street_address IS NOT NULL AND e.street_address != ''
-    ORDER BY c.slug
-  `;
+  let q =
+    "SELECT c.slug, c.name, c.country, c.location, e.street_address " +
+    "FROM churches c JOIN church_enrichments e ON e.church_slug = c.slug " +
+    `WHERE ${where} ORDER BY c.slug`;
+  if (limit > 0) {
+    params.push(limit);
+    q += ` LIMIT $${params.length}`;
+  }
+  return sql.query(q, params);
 }
 
 async function geocode(target) {
@@ -97,7 +94,7 @@ async function main() {
   const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
 
   console.log("Loading targets with address but no coords...");
-  const targets = await loadTargets(sql, options.limit);
+  const targets = await loadTargets(sql, options);
   console.log(`Targets: ${targets.length}`);
   if (targets.length === 0) return;
 

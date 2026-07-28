@@ -127,3 +127,6 @@ data/audits/
 
 # Worship dataset build artifact (regenerate: scripts/export-worship-songs-dataset.mjs)
 data-release-worship/
+
+# Raw scraped HTML captures used for parser dev (large, third-party)
+scripts/fixtures/
