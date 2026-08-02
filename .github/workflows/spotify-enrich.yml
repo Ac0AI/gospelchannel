@@ -23,6 +23,8 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm exec vitest run scripts/__tests__/enrich-spotify-by-church-name.test.mjs
 
       # Phase 1: re-run the strict matcher on legacy unverified matches.
       # No-op once the legacy pool is drained; capped to leave quota for phase 2.
@@ -32,7 +34,7 @@ jobs:
           DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
-        run: node scripts/enrich-spotify-by-church-name.mjs --revalidate-legacy --limit=50 --throttle=400 --concurrency=2 || echo "::warning::phase 1 exited non-zero"
+        run: node scripts/enrich-spotify-by-church-name.mjs --revalidate-legacy --limit=50 --throttle=400 --concurrency=2
 
       # Brief pause between bursts to ease aggregate rate-limit pressure.
       - run: sleep 60
@@ -43,6 +45,4 @@ jobs:
           DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
-        # Safety gate: keep the scheduled search observable without writing
-        # matches until the stricter playlist-only matcher has been reviewed.
-        run: node scripts/enrich-spotify-by-church-name.mjs --daily --daily-limit=500 --throttle=400 --concurrency=2 --dry-run
+        run: node scripts/enrich-spotify-by-church-name.mjs --daily --daily-limit=500 --throttle=400 --concurrency=2
