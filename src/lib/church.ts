@@ -42,6 +42,12 @@ import {
   type FacetLink,
 } from "@/lib/church-directory";
 import { slugify } from "@/lib/slugify";
+import {
+  formatLanguageLabel,
+  getKnownLanguageDefinitions,
+  getLanguageMatchValues,
+  splitLanguageValues,
+} from "@/lib/languages";
 
 type CachedVideo = {
   videoId: string;
@@ -1199,6 +1205,17 @@ type ChurchIndexPageData = {
   pageItems: ChurchDirectoryEntry[];
 };
 
+export type ChurchDirectoryFilterOption = {
+  value: string;
+  label: string;
+  count: number;
+};
+
+export type ChurchDirectoryFilterOptions = {
+  countries: ChurchDirectoryFilterOption[];
+  languages: ChurchDirectoryFilterOption[];
+};
+
 type ChurchIndexQueryRow = ChurchIndexRow & {
   total_count?: number | string | bigint | null;
 };
@@ -1539,14 +1556,19 @@ function buildChurchIndexWhereClause(filters: ChurchDirectoryFilters) {
   }
 
   if (filters.language) {
-    params.push(`%${filters.language.trim()}%`);
+    params.push(getLanguageMatchValues(filters.language));
     const index = params.length;
     clauses.push(`(
-      language ILIKE $${index}
+      EXISTS (
+        SELECT 1
+        FROM regexp_split_to_table(coalesce(language, ''), '\\s*[,;/]\\s*') AS church_language(value)
+        WHERE lower(btrim(church_language.value)) = ANY($${index}::text[])
+      )
       OR EXISTS (
         SELECT 1 FROM church_enrichments ce
+        CROSS JOIN LATERAL unnest(coalesce(ce.languages, '{}'::text[])) AS enrichment_language(value)
         WHERE ce.church_slug = churches.slug
-          AND array_to_string(ce.languages, ' ') ILIKE $${index}
+          AND lower(btrim(enrichment_language.value)) = ANY($${index}::text[])
       )
     )`);
   }
@@ -1593,6 +1615,7 @@ async function fetchChurchIndexPageRows(filters: ChurchDirectoryFilters, current
   const offset = (currentPage - 1) * pageSize;
   const trimmedQuery = filters.query?.trim() ?? "";
   const where = buildChurchIndexWhereClause(filters);
+  const exactPattern = trimmedQuery;
   const prefixPattern = `${trimmedQuery}%`;
 
   if (trimmedQuery) {
@@ -1605,11 +1628,14 @@ async function fetchChurchIndexPageRows(filters: ChurchDirectoryFilters, current
       WHERE ${where.sql}
       ORDER BY
         CASE
-          WHEN name ILIKE $${where.params.length + 1} THEN 100
+          WHEN name ILIKE $${where.params.length + 1} THEN 110
+          WHEN name ILIKE $${where.params.length + 2} THEN 100
+          WHEN location ILIKE $${where.params.length + 1} THEN 95
+          WHEN location ILIKE $${where.params.length + 2} THEN 85
           WHEN name ILIKE $2 THEN 70
-          WHEN location ILIKE $${where.params.length + 1} THEN 60
-          WHEN location ILIKE $2 THEN 45
-          WHEN country ILIKE $${where.params.length + 1} THEN 35
+          WHEN location ILIKE $2 THEN 60
+          WHEN country ILIKE $${where.params.length + 1} THEN 45
+          WHEN country ILIKE $${where.params.length + 2} THEN 35
           WHEN country ILIKE $2 THEN 30
           ELSE 10
         END DESC,
@@ -1619,9 +1645,9 @@ async function fetchChurchIndexPageRows(filters: ChurchDirectoryFilters, current
           THEN 1 ELSE 0
         END DESC,
         name ASC
-      LIMIT $${where.params.length + 2}
-      OFFSET $${where.params.length + 3}
-    `, [...where.params, prefixPattern, pageSize, offset])) as ChurchIndexQueryRow[];
+      LIMIT $${where.params.length + 3}
+      OFFSET $${where.params.length + 4}
+    `, [...where.params, exactPattern, prefixPattern, pageSize, offset])) as ChurchIndexQueryRow[];
   }
 
   return (await sql.query(`
@@ -1653,6 +1679,149 @@ async function fetchChurchIndexTotalCount(filters: ChurchDirectoryFilters): Prom
     WHERE ${where.sql}
   `, where.params)) as Array<{ count: number | string | bigint }>;
   return toCount(rows[0]?.count);
+}
+
+function sortDirectoryFilterOptions(options: ChurchDirectoryFilterOption[]): ChurchDirectoryFilterOption[] {
+  return options.sort((a, b) => (b.count - a.count) || a.label.localeCompare(b.label));
+}
+
+function getLocalChurchDirectoryFilterOptions(filters: ChurchDirectoryFilters): ChurchDirectoryFilterOptions {
+  const churches = filterCanonicalChurchSlugRecords(getLocalChurchSnapshot())
+    .map((church) => mapChurchToIndexRecord(church));
+  const countryMatches = filterChurchDirectory(churches, {
+    ...filters,
+    country: undefined,
+    countrySlug: undefined,
+  });
+  const languageMatches = filterChurchDirectory(churches, {
+    ...filters,
+    language: undefined,
+  });
+
+  const countryCounts = new Map<string, number>();
+  for (const church of countryMatches) {
+    if (!church.country) continue;
+    countryCounts.set(church.country, (countryCounts.get(church.country) ?? 0) + 1);
+  }
+
+  const languageChurches = new Map<string, Set<string>>();
+  for (const church of languageMatches) {
+    const labels = new Set(
+      [
+        church.language,
+        ...(church.enrichmentHint?.languages ?? []),
+      ]
+        .filter((value): value is string => Boolean(value))
+        .flatMap(splitLanguageValues)
+        .map(formatLanguageLabel)
+        .filter(Boolean),
+    );
+    for (const label of labels) {
+      const slugs = languageChurches.get(label) ?? new Set<string>();
+      slugs.add(church.slug);
+      languageChurches.set(label, slugs);
+    }
+  }
+
+  return {
+    countries: sortDirectoryFilterOptions([...countryCounts.entries()].map(([country, count]) => ({
+      value: country,
+      label: country,
+      count,
+    }))),
+    languages: sortDirectoryFilterOptions([...languageChurches.entries()].map(([label, slugs]) => ({
+      value: label,
+      label,
+      count: slugs.size,
+    }))),
+  };
+}
+
+function buildCanonicalLanguageSql(params: unknown[]): string {
+  const clauses = getKnownLanguageDefinitions().map((definition) => {
+    params.push(definition.values);
+    const valuesIndex = params.length;
+    params.push(definition.label);
+    const labelIndex = params.length;
+    return `WHEN lower(btrim(raw_language)) = ANY($${valuesIndex}::text[]) THEN $${labelIndex}::text`;
+  });
+
+  return `CASE
+      ${clauses.join("\n      ")}
+      ELSE initcap(lower(btrim(raw_language)))
+    END`;
+}
+
+async function fetchChurchDirectoryFilterOptions(filters: ChurchDirectoryFilters): Promise<ChurchDirectoryFilterOptions> {
+  const sql = getSql();
+  const countryWhere = buildChurchIndexWhereClause({
+    ...filters,
+    country: undefined,
+    countrySlug: undefined,
+  });
+  const languageWhere = buildChurchIndexWhereClause({
+    ...filters,
+    language: undefined,
+  });
+  const languageParams = [...languageWhere.params];
+  const canonicalLanguageSql = buildCanonicalLanguageSql(languageParams);
+
+  const [rawCountryRows, rawLanguageRows] = await Promise.all([
+    sql.query(`
+      SELECT country AS label, count(*)::int AS count
+      FROM churches
+      WHERE ${countryWhere.sql}
+        AND country <> ''
+      GROUP BY country
+      ORDER BY count DESC, country ASC
+    `, countryWhere.params),
+    sql.query(`
+      WITH eligible AS (
+        SELECT slug, language
+        FROM churches
+        WHERE ${languageWhere.sql}
+      ),
+      language_values AS (
+        SELECT eligible.slug, primary_language.value AS raw_language
+        FROM eligible
+        CROSS JOIN LATERAL regexp_split_to_table(
+          coalesce(eligible.language, ''),
+          '\\s*[,;/]\\s*'
+        ) AS primary_language(value)
+
+        UNION ALL
+
+        SELECT eligible.slug, enrichment_language.value AS raw_language
+        FROM eligible
+        JOIN church_enrichments ce ON ce.church_slug = eligible.slug
+        CROSS JOIN LATERAL unnest(coalesce(ce.languages, '{}'::text[])) AS enrichment_language(value)
+      ),
+      canonical_languages AS (
+        SELECT slug, ${canonicalLanguageSql} AS label
+        FROM language_values
+        WHERE btrim(raw_language) <> ''
+      )
+      SELECT label, count(DISTINCT slug)::int AS count
+      FROM canonical_languages
+      GROUP BY label
+      ORDER BY count DESC, label ASC
+    `, languageParams),
+  ]);
+  const countryRows = rawCountryRows as unknown as Array<{ label: string; count: number | string | bigint }>;
+  const languageRows = rawLanguageRows as unknown as Array<{ label: string; count: number | string | bigint }>;
+
+  return {
+    countries: countryRows.map((row) => ({
+      value: row.label,
+      label: row.label,
+      count: toCount(row.count),
+    })),
+    languages: languageRows.map((row) => ({
+      value: row.label,
+      label: row.label,
+      count: toCount(row.count),
+    })),
+  };
 }
 
 /**
@@ -1840,6 +2009,30 @@ const getChurchIndexTotalCountCached = unstable_cache(
   ["church-index-total-count-v1"],
   { revalidate: 3600, tags: [CHURCH_INDEX_TAG] }
 );
+
+const getChurchDirectoryFilterOptionsCached = unstable_cache(
+  async (filters: ChurchDirectoryFilters): Promise<ChurchDirectoryFilterOptions> => (
+    fetchChurchDirectoryFilterOptions(filters)
+  ),
+  ["church-directory-filter-options-v1"],
+  { revalidate: 3600, tags: [CHURCH_INDEX_TAG] },
+);
+
+export async function getChurchDirectoryFilterOptions(
+  filters: ChurchDirectoryFilters,
+): Promise<ChurchDirectoryFilterOptions> {
+  if (isOfflinePublicBuild() || !hasServiceConfig()) {
+    return getLocalChurchDirectoryFilterOptions(filters);
+  }
+
+  try {
+    return await getChurchDirectoryFilterOptionsCached(filters);
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    console.error(`[church-directory-filter-options] Falling back to local snapshot: ${detail}`);
+    return getLocalChurchDirectoryFilterOptions(filters);
+  }
+}
 
 export async function getChurchIndexPageData(input: {
   query?: string;

@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { ChurchCardFeedbackSheet } from "@/components/ChurchCardFeedbackSheet";
 import { ChurchCardImage } from "@/components/ChurchCardImage";
+import { TrackedChurchProfileLink } from "@/components/ChurchJourneyAnalytics";
 import { relativeHoursFrom } from "@/lib/utils";
 import {
   buildChurchCardMetaLabel,
@@ -93,7 +93,14 @@ export function ChurchCard({
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-rose-200/70 bg-white/80 p-3 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-rose-300 hover:shadow-md active:scale-[0.97] sm:hover:-translate-y-1">
-      <Link href={`/church/${slug}`} prefetch={prefetch} className="group flex flex-1 flex-col">
+      <TrackedChurchProfileLink
+        href={`/church/${slug}`}
+        churchSlug={slug}
+        churchName={name}
+        surface="church_card"
+        prefetch={prefetch}
+        className="group flex flex-1 flex-col"
+      >
         <ChurchCardImage
           initials={initials}
           gradient={gradient}
@@ -140,7 +147,7 @@ export function ChurchCard({
             </div>
           ) : null}
         </div>
-      </Link>
+      </TrackedChurchProfileLink>
 
       <div className="mt-auto border-t border-rose-200/50 pt-3">
         <p className="text-xs font-medium text-mauve">{metaLabel}</p>
@@ -153,13 +160,16 @@ export function ChurchCard({
             )}
             <p className="mt-1 hidden text-[11px] text-muted-warm sm:block">Updated {relativeHoursFrom(updatedAt)}</p>
           </div>
-          <Link
+          <TrackedChurchProfileLink
             href={`/church/${slug}`}
+            churchSlug={slug}
+            churchName={name}
+            surface="church_card_button"
             prefetch={prefetch}
             className="inline-flex shrink-0 items-center justify-center rounded-full bg-rose-gold px-3.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-rose-gold-deep"
           >
             {actionLabel}
-          </Link>
+          </TrackedChurchProfileLink>
         </div>
         {showFeedback ? (
           <div className="mt-2">

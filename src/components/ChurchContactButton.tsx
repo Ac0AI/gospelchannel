@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import posthog from "posthog-js";
 
 type Status = "idle" | "submitting" | "sent" | "error";
 
@@ -83,6 +84,11 @@ export function ChurchContactButton({
       }
 
       setStatus("sent");
+      posthog.capture("church_contact_submitted", {
+        church_slug: churchSlug,
+        church_name: churchName,
+        variant,
+      });
       form.reset();
     } catch (err) {
       setErrorMessage(err instanceof Error ? err.message : "Could not send message.");
@@ -104,7 +110,16 @@ export function ChurchContactButton({
     <>
       <button
         type="button"
-        onClick={() => { reset(); setOpen(true); }}
+        onClick={() => {
+          reset();
+          setOpen(true);
+          posthog.capture("church_visit_intent", {
+            church_slug: churchSlug,
+            church_name: churchName,
+            action: "message",
+            surface: variant,
+          });
+        }}
         className={triggerClass}
       >
         {variant === "link" && (

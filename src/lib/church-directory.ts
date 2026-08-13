@@ -1,6 +1,7 @@
 import type { ChurchConfig } from "@/types/gospel";
 import { slugify } from "@/lib/slugify";
 import { DENOMINATIONS } from "@/lib/denomination-taxonomy";
+import { languageValueMatches } from "@/lib/languages";
 
 type ChurchDirectoryEnrichmentHint = {
   dataRichnessScore?: number;
@@ -187,7 +188,8 @@ function getTextMatchScore(church: ChurchDirectoryEntry, query: string): number 
     else if (part.includes(q)) score = Math.max(score, 60);
   }
   // Also match against the full location string for multi-word locations
-  if (location.startsWith(q)) score = Math.max(score, 85);
+  if (location === q) score = Math.max(score, 95);
+  else if (location.startsWith(q)) score = Math.max(score, 85);
   else if (location.includes(q)) score = Math.max(score, 60);
 
   if (country.startsWith(q)) score = Math.max(score, 35);
@@ -269,13 +271,11 @@ export function getPrimaryDenominationFilter(church: Pick<ChurchDirectoryEntry, 
 }
 
 function matchesLanguage(church: Pick<ChurchDirectoryEntry, "enrichmentHint"> & { language?: string }, language: string): boolean {
-  const needle = normalize(language);
-  if (!needle) return false;
   const values = [
     church.language,
     ...(church.enrichmentHint?.languages ?? []),
   ].filter((value): value is string => Boolean(value));
-  return values.some((value) => normalize(value).includes(needle));
+  return values.some((value) => languageValueMatches(value, language));
 }
 
 function hasMusicSignal(church: Pick<ChurchDirectoryEntry, "playlistCount" | "spotifyPlaylistIds" | "additionalPlaylists"> & { spotifyUrl?: string }): boolean {
@@ -340,6 +340,10 @@ export function filterChurchDirectory(
 
   if (options.countrySlug) {
     filtered = filtered.filter((church) => church.country && slugify(church.country) === options.countrySlug);
+  }
+
+  if (options.country) {
+    filtered = filtered.filter((church) => church.country === options.country);
   }
 
   if (options.citySlug) {

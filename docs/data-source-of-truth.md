@@ -12,11 +12,9 @@
 
 ## Snapshot and fallback
 
-- `src/data/churches.json` is a generated snapshot of approved rows from `public.churches`.
-- It is a build/export artifact and local fallback, not the write source.
-- Generate it from Neon with:
-  - `npm run churches:reconcile`
-  - or `node scripts/generate-churches-json.mjs`
+- `src/data/churches.json` is an offline/build fallback, not the write source.
+- The live Neon directory is much larger, so exact slug parity is intentionally not required.
+- A full export can be generated with `node scripts/generate-churches-json.mjs` when explicitly needed. Review it for public-repository privacy before committing.
 
 ## Public page model
 
@@ -36,7 +34,7 @@
 ## Operational rules
 
 - Write approved church data to Neon first.
-- Regenerate `src/data/churches.json` after approved church updates.
+- Keep fallback rows valid, but do not regenerate the full snapshot after every approved church update.
 - Do not count `src/data/churches.json` alone when the question is about public pages; campuses live outside that snapshot.
 - For Google indexing, use `sitemap.xml` as the canonical public URL list. `scripts/push-to-google.mjs` preserves the old queue order first, then appends any extra sitemap URLs so existing checkpoints remain valid.
 
@@ -51,9 +49,5 @@
 
 ## Verification
 
-- Run `npm run churches:check` to verify approved church slug parity between Neon and `src/data/churches.json`.
-- Run `npm run churches:audit` to verify:
-  - slug parity
-  - playlist field parity
-  - explicit playlist counts on approved churches
-  - inherited playlist reach across campuses
+- Run `pnpm churches:check` to verify live directory invariants and confirm that every fallback slug still resolves to an approved Neon row.
+- If the check reports fallback rows that are no longer approved, review the sample and run `pnpm churches:check -- --fix-fallback` to prune only those stale rows.

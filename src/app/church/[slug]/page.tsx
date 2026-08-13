@@ -4,6 +4,10 @@ import Image from "next/image";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Suspense } from "react";
 import { ChurchActionCard } from "@/components/ChurchActionCard";
+import {
+  ChurchProfileViewTracker,
+  TrackedChurchActionLink,
+} from "@/components/ChurchJourneyAnalytics";
 import { buildGoogleMapsHref } from "@/lib/maps";
 import { ChurchContactButton } from "@/components/ChurchContactButton";
 import { ChurchLatestUpdatesSection } from "@/components/ChurchLatestUpdatesSection";
@@ -723,6 +727,15 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
+      <ChurchProfileViewTracker
+        churchSlug={church.slug}
+        churchName={church.name}
+        hasServiceTimes={hasServiceTimes}
+        hasDirections={Boolean(mapsHref)}
+        hasWebsite={Boolean(websiteUrl)}
+        hasMusic={hasPlaylist || hasPlayableSpotify || videos.length > 0}
+        isClaimed={isClaimed}
+      />
 
       {/* ━━━━━━━━━━ 1. CINEMATIC HERO ━━━━━━━━━━ */}
       <section className="relative min-h-[680px] overflow-hidden bg-[#120906] text-white sm:min-h-[820px] lg:min-h-[920px]">
@@ -1135,14 +1148,18 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                         </dt>
                         <dd className="text-right text-sm leading-relaxed text-warm-brown">
                           {mapsHref ? (
-                            <a
+                            <TrackedChurchActionLink
                               href={mapsHref}
+                              churchSlug={church.slug}
+                              churchName={church.name}
+                              action="directions"
+                              surface="first_sunday"
                               target="_blank"
                               rel="noreferrer"
                               className="text-warm-brown transition-colors hover:text-rose-gold"
                             >
                               {streetAddress} ↗
-                            </a>
+                            </TrackedChurchActionLink>
                           ) : (
                             streetAddress
                           )}
@@ -1156,10 +1173,28 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                         </dt>
                         <dd className="text-right text-sm">
                           {contactEmail && (
-                            <a href={`mailto:${contactEmail}`} className="block text-espresso transition-colors hover:text-rose-gold">{contactEmail}</a>
+                            <TrackedChurchActionLink
+                              href={`mailto:${contactEmail}`}
+                              churchSlug={church.slug}
+                              churchName={church.name}
+                              action="email"
+                              surface="first_sunday"
+                              className="block text-espresso transition-colors hover:text-rose-gold"
+                            >
+                              {contactEmail}
+                            </TrackedChurchActionLink>
                           )}
                           {phone && (
-                            <a href={`tel:${phone}`} className="block text-espresso transition-colors hover:text-rose-gold">{phone}</a>
+                            <TrackedChurchActionLink
+                              href={`tel:${phone}`}
+                              churchSlug={church.slug}
+                              churchName={church.name}
+                              action="call"
+                              surface="first_sunday"
+                              className="block text-espresso transition-colors hover:text-rose-gold"
+                            >
+                              {phone}
+                            </TrackedChurchActionLink>
                           )}
                           {!contactEmail && hasValidEmail && (
                             <ChurchContactButton churchSlug={church.slug} churchName={church.name} />
@@ -1628,12 +1663,16 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
               {/* Primary — keep the visitor on-site (scroll to our aggregated
                   planner) when we have one, else the strongest direct action. */}
               {visitPrimary === "plan" && (
-                <a
+                <TrackedChurchActionLink
                   href="#your-first-sunday"
+                  churchSlug={church.slug}
+                  churchName={church.name}
+                  action="plan"
+                  surface="closing_cta"
                   className="rounded-full bg-white px-10 py-5 text-sm font-bold tracking-[0.02em] text-espresso transition-all duration-150 hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(255,255,255,0.2)]"
                 >
                   Plan my first visit &rarr;
-                </a>
+                </TrackedChurchActionLink>
               )}
               {visitPrimary === "message" && (
                 <ChurchContactButton
@@ -1644,32 +1683,44 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                 />
               )}
               {visitPrimary === "directions" && mapsHref && (
-                <a
+                <TrackedChurchActionLink
                   href={mapsHref}
+                  churchSlug={church.slug}
+                  churchName={church.name}
+                  action="directions"
+                  surface="closing_cta"
                   target="_blank"
                   rel="noreferrer"
                   className="rounded-full bg-white px-10 py-5 text-sm font-bold tracking-[0.02em] text-espresso transition-all duration-150 hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(255,255,255,0.2)]"
                 >
                   Get directions &rarr;
-                </a>
+                </TrackedChurchActionLink>
               )}
               {visitPrimary === "call" && phone && (
-                <a
+                <TrackedChurchActionLink
                   href={`tel:${phone}`}
+                  churchSlug={church.slug}
+                  churchName={church.name}
+                  action="call"
+                  surface="closing_cta"
                   className="rounded-full bg-white px-10 py-5 text-sm font-bold tracking-[0.02em] text-espresso transition-all duration-150 hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(255,255,255,0.2)]"
                 >
                   Call {phone}
-                </a>
+                </TrackedChurchActionLink>
               )}
               {visitPrimary === "website" && websiteUrl && (
-                <a
+                <TrackedChurchActionLink
                   href={websiteUrl}
+                  churchSlug={church.slug}
+                  churchName={church.name}
+                  action="website"
+                  surface="closing_cta"
                   target="_blank"
                   rel="noreferrer"
                   className="rounded-full bg-white px-10 py-5 text-sm font-bold tracking-[0.02em] text-espresso transition-all duration-150 hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(255,255,255,0.2)]"
                 >
                   Visit their website &rarr;
-                </a>
+                </TrackedChurchActionLink>
               )}
 
               {/* Secondary — our mediated contact-through-us, now a first-class
@@ -1683,28 +1734,36 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                 />
               )}
               {livestreamUrl && (
-                <a
+                <TrackedChurchActionLink
                   href={livestreamUrl}
+                  churchSlug={church.slug}
+                  churchName={church.name}
+                  action="livestream"
+                  surface="closing_cta"
                   target="_blank"
                   rel="noreferrer"
                   className="rounded-full border border-white/50 bg-transparent px-10 py-5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
                 >
                   Watch this Sunday&rsquo;s service
-                </a>
+                </TrackedChurchActionLink>
               )}
             </div>
 
             {/* Website demoted to a quiet tertiary link when it isn't the lead action. */}
             {websiteUrl && visitPrimary !== "website" && (
               <div className="mt-6">
-                <a
+                <TrackedChurchActionLink
                   href={websiteUrl}
+                  churchSlug={church.slug}
+                  churchName={church.name}
+                  action="website"
+                  surface="closing_tertiary"
                   target="_blank"
                   rel="noreferrer"
                   className="text-sm font-medium text-white/60 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white"
                 >
                   Visit their website &rarr;
-                </a>
+                </TrackedChurchActionLink>
               </div>
             )}
 
@@ -1716,14 +1775,18 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                       Address
                     </div>
                     {mapsHref ? (
-                      <a
+                      <TrackedChurchActionLink
                         href={mapsHref}
+                        churchSlug={church.slug}
+                        churchName={church.name}
+                        action="directions"
+                        surface="closing_details"
                         target="_blank"
                         rel="noreferrer"
                         className="font-serif text-base text-white transition-colors hover:text-blush sm:text-[17px]"
                       >
                         {streetAddress} ↗
-                      </a>
+                      </TrackedChurchActionLink>
                     ) : (
                       <div className="font-serif text-base text-white sm:text-[17px]">{streetAddress}</div>
                     )}
@@ -1734,9 +1797,16 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                     <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.28em] text-blush/60">
                       Phone
                     </div>
-                    <a href={`tel:${phone}`} className="font-serif text-base text-white transition-colors hover:text-blush sm:text-[17px]">
+                    <TrackedChurchActionLink
+                      href={`tel:${phone}`}
+                      churchSlug={church.slug}
+                      churchName={church.name}
+                      action="call"
+                      surface="closing_details"
+                      className="font-serif text-base text-white transition-colors hover:text-blush sm:text-[17px]"
+                    >
                       {phone}
-                    </a>
+                    </TrackedChurchActionLink>
                   </div>
                 )}
                 {contactEmail && (
@@ -1744,9 +1814,16 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                     <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.28em] text-blush/60">
                       Email
                     </div>
-                    <a href={`mailto:${contactEmail}`} className="break-all font-serif text-base text-white transition-colors hover:text-blush sm:text-[17px]">
+                    <TrackedChurchActionLink
+                      href={`mailto:${contactEmail}`}
+                      churchSlug={church.slug}
+                      churchName={church.name}
+                      action="email"
+                      surface="closing_details"
+                      className="break-all font-serif text-base text-white transition-colors hover:text-blush sm:text-[17px]"
+                    >
                       {contactEmail}
-                    </a>
+                    </TrackedChurchActionLink>
                   </div>
                 )}
               </div>

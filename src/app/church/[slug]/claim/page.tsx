@@ -4,6 +4,7 @@ import { getChurchBySlugAsync } from "@/lib/content";
 import { checkChurchClaimed } from "@/lib/church";
 import { hasPendingClaimForChurch } from "@/lib/church-community";
 import { ClaimChurchForm } from "@/components/ClaimChurchForm";
+import { ChurchClaimStartedTracker } from "@/components/ChurchJourneyAnalytics";
 
 type ClaimPageProps = {
   params: Promise<{ slug: string }>;
@@ -72,6 +73,7 @@ export default async function ClaimChurchPage({ params }: ClaimPageProps) {
 
   return (
     <>
+      <ChurchClaimStartedTracker churchSlug={church.slug} churchName={church.name} />
       {/* Editorial hero */}
       <section className="px-5 pt-14 text-center sm:px-12 sm:pt-16">
         <div className="mx-auto max-w-[720px]">

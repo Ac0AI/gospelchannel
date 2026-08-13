@@ -464,21 +464,6 @@
     "sourceKind": "discovered"
   },
   {
-    "slug": "africa-gospel-church-kenya-central-office-hq",
-    "name": "Africa Gospel Church Kenya - Central Office (HQ)",
-    "description": "",
-    "country": "Kenya",
-    "location": "Nairobi",
-    "denomination": "Evangelical",
-    "website": "http://www.agckenya.org/",
-    "email": "info@agckenya.org",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/africa-gospel-church-kenya-central-office-hq.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/africa-gospel-church-kenya-central-office-hq.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
-  },
-  {
     "facebookUrl": "https://www.facebook.com/AgapeChurchAmsterdam",
     "slug": "agape-christian-church-amsterdam",
     "name": "Agape Christian Church Amsterdam",
@@ -1234,22 +1219,6 @@
     "website": "",
     "logo": "",
     "headerImage": "https://media.gospelchannel.com/heroes/anointed-word-chapel-international.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
-  },
-  {
-    "facebookUrl": "https://www.facebook.com/afcmuk.org",
-    "youtubeUrl": "https://www.youtube.com/@SehionUKMinistries",
-    "slug": "anointing-fire-catholic-ministries-uk-afcm",
-    "name": "Anointing Fire Catholic Ministries UK (AFCM)",
-    "description": "Anointing Fire Catholic Ministries UK offers worship music and playlists for the Catholic church community, focusing on spiritual content for worship and prayer.",
-    "country": "United Kingdom",
-    "denomination": "Catholic",
-    "website": "https://www.afcmuk.org/",
-    "email": "afcmuk@gmail.com",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/anointing-fire-catholic-ministries-uk-afcm.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/anointing-fire-catholic-ministries-uk-afcm.jpg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -2177,26 +2146,6 @@
     "sourceKind": "discovered"
   },
   {
-    "instagramUrl": "http://instagram.com/icb_spain",
-    "facebookUrl": "https://www.facebook.com/icbspain",
-    "youtubeUrl": "https://www.youtube.com/@ICBSpain",
-    "slug": "barcelona-international-church",
-    "name": "Barcelona International Church",
-    "description": "At ICB we welcome people from all nations into a vibrant community of faith, and give them an opportunity to experience a transformative relationship with Jesus Christ.",
-    "country": "Spain",
-    "location": "Barcelona",
-    "denomination": "Non-denominational",
-    "website": "http://www.icbspain.com/",
-    "email": "hello@icbspain.com",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/barcelona-international-church.png",
-    "headerImage": "https://media.gospelchannel.com/covers/barcelona-international-church.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-29T22:05:05.769Z",
-    "verifiedAt": "2026-03-29T22:05:05.769Z",
-    "sourceKind": "discovered"
-  },
-  {
     "slug": "basel-christian-fellowship",
     "name": "Basel Christian Fellowship",
     "description": "",
@@ -2209,24 +2158,6 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-13T00:00:00.000Z",
-    "sourceKind": "discovered"
-  },
-  {
-    "facebookUrl": "https://www.facebook.com/crossroadsbasel/",
-    "youtubeUrl": "https://www.youtube.com/channel/UCzZdoHbe7proOiyxUeILpAA",
-    "slug": "basel-crossroads-international-church",
-    "name": "Basel Crossroads International Church",
-    "description": "Crossroads is a Christ-centered church reaching, building and equipping English-speakers in the greater Basel area to realise their potential through Christ.",
-    "country": "Switzerland",
-    "location": "Basel",
-    "website": "http://www.crossroadsbasel.ch/",
-    "email": "office@crossroadsbasel.ch",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/covers/basel-crossroads-international-church.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-29T22:05:05.769Z",
-    "verifiedAt": "2026-03-29T22:05:05.769Z",
     "sourceKind": "discovered"
   },
   {
@@ -4156,25 +4087,6 @@
     "email": "ibcbudapest@gmail.com",
     "logo": "https://media.gospelchannel.com/logos/enrichments/budapest-international-baptist-church.png",
     "headerImage": "https://media.gospelchannel.com/heroes/budapest-international-baptist-church.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-29T22:05:05.769Z",
-    "verifiedAt": "2026-03-29T22:05:05.769Z",
-    "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/riversidechurch.budapest",
-    "facebookUrl": "https://www.facebook.com/pg/RiversideChurchBudapest",
-    "youtubeUrl": "https://www.youtube.com/c/RiversideChurchBudapest",
-    "slug": "budapest-riverside-church",
-    "name": "Budapest Riverside Church",
-    "description": "Riverside Church Budapest is a casual, modern, family-oriented, church located in the heart of the city. You are invited to check out our church service this weekend for practical teaching, great music, amazing kids program!",
-    "country": "Hungary",
-    "location": "Budapest",
-    "denomination": "Evangelical",
-    "website": "http://riversidechurch.hu/",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/budapest-riverside-church.png",
-    "headerImage": "https://media.gospelchannel.com/covers/budapest-riverside-church.png",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "lastResearched": "2026-03-29T22:05:05.769Z",
@@ -7110,21 +7022,6 @@
     "sourceKind": "discovered"
   },
   {
-    "instagramUrl": "https://www.instagram.com/mifa.chiesa/",
-    "facebookUrl": "https://www.facebook.com/chiesaadimilano",
-    "slug": "chiesa-cristiana-evangelica-adi",
-    "name": "Chiesa Cristiana Evangelica ADI",
-    "description": "",
-    "country": "Italy",
-    "location": "Milan",
-    "website": "http://www.adimilano.it/",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/heroes/chiesa-cristiana-evangelica-adi.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
-  },
-  {
     "slug": "chiesa-cristiana-evangelica-battista-di-roma-monti",
     "name": "Chiesa Cristiana Evangelica Battista di Roma Monti",
     "description": "",
@@ -7195,25 +7092,6 @@
     "headerImage": "https://media.gospelchannel.com/heroes/chiesa-evangelica-cristiani-evangelici-a-milano.jpg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/sanlorenzo/",
-    "facebookUrl": "https://www.facebook.com/adinapolisanlorenzo",
-    "youtubeUrl": "https://www.youtube.com/Adinapolisanlorenzo",
-    "slug": "chiesa-evangelica-adi",
-    "name": "Chiesa Evangelica ADI",
-    "description": "",
-    "country": "Italy",
-    "location": "Naples",
-    "denomination": "Pentecostal",
-    "website": "http://www.adinapoli.it/",
-    "email": "info@adinapoli.it",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/heroes/chiesa-evangelica-adi.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "youtubeChannelId": "UCgPS6799mCzfHhHVBNQ_wCQ",
     "sourceKind": "discovered"
   },
   {
@@ -11478,23 +11356,6 @@
     "sourceKind": "discovered"
   },
   {
-    "instagramUrl": "https://www.instagram.com/pinsebevegelsen/",
-    "facebookUrl": "https://www.facebook.com/pinsebevegelseninorge",
-    "slug": "de-norske-pinsemenigheters-ytremisjon",
-    "name": "De norske Pinsemenigheters Ytremisjon",
-    "description": "",
-    "country": "Norway",
-    "location": "Oslo",
-    "denomination": "Pentecostal",
-    "website": "https://pinsemisjonen.no/",
-    "email": "post@pinsebevegelsen.no",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/heroes/de-norske-pinsemenigheters-ytremisjon.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
-  },
-  {
     "instagramUrl": "https://www.instagram.com/DeanCloseSchool/?hl=en",
     "facebookUrl": "https://www.facebook.com/DeanCloseSchool/",
     "youtubeUrl": "https://www.youtube.com/user/DeanCloseSchool",
@@ -14544,23 +14405,6 @@
     "sourceKind": "discovered"
   },
   {
-    "facebookUrl": "https://www.facebook.com/NewHopeChurchEspoo/",
-    "youtubeUrl": "https://www.youtube.com/channel/UCO1fzRHNNnryGEX2EkPsddg",
-    "slug": "espoo-new-hope-church",
-    "name": "Espoo New Hope Church",
-    "description": "We are an English and Finnish Speaking (Bilingual) Church For All Nations. You are most welcome to NewHope whether you are a Finn or foreigner staying in Finland permanently, for work, study or just passing by. We trust that you will be blessed, encouraged and inspired.",
-    "country": "Finland",
-    "location": "Espoo",
-    "website": "http://www.newhope.fi/",
-    "email": "office@newhope.fi",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/espoo-new-hope-church.png",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-29T22:05:05.769Z",
-    "verifiedAt": "2026-03-29T22:05:05.769Z",
-    "sourceKind": "discovered"
-  },
-  {
     "instagramUrl": "https://www.instagram.com/espoonvapaaseurakunta",
     "facebookUrl": "https://www.facebook.com/espoonvapaaseurakunta",
     "youtubeUrl": "https://www.youtube.com/channel/UCbit.ly/espoonvapis",
@@ -15614,21 +15458,6 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCUlzyIjT64PXd01Wh8DZsXg",
-    "lastResearched": "2026-04-04T08:31:50.385Z",
-    "verifiedAt": "2026-04-04T08:31:50.385Z",
-    "sourceKind": "discovered"
-  },
-  {
-    "slug": "every-nation-church-dededo-guam",
-    "name": "Every Nation Church Dededo, Guam",
-    "description": "",
-    "country": "United States",
-    "location": "Dededo",
-    "denomination": "Every Nation",
-    "website": "https://www.everynationguam.org/",
-    "logo": "",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
     "lastResearched": "2026-04-04T08:31:50.385Z",
     "verifiedAt": "2026-04-04T08:31:50.385Z",
     "sourceKind": "discovered"
@@ -16876,24 +16705,6 @@
     "sourceKind": "discovered"
   },
   {
-    "facebookUrl": "https://www.facebook.com/AgenziaNEV/",
-    "youtubeUrl": "https://www.youtube.com/channel/UCEqq0BIPdS1Aqkjuof8qADQ",
-    "slug": "federazione-delle-chiese-evangeliche-in-italia",
-    "name": "Federazione Delle Chiese Evangeliche In Italia",
-    "description": "",
-    "country": "Italy",
-    "location": "Rome",
-    "denomination": "Evangelical",
-    "website": "https://www.fcei.it/",
-    "email": "alessandro.ahmed@gmail.com",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/heroes/federazione-delle-chiese-evangeliche-in-italia.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "youtubeChannelId": "UCEqq0BIPdS1Aqkjuof8qADQ",
-    "sourceKind": "discovered"
-  },
-  {
     "instagramUrl": "https://www.instagram.com/fellowshipchurch/",
     "facebookUrl": "https://www.facebook.com/fellowshipchurch",
     "youtubeUrl": "https://www.youtube.com/channel/UCzRDUJk3jNNHFAiv5efzm-g",
@@ -16930,20 +16741,6 @@
     "logo": "https://media.gospelchannel.com/logos/enrichments/fellowship-church-warsaw.jpg",
     "headerImage": "https://media.gospelchannel.com/heroes/fellowship-church-warsaw.jpg",
     "spotifyUrl": "https://open.spotify.com/playlist/5JkTCGw7KPyLSEPGtfxqlT",
-    "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
-  },
-  {
-    "slug": "fellowship-head-office-no-services",
-    "name": "Fellowship Head Office (no services)",
-    "description": "",
-    "country": "UAE",
-    "location": "Dubai",
-    "website": "http://www.fellowshipdubai.com/",
-    "email": "hello@fellowshipdubai.com",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/fellowship-head-office-no-services.jpg",
-    "headerImage": "https://media.gospelchannel.com/heroes/fellowship-head-office-no-services.jpg",
-    "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
@@ -19999,19 +19796,6 @@
     "sourceKind": "discovered"
   },
   {
-    "slug": "global-harvest-church-hq",
-    "name": "Global Harvest Church, HQ",
-    "description": "",
-    "country": "Nigeria",
-    "location": "Ibadan",
-    "website": "http://ghchq.org/",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/heroes/global-harvest-church-hq.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
-  },
-  {
     "slug": "global-harvest-church-lagos",
     "name": "Global Harvest Church, Lagos",
     "description": "",
@@ -22102,93 +21886,6 @@
     "youtubeChannelId": "UCAuvPlYxNyiFthh0qdnyalw",
     "lastResearched": "2026-03-13T00:00:00.000Z",
     "sourceKind": "discovered"
-  },
-  {
-    "slug": "hope-worship",
-    "name": "HOPE Worship",
-    "description": "Indie worship collective with folk-influenced intimate praise.",
-    "country": "USA",
-    "location": "West Des Moines, Iowa, United States",
-    "denomination": "Lutheran",
-    "website": "https://hopeworship.com",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/heroes/hope-worship.jpg",
-    "spotifyUrl": "https://open.spotify.com/playlist/60g2eTzAglPgh0vzeuzKzp",
-    "spotifyPlaylistIds": [
-      "60g2eTzAglPgh0vzeuzKzp"
-    ],
-    "additionalPlaylists": [
-      "6r8vQ0313UEAt17untKRMp",
-      "038h5fjWoLwLdXVrEF7irW",
-      "4nwkRzS7M8UYWj2CXbJU7x"
-    ],
-    "musicStyle": [
-      "contemporary worship"
-    ],
-    "youtubeVideos": [
-      {
-        "title": "Here I Am To Worship ",
-        "videoId": "BeVMp9uhCno",
-        "channelTitle": " Hope Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/BeVMp9uhCno/hqdefault.jpg"
-      },
-      {
-        "title": "Heart of Worship / Nothing Else / Jireh - Hope Worship ",
-        "videoId": "mB4arMBFgjU",
-        "channelTitle": " Medley (Live from Worship Night)",
-        "thumbnailUrl": "https://i.ytimg.com/vi/mB4arMBFgjU/hqdefault.jpg"
-      },
-      {
-        "title": "Revelation Song - Hope Worship ",
-        "videoId": "5cIoYaTEjTA",
-        "channelTitle": " (Live from Worship Night)",
-        "thumbnailUrl": "https://i.ytimg.com/vi/5cIoYaTEjTA/hqdefault.jpg"
-      },
-      {
-        "title": "Rattle -  Hope Worship ",
-        "videoId": "CKpyHrNGWrg",
-        "channelTitle": " (Live from Worship Night)",
-        "thumbnailUrl": "https://i.ytimg.com/vi/CKpyHrNGWrg/hqdefault.jpg"
-      },
-      {
-        "title": "Holy Forever / Lamb Of God [Spontaneous] ",
-        "videoId": "ZDHfEUIwskc",
-        "channelTitle": " Hope Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/ZDHfEUIwskc/hqdefault.jpg"
-      },
-      {
-        "title": "Faithfulness ",
-        "videoId": "-vgED6qniQM",
-        "channelTitle": " Hope Worship ",
-        "thumbnailUrl": "https://i.ytimg.com/vi/-vgED6qniQM/hqdefault.jpg"
-      },
-      {
-        "title": "Be Still ",
-        "videoId": "Lpqaql64ils",
-        "channelTitle": " Hope Worship (feat. Alyssa Conley)",
-        "thumbnailUrl": "https://i.ytimg.com/vi/Lpqaql64ils/hqdefault.jpg"
-      },
-      {
-        "title": "I Thank God / Hymn Medley (Spontaneous) ",
-        "videoId": "wbVZvIRa49M",
-        "channelTitle": " Hope Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/wbVZvIRa49M/hqdefault.jpg"
-      },
-      {
-        "title": "More Of You  ",
-        "videoId": "bL6g_6hcL-Y",
-        "channelTitle": " Hope Worship (feat. Alyssa Conley)",
-        "thumbnailUrl": "https://i.ytimg.com/vi/bL6g_6hcL-Y/hqdefault.jpg"
-      },
-      {
-        "title": "PSALM 51 ",
-        "videoId": "1qLkb13SMuE",
-        "channelTitle": " Hope Worship (Feat. Alyssa Conley)",
-        "thumbnailUrl": "https://i.ytimg.com/vi/1qLkb13SMuE/hqdefault.jpg"
-      }
-    ],
-    "lastResearched": "2026-02-27T00:00:00.000Z",
-    "sourceKind": "manual"
   },
   {
     "slug": "htb-church",
@@ -25033,93 +24730,6 @@
     "lastResearched": "2026-03-25T21:52:44.562Z",
     "verifiedAt": "2026-03-25T21:52:44.562Z",
     "sourceKind": "discovered"
-  },
-  {
-    "slug": "hope-church-copenhagen",
-    "name": "Hope Church Copenhagen",
-    "description": "Danish worship hub bringing contemporary praise and Spirit-led ministry to Scandinavian believers.",
-    "country": "Denmark",
-    "location": "Copenhagen",
-    "denomination": "Charismatic",
-    "website": "https://hopecph.dk",
-    "logo": "https://media.gospelchannel.com/logos/churches/hope-church-copenhagen.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/hope-church-copenhagen.jpg",
-    "spotifyUrl": "https://open.spotify.com/playlist/2BIb5tjLkacLjfOzTnDo16",
-    "spotifyPlaylistIds": [
-      "2BIb5tjLkacLjfOzTnDo16"
-    ],
-    "additionalPlaylists": [
-      "2twP10CuRRBFosvlfs6k00",
-      "0K2plD79poIHpwoTleL52Q",
-      "2E9SNLaR3o0qT1asRNQCmj"
-    ],
-    "musicStyle": [
-      "contemporary worship"
-    ],
-    "youtubeVideos": [
-      {
-        "title": "A Message Of Hope By Jens Vesterager : 11.10.2025",
-        "videoId": "7kttjm2b_K0",
-        "channelTitle": "SDAICC Copenhagen",
-        "thumbnailUrl": "https://i.ytimg.com/vi/7kttjm2b_K0/hqdefault.jpg"
-      },
-      {
-        "title": "FIBC Sermon: 'A Testimony of Hope'",
-        "videoId": "lmeVofpUP9Y",
-        "channelTitle": "FIBC Copenhagen",
-        "thumbnailUrl": "https://i.ytimg.com/vi/lmeVofpUP9Y/hqdefault.jpg"
-      },
-      {
-        "title": "HE IS RISEN: Hope Haugesund Church Easter Service teaser 2019",
-        "videoId": "Ws4cpVqpF9M",
-        "channelTitle": "Hope Church Norway",
-        "thumbnailUrl": "https://i.ytimg.com/vi/Ws4cpVqpF9M/hqdefault.jpg"
-      },
-      {
-        "title": "2021.08.08 - This Hope We Have - Thomas Hansen",
-        "videoId": "JIPo2r4Vzdk",
-        "channelTitle": "Hillsong Church Denmark",
-        "thumbnailUrl": "https://i.ytimg.com/vi/JIPo2r4Vzdk/hqdefault.jpg"
-      },
-      {
-        "title": "FIBC Sermon: 'He did not stand alone'",
-        "videoId": "Gah4Qkfi0Wc",
-        "channelTitle": "FIBC Copenhagen",
-        "thumbnailUrl": "https://i.ytimg.com/vi/Gah4Qkfi0Wc/hqdefault.jpg"
-      },
-      {
-        "title": "FIBC Worship, Sunday December 1, 2024",
-        "videoId": "UdigTNLutzo",
-        "channelTitle": "FIBC Copenhagen",
-        "thumbnailUrl": "https://i.ytimg.com/vi/UdigTNLutzo/hqdefault.jpg"
-      },
-      {
-        "title": "Behold The Lamb Of God - Live ",
-        "videoId": "yNg3ND_YjSc",
-        "channelTitle": " Hillsong Worship",
-        "thumbnailUrl": "https://i.ytimg.com/vi/yNg3ND_YjSc/hqdefault.jpg"
-      },
-      {
-        "title": "An American at the Marble Church in Copenhagen it's beautiful to visit an experience not to forget",
-        "videoId": "Vz2nHVO3A8I",
-        "channelTitle": "Sam Byrod",
-        "thumbnailUrl": "https://i.ytimg.com/vi/Vz2nHVO3A8I/hqdefault.jpg"
-      },
-      {
-        "title": "CHRIST THE HOPE OF OUR GLORY-COLOSSIANS 1: 27-28",
-        "videoId": "UANGnyTVvRM",
-        "channelTitle": "Videospeck57 newland",
-        "thumbnailUrl": "https://i.ytimg.com/vi/UANGnyTVvRM/hqdefault.jpg"
-      },
-      {
-        "title": "The Hope Church of Colorado Springs - Launch",
-        "videoId": "aS0Q1FBAptg",
-        "channelTitle": "THC Nation",
-        "thumbnailUrl": "https://i.ytimg.com/vi/aS0Q1FBAptg/hqdefault.jpg"
-      }
-    ],
-    "lastResearched": "2026-02-27T00:00:00.000Z",
-    "sourceKind": "manual"
   },
   {
     "facebookUrl": "https://www.facebook.com/hope.churchgilwern",
@@ -28235,21 +27845,6 @@
     "sourceKind": "discovered"
   },
   {
-    "slug": "iglesia-unida-metodista-pentecostal-coro-nacional",
-    "name": "Iglesia Unida Metodista Pentecostal - Coro Nacional",
-    "description": "Iglesia Metodista Pentecostal de Chile is a Methodist Pentecostal church serving Chile with a focus on pastoral ministry, community spiritual guidance, and various ministry programs including women's, youth, and praise ministries.",
-    "country": "Chile",
-    "location": "Santiago",
-    "denomination": "Pentecostal",
-    "website": "https://imp.cl/",
-    "email": "info@imp.cl",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/iglesia-unida-metodista-pentecostal-coro-nacional.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/iglesia-unida-metodista-pentecostal-coro-nacional.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
-  },
-  {
     "instagramUrl": "https://www.instagram.com/red_juvenil_/",
     "youtubeUrl": "https://www.youtube.com/channel/UCtfDuukrtpCdgSZ-4gfaA-w",
     "slug": "iglesia-verbo-de-dios",
@@ -28419,19 +28014,6 @@
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCNFZdWrOI7UzoOGrPzOu9Kg",
     "lastResearched": "2026-03-13T00:00:00.000Z",
-    "sourceKind": "discovered"
-  },
-  {
-    "slug": "iglesias-y-horarios-de-misa-en-espana",
-    "name": "Iglesias y Horarios de Misa en España",
-    "description": "This comprehensive online directory serves Catholic communities throughout Spain by providing up-to-date Mass schedules and parish information for over 2,500 churches across all regions. The platform covers everything from daily and Sunday Masses to special liturgical celebrations, making it an essential resource for both residents and visitors seeking worship opportunities. With detailed listings spanning from major cities like Santiago de Compostela to small rural parishes, it bridges the gap between traditional parish life and modern digital accessibility.",
-    "country": "Spain",
-    "denomination": "Catholic",
-    "website": "https://horariosrezo.es/",
-    "logo": "https://media.gospelchannel.com/logos/churches/iglesias-y-horarios-de-misa-en-espana.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/iglesias-y-horarios-de-misa-en-espana.webp",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
   {
@@ -29788,22 +29370,6 @@
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCdjz_mty-L44azXu-4HqdkA",
     "lastResearched": "2026-03-13T00:00:00.000Z",
-    "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/bordeauxchurch/",
-    "facebookUrl": "https://www.facebook.com/BordeauxChurch",
-    "slug": "bordeaux-international-church",
-    "name": "International Church of Bordeaux",
-    "description": "Bordeaux Church was started at Easter 2014 with the following aims: 1) to be a city centre church. Central Bordeaux has over 200 000 inhabitants and there are too few Bible churches. 2) to show God's love in Jesus Christ for all the people of the world by uniting around the good news of Jesus and to communicate that love to all. To begin with we are an English-language church worshipping in English - in simple English. However we want to become a multi-lingual church as soon as possible. We can imagine the following steps: a. simultaneous translation of the messages into French, as soon as we have a suitable premises, equipment and interpreters b. adding a French pastor to our team to be able to begin a French worship service. c. perhaps following these same stages with other languages and communities.",
-    "country": "France",
-    "location": "Bordeaux",
-    "website": "http://www.bordeauxchurch.org/",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/bordeaux-international-church.png",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-29T22:05:05.769Z",
-    "verifiedAt": "2026-03-29T22:05:05.769Z",
     "sourceKind": "discovered"
   },
   {
@@ -31250,20 +30816,6 @@
     "sourceKind": "discovered"
   },
   {
-    "slug": "katolska-kyrkan",
-    "name": "Katolska kyrkan",
-    "description": "The Catholic Church in Sweden operates 44 parishes across the entire country from Ystad to Luleå, serving around 132,000 registered members with Mass and religious education in Swedish. The church distinguishes itself through extensive national missions offering services in multiple languages and a comprehensive approach to social issues including migration, medical ethics, and human rights advocacy.",
-    "country": "Sweden",
-    "denomination": "Catholic",
-    "website": "https://www.katolskakyrkan.se/",
-    "email": "info@katolskakyrkan.se",
-    "logo": "https://media.gospelchannel.com/logos/churches/katolska-kyrkan.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/katolska-kyrkan.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
-  },
-  {
     "slug": "kaunas-evangelical-christian-baptist-church",
     "name": "Kaunas Evangelical Christian Baptist Church",
     "description": "Evangelical Christian Baptist Church in Kaunas seeking to follow God's Word and help people develop a close relationship with their Creator through weekly worship, Bible studies, and fellowship.",
@@ -32433,20 +31985,6 @@
     "sourceKind": "discovered"
   },
   {
-    "slug": "l-eglise-catholique-a-marseille",
-    "name": "L'Église catholique à Marseille",
-    "description": "The Catholic Diocese of Marseille encompasses 102 parishes throughout the city, conducting services in French under the leadership of Cardinal Jean-Marc Aveline. This diocese distinguishes itself through its Mediterranean-focused spirituality and extensive interfaith dialogue, alongside specialized ministries for migrants and comprehensive cultural programming including sacred art exhibitions.",
-    "country": "France",
-    "location": "Marseille",
-    "denomination": "Catholic",
-    "website": "https://diocese-marseille.fr/",
-    "logo": "https://media.gospelchannel.com/logos/churches/l-eglise-catholique-a-marseille.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/l-eglise-catholique-a-marseille.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
-  },
-  {
     "slug": "l-a-worship-church",
     "name": "L.A. Worship Church",
     "description": "",
@@ -32970,23 +32508,6 @@
     "sourceKind": "discovered"
   },
   {
-    "facebookUrl": "https://www.facebook.com/lausannefreechurch/",
-    "youtubeUrl": "http://www.lausanne-english-church.com/sermons.html",
-    "slug": "lausanne-free-church",
-    "name": "Lausanne Free Church",
-    "description": "We are an evangelical, Bible-believing church serving the English-speaking community in Lausanne and the surrounding areas of Switzerland.",
-    "country": "Switzerland",
-    "location": "Lausanne",
-    "denomination": "Evangelical",
-    "website": "http://www.lausanne-english-church.com/",
-    "logo": "",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-29T22:05:05.769Z",
-    "verifiedAt": "2026-03-29T22:05:05.769Z",
-    "sourceKind": "discovered"
-  },
-  {
     "slug": "lausanne-free-church-english-speaking-switzerland",
     "name": "Lausanne Free Church English Speaking Switzerland",
     "description": "",
@@ -33015,22 +32536,6 @@
     "email": "webmaster@scotskirklausanne.ch",
     "logo": "",
     "headerImage": "https://media.gospelchannel.com/covers/lausanne-scots-kirk.webp",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://instagram.com/lee_abbey_devon",
-    "facebookUrl": "https://www.facebook.com/leeabbeydevon",
-    "youtubeUrl": "https://www.youtube.com/leeabbeydevon",
-    "slug": "lee-abbey-christian-conference-retreat-and-holiday-centre",
-    "name": "Lee Abbey Christian Conference, Retreat and Holiday Centre",
-    "description": "Lee Abbey Devon is a Christian retreat, holiday and conference centre located on the Devon coast, offering worship experiences, workshops, and pastoral support to families, youth, church groups and individuals within a Christian community setting.",
-    "country": "United Kingdom",
-    "location": "Devon",
-    "website": "https://leeabbeydevon.org.uk/",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/lee-abbey-christian-conference-retreat-and-holiday-centre.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/lee-abbey-christian-conference-retreat-and-holiday-centre.jpg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -33666,26 +33171,6 @@
     "sourceKind": "discovered"
   },
   {
-    "instagramUrl": "https://instagram.com/icflimassol",
-    "facebookUrl": "https://www.facebook.com/icflimassol",
-    "youtubeUrl": "https://www.instagram.com/icflimassol/",
-    "slug": "limassol-international-christian-fellowship",
-    "name": "Limassol International Christian Fellowship",
-    "description": "ICF is a non-denominational Christian church with a wealth of cultures represented in our congregation.nnWe believe in God the Father, the Son and the Holy Spirit. We believe the Bible to be the written Word of God and our guide in life. We believe that as followers of Christ the fruit and the gifts of the Holy Spirit should be evident in our lives.nnWe are a growing church desiring to be God’s hands and feet in our society.nnWe are family orientated with a large section of our congregation being made up of youth.",
-    "country": "Cyprus",
-    "location": "Limassol",
-    "denomination": "Evangelical",
-    "website": "https://www.icflimassol.com/",
-    "email": "hello@icflimassol.com",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/limassol-international-christian-fellowship.png",
-    "headerImage": "https://media.gospelchannel.com/covers/limassol-international-christian-fellowship.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-29T22:05:05.769Z",
-    "verifiedAt": "2026-03-29T22:05:05.769Z",
-    "sourceKind": "discovered"
-  },
-  {
     "youtubeUrl": "https://www.youtube.com/channel/UCAqNevhxa-GhdKjtIFWN3Bg",
     "slug": "limassol-international-evangelical-church",
     "name": "Limassol International Evangelical Church",
@@ -34063,21 +33548,6 @@
     "email": "info@livingwaternw.org",
     "logo": "",
     "headerImage": "https://media.gospelchannel.com/heroes/living-water-church.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
-  },
-  {
-    "youtubeUrl": "https://www.youtube.com/channel/UCRjWlBcEBr7o",
-    "slug": "living-water-fellowship",
-    "name": "Living Water Fellowship",
-    "description": "Living Water Fellowship is a Christian church in Tillamook, Oregon focused on helping people know God, build community, and be equipped to make a difference through outreach, school support, and reaching the next generation.",
-    "country": "Australia",
-    "location": "Gold Coast",
-    "website": "http://livingwatercoast.com/",
-    "email": "office@livingwatercoast.com",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/heroes/living-water-fellowship.jpg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -38222,123 +37692,6 @@
     "sourceKind": "discovered"
   },
   {
-    "instagramUrl": "https://www.instagram.com/kirkemusikkfestivalen/",
-    "facebookUrl": "https://www.facebook.com/kirkemusikkfestivalen",
-    "youtubeUrl": "https://www.youtube.com/@oslointernasjonalekirkemus9580",
-    "slug": "oslo-church-music-festival",
-    "name": "Oslo Church Music Festival",
-    "description": "Oslo Church Music Festival is a music festival celebrating church music traditions, featuring performances and cultural events in Oslo, Norway.",
-    "country": "Norway",
-    "location": "Oslo",
-    "denomination": "Non-denominational",
-    "website": "https://www.oicmf.no/",
-    "email": "info@kirkemusikkfestivalen.no",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/oslo-church-music-festival.webp",
-    "headerImage": "https://media.gospelchannel.com/heroes/oslo-church-music-festival.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "youtubeChannelId": "UCC8JQKcdno_fIEWz81-bOag",
-    "lastResearched": "2026-03-13T00:00:00.000Z",
-    "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/oslogospelchoir/",
-    "facebookUrl": "https://www.facebook.com/oslogospelchoir",
-    "youtubeUrl": "https://www.youtube.com/@oslogospelchoir3107",
-    "slug": "oslo-gospel-choir",
-    "name": "Oslo Gospel Choir",
-    "description": "Founded in 1988, one of the most successful gospel choirs in Europe with 33 albums released. 54K monthly Spotify listeners. Influenced by American black gospel.",
-    "country": "Norway",
-    "location": "Oslo",
-    "denomination": "Non-denominational",
-    "founded": 1988,
-    "website": "https://www.oslogospelchoir.net",
-    "email": "jan@hihat.no",
-    "logo": "https://media.gospelchannel.com/logos/churches/oslo-gospel-choir.ico",
-    "headerImage": "https://media.gospelchannel.com/heroes/oslo-gospel-choir.jpg",
-    "spotifyUrl": "https://open.spotify.com/playlist/22b3YwGj9ajbtkY4jTzUIZ",
-    "spotifyPlaylistIds": [
-      "22b3YwGj9ajbtkY4jTzUIZ"
-    ],
-    "additionalPlaylists": [
-      "4v1s1wwoQltZdGdRzmiVqg",
-      "6NfwiZclvWnuHrWNWcaTgF",
-      "0BRGWSDoonJa2DjwEwG7mq"
-    ],
-    "musicStyle": [
-      "gospel choir",
-      "gospel"
-    ],
-    "notableArtists": [
-      "Tore W. Aas"
-    ],
-    "youtubeChannelId": "UCISHRHZ6EPP9Eq7hGNBi3tA",
-    "youtubeVideos": [
-      {
-        "title": "Olso Gospel Choir - Come, Now is the time to Worship(HD)With songtekst/lyrics",
-        "videoId": "rmnE8JvRqy8",
-        "channelTitle": "danielvdkooi",
-        "thumbnailUrl": "https://i.ytimg.com/vi/rmnE8JvRqy8/hqdefault.jpg"
-      },
-      {
-        "title": "Oslo Gospel Choir",
-        "videoId": "7nYZ-B6C2ls",
-        "channelTitle": "Radio Tiempo De Cosecha",
-        "thumbnailUrl": "https://i.ytimg.com/vi/7nYZ-B6C2ls/hqdefault.jpg"
-      },
-      {
-        "title": "Oslo gospel choir  this is the day part 1",
-        "videoId": "dnOaklQOttw",
-        "channelTitle": "аня осиевская",
-        "thumbnailUrl": "https://i.ytimg.com/vi/dnOaklQOttw/hqdefault.jpg"
-      },
-      {
-        "title": "Olso Gospel Choir - Here I am to Worship(HD)With songtekst/lyrics",
-        "videoId": "AE9sz-El6FA",
-        "channelTitle": "danielvdkooi",
-        "thumbnailUrl": "https://i.ytimg.com/vi/AE9sz-El6FA/hqdefault.jpg"
-      },
-      {
-        "title": "Olso Gospel Choir - Open the eyes of my heart(HD)With songtekst/lyrics",
-        "videoId": "0L-2H9UM0Cg",
-        "channelTitle": "Daniel vd Kooi",
-        "thumbnailUrl": "https://i.ytimg.com/vi/0L-2H9UM0Cg/hqdefault.jpg"
-      },
-      {
-        "title": "Olso Gospel Choir - This is the Lords Doing(HD)With Songtekst/Lyrics",
-        "videoId": "d_7RR0_2SuU",
-        "channelTitle": "Daniel vd Kooi",
-        "thumbnailUrl": "https://i.ytimg.com/vi/d_7RR0_2SuU/hqdefault.jpg"
-      },
-      {
-        "title": "Oslo Gospel Choir  This is the day 2",
-        "videoId": "XcPnXEwjyxY",
-        "channelTitle": "аня осиевская",
-        "thumbnailUrl": "https://i.ytimg.com/vi/XcPnXEwjyxY/hqdefault.jpg"
-      },
-      {
-        "title": "Olso Gospel Choir - Holy Spirit, I thirst for You(HD)With songtekst/lyrics",
-        "videoId": "9JmgCEj_ovY",
-        "channelTitle": "danielvdkooi",
-        "thumbnailUrl": "https://i.ytimg.com/vi/9JmgCEj_ovY/hqdefault.jpg"
-      },
-      {
-        "title": "Oslo Gospel Choir - We lift our hands Parte 2",
-        "videoId": "OrmuU3XWh38",
-        "channelTitle": "SEBAOT",
-        "thumbnailUrl": "https://i.ytimg.com/vi/OrmuU3XWh38/hqdefault.jpg"
-      },
-      {
-        "title": "Olso Gospel Choir - Come let us sing(HD)With Songtekst/Lyrics",
-        "videoId": "UV-NoiL3wpo",
-        "channelTitle": "Daniel vd Kooi",
-        "thumbnailUrl": "https://i.ytimg.com/vi/UV-NoiL3wpo/hqdefault.jpg"
-      }
-    ],
-    "lastResearched": "2026-02-28T00:00:00.000Z",
-    "sourceKind": "manual"
-  },
-  {
     "instagramUrl": "https://instagram.com/oslointernationalchurch",
     "facebookUrl": "https://www.facebook.com/oslointernationalchurch/",
     "youtubeUrl": "https://www.youtube.com/channel/UCkR-E-BVqedZctN_W1h1QAQ",
@@ -39324,20 +38677,6 @@
     "email": "info@peachtree.org",
     "logo": "",
     "headerImage": "https://media.gospelchannel.com/heroes/peachtree-christian-church.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
-  },
-  {
-    "slug": "pearl-church",
-    "name": "Pearl Church",
-    "description": "An open and affirming, inclusive, progressive church in Portland's Pearl District offering Sunday worship with programs for kids, youth, and adults.",
-    "country": "Australia",
-    "location": "Gold Coast",
-    "website": "http://pearlchurch.org/",
-    "email": "info@pearlchurch.org",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/heroes/pearl-church.jpg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -43983,20 +43322,6 @@
     "sourceKind": "discovered"
   },
   {
-    "facebookUrl": "https://www.facebook.com/",
-    "slug": "serving-anglican-communities-in-europe-turkey-and-morocco",
-    "name": "Serving Anglican communities in Europe, Turkey and Morocco",
-    "description": "This unique Anglican diocese serves over 250 congregations across 30+ countries from Europe to Turkey and Morocco, creating a truly international church community. Services are offered in English, German, French, and Spanish, reflecting the diocese's cosmopolitan membership that welcomes people from the UK and around the globe. The diocese emphasizes comprehensive ministry training, safeguarding, and caring for creation alongside traditional Anglican worship and discipleship programs.",
-    "country": "Switzerland",
-    "denomination": "Anglican",
-    "website": "https://www.europe.anglican.org/",
-    "email": "bron.panter@churchofengland.org",
-    "logo": "https://media.gospelchannel.com/logos/churches/serving-anglican-communities-in-europe-turkey-and-morocco.svg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
-  },
-  {
     "facebookUrl": "https://www.facebook.com/IBFSestoCalende/",
     "youtubeUrl": "https://www.ibf.cbinsieme.org/sermons/",
     "slug": "sesto-calende-international-bible-fellowship",
@@ -44737,100 +44062,6 @@
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/sowetogospelchoirlive/",
-    "facebookUrl": "https://www.facebook.com/OfficialSowetoGospelChoir/",
-    "youtubeUrl": "https://www.youtube.com/channel/UCSognX8vpiOCwC_fVSlojNA",
-    "slug": "soweto-gospel-choir",
-    "name": "Soweto Gospel Choir",
-    "description": "Grammy-winning South African choir blending traditional and contemporary gospel.",
-    "country": "South Africa",
-    "location": "Soweto, Johannesburg, South Africa",
-    "denomination": "Non-denominational",
-    "founded": 2002,
-    "website": "https://sowetogospelchoir.com",
-    "email": "roy@respectmusic.co.za",
-    "logo": "",
-    "spotifyUrl": "https://open.spotify.com/playlist/25VRMipve7KYAh4CkAVjA7",
-    "spotifyPlaylistIds": [
-      "25VRMipve7KYAh4CkAVjA7"
-    ],
-    "additionalPlaylists": [
-      "3t23MVyIQ0LPO2clcj0Lxt",
-      "0i8l7EWDakYSH41MdmS4lJ",
-      "1OVKWoXHRgskznaciNy9qP"
-    ],
-    "musicStyle": [
-      "gospel",
-      "traditional world music",
-      "South African township gospel"
-    ],
-    "youtubeChannelId": "UCSognX8vpiOCwC_fVSlojNA",
-    "youtubeVideos": [
-      {
-        "title": "Soweto Gospel Choir - Live at the NMT - Ke Na Le Modisa",
-        "videoId": "7tGOvz5NO0o",
-        "channelTitle": "sowetogospelfans",
-        "thumbnailUrl": "https://i.ytimg.com/vi/7tGOvz5NO0o/hqdefault.jpg"
-      },
-      {
-        "title": "Soweto (Choir Version)",
-        "videoId": "XhNVNr4LkfY",
-        "channelTitle": "Kabusa Oriental Choir",
-        "thumbnailUrl": "https://i.ytimg.com/vi/XhNVNr4LkfY/hqdefault.jpg"
-      },
-      {
-        "title": "Soweto Gospel Choir - UMBOMBELA",
-        "videoId": "c-HqO-EojS4",
-        "channelTitle": "Soweto Gospel Choir",
-        "thumbnailUrl": "https://i.ytimg.com/vi/c-HqO-EojS4/hqdefault.jpg"
-      },
-      {
-        "title": "Soweto Gospel Choir Blessed in Concert: Avulekile Amasango / One Love",
-        "videoId": "JGdEXP7Pe4c",
-        "channelTitle": "sowetogospelfans",
-        "thumbnailUrl": "https://i.ytimg.com/vi/JGdEXP7Pe4c/hqdefault.jpg"
-      },
-      {
-        "title": "Bawo by Soweto Central Chorus ft SamthingSoweto",
-        "videoId": "tF04d3VawQs",
-        "channelTitle": "Soweto Central Chorus",
-        "thumbnailUrl": "https://i.ytimg.com/vi/tF04d3VawQs/hqdefault.jpg"
-      },
-      {
-        "title": "Ke Na Le Modisa",
-        "videoId": "u2-0XxluAl8",
-        "channelTitle": "Soweto Gospel Choir - Topic",
-        "thumbnailUrl": "https://i.ytimg.com/vi/u2-0XxluAl8/hqdefault.jpg"
-      },
-      {
-        "title": "Modimo",
-        "videoId": "DO8mxCnG3NQ",
-        "channelTitle": "Soweto Gospel Choir - Topic",
-        "thumbnailUrl": "https://i.ytimg.com/vi/DO8mxCnG3NQ/hqdefault.jpg"
-      },
-      {
-        "title": "MIGHTY GOD (OFFICIAL VIDEO) - JOEPRAIZE FT SOWETO GOSPEL CHOIR",
-        "videoId": "zl62KqAruBo",
-        "channelTitle": "joepraizemusic",
-        "thumbnailUrl": "https://i.ytimg.com/vi/zl62KqAruBo/hqdefault.jpg"
-      },
-      {
-        "title": "BNXN, Soweto Gospel Choir - In Jesus Name (Official Audio)",
-        "videoId": "qYtm_50Orm8",
-        "channelTitle": "Bnxn TYE",
-        "thumbnailUrl": "https://i.ytimg.com/vi/qYtm_50Orm8/hqdefault.jpg"
-      },
-      {
-        "title": "Nasty C, Soweto Gospel Choir - Head Up 2.0 (Official Music Video)",
-        "videoId": "9TRoisJmhf4",
-        "channelTitle": "Nasty_C",
-        "thumbnailUrl": "https://i.ytimg.com/vi/9TRoisJmhf4/hqdefault.jpg"
-      }
-    ],
-    "lastResearched": "2026-02-27T00:00:00.000Z",
-    "sourceKind": "manual"
   },
   {
     "slug": "spring-center-biserica-credintei-cluj-napoca",
@@ -47358,24 +46589,6 @@
     "sourceKind": "discovered"
   },
   {
-    "facebookUrl": "https://www.facebook.com/gracechurchstockholm",
-    "youtubeUrl": "https://www.youtube.com/channel/UCN3kJnra1blRIKwLyVWCuOg",
-    "slug": "stockholm-grace-church",
-    "name": "Stockholm Grace Church",
-    "description": "An international church currently holding services in English, Swahili and Kinyabwisha.",
-    "country": "Sweden",
-    "location": "Stockholm",
-    "website": "https://gracechurch.se/",
-    "email": "hej@gracechurch.se",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/stockholm-grace-church.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/stockholm-grace-church.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-29T22:05:05.769Z",
-    "verifiedAt": "2026-03-29T22:05:05.769Z",
-    "sourceKind": "discovered"
-  },
-  {
     "facebookUrl": "https://www.facebook.com/stockholmskatolskastift",
     "youtubeUrl": "https://www.youtube.com/@stockholmskatolskastift2508",
     "slug": "stockholms-katolska-stift",
@@ -47622,20 +46835,6 @@
     "website": "",
     "logo": "",
     "headerImage": "https://media.gospelchannel.com/heroes/tag-urcc-upendo-revival-christian-center.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
-  },
-  {
-    "slug": "tbbmi",
-    "name": "TBBMI",
-    "description": "TBBMI is a Norwegian Bible school offering evangelical training through bilingual programs in Norwegian and English. The school combines theoretical Bible education with practical ministry training across structured 1-3 year programs, including specialized tracks for evangelism, preaching, leadership development, and culminating in a full practical ministry year.",
-    "country": "Norway",
-    "denomination": "Non-denominational",
-    "website": "https://tbbmi.no/",
-    "email": "hello@klin.com",
-    "logo": "https://media.gospelchannel.com/logos/churches/tbbmi.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/tbbmi.jpg",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
@@ -50813,24 +50012,6 @@
     "sourceKind": "discovered"
   },
   {
-    "facebookUrl": "https://www.facebook.com/ToulouseIntChurch",
-    "youtubeUrl": "https://www.youtube.com/c/ToulouseInternationalChurch",
-    "slug": "toulouse-international-church",
-    "name": "Toulouse International Church",
-    "description": "We are an English Speaking church of the Christian & Missionary Alliance, located in Toulouse, France. We meet each Sunday for our weekly worship service, and have various ministries and programs throughout the week.",
-    "country": "France",
-    "location": "Toulouse",
-    "website": "https://www.toulouseinternationalchurch.org/",
-    "email": "pastor@tic-fid.org",
-    "logo": "https://media.gospelchannel.com/logos/enrichments/toulouse-international-church.jpg",
-    "headerImage": "https://media.gospelchannel.com/heroes/toulouse-international-church.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-29T22:05:05.769Z",
-    "verifiedAt": "2026-03-29T22:05:05.769Z",
-    "sourceKind": "discovered"
-  },
-  {
     "facebookUrl": "https://www.facebook.com/ToulouseIntChurch/",
     "youtubeUrl": "https://www.youtube.com/c/ToulouseInternationalChurch/",
     "slug": "toulouse-international-church-eglise-internationale-de-toulouse",
@@ -51854,25 +51035,6 @@
     "logo": "",
     "spotifyUrl": "",
     "spotifyPlaylistIds": [],
-    "sourceKind": "discovered"
-  },
-  {
-    "instagramUrl": "https://www.instagram.com/motion.church/",
-    "facebookUrl": "https://www.facebook.com/MOTION.Utrecht/",
-    "youtubeUrl": "https://www.youtube.com/@motionchurchutrecht",
-    "slug": "utrecht-motion-church",
-    "name": "Utrecht Motion Church",
-    "description": "We are a lively, international church and enjoy meeting new people who walk into our church every Sunday who want to hear more about Jesus and worship Him with great music from our band. We have English translation available for you!",
-    "country": "Netherlands",
-    "location": "Utrecht",
-    "website": "https://motion.church/",
-    "email": "info@motion.church",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/heroes/utrecht-motion-church.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-29T22:05:05.769Z",
-    "verifiedAt": "2026-03-29T22:05:05.769Z",
     "sourceKind": "discovered"
   },
   {
@@ -53568,21 +52730,6 @@
     "sourceKind": "discovered"
   },
   {
-    "slug": "welcome-church-music",
-    "name": "Welcome Church Music",
-    "description": "",
-    "country": "United Kingdom",
-    "location": "Woking",
-    "denomination": "Non-denominational",
-    "website": "",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/covers/welcome-church-music.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-13T00:00:00.000Z",
-    "sourceKind": "discovered"
-  },
-  {
     "facebookUrl": "https://www.facebook.com/holytrinityhotwells/",
     "slug": "welcome-holy-trinity-hotwells",
     "name": "Welcome holy trinity hotwells",
@@ -54674,25 +53821,6 @@
     "sourceKind": "discovered"
   },
   {
-    "facebookUrl": "http://facebook.com/IPCZurich",
-    "youtubeUrl": "https://itunes.apple.com/us/podcast/international-protestant-church-of-zurich-sermons/id1203744009?",
-    "slug": "zurich-international-protestant-church",
-    "name": "Zürich International Protestant Church",
-    "description": "The International Protestant Church of Zurich is a non-denominational, international, self-supporting congregation serving the English-speaking community in Zürich and surrounding areas.",
-    "country": "Switzerland",
-    "location": "Zurich",
-    "denomination": "Reformed",
-    "website": "http://www.ipc-zurich.org/",
-    "email": "office@ipc-zurich.org",
-    "logo": "",
-    "headerImage": "https://media.gospelchannel.com/covers/zurich-international-protestant-church.png",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
-    "lastResearched": "2026-03-29T22:05:05.769Z",
-    "verifiedAt": "2026-03-29T22:05:05.769Z",
-    "sourceKind": "discovered"
-  },
-  {
     "instagramUrl": "https://www.instagram.com/a2church/",
     "facebookUrl": "https://www.facebook.com/a2churchbirmingham",
     "youtubeUrl": "https://www.youtube.com/@a2churchbirmingham",
@@ -54884,21 +54012,6 @@
     "spotifyPlaylistIds": [],
     "youtubeChannelId": "UCt1GXjUEVVqPNIolNxE1j6w",
     "lastResearched": "2026-03-13T00:00:00.000Z",
-    "sourceKind": "discovered"
-  },
-  {
-    "facebookUrl": "https://facebook.com/dioceselyon",
-    "slug": "l-eglise-catholique-dans-le-rhone-et-le-roannais",
-    "name": "l’église catholique dans le Rhône et le Roannais",
-    "description": "This Catholic diocese serves the Rhône and Roannais regions with comprehensive French-language ministries including catechesis, youth confirmation, and active volunteer opportunities. The diocese maintains international connections through missions work, including a partnership with Koupéla, and offers extensive formation programs for spiritual growth.",
-    "country": "France",
-    "location": "Lyon",
-    "denomination": "Catholic",
-    "website": "https://lyon.catholique.fr/",
-    "logo": "https://media.gospelchannel.com/logos/churches/l-eglise-catholique-dans-le-rhone-et-le-roannais.png",
-    "headerImage": "https://media.gospelchannel.com/heroes/l-eglise-catholique-dans-le-rhone-et-le-roannais.jpg",
-    "spotifyUrl": "",
-    "spotifyPlaylistIds": [],
     "sourceKind": "discovered"
   },
   {

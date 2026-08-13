@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ChurchDirectoryGrid } from "@/components/ChurchDirectoryGrid";
+import { TrackedChurchSearchForm } from "@/components/ChurchJourneyAnalytics";
 import { ChurchSearchAutocomplete } from "@/components/ChurchSearchAutocomplete";
 import {
   buildSearchSummary,
@@ -10,7 +11,11 @@ import {
   getStyleFilterBySlug,
   type ChurchDirectoryFilters,
 } from "@/lib/church-directory";
-import { getChurchIndexPageData } from "@/lib/church";
+import {
+  getChurchDirectoryFilterOptions,
+  getChurchIndexPageData,
+  type ChurchDirectoryFilterOption,
+} from "@/lib/church";
 import { getChurchStatsAsync } from "@/lib/content";
 import { buildBreadcrumbSchema } from "@/lib/seo-schema";
 import { serializeJsonLd } from "@/lib/json-ld";
@@ -41,12 +46,14 @@ function readBoolParam(value: string | string[] | undefined): boolean {
 function readDirectoryFilters(params: Record<string, string | string[] | undefined>): ChurchDirectoryFilters {
   const styleSlug = readStringParam(params.style).trim();
   const denominationSlug = readStringParam(params.denomination).trim();
+  const country = readStringParam(params.country).trim().slice(0, 60);
   const language = readStringParam(params.language).trim().slice(0, 40);
 
   return {
     query: readStringParam(params.q).trim().slice(0, 80),
     styleSlug: getStyleFilterBySlug(styleSlug) ? styleSlug : undefined,
     denominationSlug: getDenominationFilterBySlug(denominationSlug) ? denominationSlug : undefined,
+    country: country || undefined,
     language: language || undefined,
     hasKids: readBoolParam(params.kids) || undefined,
     hasServiceTimes: readBoolParam(params.serviceTimes) || undefined,
@@ -59,6 +66,7 @@ function buildPageHref(page: number, filters: ChurchDirectoryFilters): string {
   if (filters.query) params.set("q", filters.query);
   if (filters.styleSlug) params.set("style", filters.styleSlug);
   if (filters.denominationSlug) params.set("denomination", filters.denominationSlug);
+  if (filters.country) params.set("country", filters.country);
   if (filters.language) params.set("language", filters.language);
   if (filters.hasKids) params.set("kids", "1");
   if (filters.hasServiceTimes) params.set("serviceTimes", "1");
@@ -71,6 +79,7 @@ function buildPageHref(page: number, filters: ChurchDirectoryFilters): string {
 function buildActiveFilterLabels(filters: ChurchDirectoryFilters): string[] {
   const labels: string[] = [];
   if (filters.query) labels.push(`Area/search: ${filters.query}`);
+  if (filters.country) labels.push(`Country: ${filters.country}`);
   if (filters.styleSlug) labels.push(getStyleFilterBySlug(filters.styleSlug)?.label ?? filters.styleSlug);
   if (filters.denominationSlug) labels.push(`${getDenominationFilterBySlug(filters.denominationSlug)?.label ?? filters.denominationSlug} tradition`);
   if (filters.language) labels.push(`${filters.language} language`);
@@ -78,6 +87,14 @@ function buildActiveFilterLabels(filters: ChurchDirectoryFilters): string[] {
   if (filters.hasServiceTimes) labels.push("Service times listed");
   if (filters.hasMusic) labels.push("Music available");
   return labels;
+}
+
+function withSelectedOption(
+  options: ChurchDirectoryFilterOption[],
+  selectedValue: string | undefined,
+): ChurchDirectoryFilterOption[] {
+  if (!selectedValue || options.some((option) => option.value === selectedValue)) return options;
+  return [{ value: selectedValue, label: selectedValue, count: 0 }, ...options];
 }
 
 /** Toggle a filter — produce the URL that either applies it or removes it. */
@@ -150,13 +167,14 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
   const requestedPage = readPositivePage(params.page);
   const claimIntent = readStringParam(params.intent).trim().toLowerCase() === "claim";
 
-  const [{ churchCount, countryCount }, directoryPage] = await Promise.all([
+  const [{ churchCount, countryCount }, directoryPage, filterOptions] = await Promise.all([
     getChurchStatsAsync(),
     getChurchIndexPageData({
       query,
       filters: {
         styleSlug: filters.styleSlug,
         denominationSlug: filters.denominationSlug,
+        country: filters.country,
         language: filters.language,
         hasKids: filters.hasKids,
         hasServiceTimes: filters.hasServiceTimes,
@@ -165,6 +183,9 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
       page: requestedPage,
       pageSize: PAGE_SIZE,
     }),
+    query
+      ? getChurchDirectoryFilterOptions(filters)
+      : Promise.resolve({ countries: [], languages: [] }),
   ]);
   const { currentPage, totalCount, totalPages, pageItems } = directoryPage;
   const activeFilterLabels = buildActiveFilterLabels(filters);
@@ -174,6 +195,8 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
   const searchSummary = query ? buildSearchSummary(query) : null;
   const filterSummary = activeFilterLabels.join(", ");
   const showDecisionGuide = !hasActiveFilters && currentPage === 1;
+  const countryOptions = withSelectedOption(filterOptions.countries, filters.country);
+  const languageOptions = withSelectedOption(filterOptions.languages, filters.language);
 
   // Top 5 denominations + 4 styles for the chip rail (handoff "Refine:" pattern).
   const topDenominations = DENOMINATION_FILTERS.slice(0, 5);
@@ -262,10 +285,11 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
           ) : null}
 
           {/* Premium search pill */}
-          <form action="/church" method="get" className="mt-7 max-w-[760px]">
+          <TrackedChurchSearchForm action="/church" method="get" variant="directory" className="mt-7 max-w-[760px]">
             {claimIntent ? <input type="hidden" name="intent" value="claim" /> : null}
             {filters.styleSlug ? <input type="hidden" name="style" value={filters.styleSlug} /> : null}
             {filters.denominationSlug ? <input type="hidden" name="denomination" value={filters.denominationSlug} /> : null}
+            {filters.country ? <input type="hidden" name="country" value={filters.country} /> : null}
             {filters.language ? <input type="hidden" name="language" value={filters.language} /> : null}
             {filters.hasKids ? <input type="hidden" name="kids" value="1" /> : null}
             {filters.hasServiceTimes ? <input type="hidden" name="serviceTimes" value="1" /> : null}
@@ -283,6 +307,7 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
                   intent: claimIntent ? "claim" : undefined,
                   style: filters.styleSlug,
                   denomination: filters.denominationSlug,
+                  country: filters.country,
                   language: filters.language,
                   kids: filters.hasKids ? "1" : undefined,
                   serviceTimes: filters.hasServiceTimes ? "1" : undefined,
@@ -298,7 +323,7 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
                 Search
               </button>
             </div>
-          </form>
+          </TrackedChurchSearchForm>
 
           {/* Refine chips */}
           <div className="mt-5 max-w-[860px] flex flex-wrap items-center gap-2">
@@ -370,6 +395,62 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
               Service times
             </Link>
           </div>
+
+          {query && (
+            <TrackedChurchSearchForm
+              action="/church"
+              method="get"
+              variant="directory_filters"
+              className="mt-5 grid max-w-[760px] gap-3 rounded-2xl border border-rose-gold/15 bg-white/75 p-4 shadow-[0_8px_24px_rgba(59,42,34,0.05)] sm:grid-cols-[1fr_1fr_auto] sm:items-end"
+            >
+              <input type="hidden" name="q" value={query} />
+              {claimIntent ? <input type="hidden" name="intent" value="claim" /> : null}
+              {filters.styleSlug ? <input type="hidden" name="style" value={filters.styleSlug} /> : null}
+              {filters.denominationSlug ? <input type="hidden" name="denomination" value={filters.denominationSlug} /> : null}
+              {filters.hasKids ? <input type="hidden" name="kids" value="1" /> : null}
+              {filters.hasServiceTimes ? <input type="hidden" name="serviceTimes" value="1" /> : null}
+              {filters.hasMusic ? <input type="hidden" name="music" value="1" /> : null}
+
+              <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.12em] text-muted-warm">
+                Country
+                <select
+                  name="country"
+                  defaultValue={filters.country ?? ""}
+                  className="min-w-0 rounded-xl border border-rose-gold/20 bg-white px-3.5 py-3 text-sm font-medium normal-case tracking-normal text-espresso outline-none transition-colors focus:border-rose-gold"
+                >
+                  <option value="">All countries</option>
+                  {countryOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label} ({option.count.toLocaleString("en-US")})
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="grid gap-1.5 text-xs font-bold uppercase tracking-[0.12em] text-muted-warm">
+                Language
+                <select
+                  name="language"
+                  defaultValue={filters.language ?? ""}
+                  className="min-w-0 rounded-xl border border-rose-gold/20 bg-white px-3.5 py-3 text-sm font-medium normal-case tracking-normal text-espresso outline-none transition-colors focus:border-rose-gold"
+                >
+                  <option value="">All languages</option>
+                  {languageOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label} ({option.count.toLocaleString("en-US")})
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <button
+                type="submit"
+                className="rounded-xl bg-espresso px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-warm-brown"
+              >
+                Apply filters
+              </button>
+            </TrackedChurchSearchForm>
+          )}
 
           {hasActiveFilters && (
             <div className="mt-3.5 flex items-center gap-3 text-sm">

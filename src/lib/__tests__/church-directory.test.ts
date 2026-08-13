@@ -122,8 +122,21 @@ describe("church-directory", () => {
     expect(filterChurchDirectory([...churches], { denominationSlug: "pentecostal" }).map((church) => church.slug)).toEqual(["victory-stockholm"]);
   });
 
+  it("filters by an exact country value", () => {
+    expect(filterChurchDirectory([...churches], { country: "Sweden" }).map((church) => church.slug)).toEqual(["victory-stockholm"]);
+  });
+
   it("filters by language and kids/youth proof signals", () => {
     expect(filterChurchDirectory([...churches], { language: "English" }).map((church) => church.slug)).toEqual(["hope-london"]);
+
+    const frenchCodeChurch = {
+      ...churches[2]!,
+      slug: "grace-paris",
+      country: "France",
+      location: "Paris, France",
+      language: "fr",
+    };
+    expect(filterChurchDirectory([frenchCodeChurch], { language: "French" }).map((church) => church.slug)).toEqual(["grace-paris"]);
 
     const familyResults = filterChurchDirectory([...churches], { hasKids: true });
     expect(familyResults.map((church) => church.slug)).toEqual(["hope-london", "victory-stockholm"]);
