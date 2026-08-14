@@ -4,6 +4,7 @@ import posthog from "posthog-js";
 import { PostHogProvider as PHProvider } from "posthog-js/react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, Suspense } from "react";
+import { isKnownSyntheticBrowserSession } from "@/lib/analytics-traffic";
 
 const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY ?? "";
 const POSTHOG_HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://eu.i.posthog.com";
@@ -30,6 +31,7 @@ if (typeof window !== "undefined" && POSTHOG_KEY) {
       network_timing: false,
       web_vitals_allowed_metrics: ["LCP", "CLS", "INP"],
     },
+    before_send: (event) => (isKnownSyntheticBrowserSession() ? null : event),
     on_xhr_error: () => {},
   });
   posthog.analyticsDefaultEndpoint = "/e";
