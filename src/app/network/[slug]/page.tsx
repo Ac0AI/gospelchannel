@@ -5,6 +5,7 @@ import { getNetworkBySlug, getNetworkCampusCount, getNetworkCampuses } from "@/l
 import { getChurchBySlugAsync } from "@/lib/content";
 import type { ChurchCampus, ChurchEnrichment } from "@/types/gospel";
 import { serializeJsonLd } from "@/lib/json-ld";
+import { getNetworkLocationsTitle } from "@/lib/network-page";
 
 type NetworkPageProps = {
   params: Promise<{ slug: string }>;
@@ -48,13 +49,14 @@ export async function generateMetadata({ params }: NetworkPageProps): Promise<Me
     ? `${campusCount.toLocaleString("en-US")} ${campusCount === 1 ? "campus" : "campuses"}`
     : "church campuses";
   const description = `Compare ${network.name} ${campusLabel} by country, city, service times, worship music, and church details before choosing where to visit.`;
+  const title = getNetworkLocationsTitle(network.name);
 
   return {
-    title: `${network.name} Church Locations`,
+    title,
     description,
     alternates: { canonical: pageUrl },
     openGraph: {
-      title: `${network.name} Church Locations`,
+      title,
       description,
       type: "website",
       url: pageUrl,
@@ -62,7 +64,7 @@ export async function generateMetadata({ params }: NetworkPageProps): Promise<Me
     },
     twitter: {
       card: "summary_large_image",
-      title: `${network.name} Church Locations`,
+      title,
       description,
     },
   };
@@ -92,6 +94,23 @@ export default async function NetworkPage({ params }: NetworkPageProps) {
 
   const pageUrl = `https://gospelchannel.com/network/${network.slug}`;
   const campusLabel = `${campuses.length.toLocaleString("en-US")} ${campuses.length === 1 ? "campus" : "campuses"}`;
+  const locationTitle = getNetworkLocationsTitle(network.name);
+  const locationFaqs = [
+    {
+      question: `How many ${network.name} locations are listed?`,
+      answer: campuses.length > 0
+        ? `${campuses.length.toLocaleString("en-US")} ${network.name} ${campuses.length === 1 ? "location is" : "locations are"} currently listed across ${sortedCountries.length.toLocaleString("en-US")} ${sortedCountries.length === 1 ? "country" : "countries"}. Open a campus page for its available address, language, service time, and worship details.`
+        : `GospelChannel does not currently list any ${network.name} locations. Check the official church website for the current campus list.`,
+    },
+    {
+      question: `How do I choose a ${network.name} location?`,
+      answer: "Start with the city and travel distance, then compare the language and service time for the specific campus. Local ministries and schedules can differ even when campuses share the same church network.",
+    },
+    {
+      question: `Are service times the same at every ${network.name} location?`,
+      answer: "Not necessarily. Use the individual campus profile for published service details, then confirm the current schedule on the official church website before visiting.",
+    },
+  ];
   const jsonLd: Array<Record<string, unknown>> = [
     {
       "@context": "https://schema.org",
@@ -110,7 +129,7 @@ export default async function NetworkPage({ params }: NetworkPageProps) {
     {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
-      name: `${network.name} church locations`,
+      name: locationTitle,
       description: `Explore ${network.name} campuses by country, city, service details, worship music, and church details.`,
       url: pageUrl,
       isPartOf: {
@@ -158,6 +177,15 @@ export default async function NetworkPage({ params }: NetworkPageProps) {
               }
             : {}),
         },
+      })),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: locationFaqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: { "@type": "Answer", text: faq.answer },
       })),
     },
   ];
@@ -310,6 +338,23 @@ export default async function NetworkPage({ params }: NetworkPageProps) {
           </p>
         </section>
       )}
+
+      <section className="rounded-[22px] border border-rose-gold/[0.14] bg-white p-6 shadow-sm sm:p-7">
+        <p className="gc-eyebrow">Location questions</p>
+        <h2 className="mt-3 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-3xl">
+          {locationTitle}
+        </h2>
+        <dl className="mt-6 space-y-5">
+          {locationFaqs.map((faq) => (
+            <div key={faq.question} className="border-b border-rose-gold/10 pb-5 last:border-0 last:pb-0">
+              <dt className="font-semibold text-espresso">{faq.question}</dt>
+              <dd className="mt-2 max-w-[820px] text-sm leading-[1.7] text-warm-brown sm:text-base">
+                {faq.answer}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
 
       {/* Network website link */}
       {network.website && (

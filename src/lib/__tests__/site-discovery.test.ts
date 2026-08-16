@@ -48,6 +48,7 @@ describe("site discovery", () => {
       "../../app/church/churches-with-service-times/page.tsx",
       "../../app/church/churches-with-worship-music/page.tsx",
       "../../app/church/english-speaking-churches/page.tsx",
+      "../../app/church/english-speaking-churches-in-zurich/page.tsx",
       "../../app/church/family-friendly-churches/page.tsx",
       "../../app/church/best-worship-churches/page.tsx",
       "../../app/church/charismatic-churches-in-london/page.tsx",

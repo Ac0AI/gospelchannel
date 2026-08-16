@@ -163,7 +163,7 @@ describe("sitemap-data", () => {
   it("computes the total sitemap entry count from section counts", async () => {
     getChurchDirectorySeedCountAsyncMock.mockResolvedValue(3);
 
-    await expect(getSitemapEntryCount()).resolves.toBe(55);
+    await expect(getSitemapEntryCount()).resolves.toBe(56);
   });
 
   it("drops thin city hubs (<MIN_INDEXABLE_CITY_CHURCHES) from the sitemap", async () => {
@@ -226,9 +226,10 @@ describe("sitemap-data", () => {
     expect(entries[37]?.url).toBe("https://gospelchannel.com/church/charismatic-churches-in-london");
     expect(entries[38]?.url).toBe("https://gospelchannel.com/church/best-worship-churches");
     expect(entries[39]?.url).toBe("https://gospelchannel.com/network");
-    expect(entries[40]?.url).toBe("https://gospelchannel.com/church/church-0");
-    expect(entries.at(-1)?.url).toBe("https://gospelchannel.com/church/church-2459");
-    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(0, 2_460);
+    expect(entries[40]?.url).toBe("https://gospelchannel.com/church/english-speaking-churches-in-zurich");
+    expect(entries[41]?.url).toBe("https://gospelchannel.com/church/church-0");
+    expect(entries.at(-1)?.url).toBe("https://gospelchannel.com/church/church-2458");
+    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(0, 2_459);
     expect(getNetworksSliceMock).not.toHaveBeenCalled();
     expect(getPublishedCampusesSliceMock).not.toHaveBeenCalled();
   });
@@ -242,6 +243,7 @@ describe("sitemap-data", () => {
     const entries = await buildSitemapEntriesForChunk(2);
 
     expect(entries.map((entry) => entry.url)).toEqual([
+      "https://gospelchannel.com/church/church-4959",
       "https://gospelchannel.com/church/church-4960",
       "https://gospelchannel.com/church/church-4961",
       "https://gospelchannel.com/church/church-4962",
@@ -297,7 +299,7 @@ describe("sitemap-data", () => {
       "https://gospelchannel.com/prayerwall/church/prayer-1",
       "https://gospelchannel.com/prayerwall/church/prayer-2",
     ]);
-    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(4_960, 42);
+    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(4_959, 43);
     expect(getNetworksSliceMock).toHaveBeenCalledWith(0, 1);
     expect(getPublishedCampusesSliceMock).toHaveBeenCalledWith(0, 1);
   });

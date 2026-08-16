@@ -449,6 +449,21 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     ],
   },
   {
+    id: "english-speaking-churches-zurich",
+    type: "proof_route",
+    title: "English-Speaking Churches in Zurich",
+    subtitle: "Compare English-language churches in Zurich.",
+    href: "/church/english-speaking-churches-in-zurich",
+    priority: 99,
+    queries: [
+      "english speaking churches in zurich",
+      "english speaking church zurich",
+      "english church zurich",
+      "english churches zurich",
+      "international church zurich english",
+    ],
+  },
+  {
     id: "english-language-profiles",
     type: "proof_route",
     title: "English-Language Church Profiles",

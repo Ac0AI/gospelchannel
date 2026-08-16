@@ -71,6 +71,7 @@ const STATIC_ROUTE_PATHS = [
   "/church/charismatic-churches-in-london",
   "/church/best-worship-churches",
   "/network",
+  "/church/english-speaking-churches-in-zurich",
 ] as const;
 
 export type SitemapEntry = {

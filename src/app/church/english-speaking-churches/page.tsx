@@ -82,6 +82,7 @@ export default async function EnglishSpeakingChurchesPage() {
       ]}
       faqs={FAQS}
       relatedLinks={[
+        { href: "/church/english-speaking-churches-in-zurich", label: "English-speaking churches in Zurich" },
         { href: "/for/expats", label: "Guide for expats" },
         { href: "/church/country", label: "Browse by country" },
         { href: "/church/city", label: "Browse by city" },

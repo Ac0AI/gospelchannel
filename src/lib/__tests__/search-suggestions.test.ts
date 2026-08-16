@@ -153,6 +153,10 @@ describe("search suggestions", () => {
       type: "proof_route",
       href: "/church/english-speaking-churches",
     });
+    expect(getDecisionSearchSuggestions("english speaking churches in zurich")[0]).toMatchObject({
+      type: "proof_route",
+      href: "/church/english-speaking-churches-in-zurich",
+    });
     expect(getDecisionSearchSuggestions("charismatic churches in london")[0]).toMatchObject({
       type: "proof_route",
       href: "/church/charismatic-churches-in-london",
