@@ -136,7 +136,7 @@ describe("agent discovery", () => {
     expect(text).toContain("[Audience church-search routes](https://gospelchannel.com/for)");
     expect(text).toContain("[For expats](https://gospelchannel.com/for/expats)");
     expect(text).toContain("[For students](https://gospelchannel.com/for/students)");
-    expect(text).toContain("Proof routes: https://gospelchannel.com/church/english-speaking-churches, https://gospelchannel.com/church/churches-with-service-times");
+    expect(text).toContain("Proof routes: https://gospelchannel.com/church/english-speaking-churches, https://gospelchannel.com/church/english-speaking-churches-in-zurich, https://gospelchannel.com/church/churches-with-service-times");
     expect(text).toContain("Proof routes: https://gospelchannel.com/church/city, https://gospelchannel.com/church/churches-with-service-times");
     expect(text).toContain("## Proof Routes");
     expect(text).toContain("[Churches by worship style](https://gospelchannel.com/church/style)");

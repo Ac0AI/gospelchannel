@@ -48,6 +48,13 @@ describe("audience proof routes", () => {
       { href: "/church", label: "Browse church profiles" },
       { href: "/church/churches-with-service-times", label: "Churches with service times" },
     ]);
+    expect(getAudienceProofRoutes(forAudienceModule.FOR_AUDIENCE.expats).slice(0, 2)).toEqual([
+      { href: "/church/english-speaking-churches", label: "English-speaking churches" },
+      {
+        href: "/church/english-speaking-churches-in-zurich",
+        label: "English-speaking churches in Zurich",
+      },
+    ]);
   });
 
   it("limits proof routes without admitting guide pages", () => {

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ChurchCollectionPage } from "@/components/ChurchCollectionPage";
 import { getChurchFacetPageData } from "@/lib/church";
 import { MIN_INDEXABLE_CITY_CHURCHES } from "@/lib/church-directory";
+import { buildCityTitle, getCityGuideLinks } from "@/lib/city-page";
 import { buildCityHubContent } from "@/lib/hub-content";
 
 export const revalidate = 3600;
@@ -33,7 +34,7 @@ export async function generateMetadata({ params, searchParams }: CityPageProps):
   if (!data) return { title: "Not Found" };
 
   const basePath = `https://gospelchannel.com/church/city/${slug}`;
-  const title = `Churches in ${data.label}: Service Times, Worship & Location`;
+  const title = buildCityTitle(data.label);
   const description = `Compare ${data.totalCount.toLocaleString("en-US")} churches in ${data.label}: service times, worship style and music, language, and location. Find one worth visiting this Sunday.`;
 
   return {
@@ -70,6 +71,7 @@ export default async function CityPage({ params, searchParams }: CityPageProps) 
 
   const { currentPage, totalCount, totalPages, pageItems, label, relatedLinks, breadcrumbCountry } = data;
   const countryLinks = relatedLinks.country;
+  const cityGuideLinks = getCityGuideLinks(slug);
   const basePath = `/church/city/${slug}`;
 
   // Editorial + FAQ only on page 1 (paginated pages are noindex,follow). Woven
@@ -102,6 +104,7 @@ export default async function CityPage({ params, searchParams }: CityPageProps) 
         { href: basePath, label },
       ]}
       relatedSections={[
+        { title: `${label} Church Guides`, links: cityGuideLinks },
         { title: countryLinks.length > 1 ? "Countries" : "Country", links: countryLinks },
         { title: `Worship Styles in ${label}`, links: relatedLinks.style },
         { title: `Denominations in ${label}`, links: relatedLinks.denomination },

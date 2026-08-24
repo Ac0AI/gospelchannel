@@ -24,6 +24,7 @@ import { generateMetadata as generateCityMetadata } from "@/app/church/city/[slu
 import { generateMetadata as generateCountryMetadata } from "@/app/church/country/[slug]/page";
 import { generateMetadata as generateDenominationMetadata } from "@/app/church/denomination/[slug]/page";
 import { generateMetadata as generateStyleMetadata } from "@/app/church/style/[slug]/page";
+import { buildCityTitle, getCityGuideLinks } from "@/lib/city-page";
 
 function makeChurch(overrides: Partial<ChurchConfig> = {}): ChurchConfig {
   return {
@@ -378,7 +379,23 @@ describe("facet metadata titles", () => {
 
   it("uses the required city title format", async () => {
     const metadata = await generateCityMetadata(metadataProps("london"));
-    expect(metadata.title).toBe("Churches in London: Service Times, Worship & Location");
+    expect(metadata.title).toBe("Churches in London: Service Times & Locations");
+  });
+
+  it("keeps flagged city titles within the search-result limit", () => {
+    for (const city of ["Amsterdam", "Copenhagen", "Gold Coast"]) {
+      expect(`${buildCityTitle(city)} | GospelChannel`.length).toBeLessThanOrEqual(70);
+    }
+  });
+
+  it("links the Zurich city hub to its English-speaking guide", () => {
+    expect(getCityGuideLinks("zurich")).toEqual([
+      {
+        href: "/church/english-speaking-churches-in-zurich",
+        label: "English-speaking churches in Zurich",
+      },
+    ]);
+    expect(getCityGuideLinks("london")).toEqual([]);
   });
 
   it("uses the required country title format", async () => {

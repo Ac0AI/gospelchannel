@@ -218,6 +218,10 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
 
     proof_routes: [
       { href: "/church/english-speaking-churches", label: "English-speaking churches" },
+      {
+        href: "/church/english-speaking-churches-in-zurich",
+        label: "English-speaking churches in Zurich",
+      },
       { href: "/church/churches-with-service-times", label: "Churches with service times" },
       { href: "/church/country", label: "Browse churches by country" },
       { href: "/church/style", label: "Browse by worship style" },
