@@ -87,6 +87,8 @@ export default async function EnglishSpeakingChurchesInZurichPage() {
       churches={pageItems}
       updatedIso={updatedIso}
       updatedLabel={updatedLabel}
+      comparisonHeading="Compare English-speaking churches in Zurich"
+      comparisonDescription="Compare published language, service time, worship and music, kids or youth information, tradition, and location in one view. Open a church profile for the evidence, then confirm the current service and travel details on the church's official website."
       breadcrumbs={[
         { href: "/", label: "Home" },
         { href: "/church", label: "Churches" },

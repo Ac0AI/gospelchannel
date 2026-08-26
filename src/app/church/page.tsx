@@ -16,13 +16,66 @@ import {
   getChurchIndexPageData,
   type ChurchDirectoryFilterOption,
 } from "@/lib/church";
-import { getChurchStatsAsync } from "@/lib/content";
+import { getChurchStatsAsync, getFreshestChurchUpdatedAtAsync } from "@/lib/content";
 import { buildBreadcrumbSchema } from "@/lib/seo-schema";
 import { serializeJsonLd } from "@/lib/json-ld";
+import { formatContentFreshness } from "@/lib/utils";
 
 export const revalidate = 3600;
 
 const PAGE_SIZE = 48;
+
+const COMPARISON_CRITERIA = [
+  {
+    label: "City and location",
+    shown: "Published city, venue, and address details",
+    decision: "Can I get there consistently, and what route or parking should I confirm?",
+    href: "/church/city",
+    linkLabel: "Browse cities",
+  },
+  {
+    label: "Language",
+    shown: "Published service and ministry languages",
+    decision: "Can adults and children understand and participate in the service?",
+    href: "/church/english-speaking-churches",
+    linkLabel: "Compare languages",
+  },
+  {
+    label: "Tradition",
+    shown: "Denomination or church-family information",
+    decision: "Does the church's theology and service shape fit what I am looking for?",
+    href: "/church/denomination",
+    linkLabel: "Compare traditions",
+  },
+  {
+    label: "Worship style",
+    shown: "Published worship-style signals",
+    decision: "Is the room likely to feel contemporary, traditional, charismatic, or something else?",
+    href: "/church/style",
+    linkLabel: "Compare styles",
+  },
+  {
+    label: "Service times",
+    shown: "Published Sunday times and service notes",
+    decision: "Can I plan a realistic first visit? Confirm the current time on the church's own site.",
+    href: "/church/churches-with-service-times",
+    linkLabel: "Compare times",
+  },
+  {
+    label: "Kids and youth",
+    shown: "Published children and youth ministry signals",
+    decision: "Is there enough information to plan the first Sunday as a family?",
+    href: "/church/family-friendly-churches",
+    linkLabel: "Compare family details",
+  },
+  {
+    label: "Actual worship music",
+    shown: "Church playlists and worship videos when available",
+    decision: "Can I hear what the church's worship sounds like before I visit?",
+    href: "/church/churches-with-worship-music",
+    linkLabel: "Hear the worship",
+  },
+] as const;
 
 type ChurchIndexPageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
@@ -169,7 +222,7 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
   const requestedPage = readPositivePage(params.page);
   const claimIntent = readStringParam(params.intent).trim().toLowerCase() === "claim";
 
-  const [{ churchCount, countryCount }, directoryPage, filterOptions] = await Promise.all([
+  const [{ churchCount, countryCount }, directoryPage, filterOptions, freshestChurchUpdatedAt] = await Promise.all([
     getChurchStatsAsync(),
     getChurchIndexPageData({
       query,
@@ -188,6 +241,7 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
     query
       ? getChurchDirectoryFilterOptions(filters)
       : Promise.resolve({ countries: [], languages: [] }),
+    getFreshestChurchUpdatedAtAsync(),
   ]);
   const { currentPage, totalCount, totalPages, pageItems } = directoryPage;
   const activeFilterLabels = buildActiveFilterLabels(filters);
@@ -199,6 +253,7 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
   const showDecisionGuide = !hasActiveFilters && currentPage === 1;
   const countryOptions = withSelectedOption(filterOptions.countries, filters.country);
   const languageOptions = withSelectedOption(filterOptions.languages, filters.language);
+  const { updatedIso, updatedLabel } = formatContentFreshness(freshestChurchUpdatedAt);
 
   // Top 5 denominations + 4 styles for the chip rail (handoff "Refine:" pattern).
   const topDenominations = DENOMINATION_FILTERS.slice(0, 5);
@@ -471,51 +526,55 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
       {showDecisionGuide && (
         <section className="mx-auto max-w-[1280px] px-5 pt-12 sm:px-12 sm:pt-14">
           <div className="border-b border-rose-gold/[0.12] pb-10">
-            <p className="gc-eyebrow">Start your search</p>
+            <p className="gc-eyebrow">Compare at a glance</p>
             <h2 className="mt-2 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-[32px]">
-              Turn church details into a shortlist.
+              Compare what changes your first Sunday.
             </h2>
             <p className="mt-3 max-w-[760px] text-sm leading-[1.7] text-warm-brown sm:text-base">
-              Start with the signal you can judge before visiting, then open church profiles for
-              details: service times, music, videos, languages, location, and first-visit cues.
+              GospelChannel helps you compare the same practical signals across church profiles:
+              city, language, tradition, worship, service details, family information, and actual
+              music. Use the directory to build a shortlist, then confirm time-sensitive details on
+              each church&rsquo;s official website before visiting.
             </p>
-            <div className="mt-7 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                {
-                  href: "/church/style",
-                  label: "1. Worship style",
-                  body: "Pick the room sound you are most likely to return to: contemporary, gospel, charismatic, acoustic, Latin, African, or traditional.",
-                },
-                {
-                  href: "/church/denomination",
-                  label: "2. Tradition",
-                  body: "Narrow by Baptist, Pentecostal, Anglican, Lutheran, non-denominational, charismatic, and other church families.",
-                },
-                {
-                  href: "/church/city",
-                  label: "3. City",
-                  body: "Choose a realistic city before a broad radius. A church only helps if you can actually get there on Sunday.",
-                },
-                {
-                  href: "/guides/how-to-find-the-right-church",
-                  label: "4. Visit plan",
-                  body: "Use the step-by-step guide to compare two or three strong candidates without wasting months of Sundays.",
-                },
-              ].map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="group border-t border-rose-gold/[0.14] pt-4 transition-colors hover:border-rose-gold/40"
-                >
-                  <span className="block text-sm font-bold text-rose-gold transition-colors group-hover:text-rose-gold-deep">
-                    {item.label} &rarr;
-                  </span>
-                  <span className="mt-2 block text-sm leading-[1.6] text-warm-brown">
-                    {item.body}
-                  </span>
-                </Link>
-              ))}
+            <p className="mt-4 text-xs font-semibold text-muted-warm sm:hidden">Scroll to compare &rarr;</p>
+            <div className="mt-6 overflow-x-auto rounded-2xl border border-rose-gold/20 bg-white/65">
+              <table className="min-w-[820px] w-full border-collapse text-left text-sm">
+                <caption className="sr-only">Church details you can compare on GospelChannel</caption>
+                <thead>
+                  <tr className="border-b border-rose-gold/20 text-[11px] uppercase tracking-[0.08em] text-muted-warm">
+                    <th className="px-4 py-3 font-semibold">Compare</th>
+                    <th className="px-4 py-3 font-semibold">What you&rsquo;ll see</th>
+                    <th className="px-4 py-3 font-semibold">Why it matters</th>
+                    <th className="px-4 py-3 font-semibold">Start here</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {COMPARISON_CRITERIA.map((criterion) => (
+                    <tr key={criterion.label} className="border-b border-rose-gold/10 last:border-0 align-top">
+                      <th scope="row" className="px-4 py-3 font-semibold text-espresso">
+                        {criterion.label}
+                      </th>
+                      <td className="px-4 py-3 text-espresso/75">{criterion.shown}</td>
+                      <td className="px-4 py-3 text-espresso/75">{criterion.decision}</td>
+                      <td className="px-4 py-3">
+                        <Link
+                          href={criterion.href}
+                          className="font-semibold text-rose-gold underline decoration-rose-gold/30 underline-offset-2 hover:text-rose-gold-deep"
+                        >
+                          {criterion.linkLabel} &rarr;
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
+            <p className="mt-4 max-w-[860px] text-xs leading-relaxed text-muted-warm">
+              Directory fields come from published church profiles and enrichment of public church
+              information. A missing field means the detail is not published in the profile, not that
+              the church does not offer it. This directory is not a ranking or endorsement. Data
+              updated <time dateTime={updatedIso}>{updatedLabel}</time>.
+            </p>
           </div>
         </section>
       )}

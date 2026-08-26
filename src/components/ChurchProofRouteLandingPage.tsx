@@ -25,11 +25,37 @@ function truncate(value: string | undefined, maxLength = 96): string | null {
 }
 
 function formatLanguages(church: ChurchDirectoryEntry): string | null {
-  const languages = Array.from(new Set([
+  const languages = [
     church.language,
     ...(church.enrichmentHint?.languages ?? []),
-  ].filter((value): value is string => Boolean(value))));
+  ].filter((value): value is string => Boolean(value)).filter((value, index, values) => (
+    values.findIndex((candidate) => candidate.toLocaleLowerCase() === value.toLocaleLowerCase()) === index
+  ));
   return languages.length > 0 ? languages.slice(0, 3).join(", ") : null;
+}
+
+function formatServiceTime(church: ChurchDirectoryEntry): string {
+  return truncate(church.enrichmentHint?.serviceTimes, 88) ?? "Not published";
+}
+
+function formatWorship(church: ChurchDirectoryEntry): string {
+  const styles = church.musicStyle?.slice(0, 2).join(", ");
+  const playlistCount = church.playlistCount && church.playlistCount > 0
+    ? `${church.playlistCount} playlist${church.playlistCount === 1 ? "" : "s"}`
+    : null;
+  return [styles, playlistCount].filter(Boolean).join(" / ") || "Not published";
+}
+
+function formatFamilyDetails(church: ChurchDirectoryEntry): string {
+  const details = [
+    church.enrichmentHint?.childrenMinistry ? "Kids ministry" : null,
+    church.enrichmentHint?.youthMinistry ? "Youth ministry" : null,
+  ].filter((value): value is string => Boolean(value));
+  return details.join(" / ") || "Not published";
+}
+
+function formatLocation(church: ChurchDirectoryEntry): string {
+  return truncate(church.enrichmentHint?.location || church.location || church.country, 88) ?? "Not published";
 }
 
 function buildChurchDetails(church: ChurchDirectoryEntry): string[] {
@@ -61,6 +87,8 @@ export function ChurchProofRouteLandingPage({
   breadcrumbs,
   faqs,
   relatedLinks,
+  comparisonHeading = "Compare church details before you visit",
+  comparisonDescription = "Use the same practical fields to build a shortlist, then confirm time-sensitive details on the church's official website.",
 }: {
   canonicalPath: string;
   eyebrow: string;
@@ -76,6 +104,8 @@ export function ChurchProofRouteLandingPage({
   breadcrumbs: Breadcrumb[];
   faqs: CollectionFaq[];
   relatedLinks: RelatedLink[];
+  comparisonHeading?: string;
+  comparisonDescription?: string;
 }) {
   const canonicalUrl = `https://gospelchannel.com${canonicalPath}`;
   const jsonLd: Array<Record<string, unknown>> = [
@@ -175,20 +205,31 @@ export function ChurchProofRouteLandingPage({
             <p className="mt-10 text-muted-warm">No churches matched this list yet.</p>
           ) : (
             <>
-              <div className="mt-10 overflow-x-auto rounded-2xl border border-rose-gold/20 bg-white/60">
-                <table className="w-full border-collapse text-left text-sm">
+              <div className="mt-10">
+                <p className="gc-eyebrow">Compare at a glance</p>
+                <h2 className="mt-2 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso sm:text-3xl">
+                  {comparisonHeading}
+                </h2>
+                <p className="mt-3 max-w-[760px] text-sm leading-relaxed text-espresso/75 sm:text-base">
+                  {comparisonDescription}
+                </p>
+                <p className="mt-3 text-xs font-semibold text-muted-warm sm:hidden">Scroll to compare &rarr;</p>
+              </div>
+              <div className="mt-6 overflow-x-auto rounded-2xl border border-rose-gold/20 bg-white/60">
+                <table className="min-w-[960px] w-full border-collapse text-left text-sm">
+                  <caption className="sr-only">Comparison of published church profile details</caption>
                   <thead>
                     <tr className="border-b border-rose-gold/20 text-[11px] uppercase tracking-[0.08em] text-muted-warm">
                       <th className="px-4 py-3 font-semibold">Church</th>
-                      <th className="px-4 py-3 font-semibold">Location</th>
-                      <th className="px-4 py-3 font-semibold">Tradition</th>
                       <th className="px-4 py-3 font-semibold">Language</th>
-                      <th className="px-4 py-3 font-semibold">Church details</th>
+                      <th className="px-4 py-3 font-semibold">Service time</th>
+                      <th className="px-4 py-3 font-semibold">Worship &amp; music</th>
+                      <th className="px-4 py-3 font-semibold">Kids &amp; youth</th>
+                      <th className="px-4 py-3 font-semibold">Location</th>
                     </tr>
                   </thead>
                   <tbody>
                     {churches.map((church) => {
-                      const details = buildChurchDetails(church);
                       return (
                         <tr key={church.slug} className="border-b border-rose-gold/10 last:border-0 align-top">
                           <td className="px-4 py-3">
@@ -198,13 +239,15 @@ export function ChurchProofRouteLandingPage({
                             >
                               {church.name}
                             </Link>
+                            <span className="mt-1 block text-xs text-muted-warm">
+                              {church.denomination ?? "Tradition not published"}
+                            </span>
                           </td>
-                          <td className="px-4 py-3 text-espresso/75">{church.location || church.country || "-"}</td>
-                          <td className="px-4 py-3 text-espresso/75">{church.denomination ?? "-"}</td>
-                          <td className="px-4 py-3 text-espresso/75">{formatLanguages(church) ?? "-"}</td>
-                          <td className="px-4 py-3 text-espresso/75">
-                            {details.length > 0 ? details.join(" / ") : "Church details available"}
-                          </td>
+                          <td className="px-4 py-3 text-espresso/75">{formatLanguages(church) ?? "Not published"}</td>
+                          <td className="px-4 py-3 text-espresso/75">{formatServiceTime(church)}</td>
+                          <td className="px-4 py-3 text-espresso/75">{formatWorship(church)}</td>
+                          <td className="px-4 py-3 text-espresso/75">{formatFamilyDetails(church)}</td>
+                          <td className="px-4 py-3 text-espresso/75">{formatLocation(church)}</td>
                         </tr>
                       );
                     })}
