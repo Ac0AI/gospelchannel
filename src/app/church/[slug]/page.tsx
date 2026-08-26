@@ -224,8 +224,20 @@ export async function generateMetadata({ params }: ChurchPageProps): Promise<Met
     keywords: Array.from(keywordSet).slice(0, 20),
     alternates: { canonical: pageUrl },
     robots: indexable ? undefined : { index: false, follow: true },
-    openGraph: { title, description: seoDesc, type: "website", url: pageUrl, siteName: "GospelChannel" },
-    twitter: { card: "summary_large_image", title, description: seoDesc },
+    openGraph: {
+      images: [{ url: "https://gospelchannel.com/hero-worship.jpg" }],
+      title,
+      description: seoDesc,
+      type: "website",
+      url: pageUrl,
+      siteName: "GospelChannel",
+    },
+    twitter: {
+      images: ["https://gospelchannel.com/hero-worship.jpg"],
+      card: "summary_large_image",
+      title,
+      description: seoDesc,
+    },
   };
 }
 

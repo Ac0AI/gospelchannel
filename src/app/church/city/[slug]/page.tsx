@@ -42,6 +42,7 @@ export async function generateMetadata({ params, searchParams }: CityPageProps):
     description,
     alternates: { canonical: basePath },
     openGraph: {
+      images: [{ url: "https://gospelchannel.com/hero-worship.jpg" }],
       title,
       description,
       url: basePath,
@@ -49,6 +50,7 @@ export async function generateMetadata({ params, searchParams }: CityPageProps):
       siteName: "GospelChannel",
     },
     twitter: {
+      images: ["https://gospelchannel.com/hero-worship.jpg"],
       card: "summary_large_image",
       title,
       description,

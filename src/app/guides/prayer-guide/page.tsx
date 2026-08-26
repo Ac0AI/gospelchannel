@@ -82,6 +82,7 @@ export const metadata: Metadata = {
   description: META_DESCRIPTION,
   alternates: { canonical: PAGE_URL },
   openGraph: {
+    images: [{ url: "https://gospelchannel.com/hero-worship.jpg" }],
     title: "How to Start Praying",
     description: "A simple, honest guide for people who want to pray but don't know where to begin.",
     url: PAGE_URL,
@@ -89,6 +90,7 @@ export const metadata: Metadata = {
     type: "article",
   },
   twitter: {
+    images: ["https://gospelchannel.com/hero-worship.jpg"],
     card: "summary_large_image",
     title: "How to Start Praying",
     description: "A simple, honest guide for people who want to pray but don't know where to begin.",

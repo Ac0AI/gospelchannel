@@ -15,6 +15,7 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   alternates: { canonical: CANONICAL },
   openGraph: {
+    images: [{ url: "https://gospelchannel.com/hero-worship.jpg" }],
     title: TITLE,
     description: DESCRIPTION,
     url: CANONICAL,
@@ -22,6 +23,7 @@ export const metadata: Metadata = {
     siteName: "GospelChannel",
   },
   twitter: {
+    images: ["https://gospelchannel.com/hero-worship.jpg"],
     card: "summary_large_image",
     title: TITLE,
     description: DESCRIPTION,

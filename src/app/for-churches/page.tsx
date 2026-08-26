@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   description: PAGE_DESCRIPTION,
   alternates: { canonical: PAGE_URL },
   openGraph: {
+    images: [{ url: "https://gospelchannel.com/hero-worship.jpg" }],
     title: PAGE_TITLE,
     description: PAGE_DESCRIPTION,
     url: PAGE_URL,
@@ -26,6 +27,7 @@ export const metadata: Metadata = {
     siteName: "GospelChannel",
   },
   twitter: {
+    images: ["https://gospelchannel.com/hero-worship.jpg"],
     card: "summary_large_image",
     title: PAGE_TITLE,
     description: PAGE_DESCRIPTION,

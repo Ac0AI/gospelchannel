@@ -146,6 +146,7 @@ export async function generateMetadata({ searchParams }: ChurchIndexPageProps): 
     description: `Compare ${churchCountLabel} churches in ${countryCount} countries by worship style, tradition, city, language, and service times.`,
     alternates: { canonical: "https://gospelchannel.com/church" },
     openGraph: {
+      images: [{ url: "https://gospelchannel.com/hero-worship.jpg" }],
       title: "Find a Church",
       description: `Compare ${churchCountLabel} churches by worship style, tradition, city, language, and service times before your first visit.`,
       url: "https://gospelchannel.com/church",
@@ -153,6 +154,7 @@ export async function generateMetadata({ searchParams }: ChurchIndexPageProps): 
       siteName: "GospelChannel",
     },
     twitter: {
+      images: ["https://gospelchannel.com/hero-worship.jpg"],
       card: "summary_large_image",
       title: "Find a Church",
       description: `Compare ${churchCountLabel} churches by worship style, tradition, city, language, and service times.`,

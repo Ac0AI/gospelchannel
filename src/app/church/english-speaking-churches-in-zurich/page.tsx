@@ -50,8 +50,20 @@ export async function generateMetadata(): Promise<Metadata> {
     title,
     description,
     alternates: { canonical: CANONICAL },
-    openGraph: { title, description, url: CANONICAL, type: "website", siteName: "GospelChannel" },
-    twitter: { card: "summary_large_image", title, description },
+    openGraph: {
+      images: [{ url: "https://gospelchannel.com/hero-worship.jpg" }],
+      title,
+      description,
+      url: CANONICAL,
+      type: "website",
+      siteName: "GospelChannel",
+    },
+    twitter: {
+      images: ["https://gospelchannel.com/hero-worship.jpg"],
+      card: "summary_large_image",
+      title,
+      description,
+    },
     ...(totalCount < MIN_INDEXABLE ? { robots: { index: false, follow: true } } : {}),
   };
 }

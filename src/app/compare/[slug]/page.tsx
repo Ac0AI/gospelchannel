@@ -45,6 +45,7 @@ export async function generateMetadata({ params }: CompareGuidePageProps): Promi
     description,
     alternates: { canonical: pageUrl },
     openGraph: {
+      images: [{ url: "https://gospelchannel.com/hero-worship.jpg" }],
       title: guide.title,
       description,
       url: pageUrl,
@@ -52,6 +53,7 @@ export async function generateMetadata({ params }: CompareGuidePageProps): Promi
       type: "article",
     },
     twitter: {
+      images: ["https://gospelchannel.com/hero-worship.jpg"],
       card: "summary_large_image",
       title: guide.title,
       description,

@@ -25,6 +25,7 @@ export const metadata: Metadata = {
   description: META_DESCRIPTION,
   alternates: { canonical: PAGE_URL },
   openGraph: {
+    images: [{ url: "https://gospelchannel.com/hero-worship.jpg" }],
     title: "The worship songs churches actually sing (2026)",
     description:
       "825 churches, 31 countries, one shared songbook. Hillsong reaches 60% of them. Measured from real church playlists, not a licensing chart.",
@@ -33,6 +34,7 @@ export const metadata: Metadata = {
     type: "article",
   },
   twitter: {
+    images: ["https://gospelchannel.com/hero-worship.jpg"],
     card: "summary_large_image",
     title: "The worship songs churches actually sing (2026)",
     description:

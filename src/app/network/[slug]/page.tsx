@@ -56,6 +56,7 @@ export async function generateMetadata({ params }: NetworkPageProps): Promise<Me
     description,
     alternates: { canonical: pageUrl },
     openGraph: {
+      images: [{ url: "https://gospelchannel.com/hero-worship.jpg" }],
       title,
       description,
       type: "website",
@@ -63,6 +64,7 @@ export async function generateMetadata({ params }: NetworkPageProps): Promise<Me
       siteName: "GospelChannel",
     },
     twitter: {
+      images: ["https://gospelchannel.com/hero-worship.jpg"],
       card: "summary_large_image",
       title,
       description,

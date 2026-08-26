@@ -97,6 +97,7 @@ export const metadata: Metadata = {
   description: META_DESCRIPTION,
   alternates: { canonical: PAGE_URL },
   openGraph: {
+    images: [{ url: "https://gospelchannel.com/hero-worship.jpg" }],
     title: "Your First Church Visit, Step by Step",
     description: "Walk through every moment of a Sunday service so nothing catches you off guard.",
     url: PAGE_URL,
@@ -104,6 +105,7 @@ export const metadata: Metadata = {
     type: "article",
   },
   twitter: {
+    images: ["https://gospelchannel.com/hero-worship.jpg"],
     card: "summary_large_image",
     title: "Your First Church Visit, Step by Step",
     description: "Walk through every moment of a Sunday service so nothing catches you off guard.",

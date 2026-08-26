@@ -18,6 +18,7 @@ export const metadata: Metadata = {
   description: META_DESCRIPTION,
   alternates: { canonical: "https://gospelchannel.com/guides/denominations-comparison" },
   openGraph: {
+    images: [{ url: "https://gospelchannel.com/hero-worship.jpg" }],
     title: META_TITLE,
     description: META_DESCRIPTION,
     url: "https://gospelchannel.com/guides/denominations-comparison",
@@ -25,6 +26,7 @@ export const metadata: Metadata = {
     type: "article",
   },
   twitter: {
+    images: ["https://gospelchannel.com/hero-worship.jpg"],
     card: "summary_large_image",
     title: META_TITLE,
     description: META_DESCRIPTION,

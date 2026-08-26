@@ -21,6 +21,7 @@ export const metadata: Metadata = {
   description: CHURCH_CHOICE_ANSWER_PAGE_DESCRIPTION,
   alternates: { canonical: CHURCH_CHOICE_ANSWER_PAGE_URL },
   openGraph: {
+    images: [{ url: "https://gospelchannel.com/hero-worship.jpg" }],
     title: CHURCH_CHOICE_ANSWER_PAGE_TITLE,
     description: CHURCH_CHOICE_ANSWER_PAGE_DESCRIPTION,
     url: CHURCH_CHOICE_ANSWER_PAGE_URL,
@@ -28,6 +29,7 @@ export const metadata: Metadata = {
     type: "article",
   },
   twitter: {
+    images: ["https://gospelchannel.com/hero-worship.jpg"],
     card: "summary_large_image",
     title: CHURCH_CHOICE_ANSWER_PAGE_TITLE,
     description: CHURCH_CHOICE_ANSWER_PAGE_DESCRIPTION,

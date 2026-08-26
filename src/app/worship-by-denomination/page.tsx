@@ -21,6 +21,7 @@ export const metadata: Metadata = {
   description: META_DESCRIPTION,
   alternates: { canonical: PAGE_URL },
   openGraph: {
+    images: [{ url: "https://gospelchannel.com/hero-worship.jpg" }],
     title: "Do different denominations sing different worship songs?",
     description:
       "Everyone sings the megachurch anthems. Whether they also sing the new hymns depends entirely on their tradition. Measured from real church playlists.",
@@ -29,6 +30,7 @@ export const metadata: Metadata = {
     type: "article",
   },
   twitter: {
+    images: ["https://gospelchannel.com/hero-worship.jpg"],
     card: "summary_large_image",
     title: "Do different denominations sing different worship songs?",
     description:

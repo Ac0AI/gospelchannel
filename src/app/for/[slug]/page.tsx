@@ -27,6 +27,7 @@ export async function generateMetadata({
     description: data.meta_description,
     alternates: { canonical: url },
     openGraph: {
+      images: [{ url: "https://gospelchannel.com/hero-worship.jpg" }],
       title: data.meta_title,
       description: data.meta_description,
       url,
@@ -34,6 +35,7 @@ export async function generateMetadata({
       type: "article",
     },
     twitter: {
+      images: ["https://gospelchannel.com/hero-worship.jpg"],
       card: "summary_large_image",
       title: data.meta_title,
       description: data.meta_description,

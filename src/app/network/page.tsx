@@ -13,6 +13,7 @@ export const metadata: Metadata = {
     "Compare multi-campus church networks by location, campus pages, service details, worship music, and church details before choosing where to visit.",
   alternates: { canonical: CANONICAL },
   openGraph: {
+    images: [{ url: "https://gospelchannel.com/hero-worship.jpg" }],
     title: "Church Networks & Campuses",
     description:
       "Compare church networks and local campus details before choosing which local campus to visit.",
@@ -21,6 +22,7 @@ export const metadata: Metadata = {
     siteName: "GospelChannel",
   },
   twitter: {
+    images: ["https://gospelchannel.com/hero-worship.jpg"],
     card: "summary_large_image",
     title: "Church Networks & Campuses",
     description:

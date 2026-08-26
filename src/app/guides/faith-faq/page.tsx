@@ -44,6 +44,7 @@ export const metadata: Metadata = {
   description: META_DESCRIPTION,
   alternates: { canonical: PAGE_URL },
   openGraph: {
+    images: [{ url: "https://gospelchannel.com/hero-worship.jpg" }],
     title: "Common Questions About Faith",
     description:
       "Honest answers to the big questions about salvation, baptism, the Holy Spirit, and church life.",
@@ -52,6 +53,7 @@ export const metadata: Metadata = {
     type: "article",
   },
   twitter: {
+    images: ["https://gospelchannel.com/hero-worship.jpg"],
     card: "summary_large_image",
     title: "Common Questions About Faith",
     description: "Honest answers to the big questions about salvation, baptism, the Holy Spirit, and church life.",
