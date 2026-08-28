@@ -15,6 +15,7 @@ export const SITE_FOOTER_COLUMNS = [
   {
     title: "Find a church",
     links: [
+      { label: "Church Near Me", href: "/church-near-me" },
       { label: "Church Choice Answers", href: "/guides/church-choice-answers" },
       { label: "Church Fit Quiz", href: "/guides/church-fit-quiz" },
       { label: "Worship Style Match", href: "/guides/worship-style-match" },

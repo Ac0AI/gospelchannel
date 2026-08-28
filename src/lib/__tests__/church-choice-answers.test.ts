@@ -57,7 +57,7 @@ describe("church choice answers", () => {
       id: "how-do-i-find-the-best-church-near-me",
       question: "How do I find the best church near me?",
       guide: expect.objectContaining({ href: "/guides/how-to-find-the-right-church" }),
-      proof: expect.objectContaining({ href: "/church/city" }),
+      proof: expect.objectContaining({ href: "/church-near-me" }),
     }));
     expect(CHURCH_CHOICE_ANSWERS).toContainEqual(expect.objectContaining({
       id: "which-campus-of-a-church-network-should-i-visit",

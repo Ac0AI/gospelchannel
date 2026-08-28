@@ -8,6 +8,7 @@ import { authClient } from "@/lib/auth/client";
 import { useMyChurchAccess } from "@/components/useMyChurchAccess";
 
 const navItems = [
+  { href: "/church-near-me", label: "Near me" },
   { href: "/church", label: "Churches" },
   { href: "/guides", label: "Guides" },
   { href: "/compare", label: "Compare" },
@@ -52,7 +53,7 @@ export function SiteHeader() {
 
   function isActive(href: string) {
     if (href === "/") return pathname === "/";
-    return pathname.startsWith(href);
+    return pathname === href || pathname.startsWith(`${href}/`);
   }
 
   return (

@@ -157,7 +157,7 @@ export default async function HowToFindTheRightChurchPage() {
         eyebrow="The capstone guide"
         title="How to find the right church"
         titleAccent="without wasting a year of Sundays"
-        intro="A seven-step framework that takes you from no plan to a short list of churches worth visiting — usually inside an hour. Built from the patterns we've watched thousands of church-seekers walk through. No magic; just the order of operations most people skip when they try to figure it out alone."
+        intro="A seven-step framework that takes you from no plan to a short list of churches worth visiting, usually inside an hour. No magic; just a practical order for the decisions people often try to make all at once."
       />
 
       <section className="mt-12">
@@ -190,9 +190,9 @@ export default async function HowToFindTheRightChurchPage() {
             description: "Compare tradition families after you know what kind of Sunday you want.",
           },
           {
-            href: "/church/city/austin#austin-church-finder",
-            label: "Try the Austin Sunday finder",
-            description: "Choose an Austin area, set a practical radius, and compare worship style, tradition, language, and service times.",
+            href: "/church-near-me",
+            label: "Find churches near you",
+            description: "Use an approximate location, set a practical radius, and compare worship style, tradition, language, and service times.",
           },
           {
             href: "/church",
@@ -273,12 +273,7 @@ export default async function HowToFindTheRightChurchPage() {
 
       <GuideStep id={HOW_TO_STEPS[3].id} step={4} title={HOW_TO_STEPS[3].title}>
         <p>
-          Open the city page for your actual location and look at what's there. Start with the
-          city so you do not cross-shop places you would never realistically attend, then use a
-          practical 5, 10, or 25-mile radius to turn the directory into a Sunday plan. In Austin,
-          the <Link href="/church/city/austin#austin-church-finder" className="font-semibold text-rose-gold underline decoration-rose-gold/35 underline-offset-4">Sunday finder</Link> lets
-          you use your current location or choose a local area before narrowing by the details
-          that matter to you.
+          Use the <Link href="/church-near-me" className="font-semibold text-rose-gold underline decoration-rose-gold/35 underline-offset-4">nearby church finder</Link> for your actual location. Start with a practical radius so you do not cross-shop places you would never realistically attend, then narrow by service time, worship, tradition, language, and family needs. You can also browse the city index if you prefer not to share a location.
         </p>
         <p>
           If you don't have a car, prioritise walkable or short-transit options. Two churches

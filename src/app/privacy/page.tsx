@@ -16,7 +16,7 @@ export default function PrivacyPage() {
       >
         Privacy <em className="gc-italic">Policy</em>.
       </h1>
-      <p className="mt-4 text-sm text-muted-warm">Last updated: July 26, 2026</p>
+      <p className="mt-4 text-sm text-muted-warm">Last updated: August 28, 2026</p>
 
       <div className="mt-12 space-y-10 font-serif text-lg leading-[1.7] text-espresso">
         <section>
@@ -34,6 +34,7 @@ export default function PrivacyPage() {
           <ul className="mt-3 list-disc space-y-2 pl-6 text-base text-warm-brown">
             <li><strong className="text-espresso">Anonymous usage data</strong> &mdash; page views and general traffic patterns via PostHog. We use cookieless, memory-only analytics. No personally identifiable information is collected and no data persists between sessions.</li>
             <li><strong className="text-espresso">Local preferences</strong> &mdash; when you click &ldquo;This Moved Me&rdquo; or vote for a church, we store a small identifier in your browser&rsquo;s local storage so we can remember your interaction. This data stays on your device.</li>
+            <li><strong className="text-espresso">Nearby church searches</strong>: only after you click &ldquo;Use my location,&rdquo; your browser reads your position and rounds it to two decimal places before sending the search. GospelChannel receives only that approximate point, does not send coordinates to PostHog, and does not tie the search to an account.</li>
             <li><strong className="text-espresso">Church suggestions</strong> &mdash; if you submit a church via our suggestion form, we store the information you provide (church name, location, links).</li>
           </ul>
         </section>
@@ -67,14 +68,14 @@ export default function PrivacyPage() {
           <ul className="mt-3 list-disc space-y-2 pl-6 text-base text-warm-brown">
             <li><strong className="text-espresso">What it receives</strong>: your search terms (city, worship style, denomination, language) and, only if your assistant chooses to share it, an approximate location. We never request your precise GPS location.</li>
             <li><strong className="text-espresso">What it does</strong>: looks up matching churches in our public directory and returns their public profiles. It is read-only. It cannot change anything, and it never invents details such as service times.</li>
-            <li><strong className="text-espresso">What we store</strong>: nothing personal. We do not save your location, tie queries to you, or require an account. The assistant you use has its own privacy policy for the conversation itself.</li>
+            <li><strong className="text-espresso">What we store</strong>: we do not create a user profile, tie the query to an account, or keep a personal location history. The assistant you use has its own privacy policy for the conversation itself.</li>
           </ul>
         </section>
 
         <section>
           <h2 className="m-0 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso">Your rights</h2>
           <p className="mt-3 text-base text-warm-brown">
-            Since we don&rsquo;t collect personal data, set tracking cookies, or require accounts, there is no personal data to request or delete. You can clear local storage through your browser settings at any time.
+            We do not keep a personal location history or account-linked search profile, and we do not set tracking cookies. You can clear local storage through your browser settings at any time. If you have submitted information through a form, contact us to request access or deletion.
           </p>
         </section>
 

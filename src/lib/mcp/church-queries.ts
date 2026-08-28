@@ -32,6 +32,12 @@ export type ChurchResult = {
   phone?: string;
   mapsUrl?: string;
   livestreamUrl?: string;
+  streetAddress?: string | null;
+  languages?: string[];
+  hasKids?: boolean;
+  hasVisitorDetails?: boolean;
+  hasParkingInfo?: boolean;
+  checkedAt?: string;
 };
 
 export type ChurchProfile = ChurchResult & {
@@ -63,6 +69,12 @@ type ChurchRow = {
   website_url: string | null;
   cover_image_url: string | null;
   distance_km?: number | null;
+  street_address?: string | null;
+  languages?: string[] | null;
+  has_kids?: boolean | null;
+  has_visitor_details?: boolean | null;
+  has_parking_info?: boolean | null;
+  last_enriched_at?: string | Date | null;
 };
 
 type ProfileRow = ChurchRow & {
@@ -75,7 +87,13 @@ type ProfileRow = ChurchRow & {
   youtube_url: string | null;
 };
 
-type Filters = { style?: string; denomination?: string; language?: string };
+type Filters = {
+  style?: string;
+  denomination?: string;
+  language?: string;
+  hasServiceTimes?: boolean;
+  kids?: boolean;
+};
 
 function clamp(value: number, min: number, max: number): number {
   if (!Number.isFinite(value)) return min;
@@ -135,6 +153,12 @@ function buildFilters(p: (value: unknown) => string, filters: Filters, c = "c", 
       `AND (${c}.language ILIKE ${token} OR EXISTS (SELECT 1 FROM unnest(${e}.languages) lg WHERE lg ILIKE ${token}))`,
     );
   }
+  if (filters.hasServiceTimes) {
+    clauses.push(`AND ${e}.service_times IS NOT NULL AND jsonb_typeof(${e}.service_times) = 'array' AND jsonb_array_length(${e}.service_times) > 0`);
+  }
+  if (filters.kids) {
+    clauses.push(`AND (${e}.children_ministry IS TRUE OR ${e}.youth_ministry IS TRUE)`);
+  }
   return clauses.join("\n      ");
 }
 
@@ -165,6 +189,17 @@ function mapRow(row: ChurchRow): ChurchResult {
   if (row.phone) result.phone = row.phone;
   if (row.google_maps_url) result.mapsUrl = row.google_maps_url;
   if (row.livestream_url) result.livestreamUrl = row.livestream_url;
+  if (row.street_address?.trim()) result.streetAddress = row.street_address.trim();
+  if (Array.isArray(row.languages) && row.languages.length > 0) {
+    result.languages = [...new Set(row.languages.map((value) => value.trim()).filter(Boolean))];
+  }
+  result.hasKids = row.has_kids === true;
+  result.hasVisitorDetails = row.has_visitor_details === true;
+  result.hasParkingInfo = row.has_parking_info === true;
+  if (row.last_enriched_at) {
+    const checkedAt = new Date(row.last_enriched_at);
+    if (!Number.isNaN(checkedAt.getTime())) result.checkedAt = checkedAt.toISOString();
+  }
   return result;
 }
 
@@ -200,7 +235,11 @@ async function queryNear(input: {
         c.slug, c.name, c.location, c.country, c.denomination, c.music_style, c.language,
         c.website, c.header_image,
         e.service_times, e.phone, e.google_maps_url, e.livestream_url, e.summary,
-        e.website_url, e.cover_image_url,
+        e.website_url, e.cover_image_url, e.street_address, e.languages,
+        (e.children_ministry IS TRUE OR e.youth_ministry IS TRUE) AS has_kids,
+        (e.enrichment_status = 'complete' AND NULLIF(trim(e.what_to_expect), '') IS NOT NULL) AS has_visitor_details,
+        (NULLIF(trim(e.parking_info), '') IS NOT NULL) AS has_parking_info,
+        e.last_enriched_at,
         (6371 * acos(least(1, greatest(-1,
           sin(radians(${latToken})) * sin(radians(e.latitude)) +
           cos(radians(${latToken})) * cos(radians(e.latitude)) * cos(radians(e.longitude - ${lngToken}))
@@ -305,6 +344,8 @@ export async function findChurchesNear(input: {
   worshipStyle?: string;
   denomination?: string;
   language?: string;
+  hasServiceTimes?: boolean;
+  kids?: boolean;
 }): Promise<ChurchResult[]> {
   const lat = round2(input.latitude);
   const lng = round2(input.longitude);
@@ -314,8 +355,10 @@ export async function findChurchesNear(input: {
     style: norm(input.worshipStyle) || undefined,
     denomination: norm(input.denomination) || undefined,
     language: norm(input.language) || undefined,
+    hasServiceTimes: input.hasServiceTimes === true,
+    kids: input.kids === true,
   };
-  const key = ["mcp-near", `${lat}|${lng}|${radiusKm}|${filters.style ?? ""}|${filters.denomination ?? ""}|${filters.language ?? ""}|${limit}`];
+  const key = ["mcp-near", `${lat}|${lng}|${radiusKm}|${filters.style ?? ""}|${filters.denomination ?? ""}|${filters.language ?? ""}|${filters.hasServiceTimes ? "times" : ""}|${filters.kids ? "kids" : ""}|${limit}`];
   return cached(key, () => queryNear({ lat, lng, radiusKm, limit, filters }));
 }
 

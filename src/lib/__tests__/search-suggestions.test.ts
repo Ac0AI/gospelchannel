@@ -94,8 +94,8 @@ describe("search suggestions", () => {
       href: "/guides/church-choice-answers",
     });
     expect(getDecisionSearchSuggestions("best church near me")[0]).toMatchObject({
-      type: "guide",
-      href: "/guides/church-choice-answers",
+      type: "proof_route",
+      href: "/church-near-me",
     });
     expect(getDecisionSearchSuggestions("what church should i visit first")[0]).toMatchObject({
       type: "guide",
@@ -135,7 +135,7 @@ describe("search suggestions", () => {
     });
     expect(getDecisionSearchSuggestions("church near me")[0]).toMatchObject({
       type: "proof_route",
-      href: "/church/city",
+      href: "/church-near-me",
     });
     expect(getDecisionSearchSuggestions("churches in my city")[0]).toMatchObject({
       type: "proof_route",
@@ -143,7 +143,7 @@ describe("search suggestions", () => {
     });
     expect(getDecisionSearchSuggestions("church near me sunday")[0]).toMatchObject({
       type: "proof_route",
-      href: "/church/churches-with-service-times",
+      href: "/church-near-me",
     });
     expect(getDecisionSearchSuggestions("church with kids ministry near me")[0]).toMatchObject({
       type: "proof_route",

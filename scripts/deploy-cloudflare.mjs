@@ -8,6 +8,7 @@ const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://gospelchannel.com
 const DEFAULT_WARM_PATHS = [
   "/",
   "/church",
+  "/church-near-me",
   "/church?page=2",
   "/church?q=berlin",
   "/church/suggest",

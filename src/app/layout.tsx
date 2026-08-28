@@ -175,6 +175,12 @@ export default function RootLayout({
                     description: "Church pages with service times, worship music, location, language, tradition, and visitor information.",
                   },
                   {
+                    "@type": "WebPage",
+                    name: "Church Near Me",
+                    url: "https://gospelchannel.com/church-near-me",
+                    description: "A location-based church finder for comparing approximate distance, recorded service times, worship style, tradition, language, and first-visit details.",
+                  },
+                  {
                     "@type": "CollectionPage",
                     name: "Churches with service times",
                     url: "https://gospelchannel.com/church/churches-with-service-times",

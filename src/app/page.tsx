@@ -51,12 +51,12 @@ const HOME_DECISION_PATHS = [
     proofLabel: "Churches with worship music",
   },
   {
-    question: "I want a church I can visit this Sunday.",
-    answer: "Find churches with published service times, then compare location and what each community is like.",
+    question: "I want a church near me this Sunday.",
+    answer: "Start with churches you can reach, then compare recorded service times and the details that shape a first visit.",
     guideHref: "/guides/first-visit-guide",
     guideLabel: "Plan my first visit",
-    proofHref: "/church/churches-with-service-times",
-    proofLabel: "See Sunday service times",
+    proofHref: "/church-near-me",
+    proofLabel: "Find nearby churches",
   },
   {
     question: "Tradition or theology matters to me.",

@@ -142,6 +142,25 @@ const AUDIENCE_DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = Object.valu
 
 const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
   {
+    id: "church-near-me",
+    type: "proof_route",
+    title: "Church Near Me",
+    subtitle: "Find nearby churches and compare the details that matter before Sunday.",
+    href: "/church-near-me",
+    priority: 110,
+    queries: [
+      "church near me",
+      "churches near me",
+      "best church near me",
+      "find church near me",
+      "find churches near me",
+      "healthy church near me",
+      "local church near me",
+      "church near me sunday",
+      "church near me this sunday",
+    ],
+  },
+  {
     id: "church-choice-answers",
     type: "guide",
     title: CHURCH_CHOICE_ANSWER_PAGE_TITLE.replace(" - What Church Should I Visit?", ""),
@@ -526,8 +545,6 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
     href: "/church/city",
     priority: 99,
     queries: [
-      "church near me",
-      "churches near me",
       "church in my city",
       "churches in my city",
       "local churches",
@@ -616,6 +633,7 @@ export function getDecisionSearchSuggestions(
   const isGenericChurchQuery = normalizedTokens.length === 1 && normalizedTokens[0] === "church";
 
   for (const candidate of DECISION_SUGGESTIONS) {
+    if (candidate.id === "church-near-me" && !normalizedTokens.includes("near") && !normalizedTokens.includes("local")) continue;
     if (isGenericChurchQuery && candidate.type === "proof_route") continue;
     if (isGenericChurchQuery && candidate.id === "worship-style-match") continue;
     if (isGenericChurchQuery && (candidate.id === "prayer-guide" || candidate.id === "prayer-wall")) continue;

@@ -65,8 +65,8 @@ export const CHURCH_CHOICE_ANSWERS = [
     detail:
       "Start with geography and service times, then narrow by worship style, language, tradition, kids needs, and church details. A nearby church that fits your real Sunday is usually better than a famous church you will not attend consistently.",
     guide: { href: "/guides/how-to-find-the-right-church", label: "Follow the church-search guide" },
-    proof: { href: "/church/city", label: "Browse churches by city" },
-    proofSignals: ["city", "service times", "worship fit", "language", "ease of visiting"],
+    proof: { href: "/church-near-me", label: "Find churches near you" },
+    proofSignals: ["approximate distance", "service times", "worship fit", "language", "ease of visiting"],
   },
   {
     id: "which-campus-of-a-church-network-should-i-visit",

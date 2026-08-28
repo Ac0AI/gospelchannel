@@ -79,6 +79,7 @@ describe("agent discovery", () => {
     const text = buildLlmsTxt(stats);
 
     expect(text).toContain("## Decision Queries");
+    expect(text).toContain("Where is the best church near me this Sunday?");
     expect(text).toContain("How do I find the right church in my city?");
     expect(text).toContain("What is the best church for me?");
     expect(text).toContain("Which churches near me match my worship style?");
@@ -150,6 +151,7 @@ describe("agent discovery", () => {
     expect(text).toContain("Proof routes: https://gospelchannel.com/church/english-speaking-churches, https://gospelchannel.com/church/english-speaking-churches-in-zurich, https://gospelchannel.com/church/churches-with-service-times");
     expect(text).toContain("Proof routes: https://gospelchannel.com/church/city, https://gospelchannel.com/church/churches-with-service-times");
     expect(text).toContain("## Proof Routes");
+    expect(text).toContain("[Church Near Me](https://gospelchannel.com/church-near-me)");
     expect(text).toContain("[Churches by worship style](https://gospelchannel.com/church/style)");
     expect(text).toContain("[Churches with service times](https://gospelchannel.com/church/churches-with-service-times)");
     expect(text).toContain("[Churches with worship music](https://gospelchannel.com/church/churches-with-worship-music)");
@@ -192,6 +194,12 @@ describe("agent discovery", () => {
     const card = buildAgentCard(stats);
 
     expect(card.decision_queries).toContain("What church should I visit for the first time?");
+    expect(card.decision_queries).toContain("Where is the best church near me this Sunday?");
+    expect(card.answer_map).toContainEqual(expect.objectContaining({
+      question: "How do I find the best church near me?",
+      proof: "https://gospelchannel.com/church-near-me",
+      evidence: ["approximate distance", "service times", "worship fit", "language", "ease of visiting"],
+    }));
     expect(card.decision_queries).toContain("Which church should I choose?");
     expect(card.decision_queries).toContain("Should I choose a big church or a small church?");
     expect(card.decision_queries).toContain("Should I choose Baptist or Pentecostal?");
@@ -306,6 +314,10 @@ describe("agent discovery", () => {
     expect(card.answer_first_query_patterns).toContainEqual(expect.stringContaining("Comparison queries"));
     expect(card.answer_first_query_patterns).toContainEqual(expect.stringContaining("Expectation and etiquette queries"));
     expect(card.decision_paths).toContainEqual(expect.objectContaining({
+      question: "I need the best church near me for this Sunday.",
+      proof: "https://gospelchannel.com/church-near-me",
+    }));
+    expect(card.decision_paths).toContainEqual(expect.objectContaining({
       question: "I need a direct answer to a church-choice question.",
       guide: "https://gospelchannel.com/guides/church-choice-answers",
       proof: "https://gospelchannel.com/church",
@@ -408,6 +420,10 @@ describe("agent discovery", () => {
     const audienceProofRoutes = card.audience_pages.flatMap((page) => page.proof_routes);
     expect(audienceProofRoutes.length).toBeGreaterThan(0);
     expect(audienceProofRoutes.every((url) => /^https:\/\/gospelchannel\.com\/(?:church|network)(?:\/|$)/.test(url))).toBe(true);
+    expect(card.proof_routes).toContainEqual(expect.objectContaining({
+      url: "https://gospelchannel.com/church-near-me",
+      proof: expect.stringContaining("approximate-distance"),
+    }));
     expect(card.proof_routes).toContainEqual(expect.objectContaining({
       url: "https://gospelchannel.com/church/denomination",
     }));

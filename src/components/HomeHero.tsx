@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { HeroSearch } from "@/components/HeroSearch";
 
@@ -101,6 +102,12 @@ export function HomeHero({ surpriseSlugs, churchCountLabel }: Props) {
 
         <div className="mt-9 w-full max-w-[620px]">
           <HeroSearch surpriseSlugs={surpriseSlugs} variant="page" />
+          <Link
+            href="/church-near-me"
+            className="mx-auto mt-4 inline-flex min-h-11 items-center text-sm font-bold text-white underline decoration-white/35 underline-offset-4 transition-colors hover:text-blush"
+          >
+            Use my location to find churches near me &rarr;
+          </Link>
         </div>
       </div>
 
