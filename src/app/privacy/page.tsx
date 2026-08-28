@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "GospelChannel privacy policy - how we handle your data.",
+  description:
+    "GospelChannel privacy policy for website analytics, assistant searches, approximate location, retention, and user controls.",
   alternates: { canonical: "https://gospelchannel.com/privacy" },
 };
 
