@@ -3,13 +3,9 @@
 import Link from "next/link";
 import { useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import posthog from "posthog-js";
-import {
-  TrackedChurchActionLink,
-  TrackedChurchProfileLink,
-} from "@/components/ChurchJourneyAnalytics";
+import { ChurchCard } from "@/components/ChurchCard";
 import {
   formatNearbyServiceTime,
-  getSafeExternalUrl,
   NEARBY_DEFAULT_RADIUS_KM,
   roundNearbyCoordinate,
   type NearbyChurchResult,
@@ -91,13 +87,13 @@ function FinderSelect({
 }) {
   return (
     <label className="block">
-      <span className="mb-2 block text-[10px] font-bold uppercase tracking-[0.16em] text-linen/55">
+      <span className="mb-2 block text-[10px] font-bold uppercase tracking-[0.16em] text-muted-warm">
         {label}
       </span>
       <select
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="min-h-11 w-full rounded-xl border border-linen/15 bg-linen/[0.07] px-3.5 py-3 text-base text-linen outline-none transition-colors focus:border-rose-gold"
+        className="min-h-11 w-full rounded-xl border border-rose-200/80 bg-white px-3.5 py-3 text-base text-espresso outline-none transition focus:border-rose-gold focus:ring-2 focus:ring-rose-gold/15"
       >
         {children}
       </select>
@@ -112,17 +108,6 @@ function formatDistance(distanceKm: number | undefined): string | null {
   return `${distanceKm.toFixed(1)} km · ${miles.toFixed(1)} mi`;
 }
 
-function formatCheckedAt(value: string | undefined): string | null {
-  if (!value) return null;
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return null;
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    year: "numeric",
-    timeZone: "UTC",
-  }).format(date);
-}
-
 function getLanguages(church: NearbyChurchResult): string[] {
   return [...new Set([...(church.languages ?? []), church.language ?? ""].map((value) => value.trim()).filter(Boolean))];
 }
@@ -130,13 +115,13 @@ function getLanguages(church: NearbyChurchResult): string[] {
 function getResultSignals(church: NearbyChurchResult): string[] {
   const languages = getLanguages(church);
   return [
-    church.worshipStyles[0],
+    formatDistance(church.distanceKm),
     church.denomination,
     languages[0],
     church.hasKids ? "Kids or youth details" : null,
     church.hasVisitorDetails ? "First-visit details" : null,
     church.hasParkingInfo ? "Parking or access notes" : null,
-  ].filter((value): value is string => Boolean(value)).slice(0, 5);
+  ].filter((value): value is string => Boolean(value)).slice(0, 4);
 }
 
 export function NearbyChurchFinder() {
@@ -245,17 +230,17 @@ export function NearbyChurchFinder() {
 
   return (
     <section id="nearby-church-finder" className="scroll-mt-24">
-      <div className="overflow-hidden rounded-[28px] bg-espresso text-linen shadow-[0_24px_80px_rgba(59,42,34,0.18)]">
+      <div className="overflow-hidden rounded-[28px] border border-rose-200/70 bg-white/85 text-espresso shadow-[0_20px_65px_rgba(113,78,64,0.12)] backdrop-blur-sm">
         <div className="grid lg:grid-cols-[0.85fr_1.15fr]">
-          <div className="relative overflow-hidden border-b border-linen/10 px-6 py-9 sm:px-10 sm:py-11 lg:border-r lg:border-b-0">
-            <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-24 h-80 w-80 rounded-full border border-rose-gold/15" />
-            <div aria-hidden="true" className="pointer-events-none absolute -right-6 -top-10 h-56 w-56 rounded-full border border-rose-gold/20" />
+          <div className="relative overflow-hidden border-b border-rose-200/70 bg-linen-deep/60 px-6 py-9 sm:px-10 sm:py-11 lg:border-r lg:border-b-0">
+            <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-24 h-80 w-80 rounded-full border border-rose-gold/10" />
+            <div aria-hidden="true" className="pointer-events-none absolute -right-6 -top-10 h-56 w-56 rounded-full border border-rose-gold/15" />
             <div className="relative max-w-[500px]">
               <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-rose-gold">Church near me</p>
-              <h2 className="mt-3 font-serif text-4xl font-semibold leading-[0.98] tracking-[-0.02em] sm:text-5xl">
+              <h2 className="mt-3 font-serif text-4xl font-semibold leading-[0.98] tracking-[-0.02em] text-espresso sm:text-5xl">
                 Start close. Then check the fit.
               </h2>
-              <p className="mt-5 text-sm leading-[1.75] text-linen/72 sm:text-base">
+              <p className="mt-5 text-sm leading-[1.75] text-warm-brown sm:text-base">
                 Distance gets you to the door. Service time, worship, tradition, language, and visitor details help you choose where to go this Sunday.
               </p>
 
@@ -276,15 +261,15 @@ export function NearbyChurchFinder() {
                 </button>
               ) : null}
 
-              <p aria-live="polite" className="mt-4 min-h-10 text-xs leading-relaxed text-blush/75">
+              <p aria-live="polite" className="mt-4 min-h-10 text-xs font-medium leading-relaxed text-rose-gold-deep">
                 {status}
               </p>
-              <p className="mt-2 text-[11px] leading-relaxed text-linen/45">
+              <p className="mt-2 text-[11px] leading-relaxed text-muted-warm">
                 Your exact position stays in your browser. Only an approximate point, rounded to about 1 km, is used for the search. Coordinates are not sent to analytics.
               </p>
               <Link
                 href="/church/city"
-                className="mt-4 inline-flex min-h-11 items-center text-sm font-bold text-blush underline decoration-blush/35 underline-offset-4"
+                className="mt-4 inline-flex min-h-11 items-center text-sm font-bold text-rose-gold-deep underline decoration-rose-gold/30 underline-offset-4 transition-colors hover:text-espresso"
               >
                 Prefer not to share location? Browse by city
               </Link>
@@ -293,7 +278,7 @@ export function NearbyChurchFinder() {
 
           <div className="px-6 py-9 sm:px-10 sm:py-11">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-linen/50">Search radius</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-warm">Search radius</p>
               <div className="mt-2 flex flex-wrap gap-2" role="group" aria-label="Search radius">
                 {RADIUS_OPTIONS.map((option) => (
                   <button
@@ -304,7 +289,7 @@ export function NearbyChurchFinder() {
                     className={`min-h-11 rounded-full border px-4 py-2 text-sm font-bold transition-colors ${
                       radiusKm === option.value
                         ? "border-rose-gold bg-rose-gold text-white"
-                        : "border-linen/15 bg-linen/[0.05] text-linen/70 hover:border-rose-gold/60 hover:text-linen"
+                        : "border-rose-200/80 bg-linen text-warm-brown hover:border-rose-gold/60 hover:bg-blush-light"
                     }`}
                   >
                     {option.label}
@@ -326,7 +311,7 @@ export function NearbyChurchFinder() {
             </div>
 
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              <label className="flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border border-linen/10 bg-linen/[0.04] px-4 py-3 text-sm text-linen/72">
+              <label className="flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border border-rose-200/70 bg-linen/70 px-4 py-3 text-sm text-warm-brown transition-colors hover:border-rose-gold/40">
                 <input
                   type="checkbox"
                   checked={hasServiceTimes}
@@ -335,7 +320,7 @@ export function NearbyChurchFinder() {
                 />
                 Recorded service time
               </label>
-              <label className="flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border border-linen/10 bg-linen/[0.04] px-4 py-3 text-sm text-linen/72">
+              <label className="flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border border-rose-200/70 bg-linen/70 px-4 py-3 text-sm text-warm-brown transition-colors hover:border-rose-gold/40">
                 <input
                   type="checkbox"
                   checked={kids}
@@ -350,104 +335,64 @@ export function NearbyChurchFinder() {
               type="button"
               onClick={() => location && void searchNearby(location)}
               disabled={!location || busy}
-              className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full border border-rose-gold bg-rose-gold px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-rose-gold-deep disabled:cursor-not-allowed disabled:border-linen/15 disabled:bg-linen/[0.08] disabled:text-linen/35"
+              className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full border border-rose-gold bg-rose-gold px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-rose-gold-deep disabled:cursor-not-allowed disabled:border-rose-200 disabled:bg-linen-deep disabled:text-muted-warm"
             >
               {isSearching ? "Updating..." : "Update nearby matches"}
             </button>
-            <p className="mt-3 text-[11px] leading-relaxed text-linen/45">
+            <p className="mt-3 text-[11px] leading-relaxed text-muted-warm">
               Results are ordered by approximate distance, not reviews, popularity, or payment.
             </p>
           </div>
         </div>
 
         {hasSearched ? (
-          <div className="border-t border-linen/10 bg-[#2f211a] px-6 py-8 sm:px-10 sm:py-10">
+          <div className="border-t border-rose-200/70 bg-linen/65 px-6 py-8 sm:px-10 sm:py-10">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-rose-gold">Nearby matches</p>
-                <h3 className="mt-2 font-serif text-2xl font-semibold text-linen sm:text-3xl">
+                <h3 className="mt-2 font-serif text-2xl font-semibold text-espresso sm:text-3xl">
                   {churches.length > 0
                     ? `${churches.length} church ${churches.length === 1 ? "profile" : "profiles"}`
                     : "No matches inside these filters"}
                 </h3>
               </div>
-              <p className="max-w-[480px] text-xs leading-relaxed text-linen/52">
+              <p className="max-w-[480px] text-xs leading-relaxed text-muted-warm">
                 A directory result is not proof that a congregation is active today. Confirm the current service and access details on the church&apos;s official site before you travel.
               </p>
             </div>
 
             {churches.length > 0 ? (
-              <div className="mt-7 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              <div className="mt-7 grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {churches.map((church, index) => {
-                  const distance = formatDistance(church.distanceKm);
                   const serviceTime = formatNearbyServiceTime(church.serviceTimes);
-                  const checkedAt = formatCheckedAt(church.checkedAt);
-                  const officialWebsite = getSafeExternalUrl(church.website);
                   const signals = getResultSignals(church);
-                  const locationLabel = church.streetAddress || church.location || church.country || "Location on profile";
+                  const locationLabel = church.streetAddress || church.location || undefined;
 
                   return (
-                    <article key={church.slug} className="flex h-full min-w-0 flex-col rounded-[18px] border border-linen/10 bg-linen/[0.06] p-5">
-                      <div className="flex items-start justify-between gap-4">
-                        <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-rose-gold">
-                          Match {String(index + 1).padStart(2, "0")}
-                        </p>
-                        {distance ? <span className="rounded-full bg-rose-gold/15 px-2.5 py-1 text-xs font-bold text-blush">{distance}</span> : null}
-                      </div>
-                      <h4 className="mt-3 break-words font-serif text-xl font-semibold leading-tight text-linen">{church.name}</h4>
-                      <p className="mt-2 break-words text-xs leading-relaxed text-linen/55">{locationLabel}</p>
-                      <div className="mt-4 border-y border-linen/10 py-3">
-                        <p className={`text-sm font-semibold ${serviceTime ? "text-blush" : "text-linen/55"}`}>
-                          {serviceTime ?? "No service time recorded"}
-                        </p>
-                        <p className="mt-1 text-[11px] text-linen/40">
-                          {serviceTime ? "Last recorded. Confirm before you go." : "Check the official church site before Sunday."}
-                        </p>
-                      </div>
-                      {signals.length > 0 ? (
-                        <div className="mt-4 flex flex-wrap gap-2">
-                          {signals.map((signal) => (
-                            <span key={signal} className="max-w-full break-words rounded-full border border-linen/10 bg-linen/[0.05] px-2.5 py-1 text-[11px] font-semibold text-linen/68">
-                              {signal}
-                            </span>
-                          ))}
-                        </div>
-                      ) : null}
-                      <div className="mt-auto flex flex-wrap items-center gap-3 pt-5">
-                        <TrackedChurchProfileLink
-                          href={`/church/${church.slug}`}
-                          churchSlug={church.slug}
-                          churchName={church.name}
-                          surface="nearby_church_finder"
-                          className="inline-flex min-h-11 items-center rounded-full bg-linen px-4 py-2 text-sm font-bold text-espresso transition-colors hover:bg-blush"
-                        >
-                          Plan a first visit
-                        </TrackedChurchProfileLink>
-                        {officialWebsite ? (
-                          <TrackedChurchActionLink
-                            href={officialWebsite}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            churchSlug={church.slug}
-                            churchName={church.name}
-                            action="website"
-                            surface="nearby_church_finder"
-                            className="inline-flex min-h-11 items-center text-sm font-bold text-blush underline decoration-blush/35 underline-offset-4"
-                          >
-                            Official site
-                          </TrackedChurchActionLink>
-                        ) : null}
-                      </div>
-                      <p className="mt-4 text-[10px] leading-relaxed text-linen/35">
-                        {checkedAt ? `Directory details checked ${checkedAt}.` : "Directory freshness not recorded."}
-                      </p>
-                    </article>
+                    <ChurchCard
+                      key={church.slug}
+                      slug={church.slug}
+                      name={church.name}
+                      description={church.summary || "Church profile"}
+                      country={church.country || "Nearby"}
+                      musicStyle={church.worshipStyles}
+                      thumbnailUrl={church.imageUrl ?? undefined}
+                      updatedAt={church.checkedAt}
+                      showFeedback={false}
+                      enrichmentLocation={locationLabel}
+                      serviceTimes={serviceTime ?? undefined}
+                      enrichmentSummary={church.summary ?? undefined}
+                      matchReasons={signals}
+                      prefetch={index < 8}
+                      surface="nearby_church_finder"
+                      buttonSurface="nearby_church_finder"
+                    />
                   );
                 })}
               </div>
             ) : (
-              <div className="mt-7 rounded-[18px] border border-linen/10 bg-linen/[0.05] px-5 py-8 text-center">
-                <p className="text-sm text-linen/68">Try the wider radius or remove one filter.</p>
+              <div className="mt-7 rounded-2xl border border-rose-200/70 bg-white/90 px-5 py-8 text-center shadow-sm">
+                <p className="text-sm text-warm-brown">Try the wider radius or remove one filter.</p>
               </div>
             )}
           </div>

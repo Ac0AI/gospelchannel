@@ -25,6 +25,7 @@ export type NearbyChurchResult = {
   worshipStyles: string[];
   language: string | null;
   languages?: string[];
+  imageUrl?: string | null;
   website: string | null;
   summary: string | null;
   distanceKm?: number;

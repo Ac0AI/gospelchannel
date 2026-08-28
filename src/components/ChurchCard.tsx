@@ -25,6 +25,8 @@ type ChurchCardProps = {
   verified?: boolean;
   prefetch?: boolean;
   matchReasons?: string[];
+  surface?: string;
+  buttonSurface?: string;
 };
 
 const GRADIENTS = [
@@ -74,6 +76,8 @@ export function ChurchCard({
   verified,
   prefetch = false,
   matchReasons = [],
+  surface = "church_card",
+  buttonSurface = "church_card_button",
 }: ChurchCardProps) {
   const initials = getInitials(name);
   const gradient = getGradient(name);
@@ -97,7 +101,7 @@ export function ChurchCard({
         href={`/church/${slug}`}
         churchSlug={slug}
         churchName={name}
-        surface="church_card"
+        surface={surface}
         prefetch={prefetch}
         className="group flex flex-1 flex-col"
       >
@@ -164,7 +168,7 @@ export function ChurchCard({
             href={`/church/${slug}`}
             churchSlug={slug}
             churchName={name}
-            surface="church_card_button"
+            surface={buttonSurface}
             prefetch={prefetch}
             className="inline-flex shrink-0 items-center justify-center rounded-full bg-rose-gold px-3.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-rose-gold-deep"
           >
