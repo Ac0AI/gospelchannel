@@ -95,10 +95,15 @@ export function HomeHero({ surpriseSlugs, churchCountLabel }: Props) {
         <div className="mt-9 w-full max-w-[620px]">
           <HeroSearch surpriseSlugs={surpriseSlugs} variant="page" />
           <Link
-            href="/church-near-me"
-            className="mx-auto mt-4 inline-flex min-h-11 items-center text-sm font-bold text-white underline decoration-white/35 underline-offset-4 transition-colors hover:text-blush"
+            href="/church-near-me#nearby-church-finder"
+            className="mx-auto mt-4 inline-flex min-h-12 items-center gap-2 rounded-full border border-white/25 bg-white px-5 py-3 text-sm font-bold text-espresso shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition-all hover:-translate-y-0.5 hover:bg-blush focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
           >
-            Use my location to find churches near me &rarr;
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
+              <circle cx="12" cy="12" r="8" />
+            </svg>
+            Find churches near me
           </Link>
         </div>
       </div>

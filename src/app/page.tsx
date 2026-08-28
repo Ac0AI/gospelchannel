@@ -35,6 +35,14 @@ const TOP_CITIES: Array<{ name: string; country: string; slug: string }> = [
 
 const HOME_DECISION_PATHS = [
   {
+    question: "I want a church near me this Sunday.",
+    answer: "Start with churches you can reach, then compare recorded service times and the details that shape a first visit.",
+    guideHref: "/guides/first-visit-guide",
+    guideLabel: "Plan my first visit",
+    proofHref: "/church-near-me#nearby-church-finder",
+    proofLabel: "Find nearby churches",
+  },
+  {
     question: "I'm not sure what kind of church is right for me.",
     answer: "Take the Church Fit Quiz to narrow down what matters, then explore churches that match.",
     guideHref: "/guides/church-fit-quiz",
@@ -49,14 +57,6 @@ const HOME_DECISION_PATHS = [
     guideLabel: "Find my worship style",
     proofHref: "/church/churches-with-worship-music",
     proofLabel: "Churches with worship music",
-  },
-  {
-    question: "I want a church near me this Sunday.",
-    answer: "Start with churches you can reach, then compare recorded service times and the details that shape a first visit.",
-    guideHref: "/guides/first-visit-guide",
-    guideLabel: "Plan my first visit",
-    proofHref: "/church-near-me",
-    proofLabel: "Find nearby churches",
   },
   {
     question: "Tradition or theology matters to me.",
