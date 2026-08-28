@@ -8,20 +8,14 @@ const HERO_SLIDES = [
   {
     avif: "/hero/worship-arena.avif",
     webp: "/hero/worship-arena.webp",
-    caption: "Hands raised",
-    city: "Contemporary worship",
   },
   {
     avif: "/hero/intimate-worship.avif",
     webp: "/hero/intimate-worship.webp",
-    caption: "Eyes closed",
-    city: "Sunday morning",
   },
   {
     avif: "/hero/outdoor-gathering.avif",
     webp: "/hero/outdoor-gathering.webp",
-    caption: "Wide sky",
-    city: "Sunset gathering",
   },
 ];
 
@@ -42,8 +36,6 @@ export function HomeHero({ surpriseSlugs, churchCountLabel }: Props) {
     const id = setInterval(() => setIdx((i) => (i + 1) % HERO_SLIDES.length), 5000);
     return () => clearInterval(id);
   }, []);
-
-  const current = HERO_SLIDES[idx];
 
   return (
     <section className="relative h-[560px] overflow-hidden sm:h-[680px] lg:h-[760px]">
@@ -111,11 +103,8 @@ export function HomeHero({ surpriseSlugs, churchCountLabel }: Props) {
         </div>
       </div>
 
-      {/* Hero attribution + page indicators */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-6 z-[2] flex items-center justify-between px-5 sm:px-12">
-        <p className="text-[11px] font-medium uppercase tracking-[0.06em] text-white/70 sm:text-xs">
-          Now showing &middot; <span className="text-white">{current.caption}</span> &middot; {current.city}
-        </p>
+      {/* Page indicators */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-6 z-[2] flex justify-end px-5 sm:px-12">
         <div className="flex gap-1.5" aria-hidden="true">
           {HERO_SLIDES.map((_, i) => (
             <span
