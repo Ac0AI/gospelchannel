@@ -10,6 +10,7 @@ const config: McpServerConfig = {
       title: "Echo",
       description: "Echoes text back",
       inputSchema: { type: "object", properties: { text: { type: "string" } } },
+      outputSchema: { type: "object", properties: { text: { type: "string" } }, required: ["text"] },
       handler: (args) => ({
         content: [{ type: "text", text: `echo:${String(args.text)}` }],
         structuredContent: { text: args.text },
@@ -46,12 +47,14 @@ describe("mcp protocol handler", () => {
     expect(body.result.instructions).toBe("test instructions");
   });
 
-  it("lists tools with their input schema", async () => {
+  it("lists tools with their input and output schemas", async () => {
     const res = await rpc({ jsonrpc: "2.0", id: 2, method: "tools/list" });
     const body = await res.json();
     const names = body.result.tools.map((tool: { name: string }) => tool.name);
     expect(names).toEqual(["echo", "boom"]);
     expect(body.result.tools[0].inputSchema.type).toBe("object");
+    expect(body.result.tools[0].outputSchema.required).toEqual(["text"]);
+    expect(body.result.tools[1].outputSchema).toBeUndefined();
   });
 
   it("calls a tool and returns content plus structuredContent", async () => {

@@ -32,6 +32,78 @@ const READ_ONLY_ANNOTATIONS = {
   openWorldHint: false,
 } as const;
 
+const CHURCH_RESULT_SCHEMA = {
+  type: "object",
+  properties: {
+    slug: { type: "string" },
+    name: { type: "string" },
+    url: { type: "string", format: "uri" },
+    location: { type: ["string", "null"] },
+    country: { type: ["string", "null"] },
+    denomination: { type: ["string", "null"] },
+    worshipStyles: { type: "array", items: { type: "string" } },
+    language: { type: ["string", "null"] },
+    website: { type: ["string", "null"] },
+    imageUrl: { type: ["string", "null"] },
+    summary: { type: ["string", "null"] },
+    distanceKm: { type: "number" },
+    serviceTimesNote: { type: "string" },
+    phone: { type: "string" },
+    mapsUrl: { type: "string" },
+    livestreamUrl: { type: "string" },
+    streetAddress: { type: ["string", "null"] },
+    languages: { type: "array", items: { type: "string" } },
+    hasKids: { type: "boolean" },
+    hasVisitorDetails: { type: "boolean" },
+    hasParkingInfo: { type: "boolean" },
+    checkedAt: { type: "string", format: "date-time" },
+  },
+  required: [
+    "slug",
+    "name",
+    "url",
+    "location",
+    "country",
+    "denomination",
+    "worshipStyles",
+    "language",
+    "website",
+    "imageUrl",
+    "summary",
+  ],
+  additionalProperties: true,
+} as const;
+
+const CHURCH_LIST_OUTPUT_SCHEMA = {
+  type: "object",
+  properties: {
+    churches: { type: "array", items: CHURCH_RESULT_SCHEMA },
+    center: {
+      type: "object",
+      properties: {
+        latitude: { type: "number" },
+        longitude: { type: "number" },
+      },
+      required: ["latitude", "longitude"],
+      additionalProperties: false,
+    },
+    city: { type: "string" },
+  },
+  required: ["churches"],
+  additionalProperties: false,
+} as const;
+
+const CHURCH_PROFILE_OUTPUT_SCHEMA = {
+  type: "object",
+  properties: {
+    church: {
+      anyOf: [CHURCH_RESULT_SCHEMA, { type: "null" }],
+    },
+  },
+  required: ["church"],
+  additionalProperties: false,
+} as const;
+
 function asNumber(value: unknown): number | undefined {
   if (typeof value === "number" && Number.isFinite(value)) return value;
   if (typeof value === "string" && value.trim() !== "") {
@@ -86,6 +158,7 @@ const findChurchesNearTool: McpToolDefinition = {
   annotations: READ_ONLY_ANNOTATIONS,
   description:
     "Find Christian worship churches near the user, ranked by distance. Use when the person is new in a place or traveling. Uses the coarse location ChatGPT shares; if only a city is named, it searches that city. Filter by worship style, denomination, or language.",
+  outputSchema: CHURCH_LIST_OUTPUT_SCHEMA,
   inputSchema: {
     type: "object",
     properties: {
@@ -144,6 +217,7 @@ const findChurchesInCityTool: McpToolDefinition = {
   annotations: READ_ONLY_ANNOTATIONS,
   description:
     "Find Christian worship churches in a named city, ranked by directory quality. Filter by worship style, denomination, or language.",
+  outputSchema: CHURCH_LIST_OUTPUT_SCHEMA,
   inputSchema: {
     type: "object",
     properties: {
@@ -184,6 +258,7 @@ const getChurchTool: McpToolDefinition = {
   annotations: READ_ONLY_ANNOTATIONS,
   description:
     "Get the full profile for one church by its slug (the last path segment of its gospelchannel.com/church/<slug> URL): worship styles, denomination, language, description, top worship songs, contact, and recorded service times if available.",
+  outputSchema: CHURCH_PROFILE_OUTPUT_SCHEMA,
   inputSchema: {
     type: "object",
     properties: {
