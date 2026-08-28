@@ -262,6 +262,7 @@ export function NearbyChurchFinder() {
               {canUseCurrentLocation ? (
                 <button
                   type="button"
+                  data-nearby-location-trigger
                   onClick={useCurrentLocation}
                   disabled={busy}
                   className="mt-7 inline-flex min-h-11 items-center gap-2 rounded-full bg-rose-gold px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-rose-gold-deep focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rose-gold disabled:cursor-wait disabled:opacity-60"

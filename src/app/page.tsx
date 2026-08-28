@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ChurchGridFilter } from "@/components/ChurchGridFilter";
 import { HomeHero } from "@/components/HomeHero";
+import { NearbyChurchFinder } from "@/components/NearbyChurchFinder";
 import { getPrayers } from "@/lib/prayer";
 import { PrayerFeed } from "@/components/PrayerFeed";
 import {
@@ -39,7 +40,7 @@ const HOME_DECISION_PATHS = [
     answer: "Start with churches you can reach, then compare recorded service times and the details that shape a first visit.",
     guideHref: "/guides/first-visit-guide",
     guideLabel: "Plan my first visit",
-    proofHref: "/church-near-me#nearby-church-finder",
+    proofHref: "#nearby-church-finder",
     proofLabel: "Find nearby churches",
   },
   {
@@ -172,6 +173,11 @@ export default async function HomePage() {
           <span className="mx-3.5 opacity-40">·</span>
           Free, no ads, no tracking
         </p>
+      </div>
+
+      {/* Nearby church finder */}
+      <div className="mx-auto max-w-[1280px] px-5 pt-16 sm:px-12 sm:pt-20">
+        <NearbyChurchFinder />
       </div>
 
       {/* Find your church */}

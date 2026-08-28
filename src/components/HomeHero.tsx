@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { HeroSearch } from "@/components/HeroSearch";
 
@@ -36,6 +35,14 @@ export function HomeHero({ surpriseSlugs, churchCountLabel }: Props) {
     const id = setInterval(() => setIdx((i) => (i + 1) % HERO_SLIDES.length), 5000);
     return () => clearInterval(id);
   }, []);
+
+  function startNearbySearch() {
+    const finder = document.getElementById("nearby-church-finder");
+    finder?.scrollIntoView({ behavior: "smooth", block: "start" });
+    finder
+      ?.querySelector<HTMLButtonElement>("[data-nearby-location-trigger]")
+      ?.click();
+  }
 
   return (
     <section className="relative h-[560px] overflow-hidden sm:h-[680px] lg:h-[760px]">
@@ -94,8 +101,10 @@ export function HomeHero({ surpriseSlugs, churchCountLabel }: Props) {
 
         <div className="mt-9 w-full max-w-[620px]">
           <HeroSearch surpriseSlugs={surpriseSlugs} variant="page" />
-          <Link
-            href="/church-near-me#nearby-church-finder"
+          <button
+            type="button"
+            onClick={startNearbySearch}
+            aria-controls="nearby-church-finder"
             className="mx-auto mt-4 inline-flex min-h-12 items-center gap-2 rounded-full border border-white/25 bg-white px-5 py-3 text-sm font-bold text-espresso shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition-all hover:-translate-y-0.5 hover:bg-blush focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
           >
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -104,7 +113,7 @@ export function HomeHero({ surpriseSlugs, churchCountLabel }: Props) {
               <circle cx="12" cy="12" r="8" />
             </svg>
             Find churches near me
-          </Link>
+          </button>
         </div>
       </div>
 
