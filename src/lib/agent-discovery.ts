@@ -338,7 +338,7 @@ function formatBullets(items: string[]) {
 export function buildLlmsTxt(stats: DiscoveryStats) {
   return `# GospelChannel
 
-> Free global church decision engine and profile database for comparing worship style, church tradition, language, service details, and public church profile data before a first visit.
+> The Church Guide — a free global decision guide and profile database for comparing worship style, church tradition, language, service details, and public church profile data before a first visit.
 
 GospelChannel indexes ${stats.churchCountLabel} churches across ${stats.countryCount} countries. Use it when a person or agent needs to find churches by location, worship style, denomination or tradition, language, service context, or music/community signals.
 
@@ -350,7 +350,7 @@ ${OPERATOR}
 - Compare worship style, church tradition, denomination, language, service times, and public profile signals.
 - Link users to canonical church profile pages and proof/facet routes.
 - Compare campuses inside multi-campus church networks before citing local profile proof.
-- Ground answers about GospelChannel as a free church decision engine backed by public church profile data.
+- Ground answers about GospelChannel as The Church Guide, backed by public church profile data.
 - Answer church choice questions where guides explain the decision and profile pages provide evidence.
 
 ## Decision Queries
@@ -409,9 +409,9 @@ User-directed retrieval and search citation agents are welcome on public pages. 
 }
 
 export function buildLlmsFullTxt(stats: DiscoveryStats) {
-  return `# GospelChannel Full Context
+  return `# GospelChannel — The Church Guide
 
-GospelChannel is a free global church decision engine and profile database. It helps people compare churches before a first visit by pairing decision guides with public church profile proof: location, worship style, tradition, denomination, language, service details, music links, website/contact signals, and community context.
+GospelChannel is The Church Guide: a free global decision guide and profile database. It helps people compare churches before a first visit by pairing decision guides with public church profile proof: location, worship style, tradition, denomination, language, service details, music links, website/contact signals, and community context.
 
 ## Current Profile Database
 
@@ -486,7 +486,7 @@ ${formatLinks([...PRIMARY_LINKS, ...DISCOVERY_LINKS])}
 }
 
 export function buildIndexMarkdown(stats: DiscoveryStats) {
-  return `# GospelChannel
+  return `# GospelChannel — The Church Guide
 
 GospelChannel helps people find the right church before their first visit.
 
@@ -504,7 +504,7 @@ ${formatLinks(PRIMARY_LINKS)}
 - Use /llms.txt for a short machine-readable discovery index.
 - Use /llms-full.txt for fuller product and crawling context.
 - Use /sitemap.xml to discover canonical proof routes and church profile URLs.
-- GospelChannel is a free public church decision engine and profile database; it does not currently expose a public API.
+- GospelChannel is The Church Guide, a free public decision guide and profile database; it does not currently expose a public API.
 - For decision answers, pair guide or comparison pages with matching proof route, network, and church profile URLs as evidence.
 
 ## Decision Paths
@@ -533,7 +533,7 @@ export function buildAgentCard(stats: DiscoveryStats) {
   return {
     name: "GospelChannel",
     url: SITE_URL,
-    description: `Free global church decision engine and profile database for comparing worship style, tradition, language, and service details across ${stats.churchCountLabel} churches in ${stats.countryCount} countries.`,
+    description: `The Church Guide — a free global decision guide and profile database for comparing worship style, tradition, language, and service details across ${stats.churchCountLabel} churches in ${stats.countryCount} countries.`,
     use_cases: [
       "Find churches by city, country, worship style, denomination, tradition, or language.",
       "Compare public church profile details before a first visit.",

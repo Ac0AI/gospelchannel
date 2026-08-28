@@ -9,6 +9,22 @@ type FooterColumn = {
 };
 
 describe("site discovery", () => {
+  it("uses The Church Guide as a descriptor while keeping GospelChannel as the entity", () => {
+    const headerSource = readFileSync(
+      new URL("../../components/SiteHeader.tsx", import.meta.url),
+      "utf8",
+    );
+    const layoutSource = readFileSync(
+      new URL("../../app/layout.tsx", import.meta.url),
+      "utf8",
+    );
+
+    expect(headerSource).toContain("GospelChannel");
+    expect(headerSource).toContain("The Church Guide");
+    expect(layoutSource).toContain('name: "GospelChannel"');
+    expect(layoutSource).toContain('slogan: "The Church Guide"');
+  });
+
   it("links the answer map and every audience route from the global footer", () => {
     const columns = (
       siteFooterModule as typeof siteFooterModule & {

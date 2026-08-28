@@ -14,7 +14,7 @@ import {
 } from "@/lib/mcp/church-queries";
 
 export const SERVER_INSTRUCTIONS = [
-  "GospelChannel helps someone find a Christian worship church that fits them —",
+  "GospelChannel, The Church Guide, helps someone find a Christian church that fits them —",
   "especially when they are new in a place or traveling. Lead with fit: worship",
   "style (contemporary, gospel, charismatic, traditional), denomination, language,",
   "and location. Call find_churches_near when you have or can infer a location;",

@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const { churchCountLabel } = await getChurchStatsAsync();
   return {
     title: "About GospelChannel",
-    description: `GospelChannel helps you find the right church before a first visit with worship style, tradition, location, language, and service times across ${churchCountLabel} churches.`,
+    description: `GospelChannel is The Church Guide, helping people compare worship style, tradition, location, language, and service times across ${churchCountLabel} churches.`,
     alternates: { canonical: PAGE_URL },
   };
 }
@@ -34,7 +34,7 @@ export default async function AboutPage() {
       "@context": "https://schema.org",
       "@type": "AboutPage",
       name: "About GospelChannel",
-      description: `GospelChannel is a church directory with worship style, tradition, location, language, and service times for ${churchCountLabel} churches in ${countryCount} countries.`,
+      description: `GospelChannel is The Church Guide, with worship style, tradition, location, language, and service times for ${churchCountLabel} churches in ${countryCount} countries.`,
       url: PAGE_URL,
       isPartOf: {
         "@type": "WebSite",
@@ -47,7 +47,8 @@ export default async function AboutPage() {
         url: SITE_URL,
         legalName: "AC0 AI, S.L.U.",
         taxID: "B26808741",
-        description: "Free church directory for people planning a first visit.",
+        slogan: "The Church Guide",
+        description: "Free global church guide for people planning a first visit.",
       },
       about: [
         { "@type": "Thing", name: "Church directory" },
@@ -114,7 +115,7 @@ export default async function AboutPage() {
             So we built one page. Then five. Then we asked thirty pastors if we could rebuild theirs. They said yes. Then they said please. Then they sent it to other pastors.
           </p>
           <p className="mt-5">
-            This is a church directory, made by people who think the front door matters. Guides and church pages help people explore service times, music, language, location, and what to expect on a first visit. It&rsquo;s free because we think charging churches to be findable is wrong. It&rsquo;s ad-free because we think putting a Coca-Cola banner next to a prayer is also wrong.
+            GospelChannel is The Church Guide we wished had existed, made by people who think the front door matters. Guides and church pages help people explore service times, music, language, location, and what to expect on a first visit. It&rsquo;s free because we think charging churches to be findable is wrong. It&rsquo;s ad-free because we think putting a Coca-Cola banner next to a prayer is also wrong.
           </p>
           <p className="mt-5">
             We&rsquo;re small. We&rsquo;re independent. We&rsquo;re <em className="text-rose-gold-deep">{churchCountLabel} churches in</em>. Most days we still can&rsquo;t believe it.

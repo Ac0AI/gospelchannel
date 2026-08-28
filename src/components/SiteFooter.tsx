@@ -68,7 +68,10 @@ export async function SiteFooter() {
             <div className="font-serif text-[28px] font-semibold leading-tight tracking-[-0.01em] text-linen">
               GospelChannel
             </div>
-            <p className="mt-3.5 max-w-[320px] text-sm leading-relaxed">
+            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.2em] text-blush">
+              The Church Guide
+            </p>
+            <p className="mt-4 max-w-[320px] text-sm leading-relaxed">
               Find the right church with worship style, tradition, service times, music, location, language, and visitor information.
             </p>
             <p className="mt-4 text-xs uppercase tracking-[0.08em] text-[rgba(253,248,244,0.55)]">

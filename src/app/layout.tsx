@@ -28,7 +28,7 @@ export const viewport: Viewport = {
 
 export async function generateMetadata(): Promise<Metadata> {
   const { churchCountLabel, countryCount } = await getChurchStatsAsync();
-  const siteDescription = `Find the right church by comparing worship style, tradition, location, language, and service times across ${churchCountLabel} churches in ${countryCount} countries.`;
+  const siteDescription = `GospelChannel is the global church guide for comparing worship style, tradition, location, language, and service times across ${churchCountLabel} churches in ${countryCount} countries.`;
   return {
     metadataBase: new URL("https://gospelchannel.com"),
     title: {
@@ -49,7 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
       "worship style churches",
     ],
     openGraph: {
-      title: "Find the Right Church Before Your First Visit",
+      title: "GospelChannel — The Church Guide",
       description: siteDescription,
       type: "website",
       url: "https://gospelchannel.com",
@@ -59,7 +59,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: "Find the Right Church Before Your First Visit",
+      title: "GospelChannel — The Church Guide",
       description: siteDescription,
       images: ["https://gospelchannel.com/hero-worship.jpg"],
     },
@@ -78,8 +78,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const scriptChurchCopy = "GospelChannel helps people find the right church before a first visit by comparing worship style, tradition, location, language, service times, music, and community life.";
-  const scriptBrowseCopy = "Explore churches by worship style, tradition, language, city, service times, music, and visitor information.";
+  const scriptChurchCopy = "GospelChannel is The Church Guide, helping people find the right church before a first visit by comparing worship style, tradition, location, language, service times, music, and community life.";
+  const scriptBrowseCopy = "The global church guide for exploring churches by worship style, tradition, language, city, service times, music, and visitor information.";
   const knowsAbout = [
     "church discovery",
     "church search",
@@ -116,6 +116,7 @@ export default function RootLayout({
                 legalName: "AC0 AI, S.L.U.",
                 taxID: "B26808741",
                 url: "https://gospelchannel.com",
+                slogan: "The Church Guide",
                 description: scriptChurchCopy,
                 knowsAbout,
                 address: {

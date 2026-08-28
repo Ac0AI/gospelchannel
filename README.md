@@ -1,8 +1,8 @@
-# GospelChannel.com
+# GospelChannel — The Church Guide
 
-Helping people find their way to the Lord - or just explore worship all over the world.
+Find the right church before your first visit.
 
-Curated gospel and worship discovery platform built with Next.js 16, OpenNext on Cloudflare Workers, Neon, Spotify, and YouTube.
+Free global church guide with worship-aware profiles, built with Next.js 16, OpenNext on Cloudflare Workers, Neon, Spotify, and YouTube.
 
 > Solo-maintained project, and my first open source project. This repository is public so people can report bugs, suggest improvements, and send small focused pull requests. I am still learning the open source side of things, so patience and clarity help a lot.
 
@@ -14,7 +14,8 @@ Curated gospel and worship discovery platform built with Next.js 16, OpenNext on
 
 ## What the app does
 
-- Browse curated church, worship, and gospel music content
+- Find and compare churches by location, tradition, language, worship style, and service details
+- Browse curated worship and gospel music connected to church profiles
 - Explore church pages with Spotify embeds and YouTube video grids
 - Submit church suggestions and ownership claims
 - Run scheduled content refresh jobs

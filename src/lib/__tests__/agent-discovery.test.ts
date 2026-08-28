@@ -4,6 +4,17 @@ import { buildAgentCard, buildLlmsFullTxt, buildLlmsTxt } from "@/lib/agent-disc
 const stats = { churchCountLabel: "12,345", countryCount: 42 };
 
 describe("agent discovery", () => {
+  it("publishes The Church Guide descriptor without renaming GospelChannel", () => {
+    const card = buildAgentCard(stats);
+    const llms = buildLlmsTxt(stats);
+    const full = buildLlmsFullTxt(stats);
+
+    expect(card.name).toBe("GospelChannel");
+    expect(card.description).toContain("The Church Guide");
+    expect(llms).toContain("> The Church Guide");
+    expect(full).toContain("# GospelChannel — The Church Guide");
+  });
+
   it("keeps legacy machine answers for visitor-rewritten church-choice guidance", () => {
     const legacyAnswers = [
       [

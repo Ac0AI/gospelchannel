@@ -71,7 +71,7 @@ function buildHomeFaqSchema(churchCountLabel: string, countryCount: number) {
   const questions: Array<{ q: string; a: string }> = [
     {
       q: "What is GospelChannel?",
-      a: "GospelChannel helps you find the right church before your first visit. Compare worship style, tradition, language, service times, location, and visitor details on each church page before Sunday.",
+      a: "GospelChannel is The Church Guide. It helps you find the right church before your first visit by comparing worship style, tradition, language, service times, location, and visitor details before Sunday.",
     },
     {
       q: "Can churches list themselves on GospelChannel?",
@@ -89,7 +89,7 @@ function buildHomeFaqSchema(churchCountLabel: string, countryCount: number) {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    description: `Answers to common questions about GospelChannel — a free church directory of ${churchCountLabel} churches across ${countryCount} countries, with worship style, tradition, location, language, and service times.`,
+    description: `Answers to common questions about GospelChannel, The Church Guide, across ${churchCountLabel} churches in ${countryCount} countries.`,
     mainEntity: questions.map(({ q, a }) => ({
       "@type": "Question",
       name: q,
@@ -106,7 +106,7 @@ function buildHomeSchema(churchCountLabel: string, countryCount: number) {
       "@type": "WebSite",
       name: "GospelChannel",
       url: "https://gospelchannel.com",
-      description: `A free church directory of ${churchCountLabel} churches across ${countryCount} countries.`,
+      description: `GospelChannel is The Church Guide, covering ${churchCountLabel} churches across ${countryCount} countries.`,
       potentialAction: {
         "@type": "SearchAction",
         target: "https://gospelchannel.com/church?q={search_term_string}",
@@ -123,7 +123,7 @@ function buildHomeSchema(churchCountLabel: string, countryCount: number) {
       "@type": "CollectionPage",
       name: "GospelChannel",
       url: "https://gospelchannel.com",
-      description: `Find the right church across ${churchCountLabel} churches in ${countryCount} countries by exploring worship style, tradition, location, language, and service times.`,
+      description: `GospelChannel is the global church guide for finding the right church across ${churchCountLabel} churches in ${countryCount} countries.`,
       isPartOf: {
         "@type": "WebSite",
         name: "GospelChannel",
