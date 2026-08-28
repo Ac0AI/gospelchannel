@@ -78,6 +78,7 @@ const CHURCH_LIST_OUTPUT_SCHEMA = {
   type: "object",
   properties: {
     churches: { type: "array", items: CHURCH_RESULT_SCHEMA },
+    count: { type: "integer", minimum: 0 },
     center: {
       type: "object",
       properties: {
@@ -89,7 +90,7 @@ const CHURCH_LIST_OUTPUT_SCHEMA = {
     },
     city: { type: "string" },
   },
-  required: ["churches"],
+  required: ["churches", "count"],
   additionalProperties: false,
 } as const;
 
@@ -199,7 +200,11 @@ const findChurchesNearTool: McpToolDefinition = {
 
     if (lat != null && lng != null) {
       const churches = await findChurchesNear({ latitude: lat, longitude: lng, radiusKm, limit, ...filters });
-      return textResult(summarizeList(churches, "near you"), { churches, center: { latitude: lat, longitude: lng } });
+      return textResult(summarizeList(churches, "near you"), {
+        churches,
+        count: churches.length,
+        center: { latitude: lat, longitude: lng },
+      });
     }
 
     // No coordinates — fall back to a city search.
@@ -208,12 +213,12 @@ const findChurchesNearTool: McpToolDefinition = {
       const city = normalizeCityInput(requestedCity);
       const citySlug = slugify(city);
       const churches = await findChurchesInCity({ citySlug, limit, ...filters });
-      return textResult(summarizeList(churches, `in ${city}`), { churches, city });
+      return textResult(summarizeList(churches, `in ${city}`), { churches, count: churches.length, city });
     }
 
     return textResult(
       "I need a location - share your location or name a city.",
-      { churches: [] },
+      { churches: [], count: 0 },
       true,
     );
   },
@@ -249,7 +254,7 @@ const findChurchesInCityTool: McpToolDefinition = {
   handler: async (args) => {
     const requestedCity = asString(args.city);
     if (!requestedCity) {
-      return textResult("Please provide a city name.", { churches: [] }, true);
+      return textResult("Please provide a city name.", { churches: [], count: 0 }, true);
     }
     const city = normalizeCityInput(requestedCity);
     const citySlug = slugify(city);
@@ -260,7 +265,7 @@ const findChurchesInCityTool: McpToolDefinition = {
       denomination: asString(args.denomination),
       language: asString(args.language),
     });
-    return textResult(summarizeList(churches, `in ${city}`), { churches, city });
+    return textResult(summarizeList(churches, `in ${city}`), { churches, count: churches.length, city });
   },
 };
 

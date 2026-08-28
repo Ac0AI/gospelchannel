@@ -40,7 +40,7 @@ describe("church MCP tools", () => {
       denomination: undefined,
       language: undefined,
     });
-    expect(result.structuredContent).toEqual({ churches: [], city: "Málaga" });
+    expect(result.structuredContent).toEqual({ churches: [], count: 0, city: "Málaga" });
   });
 
   it("normalizes a country-qualified city in the nearby fallback", async () => {
@@ -56,6 +56,44 @@ describe("church MCP tools", () => {
       denomination: undefined,
       language: undefined,
     });
-    expect(result.structuredContent).toEqual({ churches: [], city: "Málaga" });
+    expect(result.structuredContent).toEqual({ churches: [], count: 0, city: "Málaga" });
+  });
+
+  it("returns an explicit result count so the model does not confuse it with the limit", async () => {
+    findChurchesInCityMock.mockResolvedValue([
+      {
+        slug: "one",
+        name: "One Church",
+        url: "https://gospelchannel.com/church/one",
+        location: "London",
+        country: "United Kingdom",
+        denomination: null,
+        worshipStyles: [],
+        language: null,
+        website: null,
+        imageUrl: null,
+        summary: null,
+      },
+      {
+        slug: "two",
+        name: "Two Church",
+        url: "https://gospelchannel.com/church/two",
+        location: "London",
+        country: "United Kingdom",
+        denomination: null,
+        worshipStyles: [],
+        language: null,
+        website: null,
+        imageUrl: null,
+        summary: null,
+      },
+    ]);
+
+    const result = await tool("find_churches_in_city").handler(
+      { city: "London", limit: 20 },
+      { meta: {} },
+    );
+
+    expect(result.structuredContent).toMatchObject({ count: 2, city: "London" });
   });
 });
