@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import posthog from "posthog-js";
 import { TrackedChurchProfileLink } from "@/components/ChurchJourneyAnalytics";
 import {
@@ -26,6 +26,29 @@ type CityChurchFinderProps = {
 };
 
 const RADIUS_OPTIONS = [5, 10, 25] as const;
+
+type BrowserPermissionsPolicy = {
+  allowsFeature(feature: string): boolean;
+};
+
+function subscribeToLocationPolicy(): () => void {
+  // The policy is fixed for the lifetime of a document. React still checks the
+  // snapshot after hydration, and a reload creates a new subscription.
+  return () => undefined;
+}
+
+function getLocationPolicySnapshot(): boolean {
+  const policyDocument = document as Document & {
+    permissionsPolicy?: BrowserPermissionsPolicy;
+    featurePolicy?: BrowserPermissionsPolicy;
+  };
+  const policy = policyDocument.permissionsPolicy ?? policyDocument.featurePolicy;
+  return Boolean(navigator.geolocation) && (policy?.allowsFeature("geolocation") ?? true);
+}
+
+function getLocationPolicyServerSnapshot(): boolean {
+  return false;
+}
 
 function formatCheckedAt(value: string | undefined): string | null {
   if (!value) return null;
@@ -75,12 +98,17 @@ export function CityChurchFinder({
   languageOptions,
 }: CityChurchFinderProps) {
   const cityArticle = /^[aeiou]/i.test(city) ? "an" : "a";
+  const canUseCurrentLocation = useSyncExternalStore(
+    subscribeToLocationPolicy,
+    getLocationPolicySnapshot,
+    getLocationPolicyServerSnapshot,
+  );
   const [location, setLocation] = useState<CityFinderLocation | undefined>();
   const [radiusMiles, setRadiusMiles] = useState<(typeof RADIUS_OPTIONS)[number]>(10);
   const [filters, setFilters] = useState<CityFinderFilters>({});
   const [areaId, setAreaId] = useState("");
   const [isLocating, setIsLocating] = useState(false);
-  const [status, setStatus] = useState(`Choose ${cityArticle} ${city} area or use your current location.`);
+  const [status, setStatus] = useState(`Choose ${cityArticle} ${city} area to start.`);
   const [visibleCount, setVisibleCount] = useState(3);
   const trackedResults = useRef(new Set<string>());
 
@@ -130,7 +158,7 @@ export function CityChurchFinder({
     const area = areas.find((item) => item.id === nextAreaId);
     if (!area) {
       setLocation(undefined);
-      setStatus(`Choose ${cityArticle} ${city} area or use your current location.`);
+      setStatus(`Choose ${cityArticle} ${city} area to start.`);
       return;
     }
     setLocation(area);
@@ -205,22 +233,26 @@ export function CityChurchFinder({
                 Distance gets you to the door. Worship, tradition, language, service time, and family needs help you decide whether to return.
               </p>
 
-              <button
-                type="button"
-                onClick={useCurrentLocation}
-                disabled={isLocating || churches.length === 0}
-                className="mt-7 inline-flex items-center gap-2 rounded-full bg-rose-gold px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-rose-gold-deep focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rose-gold disabled:cursor-wait disabled:opacity-60"
-              >
-                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="3" />
-                  <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
-                  <circle cx="12" cy="12" r="8" />
-                </svg>
-                {isLocating ? "Finding you..." : "Use my location"}
-              </button>
+              {canUseCurrentLocation ? (
+                <button
+                  type="button"
+                  onClick={useCurrentLocation}
+                  disabled={isLocating || churches.length === 0}
+                  className="mt-7 inline-flex items-center gap-2 rounded-full bg-rose-gold px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-rose-gold-deep focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rose-gold disabled:cursor-wait disabled:opacity-60"
+                >
+                  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
+                    <circle cx="12" cy="12" r="8" />
+                  </svg>
+                  {isLocating ? "Finding you..." : "Use my location"}
+                </button>
+              ) : null}
 
-              <label className="mt-5 block max-w-[330px]">
-                <span className="mb-2 block text-[10px] font-bold uppercase tracking-[0.16em] text-linen/50">Or choose {cityArticle} {city} area</span>
+              <label className={`${canUseCurrentLocation ? "mt-5" : "mt-7"} block max-w-[330px]`}>
+                <span className="mb-2 block text-[10px] font-bold uppercase tracking-[0.16em] text-linen/50">
+                  {canUseCurrentLocation ? "Or choose" : "Choose"} {cityArticle} {city} area
+                </span>
                 <select
                   value={areaId}
                   onChange={(event) => chooseArea(event.target.value)}
@@ -235,7 +267,9 @@ export function CityChurchFinder({
 
               <p aria-live="polite" className="mt-4 min-h-5 text-xs leading-relaxed text-blush/70">{status}</p>
               <p className="mt-2 text-[11px] leading-relaxed text-linen/45">
-                Your precise location stays in this browser. Analytics never receives your coordinates.
+                {canUseCurrentLocation
+                  ? "Your precise location stays in this browser. Analytics never receives your coordinates."
+                  : `Distance is calculated in this browser from the ${city} area you choose.`}
               </p>
             </div>
           </div>

@@ -10,4 +10,12 @@ describe("next.config security headers", () => {
 
     expect(cspHeader?.value).toContain("https://www.youtube-nocookie.com");
   });
+
+  it("allows same-origin geolocation while keeping camera and microphone off", async () => {
+    const headerRules = await nextConfig.headers?.();
+    const rootRule = headerRules?.find((rule) => rule.source === "/(.*)");
+    const permissionsPolicy = rootRule?.headers.find((header) => header.key === "Permissions-Policy");
+
+    expect(permissionsPolicy?.value).toBe("camera=(), microphone=(), geolocation=(self)");
+  });
 });
