@@ -63,7 +63,7 @@ export function SiteHeader() {
           href="/"
           prefetch={false}
           aria-label="GospelChannel — The Church Guide"
-          className="flex shrink-0 flex-col text-espresso no-underline"
+          className="flex min-h-11 shrink-0 flex-col justify-center text-espresso no-underline"
         >
           <span className="font-serif text-2xl font-semibold leading-none tracking-[-0.01em]">
             GospelChannel
@@ -120,7 +120,7 @@ export function SiteHeader() {
             <Link
               href={myChurchHref}
               prefetch={false}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-rose-gold/30 bg-white text-rose-gold transition-colors hover:bg-rose-gold/[0.06]"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-rose-gold/30 bg-white text-rose-gold transition-colors hover:bg-rose-gold/[0.06]"
               title={churchCount > 1 ? "Your church admin" : "Your church"}
               aria-label={churchCount > 1 ? "Open church admin" : "Go to your church"}
             >
@@ -132,7 +132,7 @@ export function SiteHeader() {
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="relative z-50 flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-rose-gold/[0.06]"
+            className="relative z-50 flex h-11 w-11 items-center justify-center rounded-full transition-colors hover:bg-rose-gold/[0.06]"
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             aria-controls="mobile-nav"

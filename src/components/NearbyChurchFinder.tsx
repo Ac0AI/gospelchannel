@@ -330,7 +330,7 @@ export function NearbyChurchFinder() {
                   type="checkbox"
                   checked={hasServiceTimes}
                   onChange={(event) => setHasServiceTimes(event.target.checked)}
-                  className="h-4 w-4 accent-rose-gold"
+                  className="h-4 w-4 text-base accent-rose-gold"
                 />
                 Recorded service time
               </label>
@@ -339,7 +339,7 @@ export function NearbyChurchFinder() {
                   type="checkbox"
                   checked={kids}
                   onChange={(event) => setKids(event.target.checked)}
-                  className="h-4 w-4 accent-rose-gold"
+                  className="h-4 w-4 text-base accent-rose-gold"
                 />
                 Kids or youth details
               </label>
