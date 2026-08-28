@@ -86,9 +86,7 @@ export function HeroSearch({ churches = [], surpriseSlugs = [], variant = "hero"
         <button
           type="button"
           onClick={handleSurprise}
-          className={`mt-3 w-full text-center text-sm font-medium tracking-wide ${
-            isHero ? "text-white/50 hover:text-white" : "text-warm-brown/50 hover:text-warm-brown"
-          }`}
+          className="mt-3 w-full text-center text-sm font-medium tracking-wide text-white/80 drop-shadow-sm transition-colors hover:text-white"
         >
           or surprise me →
         </button>
