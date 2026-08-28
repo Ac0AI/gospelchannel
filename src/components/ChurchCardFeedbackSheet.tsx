@@ -7,9 +7,14 @@ type FeedbackKind = "data_issue" | "playlist_addition";
 type ChurchCardFeedbackSheetProps = {
   churchSlug: string;
   churchName: string;
+  triggerLabel?: string;
 };
 
-export function ChurchCardFeedbackSheet({ churchSlug, churchName }: ChurchCardFeedbackSheetProps) {
+export function ChurchCardFeedbackSheet({
+  churchSlug,
+  churchName,
+  triggerLabel = "Missing or wrong?",
+}: ChurchCardFeedbackSheetProps) {
   const [open, setOpen] = useState(false);
   const [kind, setKind] = useState<FeedbackKind>("data_issue");
   const [field, setField] = useState("playlist");
@@ -65,9 +70,9 @@ export function ChurchCardFeedbackSheet({ churchSlug, churchName }: ChurchCardFe
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="text-xs font-medium text-mauve transition-colors hover:text-rose-gold-deep"
+        className="inline-flex min-h-11 items-center text-xs font-medium text-mauve transition-colors hover:text-rose-gold-deep"
       >
-        Missing or wrong?
+        {triggerLabel}
       </button>
 
       {open ? (

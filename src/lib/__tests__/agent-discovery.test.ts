@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildAgentCard, buildLlmsFullTxt, buildLlmsTxt } from "@/lib/agent-discovery";
+import { buildAgentCard, buildIndexMarkdown, buildLlmsFullTxt, buildLlmsTxt } from "@/lib/agent-discovery";
 
 const stats = { churchCountLabel: "12,345", countryCount: 42 };
 
@@ -73,6 +73,27 @@ describe("agent discovery", () => {
     expect(llms).toContain(
       "Which campus of a church network should I visit? Answer: Choose the campus you can actually attend and verify locally, not just the network name you recognize. Shared worship identity helps, but the visit decision is campus-specific. Guide: https://gospelchannel.com/guides/how-to-find-the-right-church. Proof: https://gospelchannel.com/network. Evidence: network campuses, city, service times, language, campus profile proof.",
     );
+  });
+
+  it("publishes the live read-only MCP endpoint consistently", () => {
+    const llms = buildLlmsTxt(stats);
+    const full = buildLlmsFullTxt(stats);
+    const markdown = buildIndexMarkdown(stats);
+    const card = buildAgentCard(stats);
+
+    expect(llms).toContain("[Church finder MCP](https://gospelchannel.com/mcp)");
+    expect(llms).toContain("public MCP endpoint at /mcp");
+    expect(full).toContain("public read-only Model Context Protocol endpoint at https://gospelchannel.com/mcp");
+    expect(markdown).toContain("public read-only MCP endpoint at /mcp");
+    expect(card.mcp).toEqual({
+      url: "https://gospelchannel.com/mcp",
+      transport: "streamable-http",
+      authentication: "none",
+      access: "read-only",
+      tools: ["find_churches_near", "find_churches_in_city", "get_church"],
+    });
+    expect(card.docs.mcp).toBe("https://gospelchannel.com/mcp");
+    expect(JSON.stringify(card)).not.toContain("No MCP server");
   });
 
   it("exposes church choice decision queries in llms.txt", () => {

@@ -25,9 +25,11 @@ const PRIMARY_LINKS = [
   { label: "About", url: `${SITE_URL}/about` },
   { label: "Contact", url: `${SITE_URL}/contact` },
   { label: "Privacy", url: `${SITE_URL}/privacy` },
+  { label: "Terms", url: `${SITE_URL}/terms` },
 ];
 
 const DISCOVERY_LINKS = [
+  { label: "Church finder MCP", url: `${SITE_URL}/mcp` },
   { label: "Sitemap", url: `${SITE_URL}/sitemap.xml` },
   { label: "LLMs index", url: `${SITE_URL}/llms.txt` },
   { label: "Full LLM context", url: `${SITE_URL}/llms-full.txt` },
@@ -411,7 +413,8 @@ ${formatLinks(DISCOVERY_LINKS)}
 - Use the sitemap for crawl discovery and church profile URLs.
 - For concise non-JavaScript context, fetch /index.md.
 - For expanded product context, fetch /llms-full.txt.
-- GospelChannel does not publish a public API, OpenAPI spec, SDK, MCP server, OAuth app, or CLI in this v1 discovery surface.
+- For structured read-only lookup, connect to the public MCP endpoint at /mcp and use find_churches_near, find_churches_in_city, or get_church.
+- GospelChannel does not publish a general REST API, OpenAPI spec, SDK, OAuth app, webhook integration, or CLI. The MCP endpoint exposes public directory data without authentication.
 
 ## Crawler Policy
 
@@ -484,7 +487,7 @@ For direct human-like lookup, use /church?q=SEARCH_TERM. For broad crawling, pre
 
 ## Agent And Integration Status
 
-GospelChannel does not currently provide a public API, OpenAPI schema, SDK, OAuth integration, MCP server, webhook system, CLI, or paid developer platform. Agents should use public pages, markdown discovery files, structured data, and sitemaps. A read-only public API may be considered later, but it is intentionally out of scope for Agent Discovery v1.
+GospelChannel provides a public read-only Model Context Protocol endpoint at ${SITE_URL}/mcp using Streamable HTTP. It exposes find_churches_near, find_churches_in_city, and get_church for structured church discovery and profile lookup. It requires no authentication and only returns public directory data. GospelChannel does not provide a general REST API, OpenAPI schema, SDK, OAuth integration, webhook system, CLI, or paid developer platform.
 
 ## Trust And Policy
 
@@ -515,7 +518,8 @@ ${formatLinks(PRIMARY_LINKS)}
 - Use /llms.txt for a short machine-readable discovery index.
 - Use /llms-full.txt for fuller product and crawling context.
 - Use /sitemap.xml to discover canonical proof routes and church profile URLs.
-- GospelChannel is The Church Guide, a free public decision guide and profile database; it does not currently expose a public API.
+- Use the public read-only MCP endpoint at /mcp for structured nearby, city, and church-profile lookup.
+- GospelChannel is The Church Guide, a free public decision guide and profile database. It does not expose a general REST API.
 - For decision answers, pair guide or comparison pages with matching proof route, network, and church profile URLs as evidence.
 
 ## Decision Paths
@@ -562,6 +566,7 @@ export function buildAgentCard(stats: DiscoveryStats) {
       "Location, style, denomination, and tradition proof/facet pages",
       "Sitemap-based discovery",
       "Markdown and llms.txt discovery files",
+      "Public read-only MCP church search and profile lookup",
       "Structured data on public pages",
       "Decision guides and comparison pages connected to real church profile data",
       "Audience-intent pages connected to guide answers and profile proof routes",
@@ -585,13 +590,21 @@ export function buildAgentCard(stats: DiscoveryStats) {
       audienceIntent: `${SITE_URL}/for/[slug]`,
       comparison: `${SITE_URL}/compare/[slug]`,
       facetHub: `${SITE_URL}/church/{country,city,style,denomination}/[slug]`,
+      mcp: `${SITE_URL}/mcp`,
+    },
+    mcp: {
+      url: `${SITE_URL}/mcp`,
+      transport: "streamable-http",
+      authentication: "none",
+      access: "read-only",
+      tools: ["find_churches_near", "find_churches_in_city", "get_church"],
     },
     limitations: [
-      "No public API in Agent Discovery v1",
-      "No OpenAPI schema",
+      "No general REST API or OpenAPI schema",
       "No OAuth or developer key flow",
-      "No MCP server, SDK, CLI, or webhook integration",
-      "Agents should use public pages, markdown discovery files, and sitemaps",
+      "MCP access is read-only and returns public directory data",
+      "No SDK, CLI, or webhook integration",
+      "Agents should use MCP for structured lookup and public pages, markdown discovery files, and sitemaps for source context",
     ],
     contact: `${SITE_URL}/contact`,
     operator: {
@@ -604,6 +617,7 @@ export function buildAgentCard(stats: DiscoveryStats) {
       llmsFull: `${SITE_URL}/llms-full.txt`,
       markdownIndex: `${SITE_URL}/index.md`,
       sitemap: `${SITE_URL}/sitemap.xml`,
+      mcp: `${SITE_URL}/mcp`,
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
     llms: `${SITE_URL}/llms.txt`,

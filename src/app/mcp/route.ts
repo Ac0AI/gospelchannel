@@ -1,8 +1,8 @@
 // Model Context Protocol endpoint. POST JSON-RPC here to list and call the
 // church-finder tools. The same URL powers a ChatGPT App and works in Claude /
 // Cursor. Public, no auth (public directory data); Neon is protected by the
-// R2-backed cache in church-queries.ts. Add a Cloudflare edge rate-limit rule on
-// /mcp before public launch.
+// R2-backed cache in church-queries.ts and a Cloudflare edge rate-limit on POST
+// /mcp.
 
 import type { NextRequest } from "next/server";
 import { CHURCH_TOOLS, SERVER_INSTRUCTIONS } from "@/lib/mcp/church-tools";

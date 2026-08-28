@@ -10,6 +10,7 @@ import {
 } from "@/components/ChurchJourneyAnalytics";
 import { buildGoogleMapsHref } from "@/lib/maps";
 import { ChurchContactButton } from "@/components/ChurchContactButton";
+import { ChurchCardFeedbackSheet } from "@/components/ChurchCardFeedbackSheet";
 import { ChurchLatestUpdatesSection } from "@/components/ChurchLatestUpdatesSection";
 import { ChurchNetworkSection } from "@/components/ChurchNetworkSection";
 import { FollowChurchButton } from "@/components/FollowChurchButton";
@@ -54,6 +55,7 @@ import { buildChurchDescription, buildChurchTitle, getChurchSearchAliases } from
 import { serializeJsonLd } from "@/lib/json-ld";
 import { getVideoThumbnailPath, proxyYouTubeThumbnailUrl } from "@/lib/video-thumbnail";
 import { buildOpeningHours } from "@/lib/seo-schema";
+import { buildChurchProfileSource } from "@/lib/church-profile-source";
 
 type ChurchPageProps = {
   params: Promise<{ slug: string }>;
@@ -309,6 +311,13 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   const websiteUrl = isValidOfficialWebsiteUrl((mergedProfile.websiteUrl as string | undefined) || enrichment?.websiteUrl || church.website)
     ? ((mergedProfile.websiteUrl as string | undefined) || enrichment?.websiteUrl || church.website)
     : undefined;
+  const profileSource = buildChurchProfileSource({
+    isClaimed,
+    sourceKind: church.sourceKind,
+    verifiedAt: pageData.sourceVerifiedAt,
+    lastResearched: pageData.sourceResearchedAt,
+    hasOfficialWebsite: Boolean(websiteUrl),
+  });
   const websiteHostLabel = getPublicHostLabel(websiteUrl);
   const displayName = pickDisplayChurchName(church.name, enrichment?.officialChurchName);
   const metadataInput = { church, enrichment, mergedProfile, displayName };
@@ -342,7 +351,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   });
   const rawEmail = (mergedProfile.contactEmail as string | undefined) || enrichment?.contactEmail || church.email;
   const hasValidEmail = isValidPublicEmail(rawEmail);
-  const emailVisiblePublicly = Boolean(church.verifiedAt && church.showEmailPublicly);
+  const emailVisiblePublicly = Boolean(pageData.sourceVerifiedAt && church.showEmailPublicly);
   const contactEmail = hasValidEmail && emailVisiblePublicly ? rawEmail : undefined;
   const phone = isValidPublicPhone((mergedProfile.phone as string | undefined) || enrichment?.phone)
     ? ((mergedProfile.phone as string | undefined) || enrichment?.phone)
@@ -571,9 +580,10 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
       description: seoDescription,
       url: pageUrl,
       mainEntity: { "@id": `${pageUrl}#church` },
-      // Real freshness signal for AI/search — only when we have a verified date.
-      ...(church.verifiedAt && !Number.isNaN(Date.parse(String(church.verifiedAt))) && {
-        dateModified: new Date(church.verifiedAt).toISOString(),
+      // Only publish row-level source freshness. The quality fallback date is
+      // useful for sorting but is not evidence that this profile was checked.
+      ...(profileSource.freshnessDate && {
+        dateModified: profileSource.freshnessDate,
       }),
       about: { "@id": `${pageUrl}#church` },
     },
@@ -918,6 +928,47 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
           Music from <span className="font-semibold text-espresso">{parentChurchName}</span> &mdash; shared across all {network?.name} campuses.
         </div>
       )}
+
+      <section id="profile-source" aria-label="Profile source and freshness" className="scroll-mt-24 border-b border-rose-gold/[0.14] bg-white px-5 sm:px-12">
+        <div className="mx-auto grid max-w-[1400px] sm:grid-cols-3">
+          <div className="flex min-h-[88px] items-center justify-between gap-5 border-b border-rose-gold/[0.12] py-5 sm:block sm:border-b-0 sm:border-r sm:px-6 sm:first:pl-0">
+            <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-muted-warm">Profile status</p>
+            <p className="m-0 text-right text-sm font-semibold text-espresso sm:mt-2 sm:text-left">
+              {profileSource.status}
+            </p>
+          </div>
+          <div className="flex min-h-[88px] items-center justify-between gap-5 border-b border-rose-gold/[0.12] py-5 sm:block sm:border-b-0 sm:border-r sm:px-6">
+            <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-muted-warm">{profileSource.freshnessLabel}</p>
+            <p className="m-0 text-right text-sm font-semibold text-espresso sm:mt-2 sm:text-left">
+              {profileSource.freshnessDate ? (
+                <time dateTime={profileSource.freshnessDate}>{profileSource.freshnessValue}</time>
+              ) : profileSource.freshnessValue}
+            </p>
+          </div>
+          <div className="min-h-[88px] py-5 sm:px-6 sm:pr-0">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-muted-warm">Primary source</p>
+              <p className="m-0 mt-2 text-sm font-semibold text-espresso">
+                {websiteUrl ? (
+                  <a
+                    href={websiteUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex min-h-11 items-center text-rose-gold underline decoration-rose-gold/35 underline-offset-4 transition-colors hover:text-rose-gold-deep"
+                  >
+                    Official church website&nbsp;↗
+                  </a>
+                ) : profileSource.source}
+              </p>
+            </div>
+            <ChurchCardFeedbackSheet
+              churchSlug={church.slug}
+              churchName={displayName}
+              triggerLabel="Report a correction"
+            />
+          </div>
+        </div>
+      </section>
 
       {/* ━━━━━━━━━━ 2. WORD FROM THE TEAM (only if pastor present) ━━━━━━━━━━ */}
       {pastorName && (
