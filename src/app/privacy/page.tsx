@@ -22,7 +22,7 @@ export default function PrivacyPage() {
         <section>
           <h2 className="m-0 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso">Who runs this site</h2>
           <p className="mt-3 text-base text-warm-brown">
-            GospelChannel is operated by AC0 AI, S.L.U., NIF B26808741, Maestranza 25, planta 1, 29016 Málaga, Spain.
+            GospelChannel is operated by AC0 AI, S.L.U., NIF B26808741, Maestranza 25, planta 1, 29016 Málaga, Spain. AC0 AI, S.L.U. is the controller for the personal data described in this policy.
           </p>
         </section>
 
@@ -32,17 +32,17 @@ export default function PrivacyPage() {
             GospelChannel collects minimal data to provide a better experience:
           </p>
           <ul className="mt-3 list-disc space-y-2 pl-6 text-base text-warm-brown">
-            <li><strong className="text-espresso">Anonymous usage data</strong> &mdash; page views and general traffic patterns via PostHog. We use cookieless, memory-only analytics. No personally identifiable information is collected and no data persists between sessions.</li>
-            <li><strong className="text-espresso">Local preferences</strong> &mdash; when you click &ldquo;This Moved Me&rdquo; or vote for a church, we store a small identifier in your browser&rsquo;s local storage so we can remember your interaction. This data stays on your device.</li>
+            <li><strong className="text-espresso">Website analytics</strong> – page views, selected interaction events, and Core Web Vitals through PostHog. IP anonymization is enabled, person profiles and session recording are disabled, and we do not send nearby-search coordinates to PostHog.</li>
+            <li><strong className="text-espresso">Local preferences</strong> – your cookie choice and identifiers for features you explicitly use, such as voting for a church, are stored in your browser.</li>
             <li><strong className="text-espresso">Nearby church searches</strong>: only after you click &ldquo;Use my location,&rdquo; your browser reads your position and rounds it to two decimal places before sending the search. GospelChannel receives only that approximate point, does not send coordinates to PostHog, and does not tie the search to an account.</li>
-            <li><strong className="text-espresso">Church suggestions</strong> &mdash; if you submit a church via our suggestion form, we store the information you provide (church name, location, links).</li>
+            <li><strong className="text-espresso">Information you submit</strong> – church suggestions, correction requests, claims, and contact forms contain the details you choose to provide so we can review or answer them.</li>
           </ul>
         </section>
 
         <section>
           <h2 className="m-0 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso">Cookies &amp; storage</h2>
           <p className="mt-3 text-base text-warm-brown">
-            GospelChannel does not set any tracking cookies. Our analytics run entirely in memory and do not persist between visits. We use browser local storage only for features you explicitly interact with (such as voting for a church).
+            Before you choose, PostHog uses a memory-only identifier and does not set an analytics cookie. If you accept analytics, PostHog may store an identifier in local storage and a cookie so visits can be understood over time. If you decline, PostHog is opted out after your choice. Your consent choice remains in local storage, and you can change it from the cookie settings link in the site footer.
           </p>
         </section>
 
@@ -52,9 +52,11 @@ export default function PrivacyPage() {
             GospelChannel embeds content from third-party platforms:
           </p>
           <ul className="mt-3 list-disc space-y-2 pl-6 text-base text-warm-brown">
-            <li><strong className="text-espresso">YouTube</strong> (via youtube-nocookie.com) &mdash; for embedded worship videos. YouTube&rsquo;s privacy policy applies when you interact with embedded videos.</li>
-            <li><strong className="text-espresso">Spotify</strong> &mdash; for embedded playlist players. Spotify&rsquo;s privacy policy applies when you interact with embedded playlists.</li>
-            <li><strong className="text-espresso">PostHog</strong> &mdash; for cookieless, anonymous analytics. No personal data is sent and no cookies are set. We use it to understand aggregated usage patterns and improve the site.</li>
+            <li><strong className="text-espresso">Cloudflare</strong> – hosts and protects the site and assistant app, and processes standard request and security metadata.</li>
+            <li><strong className="text-espresso">Neon</strong> – hosts the directory database and executes church lookups. Search queries are not written to a user profile or search-history table.</li>
+            <li><strong className="text-espresso">PostHog</strong> – processes the website analytics described above. It does not receive assistant-app searches or nearby-search coordinates.</li>
+            <li><strong className="text-espresso">YouTube</strong> (via youtube-nocookie.com) – provides embedded worship videos. YouTube&rsquo;s privacy policy applies when you interact with a video.</li>
+            <li><strong className="text-espresso">Spotify</strong> – provides embedded playlist players. Spotify&rsquo;s privacy policy applies when you interact with a player.</li>
           </ul>
         </section>
 
@@ -66,16 +68,27 @@ export default function PrivacyPage() {
             usable inside AI assistants such as ChatGPT and Claude. When you use it:
           </p>
           <ul className="mt-3 list-disc space-y-2 pl-6 text-base text-warm-brown">
-            <li><strong className="text-espresso">What it receives</strong>: your search terms (city, worship style, denomination, language) and, only if your assistant chooses to share it, an approximate location. We never request your precise GPS location.</li>
+            <li><strong className="text-espresso">What it receives</strong>: search terms needed for the request, such as an explicitly named city, worship style, denomination, or language. For &ldquo;near me&rdquo; searches, location comes only through the assistant&rsquo;s controlled location metadata and is rounded before the directory lookup. The tool does not ask for precise GPS coordinates in its input fields.</li>
             <li><strong className="text-espresso">What it does</strong>: looks up matching churches in our public directory and returns their public profiles. It is read-only. It cannot change anything, and it never invents details such as service times.</li>
-            <li><strong className="text-espresso">What we store</strong>: we do not create a user profile, tie the query to an account, or keep a personal location history. The assistant you use has its own privacy policy for the conversation itself.</li>
+            <li><strong className="text-espresso">Who processes it</strong>: Cloudflare handles the request and Neon executes the directory lookup on our behalf. Assistant-app searches are not sent to PostHog.</li>
+            <li><strong className="text-espresso">What we store</strong>: GospelChannel does not write the query or approximate location to its application database, create a user profile, or keep a personal location history. Cloudflare may retain standard operational logs as described below. The assistant you use has its own privacy policy for the conversation itself.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="m-0 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso">How long we keep data</h2>
+          <ul className="mt-3 list-disc space-y-2 pl-6 text-base text-warm-brown">
+            <li><strong className="text-espresso">Assistant searches</strong> – query bodies and approximate locations are processed for the lookup and are not intentionally stored by GospelChannel. Cloudflare Workers operational logs are retained for no more than 7 days; aggregate Worker metrics may remain for up to 3 months.</li>
+            <li><strong className="text-espresso">Website analytics</strong> – PostHog events are currently retained for up to 84 months. IP anonymization is enabled and session recordings and person profiles are disabled.</li>
+            <li><strong className="text-espresso">Browser preferences</strong> – remain on your device until you clear site data or change the relevant setting.</li>
+            <li><strong className="text-espresso">Forms and correspondence</strong> – kept while we review or answer the request, then deleted or anonymized within 24 months unless a longer period is required to resolve a dispute or meet a legal obligation.</li>
           </ul>
         </section>
 
         <section>
           <h2 className="m-0 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso">Your rights</h2>
           <p className="mt-3 text-base text-warm-brown">
-            We do not keep a personal location history or account-linked search profile, and we do not set tracking cookies. You can clear local storage through your browser settings at any time. If you have submitted information through a form, contact us to request access or deletion.
+            You can decline or withdraw analytics consent, clear GospelChannel cookies and local storage in your browser, and ask us for access, correction, deletion, restriction, or a copy of personal data you submitted. You may also object to processing and complain to your local data-protection authority. Because assistant searches are not tied to an account or stored as a search history, we generally cannot identify a past search as belonging to you.
           </p>
         </section>
 

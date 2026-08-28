@@ -1,6 +1,6 @@
 // Tool definitions for the GospelChannel church-finder MCP server.
 //
-// Positioning: "new in a place — find a church that feels like home". Lead with
+// Positioning: "new in a place – find a church that feels like home". Lead with
 // fit (worship style, denomination, language, location); service times are a
 // bonus shown only when we hold them, never invented.
 
@@ -10,16 +10,18 @@ import {
   findChurchesInCity,
   findChurchesNear,
   getChurchProfile,
+  type ChurchProfile,
   type ChurchResult,
 } from "@/lib/mcp/church-queries";
 
 export const SERVER_INSTRUCTIONS = [
-  "GospelChannel, The Church Guide, helps someone find a Christian church that fits them —",
+  "GospelChannel, The Church Guide, helps someone find a Christian church that fits them –",
   "especially when they are new in a place or traveling. Lead with fit: worship",
   "style (contemporary, gospel, charismatic, traditional), denomination, language,",
-  "and location. Call find_churches_near when you have or can infer a location;",
-  "fall back to find_churches_in_city when only a city is known. Service times are",
-  "shown only when recorded and may be stale — always tell the user to confirm with",
+  "and location. Call find_churches_near for the user's current area only when",
+  "ChatGPT shares coarse location metadata. Call find_churches_in_city when the",
+  "user explicitly names a destination city. Service times are",
+  "shown only when recorded and may be stale – always tell the user to confirm with",
   "the church, and never invent a time. Link people to each church's page URL.",
 ].join(" ");
 
@@ -44,7 +46,6 @@ const CHURCH_RESULT_SCHEMA = {
     worshipStyles: { type: "array", items: { type: "string" } },
     language: { type: ["string", "null"] },
     website: { type: ["string", "null"] },
-    imageUrl: { type: ["string", "null"] },
     summary: { type: ["string", "null"] },
     distanceKm: { type: "number" },
     serviceTimesNote: { type: "string" },
@@ -68,26 +69,33 @@ const CHURCH_RESULT_SCHEMA = {
     "worshipStyles",
     "language",
     "website",
-    "imageUrl",
     "summary",
   ],
   additionalProperties: true,
 } as const;
 
+const CHURCH_LIST_ITEM_SCHEMA = {
+  type: "object",
+  properties: {
+    slug: { type: "string" },
+    name: { type: "string" },
+    url: { type: "string", format: "uri" },
+    location: { type: ["string", "null"] },
+    country: { type: ["string", "null"] },
+    denomination: { type: ["string", "null"] },
+    worshipStyles: { type: "array", items: { type: "string" } },
+    language: { type: ["string", "null"] },
+    distanceKm: { type: "number" },
+  },
+  required: ["slug", "name", "url", "location", "country", "denomination", "worshipStyles", "language"],
+  additionalProperties: false,
+} as const;
+
 const CHURCH_LIST_OUTPUT_SCHEMA = {
   type: "object",
   properties: {
-    churches: { type: "array", items: CHURCH_RESULT_SCHEMA },
+    churches: { type: "array", items: CHURCH_LIST_ITEM_SCHEMA },
     count: { type: "integer", minimum: 0 },
-    center: {
-      type: "object",
-      properties: {
-        latitude: { type: "number" },
-        longitude: { type: "number" },
-      },
-      required: ["latitude", "longitude"],
-      additionalProperties: false,
-    },
     city: { type: "string" },
   },
   required: ["churches", "count"],
@@ -146,6 +154,27 @@ function textResult(text: string, structuredContent: Record<string, unknown>, is
   return { content: [{ type: "text", text }], structuredContent, isError };
 }
 
+function toListItem(church: ChurchResult) {
+  return {
+    slug: church.slug,
+    name: church.name,
+    url: church.url,
+    location: church.location,
+    country: church.country,
+    denomination: church.denomination,
+    worshipStyles: church.worshipStyles,
+    language: church.language,
+    ...(typeof church.distanceKm === "number" ? { distanceKm: church.distanceKm } : {}),
+  };
+}
+
+function toProfileResult(church: ChurchProfile): Record<string, unknown> {
+  const result = { ...church } as Record<string, unknown>;
+  delete result.imageUrl;
+  delete result.description;
+  return result;
+}
+
 function summarizeList(churches: ChurchResult[], heading: string): string {
   if (churches.length === 0) {
     return `No matching churches found ${heading}. Try widening the radius or relaxing the worship-style/denomination filters.`;
@@ -165,12 +194,11 @@ const findChurchesNearTool: McpToolDefinition = {
   title: "Find churches near a place",
   annotations: READ_ONLY_ANNOTATIONS,
   description:
-    "Find Christian worship churches near the user, ranked by distance. Use when the person is new in a place or traveling. Uses the coarse location ChatGPT shares; if only a city is named, it searches that city. Filter by worship style, denomination, or language.",
+    "Find Christian worship churches near the user, ranked by distance. Uses only the coarse location metadata ChatGPT shares, never raw location input fields. If the metadata includes only a city, it searches that city. Filter by worship style, denomination, or language.",
   outputSchema: CHURCH_LIST_OUTPUT_SCHEMA,
   inputSchema: {
     type: "object",
     properties: {
-      city: { type: "string", description: "City name to search in, when a specific city is mentioned." },
       worship_style: {
         type: "string",
         description: "Preferred worship style, e.g. contemporary, gospel, charismatic, traditional, hillsong.",
@@ -186,7 +214,7 @@ const findChurchesNearTool: McpToolDefinition = {
   },
   handler: async (args, { meta }) => {
     // Coordinates come only from ChatGPT's shared coarse location, never the
-    // input schema — per Apps SDK guidelines we don't request precise location.
+    // input schema – per Apps SDK guidelines we don't request precise location.
     const metaLoc = extractMetaLocation(meta);
     const lat = metaLoc.lat;
     const lng = metaLoc.lng;
@@ -201,23 +229,28 @@ const findChurchesNearTool: McpToolDefinition = {
     if (lat != null && lng != null) {
       const churches = await findChurchesNear({ latitude: lat, longitude: lng, radiusKm, limit, ...filters });
       return textResult(summarizeList(churches, "near you"), {
-        churches,
+        churches: churches.map(toListItem),
         count: churches.length,
-        center: { latitude: lat, longitude: lng },
       });
     }
 
-    // No coordinates — fall back to a city search.
-    const requestedCity = asString(args.city) ?? metaLoc.city;
+    // No coordinates – fall back only to the coarse city ChatGPT shares via
+    // its controlled location side channel. Named destination searches use
+    // the separate city tool.
+    const requestedCity = metaLoc.city;
     if (requestedCity) {
       const city = normalizeCityInput(requestedCity);
       const citySlug = slugify(city);
       const churches = await findChurchesInCity({ citySlug, limit, ...filters });
-      return textResult(summarizeList(churches, `in ${city}`), { churches, count: churches.length, city });
+      return textResult(summarizeList(churches, `in ${city}`), {
+        churches: churches.map(toListItem),
+        count: churches.length,
+        city,
+      });
     }
 
     return textResult(
-      "I need a location - share your location or name a city.",
+      "Share an approximate location with ChatGPT, or ask for churches in a named city.",
       { churches: [], count: 0 },
       true,
     );
@@ -236,7 +269,8 @@ const findChurchesInCityTool: McpToolDefinition = {
     properties: {
       city: {
         type: "string",
-        description: "City name, e.g. Austin, Barcelona, London. A trailing region or country is accepted.",
+        description:
+          "A destination city explicitly named by the user, e.g. Austin, Barcelona, London. A trailing region or country is accepted.",
       },
       worship_style: {
         type: "string",
@@ -265,7 +299,11 @@ const findChurchesInCityTool: McpToolDefinition = {
       denomination: asString(args.denomination),
       language: asString(args.language),
     });
-    return textResult(summarizeList(churches, `in ${city}`), { churches, count: churches.length, city });
+    return textResult(summarizeList(churches, `in ${city}`), {
+      churches: churches.map(toListItem),
+      count: churches.length,
+      city,
+    });
   },
 };
 
@@ -274,7 +312,7 @@ const getChurchTool: McpToolDefinition = {
   title: "Get a church profile",
   annotations: READ_ONLY_ANNOTATIONS,
   description:
-    "Get the full profile for one church by its slug (the last path segment of its gospelchannel.com/church/<slug> URL): worship styles, denomination, language, description, top worship songs, contact, and recorded service times if available.",
+    "Get the full profile for one church by its slug (the last path segment of its gospelchannel.com/church/<slug> URL): worship styles, denomination, language, summary, top worship songs, contact, and recorded service times if available.",
   outputSchema: CHURCH_PROFILE_OUTPUT_SCHEMA,
   inputSchema: {
     type: "object",
@@ -295,7 +333,7 @@ const getChurchTool: McpToolDefinition = {
     const styles = church.worshipStyles.length ? ` Worship: ${church.worshipStyles.join(", ")}.` : "";
     const denom = church.denomination ? ` ${church.denomination}.` : "";
     return textResult(`${church.name} - ${church.location ?? church.country ?? ""}.${denom}${styles} ${church.url}`, {
-      church,
+      church: toProfileResult(church),
     });
   },
 };

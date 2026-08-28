@@ -45,8 +45,8 @@ describe("church MCP tools", () => {
 
   it("normalizes a country-qualified city in the nearby fallback", async () => {
     const result = await tool("find_churches_near").handler(
-      { city: "Málaga, Spain" },
-      { meta: {} },
+      {},
+      { meta: { "openai/userLocation": { city: "Málaga, Spain" } } },
     );
 
     expect(findChurchesInCityMock).toHaveBeenCalledWith({
@@ -57,6 +57,24 @@ describe("church MCP tools", () => {
       language: undefined,
     });
     expect(result.structuredContent).toEqual({ churches: [], count: 0, city: "Málaga" });
+  });
+
+  it("uses coarse client location without returning coordinates to the model", async () => {
+    const result = await tool("find_churches_near").handler(
+      { radius_km: 25 },
+      { meta: { "openai/userLocation": { latitude: 36.72, longitude: -4.42, city: "Málaga" } } },
+    );
+
+    expect(findChurchesNearMock).toHaveBeenCalledWith({
+      latitude: 36.72,
+      longitude: -4.42,
+      radiusKm: 25,
+      limit: undefined,
+      worshipStyle: undefined,
+      denomination: undefined,
+      language: undefined,
+    });
+    expect(result.structuredContent).toEqual({ churches: [], count: 0 });
   });
 
   it("returns an explicit result count so the model does not confuse it with the limit", async () => {
@@ -94,6 +112,62 @@ describe("church MCP tools", () => {
       { meta: {} },
     );
 
-    expect(result.structuredContent).toMatchObject({ count: 2, city: "London" });
+    expect(result.structuredContent).toEqual({
+      churches: [
+        {
+          slug: "one",
+          name: "One Church",
+          url: "https://gospelchannel.com/church/one",
+          location: "London",
+          country: "United Kingdom",
+          denomination: null,
+          worshipStyles: [],
+          language: null,
+        },
+        {
+          slug: "two",
+          name: "Two Church",
+          url: "https://gospelchannel.com/church/two",
+          location: "London",
+          country: "United Kingdom",
+          denomination: null,
+          worshipStyles: [],
+          language: null,
+        },
+      ],
+      count: 2,
+      city: "London",
+    });
+  });
+
+  it("omits copied images and long source descriptions from profile responses", async () => {
+    getChurchProfileMock.mockResolvedValue({
+      slug: "one",
+      name: "One Church",
+      url: "https://gospelchannel.com/church/one",
+      location: "London",
+      country: "United Kingdom",
+      denomination: "Baptist",
+      worshipStyles: ["contemporary worship"],
+      language: "English",
+      website: "https://one.example",
+      imageUrl: "https://media.gospelchannel.com/one.jpg",
+      summary: "A concise GospelChannel summary.",
+      description: "A long source description.",
+      whatToExpect: "A welcoming Sunday service.",
+      pastorName: null,
+      streetAddress: null,
+      topSongs: [],
+    });
+
+    const result = await tool("get_church").handler({ slug: "one" }, { meta: {} });
+
+    expect(result.structuredContent?.church).toMatchObject({
+      slug: "one",
+      summary: "A concise GospelChannel summary.",
+      whatToExpect: "A welcoming Sunday service.",
+    });
+    expect(result.structuredContent?.church).not.toHaveProperty("imageUrl");
+    expect(result.structuredContent?.church).not.toHaveProperty("description");
   });
 });
