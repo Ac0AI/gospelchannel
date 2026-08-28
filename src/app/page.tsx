@@ -26,6 +26,7 @@ const TRADITIONS: Array<{ slug: string; name: string; vibe: string; example: str
 const TOP_CITIES: Array<{ name: string; country: string; slug: string }> = [
   { name: "London", country: "UK", slug: "london" },
   { name: "New York", country: "US", slug: "new-york" },
+  { name: "Austin", country: "US", slug: "austin" },
   { name: "Paris", country: "FR", slug: "paris" },
   { name: "Berlin", country: "DE", slug: "berlin" },
   { name: "Stockholm", country: "SE", slug: "stockholm" },

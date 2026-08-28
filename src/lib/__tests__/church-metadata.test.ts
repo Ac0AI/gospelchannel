@@ -20,6 +20,15 @@ vi.mock("@/lib/church", () => ({
   })),
 }));
 
+vi.mock("@/lib/city-finder-data", () => ({
+  getCityFinderData: vi.fn(async () => ({
+    churches: [],
+    styleOptions: [],
+    denominationOptions: [],
+    languageOptions: [],
+  })),
+}));
+
 import { generateMetadata as generateCityMetadata } from "@/app/church/city/[slug]/page";
 import { generateMetadata as generateCountryMetadata } from "@/app/church/country/[slug]/page";
 import { generateMetadata as generateDenominationMetadata } from "@/app/church/denomination/[slug]/page";

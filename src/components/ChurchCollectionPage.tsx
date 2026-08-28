@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { ChurchDirectoryGrid } from "@/components/ChurchDirectoryGrid";
 import { extractCity } from "@/lib/church-directory";
 import type { HubEditorial } from "@/lib/hub-content";
@@ -91,6 +92,8 @@ export function ChurchCollectionPage({
   breadcrumbs,
   relatedSections = [],
   editorial,
+  featuredContent,
+  quickAnswerLead: quickAnswerLeadOverride,
 }: {
   eyebrow: string;
   title: string;
@@ -104,6 +107,8 @@ export function ChurchCollectionPage({
   breadcrumbs: Breadcrumb[];
   relatedSections?: RelatedSection[];
   editorial?: HubEditorial;
+  featuredContent?: ReactNode;
+  quickAnswerLead?: string;
 }) {
   const currentUrl = buildPageHref(basePath, currentPage);
   const canonicalUrl = `https://gospelchannel.com${basePath}`;
@@ -125,9 +130,9 @@ export function ChurchCollectionPage({
     : [];
   const quickAnswerChurches = currentPage === 1 ? churches.slice(0, 3) : [];
   const target = getCollectionTarget(title);
-  const quickAnswerLead = target
+  const quickAnswerLead = quickAnswerLeadOverride ?? (target
     ? `GospelChannel lists ${totalCount.toLocaleString("en-US")} churches for ${target}. This list uses published location, worship, service-time, language, music, and visitor information where available. Open church profiles for the details that matter to your visit.`
-    : `GospelChannel lists ${totalCount.toLocaleString("en-US")} churches in this collection. This list uses published location, worship, service-time, language, music, and visitor information where available. Open church profiles for the details that matter to your visit.`;
+    : `GospelChannel lists ${totalCount.toLocaleString("en-US")} churches in this collection. This list uses published location, worship, service-time, language, music, and visitor information where available. Open church profiles for the details that matter to your visit.`);
   const showQuickAnswer = currentPage === 1 && (quickAnswerSections.length > 0 || quickAnswerChurches.length > 0);
 
   const jsonLd: Array<Record<string, unknown>> = [
@@ -352,6 +357,8 @@ export function ChurchCollectionPage({
           </div>
         </section>
       )}
+
+      {featuredContent}
 
       {/* Quick answer */}
       {showQuickAnswer && (

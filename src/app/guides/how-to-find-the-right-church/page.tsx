@@ -32,8 +32,8 @@ const HOW_TO_STEPS = [
   },
   {
     id: "filter-by-city",
-    title: "Filter by your city, not your radius",
-    text: "Start with a city page you can realistically attend, then narrow by style, denomination, language, and profile details.",
+    title: "Pick your city, then narrow by distance",
+    text: "Start with a city you can realistically attend, then narrow by distance, style, denomination, language, and profile details.",
   },
   {
     id: "read-profiles-listen-to-music",
@@ -190,9 +190,9 @@ export default async function HowToFindTheRightChurchPage() {
             description: "Compare tradition families after you know what kind of Sunday you want.",
           },
           {
-            href: "/church/city",
-            label: "Pick a city before a radius",
-            description: "Open a city page, then compare worship style, denomination, language, service times, and location.",
+            href: "/church/city/austin#austin-church-finder",
+            label: "Try the Austin Sunday finder",
+            description: "Choose an Austin area, set a practical radius, and compare worship style, tradition, language, and service times.",
           },
           {
             href: "/church",
@@ -273,11 +273,12 @@ export default async function HowToFindTheRightChurchPage() {
 
       <GuideStep id={HOW_TO_STEPS[3].id} step={4} title={HOW_TO_STEPS[3].title}>
         <p>
-          Open the city page for your actual location and look at what's there. Most directories
-          show you a radius — 5, 10, 25 miles — and let suburbs that you'll never realistically
-          drive to clutter the results. A city filter shows you the churches in your city,
-          which is usually all you need. Drill into a specific neighbourhood or transit line
-          from there.
+          Open the city page for your actual location and look at what's there. Start with the
+          city so you do not cross-shop places you would never realistically attend, then use a
+          practical 5, 10, or 25-mile radius to turn the directory into a Sunday plan. In Austin,
+          the <Link href="/church/city/austin#austin-church-finder" className="font-semibold text-rose-gold underline decoration-rose-gold/35 underline-offset-4">Sunday finder</Link> lets
+          you use your current location or choose a local area before narrowing by the details
+          that matter to you.
         </p>
         <p>
           If you don't have a car, prioritise walkable or short-transit options. Two churches
@@ -427,7 +428,7 @@ export default async function HowToFindTheRightChurchPage() {
         </h2>
         <p className="mt-4 text-base leading-relaxed text-warm-brown">
           If you only remember one thing: <em className="gc-italic">filter by worship style
-          before denomination, and pick a city before a radius.</em> Those two rules eliminate
+          before denomination, and pick a city before narrowing by distance.</em> Those two rules eliminate
           the most common reasons people end up at the wrong church.
         </p>
         <p className="mt-4 text-base leading-relaxed text-warm-brown">

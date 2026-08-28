@@ -2,14 +2,24 @@ import { cache } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ChurchCollectionPage } from "@/components/ChurchCollectionPage";
+import { CityChurchFinder } from "@/components/CityChurchFinder";
 import { getChurchFacetPageData } from "@/lib/church";
 import { MIN_INDEXABLE_CITY_CHURCHES } from "@/lib/church-directory";
-import { buildCityTitle, getCityGuideLinks } from "@/lib/city-page";
+import { getCityFinderData, type CityFinderData } from "@/lib/city-finder-data";
+import { getCityPageCopy, getCityGuideLinks } from "@/lib/city-page";
 import { buildCityHubContent } from "@/lib/hub-content";
 
 export const revalidate = 3600;
 
 const PAGE_SIZE = 48;
+
+const AUSTIN_AREAS = [
+  { id: "central", label: "Central Austin", latitude: 30.2672, longitude: -97.7431 },
+  { id: "north", label: "North Austin", latitude: 30.3859, longitude: -97.7281 },
+  { id: "south", label: "South Austin", latitude: 30.1738, longitude: -97.823 },
+  { id: "east", label: "East Austin", latitude: 30.2621, longitude: -97.6926 },
+  { id: "round-rock", label: "Round Rock", latitude: 30.5083, longitude: -97.6789 },
+] as const;
 
 type CityPageProps = {
   params: Promise<{ slug: string }>;
@@ -27,6 +37,16 @@ const loadCity = cache((slug: string, page: number) =>
   getChurchFacetPageData({ kind: "city", slug, page, pageSize: PAGE_SIZE }),
 );
 
+async function loadOptionalFinder(slug: string, page: number): Promise<CityFinderData | null> {
+  if (slug !== "austin" || page !== 1) return null;
+  try {
+    return await getCityFinderData(slug);
+  } catch (error) {
+    console.error("[city-finder] failed to load Austin finder data", error);
+    return null;
+  }
+}
+
 export async function generateMetadata({ params, searchParams }: CityPageProps): Promise<Metadata> {
   const [{ slug }, qs] = await Promise.all([params, searchParams]);
   const page = readPositivePage(qs?.page);
@@ -34,8 +54,9 @@ export async function generateMetadata({ params, searchParams }: CityPageProps):
   if (!data) return { title: "Not Found" };
 
   const basePath = `https://gospelchannel.com/church/city/${slug}`;
-  const title = buildCityTitle(data.label);
-  const description = `Compare ${data.totalCount.toLocaleString("en-US")} churches in ${data.label}: service times, worship style and music, language, and location. Find one worth visiting this Sunday.`;
+  const copy = getCityPageCopy({ slug, label: data.label, totalCount: data.totalCount });
+  const title = copy.metadataTitle;
+  const description = copy.description;
 
   return {
     title,
@@ -68,13 +89,15 @@ export async function generateMetadata({ params, searchParams }: CityPageProps):
 export default async function CityPage({ params, searchParams }: CityPageProps) {
   const [{ slug }, qs] = await Promise.all([params, searchParams]);
   const page = readPositivePage(qs?.page);
-  const data = await loadCity(slug, page);
+  const [data, finderData] = await Promise.all([loadCity(slug, page), loadOptionalFinder(slug, page)]);
   if (!data) notFound();
 
   const { currentPage, totalCount, totalPages, pageItems, label, relatedLinks, breadcrumbCountry } = data;
   const countryLinks = relatedLinks.country;
   const cityGuideLinks = getCityGuideLinks(slug);
   const basePath = `/church/city/${slug}`;
+  const copy = getCityPageCopy({ slug, label, totalCount });
+  const hasFinder = Boolean(finderData?.churches.length);
 
   // Editorial + FAQ only on page 1 (paginated pages are noindex,follow). Woven
   // from this city's real denomination/worship-style mix so each hub is unique.
@@ -86,14 +109,15 @@ export default async function CityPage({ params, searchParams }: CityPageProps) 
           totalCount,
           denominations: relatedLinks.denomination,
           styles: relatedLinks.style,
+          hasLocalFinder: hasFinder,
         })
       : null;
 
   return (
     <ChurchCollectionPage
-      eyebrow="Browse by City"
-      title={`${label} Churches`}
-      description={`Explore churches in ${label}, then compare location, service times, worship style, denomination, and first-visit details before choosing where to go.`}
+      eyebrow={copy.eyebrow}
+      title={copy.pageTitle}
+      description={copy.description}
       basePath={basePath}
       currentPage={currentPage}
       totalPages={totalPages}
@@ -112,6 +136,19 @@ export default async function CityPage({ params, searchParams }: CityPageProps) 
         { title: `Denominations in ${label}`, links: relatedLinks.denomination },
       ]}
       editorial={editorial ?? undefined}
+      quickAnswerLead={copy.quickAnswer}
+      featuredContent={hasFinder ? (
+        <CityChurchFinder
+          city="Austin"
+          cityCenter={{ label: "Central Austin", latitude: 30.2672, longitude: -97.7431 }}
+          maxLocalDistanceMiles={90}
+          churches={finderData!.churches}
+          areas={[...AUSTIN_AREAS]}
+          styleOptions={finderData!.styleOptions}
+          denominationOptions={finderData!.denominationOptions}
+          languageOptions={finderData!.languageOptions}
+        />
+      ) : undefined}
     />
   );
 }

@@ -28,6 +28,7 @@ export function buildCityHubContent(input: {
   totalCount: number;
   denominations: FacetCount[];
   styles: FacetCount[];
+  hasLocalFinder?: boolean;
 }): HubEditorial | null {
   const { city, totalCount } = input;
   if (totalCount < HUB_EDITORIAL_MIN_CHURCHES) return null;
@@ -50,8 +51,23 @@ export function buildCityHubContent(input: {
       ? `Worship is at the heart of how we list churches. Where a congregation in ${city} shares its music, often ${naturalList(topStyles.slice(0, 3))}, you will find Spotify playlists, live worship videos and the songs sung on Sunday, so you can hear a church before you ever visit. Use the worship-style and denomination links below to find a fit.`
       : `Worship is at the heart of how we list churches. Where a congregation in ${city} shares its music, you will find Spotify playlists, live worship videos and the songs sung on Sunday, so you can hear a church before you ever visit. Use the denomination links below to find a fit.`,
   );
+  if (input.hasLocalFinder) {
+    intro.push(
+      `Use the ${city} Sunday finder below to start from your current location or a local area, choose a realistic radius, and narrow the list by worship, tradition, language, service time, and family needs. Distance is calculated in your browser; GospelChannel does not rank churches by theology, popularity, reviews, or paid placement.`,
+    );
+  }
 
   const faqs: HubFaq[] = [];
+  if (input.hasLocalFinder) {
+    faqs.push({
+      question: `What is the best church in ${city} for me?`,
+      answer: `There is no single best church for everyone in ${city}. A useful first match is close enough to attend and fits the service time, worship style, language, tradition, and family details that matter to your Sunday. GospelChannel explains those matches instead of publishing a universal ranking.`,
+    });
+    faqs.push({
+      question: `How does the ${city} church finder use my location?`,
+      answer: `Your browser calculates distance to churches with recorded map coordinates. Your precise coordinates stay in the browser and are not sent with the search or included in analytics. You can choose a local area instead of sharing your current location.`,
+    });
+  }
   faqs.push({
     question: `How many churches are there in ${city}?`,
     answer:
