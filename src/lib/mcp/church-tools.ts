@@ -118,6 +118,13 @@ function asString(value: unknown): string | undefined {
   return undefined;
 }
 
+// Models commonly pass a natural location such as "Málaga, Spain" even when
+// the schema asks for a city. The directory key contains the city only, so
+// remove trailing region/country qualifiers before slugifying it.
+function normalizeCityInput(value: string): string {
+  return value.split(",", 1)[0]?.trim() || value.trim();
+}
+
 // ChatGPT passes the user's coarse location in _meta["openai/userLocation"].
 // Shape is not strictly guaranteed, so read defensively.
 function extractMetaLocation(meta: Record<string, unknown>): { lat?: number; lng?: number; city?: string } {
@@ -196,8 +203,9 @@ const findChurchesNearTool: McpToolDefinition = {
     }
 
     // No coordinates — fall back to a city search.
-    const city = asString(args.city) ?? metaLoc.city;
-    if (city) {
+    const requestedCity = asString(args.city) ?? metaLoc.city;
+    if (requestedCity) {
+      const city = normalizeCityInput(requestedCity);
       const citySlug = slugify(city);
       const churches = await findChurchesInCity({ citySlug, limit, ...filters });
       return textResult(summarizeList(churches, `in ${city}`), { churches, city });
@@ -221,7 +229,10 @@ const findChurchesInCityTool: McpToolDefinition = {
   inputSchema: {
     type: "object",
     properties: {
-      city: { type: "string", description: "City name, e.g. Austin, Barcelona, London." },
+      city: {
+        type: "string",
+        description: "City name, e.g. Austin, Barcelona, London. A trailing region or country is accepted.",
+      },
       worship_style: {
         type: "string",
         description: "Preferred worship style, e.g. contemporary, gospel, charismatic, traditional, hillsong.",
@@ -236,10 +247,11 @@ const findChurchesInCityTool: McpToolDefinition = {
     required: ["city"],
   },
   handler: async (args) => {
-    const city = asString(args.city);
-    if (!city) {
+    const requestedCity = asString(args.city);
+    if (!requestedCity) {
       return textResult("Please provide a city name.", { churches: [] }, true);
     }
+    const city = normalizeCityInput(requestedCity);
     const citySlug = slugify(city);
     const churches = await findChurchesInCity({
       citySlug,
