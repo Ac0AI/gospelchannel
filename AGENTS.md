@@ -38,7 +38,8 @@ Auditen gjordes före releaserna av `/church-near-me`, nearby-sökningen på sta
 - Officiella kyrksidor vinner lokala AI-svar. Varje profil ska därför visa kontrollerade fakta, freshness och tydliga officiella länkar, inte bara generell katalogtext.
 - Använd samma bild- och kortdesign som den ordinarie kyrkolistan för nearby- och stadsresultat.
 - Lagra eller analysera inte användarens exakta koordinater. Mät verktyg och utfall utan rå position.
-- OpenAI-pluginversion `1.0.0` skickades till review 2026-08-28. Verifiera aktuell portalstatus innan den kallas godkänd eller publik och ändra inte review-kontraktet utan att bedöma granskningspåverkan.
+- OpenAI-plugin `GospelChannel Church Guide` version `1.0.0` är `Published` (verifierat i portalen 2026-09-02). App-ID `asdk_app_6a918a8b5e7c8191a13aee40ef088e7b`, publik katalogsida `https://chatgpt.com/plugins/plugin_asdk_app_6a918a8b5e7c8191a13aee40ef088e7b`. Ändra inte review-kontraktet utan att bedöma granskningspåverkan; en ny version kräver ny review.
+- MCP Registry: `io.github.Ac0AI/gospelchannel-church-finder` 1.0.0 `active` (2026-09-02), `server.json` i repo-roten. Plugin-paket för Claude Code/Codex/Cursor/Grok i `Ac0AI/ac0-plugins`.
 
 ## Deploy
 
