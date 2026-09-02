@@ -1,0 +1,27 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.Ac0AI/gospelchannel-church-finder",
+  "title": "GospelChannel Church Finder",
+  "description": "Find a Christian church by worship style, denomination, language, and location. Read-only.",
+  "version": "1.0.0",
+  "websiteUrl": "https://gospelchannel.com",
+  "repository": {
+    "url": "https://github.com/Ac0AI/gospelchannel",
+    "source": "github"
+  },
+  "icons": [
+    {
+      "src": "https://gospelchannel.com/gospelchannel-plugin-icon.png",
+      "mimeType": "image/png",
+      "sizes": [
+        "512x512"
+      ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://gospelchannel.com/mcp"
+    }
+  ]
+}
