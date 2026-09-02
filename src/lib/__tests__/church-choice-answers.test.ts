@@ -161,12 +161,8 @@ describe("church choice answers", () => {
       guide: expect.objectContaining({ href: "/for/deconstructing" }),
       proof: expect.objectContaining({ href: "/church" }),
     }));
-    expect(CHURCH_CHOICE_ANSWERS).toContainEqual(expect.objectContaining({
+    expect(CHURCH_CHOICE_ANSWERS).not.toContainEqual(expect.objectContaining({
       id: "where-can-i-pray-before-choosing-a-church",
-      question: "Where can I pray or see community prayer signals before choosing a church?",
-      guide: expect.objectContaining({ href: "/guides/prayer-guide" }),
-      proof: expect.objectContaining({ href: "/church/churches-with-service-times" }),
-      proofSignals: expect.arrayContaining(["community", "service times", "church details"]),
     }));
     expect(CHURCH_CHOICE_ANSWERS).toEqual(expect.arrayContaining([
       expect.objectContaining({

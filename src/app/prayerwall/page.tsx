@@ -6,6 +6,8 @@ import { PrayerWallFilters } from "@/components/PrayerWallFilters";
 import Link from "next/link";
 import { buildItemListSchema } from "@/lib/seo-schema";
 import { serializeJsonLd } from "@/lib/json-ld";
+import { redirect } from "next/navigation";
+import { PRAYER_FEATURE_ENABLED } from "@/lib/features";
 
 export const metadata: Metadata = {
   title: "Prayer Wall: Community Prayers From Churches",
@@ -27,6 +29,8 @@ export const metadata: Metadata = {
 };
 
 export default async function PrayerWallPage() {
+  if (!PRAYER_FEATURE_ENABLED) redirect("/church");
+
   const [prayersWithChurch, countryOptions] = await Promise.all([
     getLatestPrayersWithChurch(8),
     getPrayerCountryOptions(),

@@ -163,7 +163,7 @@ describe("sitemap-data", () => {
   it("computes the total sitemap entry count from section counts", async () => {
     getChurchDirectorySeedCountAsyncMock.mockResolvedValue(3);
 
-    await expect(getSitemapEntryCount()).resolves.toBe(57);
+    await expect(getSitemapEntryCount()).resolves.toBe(51);
   });
 
   it("drops thin city hubs (<MIN_INDEXABLE_CITY_CHURCHES) from the sitemap", async () => {
@@ -202,35 +202,35 @@ describe("sitemap-data", () => {
     expect(entries[4]?.url).toBe("https://gospelchannel.com/church/denomination");
     expect(entries[5]?.url).toBe("https://gospelchannel.com/church/style");
     expect(entries[10]?.url).toBe("https://gospelchannel.com/guides/church-choice-answers");
-    expect(entries[16]?.url).toBe("https://gospelchannel.com/compare");
-    expect(entries[17]?.url).toBe("https://gospelchannel.com/european-church-tech-2026");
-    expect(entries[18]?.url).toBe("https://gospelchannel.com/alternatives/churchfinder");
-    expect(entries[19]?.url).toBe("https://gospelchannel.com/alternatives/gospel-coalition");
-    expect(entries[20]?.url).toBe("https://gospelchannel.com/alternatives/mychurchfinder");
-    expect(entries[21]?.url).toBe("https://gospelchannel.com/for");
-    expect(entries[22]?.url).toBe("https://gospelchannel.com/for/expats");
-    expect(entries[23]?.url).toBe("https://gospelchannel.com/for/students");
-    expect(entries[24]?.url).toBe("https://gospelchannel.com/for/young-adults");
-    expect(entries[25]?.url).toBe("https://gospelchannel.com/for/families");
-    expect(entries[26]?.url).toBe("https://gospelchannel.com/for/new-believers");
-    expect(entries[27]?.url).toBe("https://gospelchannel.com/for/deconstructing");
-    expect(entries[28]?.url).toBe("https://gospelchannel.com/guides/worship-styles-explained");
-    expect(entries[29]?.url).toBe("https://gospelchannel.com/guides/denominations-comparison");
-    expect(entries[30]?.url).toBe("https://gospelchannel.com/guides/how-to-find-the-right-church");
-    expect(entries[31]?.url).toBe("https://gospelchannel.com/contact");
-    expect(entries[32]?.url).toBe("https://gospelchannel.com/privacy");
-    expect(entries[33]?.url).toBe("https://gospelchannel.com/church/churches-with-service-times");
-    expect(entries[34]?.url).toBe("https://gospelchannel.com/church/churches-with-worship-music");
-    expect(entries[35]?.url).toBe("https://gospelchannel.com/church/english-speaking-churches");
-    expect(entries[36]?.url).toBe("https://gospelchannel.com/church/family-friendly-churches");
-    expect(entries[37]?.url).toBe("https://gospelchannel.com/church/charismatic-churches-in-london");
-    expect(entries[38]?.url).toBe("https://gospelchannel.com/church/best-worship-churches");
-    expect(entries[39]?.url).toBe("https://gospelchannel.com/network");
-    expect(entries[40]?.url).toBe("https://gospelchannel.com/church/english-speaking-churches-in-zurich");
-    expect(entries[41]?.url).toBe("https://gospelchannel.com/church-near-me");
-    expect(entries[42]?.url).toBe("https://gospelchannel.com/church/church-0");
-    expect(entries.at(-1)?.url).toBe("https://gospelchannel.com/church/church-2457");
-    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(0, 2_458);
+    expect(entries[15]?.url).toBe("https://gospelchannel.com/compare");
+    expect(entries[16]?.url).toBe("https://gospelchannel.com/european-church-tech-2026");
+    expect(entries[17]?.url).toBe("https://gospelchannel.com/alternatives/churchfinder");
+    expect(entries[18]?.url).toBe("https://gospelchannel.com/alternatives/gospel-coalition");
+    expect(entries[19]?.url).toBe("https://gospelchannel.com/alternatives/mychurchfinder");
+    expect(entries[20]?.url).toBe("https://gospelchannel.com/for");
+    expect(entries[21]?.url).toBe("https://gospelchannel.com/for/expats");
+    expect(entries[22]?.url).toBe("https://gospelchannel.com/for/students");
+    expect(entries[23]?.url).toBe("https://gospelchannel.com/for/young-adults");
+    expect(entries[24]?.url).toBe("https://gospelchannel.com/for/families");
+    expect(entries[25]?.url).toBe("https://gospelchannel.com/for/new-believers");
+    expect(entries[26]?.url).toBe("https://gospelchannel.com/for/deconstructing");
+    expect(entries[27]?.url).toBe("https://gospelchannel.com/guides/worship-styles-explained");
+    expect(entries[28]?.url).toBe("https://gospelchannel.com/guides/denominations-comparison");
+    expect(entries[29]?.url).toBe("https://gospelchannel.com/guides/how-to-find-the-right-church");
+    expect(entries[30]?.url).toBe("https://gospelchannel.com/contact");
+    expect(entries[31]?.url).toBe("https://gospelchannel.com/privacy");
+    expect(entries[32]?.url).toBe("https://gospelchannel.com/church/churches-with-service-times");
+    expect(entries[33]?.url).toBe("https://gospelchannel.com/church/churches-with-worship-music");
+    expect(entries[34]?.url).toBe("https://gospelchannel.com/church/english-speaking-churches");
+    expect(entries[35]?.url).toBe("https://gospelchannel.com/church/family-friendly-churches");
+    expect(entries[36]?.url).toBe("https://gospelchannel.com/church/charismatic-churches-in-london");
+    expect(entries[37]?.url).toBe("https://gospelchannel.com/church/best-worship-churches");
+    expect(entries[38]?.url).toBe("https://gospelchannel.com/network");
+    expect(entries[39]?.url).toBe("https://gospelchannel.com/church/english-speaking-churches-in-zurich");
+    expect(entries[40]?.url).toBe("https://gospelchannel.com/church-near-me");
+    expect(entries[41]?.url).toBe("https://gospelchannel.com/church/church-0");
+    expect(entries.at(-1)?.url).toBe("https://gospelchannel.com/church/church-2458");
+    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(0, 2_459);
     expect(getNetworksSliceMock).not.toHaveBeenCalled();
     expect(getPublishedCampusesSliceMock).not.toHaveBeenCalled();
   });
@@ -244,7 +244,6 @@ describe("sitemap-data", () => {
     const entries = await buildSitemapEntriesForChunk(2);
 
     expect(entries.map((entry) => entry.url)).toEqual([
-      "https://gospelchannel.com/church/church-4958",
       "https://gospelchannel.com/church/church-4959",
       "https://gospelchannel.com/church/church-4960",
       "https://gospelchannel.com/church/church-4961",
@@ -295,13 +294,8 @@ describe("sitemap-data", () => {
       "https://gospelchannel.com/compare/compare-a",
       "https://gospelchannel.com/network/network-1",
       "https://gospelchannel.com/church/campus-1",
-      "https://gospelchannel.com/prayerwall",
-      "https://gospelchannel.com/prayerwall/country/sweden",
-      "https://gospelchannel.com/prayerwall/city/stockholm",
-      "https://gospelchannel.com/prayerwall/church/prayer-1",
-      "https://gospelchannel.com/prayerwall/church/prayer-2",
     ]);
-    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(4_958, 44);
+    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(4_959, 43);
     expect(getNetworksSliceMock).toHaveBeenCalledWith(0, 1);
     expect(getPublishedCampusesSliceMock).toHaveBeenCalledWith(0, 1);
   });

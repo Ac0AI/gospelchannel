@@ -56,7 +56,6 @@ echo "[smoke] Checking pages"
 fetch_page "/"
 fetch_page "/church"
 fetch_page "/church/${CHURCH_SLUG}"
-fetch_page "/prayerwall"
 
 echo "[smoke] Checking APIs"
 curl -fsS "$BASE_URL/api/church/vote?slugs=${CHURCH_SLUG}" >/dev/null

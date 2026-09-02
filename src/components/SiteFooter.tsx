@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { COPYRIGHT_YEAR } from "@/lib/utils";
 import { getChurchStatsAsync } from "@/lib/content";
+import { PRAYER_FEATURE_ENABLED } from "@/lib/features";
 
 export const SITE_FOOTER_COLUMNS = [
   {
@@ -9,7 +10,9 @@ export const SITE_FOOTER_COLUMNS = [
       { label: "Browse all churches", href: "/church" },
       { label: "Guides", href: "/guides" },
       { label: "Compare", href: "/compare" },
-      { label: "Prayer Wall", href: "/prayerwall" },
+      ...(PRAYER_FEATURE_ENABLED
+        ? [{ label: "Prayer Wall", href: "/prayerwall" }]
+        : []),
     ],
   },
   {

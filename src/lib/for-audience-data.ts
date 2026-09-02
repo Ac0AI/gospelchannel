@@ -1,3 +1,5 @@
+import { PRAYER_FEATURE_ENABLED } from "@/lib/features";
+
 export type PainPoint = {
   title: string;
   body: string;
@@ -903,7 +905,9 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
     related_guides: [
       { href: "/guides/first-visit-guide", label: "First visit guide" },
       { href: "/guides/faith-faq", label: "Faith FAQ" },
-      { href: "/guides/prayer-guide", label: "How to start praying" },
+      ...(PRAYER_FEATURE_ENABLED
+        ? [{ href: "/guides/prayer-guide", label: "How to start praying" }]
+        : []),
     ],
 
     faq_h2: "New-believer church-finding FAQ",
@@ -1004,18 +1008,19 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
         href: "/church",
         cta: "Explore churches",
       },
-      {
-        title: "Pray on the prayer wall, even before you visit anywhere",
-        body:
-          "The prayer wall is anonymous, public-or-private, and doesn't require a church. Some seekers reconnect through prayer before reconnecting through any specific congregation. It's there if you want it.",
-        href: "/prayerwall",
-        cta: "Open the prayer wall",
-      },
+      ...(PRAYER_FEATURE_ENABLED
+        ? [{
+            title: "Pray on the prayer wall, even before you visit anywhere",
+            body:
+              "The prayer wall is anonymous, public-or-private, and doesn't require a church. Some seekers reconnect through prayer before reconnecting through any specific congregation. It's there if you want it.",
+            href: "/prayerwall",
+            cta: "Open the prayer wall",
+          }]
+        : []),
     ],
 
     curated_h2: "Gentle starting points",
-    curated_lede:
-      "Six pages chosen because they tend to host congregations that handle questions, doubt, and church history with less reactivity. Each links to every church in that bucket.",
+    curated_lede: `${PRAYER_FEATURE_ENABLED ? "Six" : "Four"} pages chosen because they tend to host congregations that handle questions, doubt, and church history with less reactivity. Each links to every church in that bucket.`,
     curated_cards: [
       {
         title: "Anglican churches",
@@ -1035,24 +1040,28 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
           "Each non-denominational congregation is its own thing. That variety means it's worth reading individual profiles — but it also means you're not signing on to a specific denominational identity you may not be ready for.",
         href: "/church/denomination/non-denominational",
       },
-      {
-        title: "Prayer wall",
-        description:
-          "Anonymous space to pray and be prayed for, with or without a church attached. Sometimes the right next step.",
-        href: "/prayerwall",
-      },
+      ...(PRAYER_FEATURE_ENABLED
+        ? [{
+            title: "Prayer wall",
+            description:
+              "Anonymous space to pray and be prayed for, with or without a church attached. Sometimes the right next step.",
+            href: "/prayerwall",
+          }]
+        : []),
       {
         title: "Faith FAQ",
         description:
           "Plain-spoken answers to common questions about salvation, baptism, the Holy Spirit, and church — without the loaded framing.",
         href: "/guides/faith-faq",
       },
-      {
-        title: "How to start praying",
-        description:
-          "If prayer itself has gotten complicated, this guide is the shortest path back into it. No jargon. No pressure.",
-        href: "/guides/prayer-guide",
-      },
+      ...(PRAYER_FEATURE_ENABLED
+        ? [{
+            title: "How to start praying",
+            description:
+              "If prayer itself has gotten complicated, this guide is the shortest path back into it. No jargon. No pressure.",
+            href: "/guides/prayer-guide",
+          }]
+        : []),
     ],
 
     proof_routes: [
@@ -1064,7 +1073,9 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
 
     related_guides: [
       { href: "/guides/faith-faq", label: "Faith FAQ" },
-      { href: "/guides/prayer-guide", label: "How to start praying" },
+      ...(PRAYER_FEATURE_ENABLED
+        ? [{ href: "/guides/prayer-guide", label: "How to start praying" }]
+        : []),
       { href: "/guides/first-visit-guide", label: "First visit guide" },
     ],
 
@@ -1085,20 +1096,22 @@ export const FOR_AUDIENCE: Record<string, ForAudienceData> = {
         answer:
           "No. GospelChannel doesn't ask. It lists churches and lets you decide. Many people use it during a deconstructing season specifically because there isn't an account, a profile, or a position-paper you have to fill in to use it.",
       },
-      {
-        question: "Is the prayer wall a substitute for going to a church?",
-        answer:
-          "It can be a bridge rather than a substitute. Some seekers use it to keep a thread of prayer alive while they're not attending anywhere. Others use it alongside a church they're starting to try again. It's not a replacement and we don't pitch it as one; it's a separate, gentler way in.",
-      },
+      ...(PRAYER_FEATURE_ENABLED
+        ? [{
+            question: "Is the prayer wall a substitute for going to a church?",
+            answer:
+              "It can be a bridge rather than a substitute. Some seekers use it to keep a thread of prayer alive while they're not attending anywhere. Others use it alongside a church they're starting to try again. It's not a replacement and we don't pitch it as one; it's a separate, gentler way in.",
+          }]
+        : []),
       {
         question: "What if I don't want to go back to church at all right now?",
         answer:
-          "That's a legitimate place to be and GospelChannel doesn't push you out of it. Many deconstructing seekers spend months on the prayer wall, the faith FAQ, and the guides without ever visiting a congregation. There's no clock. We're not trying to convert your season into someone else's.",
+          "That's a legitimate place to be and GospelChannel doesn't push you out of it. Many deconstructing seekers spend months with the faith FAQ and guides without visiting a congregation. There's no clock. We're not trying to convert your season into someone else's.",
       },
     ],
 
     cta_h2: "Take the next step at your own pace",
     cta_lede:
-      "Use the church search, the prayer wall, or the guides at whatever depth you want. None of them require an account or push you somewhere you're not ready to be.",
+      "Use the church search or guides at whatever depth you want. Neither requires an account or pushes you somewhere you're not ready to be.",
   },
 };

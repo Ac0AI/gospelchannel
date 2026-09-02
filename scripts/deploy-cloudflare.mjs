@@ -14,8 +14,6 @@ const DEFAULT_WARM_PATHS = [
   "/church/suggest",
   "/for-churches",
   "/contact",
-  "/prayerwall",
-  "/prayerwall/country/united-states",
   "/robots.txt",
 ];
 const SKIP_WARM_FLAGS = new Set(["--skip-warm", "--no-warm"]);

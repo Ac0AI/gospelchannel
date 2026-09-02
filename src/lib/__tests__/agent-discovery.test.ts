@@ -38,10 +38,6 @@ describe("agent discovery", () => {
         "Start with contemporary or charismatic worship proof, then narrow by city and profile evidence so the first visit is more than a familiar sound.",
       ],
       [
-        "Where can I pray or see community prayer signals before choosing a church?",
-        "Use prayer as a next step, not a shortcut around evidence. Pray privately or use the Prayer Wall as a community signal, then verify any church through real profile proof before visiting.",
-      ],
-      [
         "How do I find a low-pressure church after church hurt?",
         "Use the gentlest verifiable next step: compare profile evidence quietly, avoid rushing commitment, and treat prayer or one visit as enough progress for now.",
       ],
@@ -129,7 +125,7 @@ describe("agent discovery", () => {
     expect(text).toContain("Should I choose Baptist or Pentecostal? Answer:");
     expect(text).toContain("How do families choose a family-friendly church? Answer:");
     expect(text).toContain("How do I find a low-pressure church after church hurt? Answer:");
-    expect(text).toContain("Where can I pray or see community prayer signals before choosing a church? Answer:");
+    expect(text).not.toContain("Where can I pray or see community prayer signals before choosing a church? Answer:");
     expect(text).toContain("Can I listen to a church before visiting? Answer:");
     expect(text).toContain("Where can I find charismatic, Pentecostal, or gospel churches in London? Answer:");
     expect(text).toContain("How do I find churches known for worship? Answer:");
@@ -162,9 +158,9 @@ describe("agent discovery", () => {
     expect(text).toContain("I am choosing between liturgical and free worship.");
     expect(text).toContain("I am processing church history and need a lower-pressure next step.");
     expect(text).toContain("Which campus of a church network should I visit?");
-    expect(text).toContain("Where can I pray or see community prayer signals before choosing a church?");
+    expect(text).not.toContain("Where can I pray or see community prayer signals before choosing a church?");
     expect(text).toContain("Proof: https://gospelchannel.com/church/churches-with-service-times");
-    expect(text).toContain("Community signal: https://gospelchannel.com/prayerwall");
+    expect(text).not.toContain("https://gospelchannel.com/prayerwall");
     expect(text).toContain("## Audience Intent Pages");
     expect(text).toContain("[Audience church-search routes](https://gospelchannel.com/for)");
     expect(text).toContain("[For expats](https://gospelchannel.com/for/expats)");
@@ -182,7 +178,7 @@ describe("agent discovery", () => {
     expect(text).toContain("[Church networks and campuses](https://gospelchannel.com/network)");
     expect(text).toContain("[Hillsong campuses](https://gospelchannel.com/network/hillsong)");
     expect(text).toContain("## Community Signal Routes");
-    expect(text).toContain("[Prayer Wall](https://gospelchannel.com/prayerwall)");
+    expect(text).not.toContain("[Prayer Wall](https://gospelchannel.com/prayerwall)");
   });
 
   it("describes the guide-to-profile evidence model in full LLM context", () => {
@@ -200,7 +196,7 @@ describe("agent discovery", () => {
     expect(text).toContain("## Current Profile Database");
     expect(text).toContain("Primary profile database: https://gospelchannel.com/church");
     expect(text).toContain("network campus proof pages at /network/[slug]");
-    expect(text).toContain("Prayer Wall community-signal surface at /prayerwall");
+    expect(text).not.toContain("/prayerwall");
     expect(text).toContain("public proof routes");
     expect(text).not.toContain("Primary directory");
     expect(text).not.toContain("## Current Catalog");
@@ -313,11 +309,8 @@ describe("agent discovery", () => {
       proof: "https://gospelchannel.com/church/churches-with-service-times",
       evidence: ["plain language", "visitor welcome", "service times", "community life"],
     }));
-    expect(card.answer_map).toContainEqual(expect.objectContaining({
+    expect(card.answer_map).not.toContainEqual(expect.objectContaining({
       question: "Where can I pray or see community prayer signals before choosing a church?",
-      guide: "https://gospelchannel.com/guides/prayer-guide",
-      proof: "https://gospelchannel.com/church/churches-with-service-times",
-      evidence: ["prayer guide", "community", "service times", "location", "profile evidence"],
     }));
     expect(card.answer_map).toContainEqual(expect.objectContaining({
       question: "Where can I find charismatic, Pentecostal, or gospel churches in London?",
@@ -343,10 +336,8 @@ describe("agent discovery", () => {
       guide: "https://gospelchannel.com/guides/church-choice-answers",
       proof: "https://gospelchannel.com/church",
     }));
-    expect(card.decision_paths).toContainEqual(expect.objectContaining({
+    expect(card.decision_paths).not.toContainEqual(expect.objectContaining({
       question: "I want to pray first before choosing a church.",
-      communitySignal: "https://gospelchannel.com/prayerwall",
-      proof: "https://gospelchannel.com/church/churches-with-service-times",
     }));
     expect(card.decision_paths).toContainEqual(expect.objectContaining({
       question: "I am choosing between a big church and a small church.",
@@ -479,13 +470,10 @@ describe("agent discovery", () => {
     expect(card.proof_routes).toContainEqual(expect.objectContaining({
       url: "https://gospelchannel.com/network/hillsong",
     }));
-    expect(card.community_signal_routes).toContainEqual(expect.objectContaining({
-      url: "https://gospelchannel.com/prayerwall",
-      signal: expect.stringContaining("not a ranking"),
-    }));
+    expect(card.community_signal_routes).toEqual([]);
     expect(card.evidence_model).toContain("Use city, country, worship-style, and denomination proof/facet routes for real profile evidence.");
     expect(card.evidence_model).toContain("Use language, kids/youth, service-time, and music canonical proof routes only when the user is narrowing a real visit decision by that evidence.");
-    expect(card.evidence_model).toContain("Use /prayerwall as a community signal only; verify the church choice with profile evidence before recommending a visit.");
+    expect(card.evidence_model).not.toContain("/prayerwall");
     expect(card.evidence_model).toContain("Use /network/[slug] pages for multi-campus church networks, then cite the individual /church/[campus-slug] profile for local proof.");
     expect(card.capabilities).toContain("Decision guides and comparison pages connected to real church profile data");
     expect(card.capabilities).toContain("Audience-intent pages connected to guide answers and profile proof routes");

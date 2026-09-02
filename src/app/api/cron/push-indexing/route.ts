@@ -103,7 +103,6 @@ function coreAndNetworkUrls(): string[] {
     SITE_URL,
     `${SITE_URL}/church`,
     `${SITE_URL}/about`,
-    `${SITE_URL}/prayerwall`,
   ];
 
   const networks = ["hillsong", "c3", "icf", "vineyard", "sos-church", "calvary-chapel", "every-nation", "pingstkyrkan", "svenska-kyrkan"];

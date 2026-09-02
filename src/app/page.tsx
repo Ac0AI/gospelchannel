@@ -12,6 +12,7 @@ import {
 import { getClaimedChurchSlugs } from "@/lib/church";
 import { buildItemListSchema } from "@/lib/seo-schema";
 import { serializeJsonLd } from "@/lib/json-ld";
+import { PRAYER_FEATURE_ENABLED } from "@/lib/features";
 
 export const revalidate = 3600;
 
@@ -147,7 +148,7 @@ export default async function HomePage() {
   const [showcaseChurches, stats, recentPrayers, claimedSlugs] = await Promise.all([
     getHomepageShowcaseChurches(),
     getChurchStatsAsync(),
-    getPrayers({ limit: 5 }),
+    PRAYER_FEATURE_ENABLED ? getPrayers({ limit: 5 }) : Promise.resolve([]),
     getClaimedChurchSlugs(),
   ]);
   const churchCountLabel = stats.churchCountLabel;
@@ -155,7 +156,9 @@ export default async function HomePage() {
   const homeSchema = buildHomeSchema(churchCountLabel, countryCount);
   const featured = showcaseChurches.slice(0, 48);
   const surpriseSlugs = showcaseChurches.slice(0, 48).map((church) => church.slug);
-  const churchNames = await getChurchNamesBySlugsAsync(recentPrayers.map((prayer) => prayer.churchSlug));
+  const churchNames = PRAYER_FEATURE_ENABLED
+    ? await getChurchNamesBySlugsAsync(recentPrayers.map((prayer) => prayer.churchSlug))
+    : {};
 
   return (
     <>
@@ -339,9 +342,14 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 5. Prayer wall + Cities side-by-side */}
-      <section className="mx-auto max-w-[1280px] gap-12 px-5 pt-20 sm:px-12 lg:grid lg:grid-cols-[1.4fr_1fr]">
-        <div>
+      {/* 5. Prayer wall + Cities */}
+      <section
+        className={`mx-auto max-w-[1280px] gap-12 px-5 pt-20 sm:px-12 ${
+          PRAYER_FEATURE_ENABLED ? "lg:grid lg:grid-cols-[1.4fr_1fr]" : ""
+        }`}
+      >
+        {PRAYER_FEATURE_ENABLED && (
+          <div>
           <div className="mb-6 flex items-center justify-between">
             <h2 className="m-0 font-serif text-3xl font-semibold tracking-[-0.01em] text-espresso sm:text-4xl">
               Prayer Wall
@@ -368,9 +376,10 @@ export default async function HomePage() {
               </Link>
             </div>
           )}
-        </div>
+          </div>
+        )}
 
-        <div className="mt-12 lg:mt-0">
+        <div className={PRAYER_FEATURE_ENABLED ? "mt-12 lg:mt-0" : ""}>
           <h2 className="mb-6 font-serif text-3xl font-semibold tracking-[-0.01em] text-espresso sm:text-4xl">
             By city
           </h2>

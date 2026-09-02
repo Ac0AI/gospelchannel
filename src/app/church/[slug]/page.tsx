@@ -56,6 +56,7 @@ import { serializeJsonLd } from "@/lib/json-ld";
 import { getVideoThumbnailPath, proxyYouTubeThumbnailUrl } from "@/lib/video-thumbnail";
 import { buildOpeningHours } from "@/lib/seo-schema";
 import { buildChurchProfileSource } from "@/lib/church-profile-source";
+import { PRAYER_FEATURE_ENABLED } from "@/lib/features";
 
 type ChurchPageProps = {
   params: Promise<{ slug: string }>;
@@ -1664,13 +1665,14 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
           <NearbyChurchesSection churchSlug={church.slug} />
         </Suspense>
 
-        {/* Prayer card */}
-        <section>
-          <h2 className="font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso">Pray for {displayName}</h2>
-          <div className="mt-4">
-            <ChurchPrayerSection churchSlug={church.slug} churchName={displayName} />
-          </div>
-        </section>
+        {PRAYER_FEATURE_ENABLED && (
+          <section>
+            <h2 className="font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso">Pray for {displayName}</h2>
+            <div className="mt-4">
+              <ChurchPrayerSection churchSlug={church.slug} churchName={displayName} />
+            </div>
+          </section>
+        )}
 
         <Suspense fallback={null}>
           <ClaimFooterLink slug={church.slug} displayName={displayName} mode={claimCtaMode} />

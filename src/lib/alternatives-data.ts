@@ -1,3 +1,5 @@
+import { PRAYER_FEATURE_ENABLED } from "@/lib/features";
+
 export type CellState = "yes" | "no" | "partial" | "text";
 
 export type ComparisonCell = {
@@ -116,11 +118,13 @@ export const ALTERNATIVES: Record<string, AlternativeData> = {
         yours: { state: "text", note: "104" },
         theirs: { state: "text", note: "Primarily United States" },
       },
-      {
-        feature: "Prayer wall",
-        yours: { state: "yes" },
-        theirs: { state: "no" },
-      },
+      ...(PRAYER_FEATURE_ENABLED
+        ? [{
+            feature: "Prayer wall",
+            yours: { state: "yes" as const },
+            theirs: { state: "no" as const },
+          }]
+        : []),
       {
         feature: "Open data for AI search",
         yours: { state: "yes", note: "llms.txt + structured data" },
@@ -297,11 +301,13 @@ export const ALTERNATIVES: Record<string, AlternativeData> = {
         yours: { state: "yes", note: "5 guides, no signup" },
         theirs: { state: "yes", note: "Article archive" },
       },
-      {
-        feature: "Prayer wall",
-        yours: { state: "yes" },
-        theirs: { state: "no" },
-      },
+      ...(PRAYER_FEATURE_ENABLED
+        ? [{
+            feature: "Prayer wall",
+            yours: { state: "yes" as const },
+            theirs: { state: "no" as const },
+          }]
+        : []),
       {
         feature: "Open data for AI search (llms.txt)",
         yours: { state: "yes" },
@@ -463,11 +469,13 @@ export const ALTERNATIVES: Record<string, AlternativeData> = {
         yours: { state: "yes" },
         theirs: { state: "partial" },
       },
-      {
-        feature: "Prayer wall",
-        yours: { state: "yes" },
-        theirs: { state: "no" },
-      },
+      ...(PRAYER_FEATURE_ENABLED
+        ? [{
+            feature: "Prayer wall",
+            yours: { state: "yes" as const },
+            theirs: { state: "no" as const },
+          }]
+        : []),
       {
         feature: "Open data for AI search (llms.txt)",
         yours: { state: "yes" },

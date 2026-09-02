@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getChurchStatsAsync } from "@/lib/content";
 import { buildBreadcrumbSchema, buildItemListSchema } from "@/lib/seo-schema";
 import { serializeJsonLd } from "@/lib/json-ld";
+import { PRAYER_FEATURE_ENABLED } from "@/lib/features";
 
 // Without ISR this page is prerendered once at build time, where the DB is
 // unreachable — baking the tiny fallback church count into the HTML forever.
@@ -75,7 +76,9 @@ const FAQ = [
   { q: "What if my church doesn't have great photos?", a: "No problem. Pages without photos get a clean color layout based on your tradition's palette, and you can add photos whenever you're ready." },
   { q: "Can I edit the page anytime?", a: "Yes. Submit changes anytime from your dashboard and they go live after a quick review." },
   { q: "Will you email my visitors?", a: "Never. When a visitor contacts your church through the page, the message goes to you, not to a list. We don't run a newsletter." },
-  { q: "What about prayer requests?", a: "Our community Prayer Wall lets visitors share a request and lets others mark that they prayed. It's open to everyone, your congregation included." },
+  ...(PRAYER_FEATURE_ENABLED
+    ? [{ q: "What about prayer requests?", a: "Our community Prayer Wall lets visitors share a request and lets others mark that they prayed. It's open to everyone, your congregation included." }]
+    : []),
   { q: "Can I delete my church anytime?", a: "Yes. One message to us and the page comes down. We don't keep a public archive." },
 ];
 

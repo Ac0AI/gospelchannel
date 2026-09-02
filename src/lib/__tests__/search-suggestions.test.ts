@@ -232,22 +232,10 @@ describe("search suggestions", () => {
       type: "guide",
       href: "/guides/church-choice-answers",
     });
-    expect(getDecisionSearchSuggestions("where can i pray or see community prayer signals before choosing a church")[0]).toMatchObject({
-      type: "guide",
-      href: "/guides/church-choice-answers",
-    });
-    expect(getDecisionSearchSuggestions("pray before choosing a church")[0]).toMatchObject({
-      type: "guide",
-      href: "/guides/church-choice-answers",
-    });
-    expect(getDecisionSearchSuggestions("how to pray")[0]).toMatchObject({
-      type: "guide",
-      href: "/guides/prayer-guide",
-    });
-    expect(getDecisionSearchSuggestions("prayer wall")[0]).toMatchObject({
-      type: "guide",
-      href: "/prayerwall",
-    });
+    expect(getDecisionSearchSuggestions("where can i pray or see community prayer signals before choosing a church")).toEqual([]);
+    expect(getDecisionSearchSuggestions("pray before choosing a church")).toEqual([]);
+    expect(getDecisionSearchSuggestions("how to pray")).toEqual([]);
+    expect(getDecisionSearchSuggestions("prayer wall")).toEqual([]);
     expect(getDecisionSearchSuggestions("worship playlist")[0]).toMatchObject({
       type: "proof_route",
       href: "/church/churches-with-worship-music",

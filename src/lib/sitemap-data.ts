@@ -22,6 +22,7 @@ import { getChurchSlugsWithPrayers } from "@/lib/prayer";
 import { buildScopedPrayerIndex } from "@/lib/prayer-scoped-index";
 import { getCompareGuideSlugs } from "@/lib/tooling";
 import { CONTENT_UPDATED_AT } from "@/lib/utils";
+import { PRAYER_FEATURE_ENABLED } from "@/lib/features";
 
 export const BASE_URL = "https://gospelchannel.com";
 
@@ -45,7 +46,7 @@ const STATIC_ROUTE_PATHS = [
   "/guides/church-fit-quiz",
   "/guides/first-visit-guide",
   "/guides/worship-style-match",
-  "/guides/prayer-guide",
+  ...(PRAYER_FEATURE_ENABLED ? ["/guides/prayer-guide"] : []),
   "/guides/faith-faq",
   "/compare",
   "/european-church-tech-2026",
@@ -102,6 +103,13 @@ type SitemapPrayerData = {
   // cached so chunk renders skip the 73k allChurchOptions JS filter that was
   // pushing tail chunks past the CF Worker CPU limit (error 1102).
   populatedChurchSlugs: string[];
+};
+
+const EMPTY_SITEMAP_PRAYER_DATA: SitemapPrayerData = {
+  countryOptions: [],
+  cityOptions: [],
+  prayerChurchCount: 0,
+  populatedChurchSlugs: [],
 };
 
 type SitemapSectionCounts = {
@@ -254,7 +262,7 @@ function getSitemapEntryCountFromSections(data: SitemapSectionCounts): number {
     + data.compareSlugs.length
     + data.networkCount
     + data.campusCount
-    + 1
+    + (PRAYER_FEATURE_ENABLED ? 1 : 0)
     + data.prayerCountryCount
     + data.prayerCityCount
     + data.prayerChurchCount;
@@ -343,7 +351,9 @@ const getSitemapSectionCountsCached = unstable_cache(
     const [churchCount, facetData, prayerData, networkCount, campusCount] = await Promise.all([
       getSitemapChurchSeedCountAsync(),
       getSitemapFacetDataCached(),
-      getSitemapPrayerDataCached(),
+      PRAYER_FEATURE_ENABLED
+        ? getSitemapPrayerDataCached()
+        : Promise.resolve(EMPTY_SITEMAP_PRAYER_DATA),
       getNetworkCount(),
       getPublishedCampusCount(),
     ]);
@@ -362,7 +372,7 @@ const getSitemapSectionCountsCached = unstable_cache(
       prayerChurchCount: prayerData.prayerChurchCount,
     };
   },
-  ["sitemap-section-counts-v1"],
+  ["sitemap-section-counts-v2"],
   { revalidate: 3600, tags: [CHURCH_INDEX_TAG] },
 );
 
@@ -477,13 +487,15 @@ export async function buildSitemapEntriesForChunk(id: number): Promise<SitemapEn
   }
   cursor += counts.campusCount;
 
-  appendMappedSlice(
-    entries,
-    [0],
-    getSectionWindow(rangeStart, rangeEndExclusive, cursor, 1),
-    () => buildPrayerRootRoute(lastModified),
-  );
-  cursor += 1;
+  if (PRAYER_FEATURE_ENABLED) {
+    appendMappedSlice(
+      entries,
+      [0],
+      getSectionWindow(rangeStart, rangeEndExclusive, cursor, 1),
+      () => buildPrayerRootRoute(lastModified),
+    );
+    cursor += 1;
+  }
 
   const prayerDataPromise =
     getSectionWindow(rangeStart, rangeEndExclusive, cursor, counts.prayerCountryCount)
@@ -529,7 +541,7 @@ export const getSitemapIndexXml = unstable_cache(
     const chunkCount = Math.max(1, Math.ceil(entryCount / CHUNK_SIZE));
     return renderIndexXml(chunkCount, await getSitemapLastModified());
   },
-  ["sitemap-index-xml-v1"],
+  ["sitemap-index-xml-v2"],
   { revalidate: 3600, tags: [CHURCH_INDEX_TAG] },
 );
 

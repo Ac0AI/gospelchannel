@@ -57,7 +57,6 @@ async function getAllUrls() {
   urls.push(SITE_URL);
   urls.push(`${SITE_URL}/church`);
   urls.push(`${SITE_URL}/about`);
-  urls.push(`${SITE_URL}/prayerwall`);
 
   // Priority 2: Network pages
   const networks = ['hillsong', 'c3', 'icf', 'vineyard', 'sos-church', 'calvary-chapel', 'every-nation', 'pingstkyrkan', 'svenska-kyrkan'];

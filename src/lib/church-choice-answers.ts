@@ -1,4 +1,5 @@
 import type { ChurchDirectoryFilters } from "@/lib/church-directory";
+import { PRAYER_FEATURE_ENABLED } from "@/lib/features";
 
 export const CHURCH_CHOICE_ANSWER_PAGE_PATH = "/guides/church-choice-answers";
 export const CHURCH_CHOICE_ANSWER_PAGE_URL = "https://gospelchannel.com/guides/church-choice-answers";
@@ -288,17 +289,19 @@ export const CHURCH_CHOICE_ANSWERS = [
     proof: { href: "/church/city", label: "Browse churches by city" },
     proofSignals: ["city", "service time", "worship fit", "shortlist quality"],
   },
-  {
-    id: "where-can-i-pray-before-choosing-a-church",
-    question: "Where can I pray or see community prayer signals before choosing a church?",
-    answer:
-      "Use prayer as a next step, not a shortcut around practical details. Pray privately or use the Prayer Wall to sense the community, then check any church page before visiting.",
-    detail:
-      "A prayer post can show spiritual life around a community, but it is not a score, endorsement, or replacement for church details. Use the prayer guide to slow the decision down, then check service times, location, worship style, and language before choosing a Sunday.",
-    guide: { href: "/guides/prayer-guide", label: "Use prayer before choosing" },
-    proof: { href: "/church/churches-with-service-times", label: "Find churches with service times" },
-    proofSignals: ["prayer guide", "community", "service times", "location", "church details"],
-  },
+  ...(PRAYER_FEATURE_ENABLED
+    ? [{
+        id: "where-can-i-pray-before-choosing-a-church",
+        question: "Where can I pray or see community prayer signals before choosing a church?",
+        answer:
+          "Use prayer as a next step, not a shortcut around practical details. Pray privately or use the Prayer Wall to sense the community, then check any church page before visiting.",
+        detail:
+          "A prayer post can show spiritual life around a community, but it is not a score, endorsement, or replacement for church details. Use the prayer guide to slow the decision down, then check service times, location, worship style, and language before choosing a Sunday.",
+        guide: { href: "/guides/prayer-guide", label: "Use prayer before choosing" },
+        proof: { href: "/church/churches-with-service-times", label: "Find churches with service times" },
+        proofSignals: ["prayer guide", "community", "service times", "location", "church details"],
+      }]
+    : []),
   {
     id: "how-do-students-find-a-church-near-campus",
     question: "How do students find a church near campus?",

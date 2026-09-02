@@ -6,13 +6,16 @@ import { usePathname } from "next/navigation";
 import { HeaderUserMenu, HeaderUserMenuMobile } from "@/components/HeaderUserMenu";
 import { authClient } from "@/lib/auth/client";
 import { useMyChurchAccess } from "@/components/useMyChurchAccess";
+import { PRAYER_FEATURE_ENABLED } from "@/lib/features";
 
 const navItems = [
   { href: "/church-near-me", label: "Near me" },
   { href: "/church", label: "Churches" },
   { href: "/guides", label: "Guides" },
   { href: "/compare", label: "Compare" },
-  { href: "/prayerwall", label: "Share a Prayer" },
+  ...(PRAYER_FEATURE_ENABLED
+    ? [{ href: "/prayerwall", label: "Share a Prayer" }]
+    : []),
   { href: "/about", label: "About" },
 ];
 

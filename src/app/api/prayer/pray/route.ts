@@ -2,8 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { incrementPrayedCount } from "@/lib/prayer";
 import { captureServerEvent } from "@/lib/posthog-server";
 import { getClientIp, hasKvRateLimit, setKvRateLimit } from "@/lib/request-guards";
+import { PRAYER_FEATURE_ENABLED } from "@/lib/features";
 
 export async function POST(request: NextRequest) {
+  if (!PRAYER_FEATURE_ENABLED) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
   try {
     const { prayerId } = await request.json();
 

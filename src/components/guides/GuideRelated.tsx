@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PRAYER_FEATURE_ENABLED } from "@/lib/features";
 
 type GuideSlug =
   | "church-fit-quiz"
@@ -35,7 +36,7 @@ interface GuideRelatedProps {
 
 export function GuideRelated({ current, siblingCount = 3 }: GuideRelatedProps) {
   const siblings = (Object.keys(ALL_GUIDES) as GuideSlug[])
-    .filter((slug) => slug !== current)
+    .filter((slug) => slug !== current && (PRAYER_FEATURE_ENABLED || slug !== "prayer-guide"))
     .slice(0, siblingCount)
     .map((slug) => ALL_GUIDES[slug]);
 

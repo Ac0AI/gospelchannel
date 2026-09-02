@@ -10,6 +10,7 @@ import {
 } from "@/lib/church-choice-answers";
 import { FOR_AUDIENCE } from "@/lib/for-audience-data";
 import type { ChurchConfig } from "@/types/gospel";
+import { PRAYER_FEATURE_ENABLED } from "@/lib/features";
 
 export const SEARCH_SUGGEST_MIN_QUERY_LENGTH = 2;
 export const SEARCH_SUGGEST_DEFAULT_LIMIT = 8;
@@ -222,37 +223,41 @@ const DECISION_SUGGESTIONS: DecisionSuggestionCandidate[] = [
       "find the right church",
     ],
   },
-  {
-    id: "prayer-guide",
-    type: "guide",
-    title: "Prayer Guide",
-    subtitle: "Pray first, then check church details before visiting.",
-    href: "/guides/prayer-guide",
-    priority: 90,
-    queries: [
-      "how to pray",
-      "prayer guide",
-      "pray before choosing a church",
-      "where can i pray",
-      "community prayer signals",
-      "pray before church",
-    ],
-  },
-  {
-    id: "prayer-wall",
-    type: "guide",
-    title: "Prayer Wall",
-    subtitle: "Community prayer requests and church details in one place.",
-    href: "/prayerwall",
-    priority: 99,
-    queries: [
-      "prayer wall",
-      "gospelchannel prayer wall",
-      "community prayers",
-      "church prayer requests",
-      "prayer requests",
-    ],
-  },
+  ...(PRAYER_FEATURE_ENABLED
+    ? [
+        {
+          id: "prayer-guide",
+          type: "guide" as const,
+          title: "Prayer Guide",
+          subtitle: "Pray first, then check church details before visiting.",
+          href: "/guides/prayer-guide",
+          priority: 90,
+          queries: [
+            "how to pray",
+            "prayer guide",
+            "pray before choosing a church",
+            "where can i pray",
+            "community prayer signals",
+            "pray before church",
+          ],
+        },
+        {
+          id: "prayer-wall",
+          type: "guide" as const,
+          title: "Prayer Wall",
+          subtitle: "Community prayer requests and church details in one place.",
+          href: "/prayerwall",
+          priority: 99,
+          queries: [
+            "prayer wall",
+            "gospelchannel prayer wall",
+            "community prayers",
+            "church prayer requests",
+            "prayer requests",
+          ],
+        },
+      ]
+    : []),
   {
     id: "worship-style-match",
     type: "guide",

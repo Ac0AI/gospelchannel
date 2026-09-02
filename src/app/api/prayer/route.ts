@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { submitPrayer, getPrayers, getPrayersFiltered, getChurchNamesForSlugsSQL } from "@/lib/prayer";
 import { getClientIp, getRateLimitValue, hasKvRateLimit, incrementRateLimitValue, setKvRateLimit } from "@/lib/request-guards";
+import { PRAYER_FEATURE_ENABLED } from "@/lib/features";
+
+function unavailable() {
+  return NextResponse.json({ error: "Not found" }, { status: 404 });
+}
 
 export async function GET(request: NextRequest) {
+  if (!PRAYER_FEATURE_ENABLED) return unavailable();
+
   const { searchParams } = request.nextUrl;
   const churchSlug = searchParams.get("church") || undefined;
   const country = searchParams.get("country") || undefined;
@@ -22,6 +29,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  if (!PRAYER_FEATURE_ENABLED) return unavailable();
+
   try {
     const body = await request.json();
     const { churchSlug, content, authorName } = body;

@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getPrayersFiltered } from "@/lib/prayer";
@@ -17,6 +17,7 @@ import {
 } from "@/lib/prayer-filters";
 import { getPrayerNavIndex } from "@/lib/prayer-scoped-index";
 import { serializeJsonLd } from "@/lib/json-ld";
+import { PRAYER_FEATURE_ENABLED } from "@/lib/features";
 export const dynamicParams = true;
 
 type FilterState = {
@@ -66,6 +67,8 @@ export async function generateMetadata({
 }: {
   params: Promise<{ segments: string[] }>;
 }): Promise<Metadata> {
+  if (!PRAYER_FEATURE_ENABLED) redirect("/church");
+
   const { segments } = await params;
   const filterIndex = await getPrayerNavIndex();
   const filter = parseSegments(segments, filterIndex);
@@ -122,6 +125,8 @@ export default async function FilteredPrayerWallPage({
 }: {
   params: Promise<{ segments: string[] }>;
 }) {
+  if (!PRAYER_FEATURE_ENABLED) redirect("/church");
+
   const { segments } = await params;
   const filterIndex = await getPrayerNavIndex();
   const filter = parseSegments(segments, filterIndex);

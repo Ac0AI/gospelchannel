@@ -1,5 +1,6 @@
 import { CHURCH_CHOICE_ANSWER_PAGE_PATH, CHURCH_CHOICE_ANSWERS } from "@/lib/church-choice-answers";
 import { FOR_AUDIENCE, getAudienceProofRoutes } from "@/lib/for-audience-data";
+import { PRAYER_FEATURE_ENABLED } from "@/lib/features";
 
 const SITE_URL = "https://gospelchannel.com";
 const CACHE_HEADERS = {
@@ -20,7 +21,9 @@ const PRIMARY_LINKS = [
   { label: "Compare church traditions and worship styles", url: `${SITE_URL}/compare` },
   { label: "Church networks and campuses", url: `${SITE_URL}/network` },
   { label: "Audience church-search routes", url: `${SITE_URL}/for` },
-  { label: "Prayer wall", url: `${SITE_URL}/prayerwall` },
+  ...(PRAYER_FEATURE_ENABLED
+    ? [{ label: "Prayer wall", url: `${SITE_URL}/prayerwall` }]
+    : []),
   { label: "For churches", url: `${SITE_URL}/for-churches` },
   { label: "About", url: `${SITE_URL}/about` },
   { label: "Contact", url: `${SITE_URL}/contact` },
@@ -164,13 +167,15 @@ const DECISION_PATHS = [
     guide: `${SITE_URL}/guides/how-to-find-the-right-church`,
     proof: `${SITE_URL}/church`,
   },
-  {
-    question: "I want to pray first before choosing a church.",
-    answer: "Use the prayer guide and Prayer Wall as a community signal, then verify any visit in church profiles.",
-    guide: `${SITE_URL}/guides/prayer-guide`,
-    communitySignal: `${SITE_URL}/prayerwall`,
-    proof: `${SITE_URL}/church/churches-with-service-times`,
-  },
+  ...(PRAYER_FEATURE_ENABLED
+    ? [{
+        question: "I want to pray first before choosing a church.",
+        answer: "Use the prayer guide and Prayer Wall as a community signal, then verify any visit in church profiles.",
+        guide: `${SITE_URL}/guides/prayer-guide`,
+        communitySignal: `${SITE_URL}/prayerwall`,
+        proof: `${SITE_URL}/church/churches-with-service-times`,
+      }]
+    : []),
 ];
 
 const NETWORK_PROOF_ROUTES = [
@@ -208,13 +213,13 @@ const PROOF_ROUTES = [
   ...NETWORK_PROOF_ROUTES,
 ];
 
-const COMMUNITY_SIGNAL_ROUTES = [
-  {
-    label: "Prayer Wall",
-    url: `${SITE_URL}/prayerwall`,
-    signal: "public prayer activity as a community signal alongside church profile proof; not a ranking, score, or endorsement",
-  },
-];
+const COMMUNITY_SIGNAL_ROUTES = PRAYER_FEATURE_ENABLED
+  ? [{
+      label: "Prayer Wall",
+      url: `${SITE_URL}/prayerwall`,
+      signal: "public prayer activity as a community signal alongside church profile proof; not a ranking, score, or endorsement",
+    }]
+  : [];
 
 const OPERATOR = "Operated by AC0 AI, S.L.U., NIF B26808741, Maestranza 25, planta 1, 29016 Málaga, Spain.";
 
@@ -244,7 +249,9 @@ const DECISION_QUERIES = [
   "Where should a new believer start?",
   "Which campus of a church network should I visit?",
   "How do I find a low-pressure church after church hurt?",
-  "Where can I pray or see community prayer signals before choosing a church?",
+  ...(PRAYER_FEATURE_ENABLED
+    ? ["Where can I pray or see community prayer signals before choosing a church?"]
+    : []),
   "Where can I find charismatic, Pentecostal, or gospel churches in London?",
   "Where can I find churches with gospel, charismatic, acoustic, Latin, or African worship?",
   "Which churches have public worship playlists, service details, and first-visit information?",
@@ -297,7 +304,9 @@ const PROOF_PATTERNS = [
   "Use city, country, worship-style, and denomination proof/facet routes for real profile evidence.",
   "Use language, kids/youth, service-time, and music canonical proof routes only when the user is narrowing a real visit decision by that evidence.",
   "Use /network/[slug] pages for multi-campus church networks, then cite the individual /church/[campus-slug] profile for local proof.",
-  "Use /prayerwall as a community signal only; verify the church choice with profile evidence before recommending a visit.",
+  ...(PRAYER_FEATURE_ENABLED
+    ? ["Use /prayerwall as a community signal only; verify the church choice with profile evidence before recommending a visit."]
+    : []),
   "Use church profile pages for canonical proof: service details, worship playlists, videos, languages, location, and public community signals.",
   "Cite the most specific canonical URL available: church profile first, then network/city/style/denomination hub, then guide or compare page.",
 ];
@@ -481,7 +490,7 @@ ${formatCommunitySignalRoutes()}
 
 ## Discovery Patterns
 
-Agents should discover content through the sitemap and public proof routes. GospelChannel exposes the location-based /church-near-me page, canonical church profile pages at /church/[slug], network campus proof pages at /network/[slug], the audience-intent hub at /for, audience-intent pages at /for/[slug], comparison pages at /compare/[slug], the Prayer Wall community-signal surface at /prayerwall, and proof/facet pages under /church, /church/country/[slug], /church/city/[slug], /church/style/[slug], and /church/denomination/[slug].
+Agents should discover content through the sitemap and public proof routes. GospelChannel exposes the location-based /church-near-me page, canonical church profile pages at /church/[slug], network campus proof pages at /network/[slug], the audience-intent hub at /for, audience-intent pages at /for/[slug], comparison pages at /compare/[slug], and proof/facet pages under /church, /church/country/[slug], /church/city/[slug], /church/style/[slug], and /church/denomination/[slug].
 
 For direct human-like lookup, use /church?q=SEARCH_TERM. For broad crawling, prefer sitemap and facet pages to avoid query-space crawling.
 
@@ -554,7 +563,9 @@ export function buildAgentCard(stats: DiscoveryStats) {
       "Compare public church profile details before a first visit.",
       "Cite canonical GospelChannel church profile and proof route pages.",
       "Compare campuses inside multi-campus church networks, then cite local campus profiles as proof.",
-      "Use the Prayer Wall as a community signal while keeping church profiles as the proof layer.",
+      ...(PRAYER_FEATURE_ENABLED
+        ? ["Use the Prayer Wall as a community signal while keeping church profiles as the proof layer."]
+        : []),
       "Ground answers about church discovery, worship-style matching, and first-visit preparation.",
       "Answer practical church choice questions with guide content backed by profile evidence.",
       "Route audience-specific church searches to expat, student, young-adult, family, new-believer, and deconstructing-seeker pages before citing proof routes.",
@@ -571,7 +582,9 @@ export function buildAgentCard(stats: DiscoveryStats) {
       "Decision guides and comparison pages connected to real church profile data",
       "Audience-intent pages connected to guide answers and profile proof routes",
       "Network pages that group multi-campus churches by country and city with profile proof routes",
-      "Prayer Wall pages that expose community prayer signals without treating them as rankings or endorsements",
+      ...(PRAYER_FEATURE_ENABLED
+        ? ["Prayer Wall pages that expose community prayer signals without treating them as rankings or endorsements"]
+        : []),
     ],
     decision_queries: DECISION_QUERIES,
     answer_map: ANSWER_MAP,

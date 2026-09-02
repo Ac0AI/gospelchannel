@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { PRAYER_FEATURE_ENABLED } from "./src/lib/features";
 
 const nextConfig: NextConfig = {
   experimental: {
@@ -33,11 +34,34 @@ const nextConfig: NextConfig = {
         destination: "/church",
         permanent: true,
       },
-      {
-        source: "/pray",
-        destination: "/prayerwall",
-        permanent: true,
-      },
+      ...(PRAYER_FEATURE_ENABLED
+        ? [{
+            source: "/pray",
+            destination: "/prayerwall",
+            permanent: true,
+          }]
+        : [
+            {
+              source: "/pray",
+              destination: "/church",
+              permanent: false,
+            },
+            {
+              source: "/prayerwall",
+              destination: "/church",
+              permanent: false,
+            },
+            {
+              source: "/prayerwall/:path*",
+              destination: "/church",
+              permanent: false,
+            },
+            {
+              source: "/guides/prayer-guide",
+              destination: "/guides",
+              permanent: false,
+            },
+          ]),
       {
         source: "/tools",
         destination: "/guides",

@@ -13,6 +13,8 @@ import {
 import { ToolPageTracker } from "@/components/tools/ToolPageTracker";
 import { buildGuideSchema, buildHowToSchema, buildItemListSchema } from "@/lib/seo-schema";
 import { serializeJsonLd } from "@/lib/json-ld";
+import { redirect } from "next/navigation";
+import { PRAYER_FEATURE_ENABLED } from "@/lib/features";
 
 export const revalidate = 3600;
 
@@ -117,6 +119,8 @@ const SAMPLE_PRAYERS: Array<{ title: string; text: string }> = [
 ];
 
 export default function PrayerGuidePage() {
+  if (!PRAYER_FEATURE_ENABLED) redirect("/guides");
+
   const schema = buildGuideSchema({
     slug: "prayer-guide",
     headline: "How to Start Praying",
