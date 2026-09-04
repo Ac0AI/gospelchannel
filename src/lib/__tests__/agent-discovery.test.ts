@@ -8,11 +8,18 @@ describe("agent discovery", () => {
     const card = buildAgentCard(stats);
     const llms = buildLlmsTxt(stats);
     const full = buildLlmsFullTxt(stats);
+    const markdown = buildIndexMarkdown(stats);
 
     expect(card.name).toBe("GospelChannel");
     expect(card.description).toContain("The Church Guide");
+    expect(card.description).toContain("church-discovery website and public church directory");
+    expect(card.description).toContain("not a television or radio broadcaster");
     expect(llms).toContain("> The Church Guide");
     expect(full).toContain("# GospelChannel — The Church Guide");
+    for (const text of [llms, full, markdown]) {
+      expect(text).toContain("GospelChannel is a church-discovery website and public church directory.");
+      expect(text).toContain("It is not a television or radio broadcaster.");
+    }
   });
 
   it("keeps legacy machine answers for visitor-rewritten church-choice guidance", () => {

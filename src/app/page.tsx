@@ -70,25 +70,30 @@ const HOME_DECISION_PATHS = [
   },
 ];
 
-function buildHomeFaqSchema(churchCountLabel: string, countryCount: number) {
-  const questions: Array<{ q: string; a: string }> = [
+type HomeFaq = { q: string; a: string };
+
+function buildHomeFaqs(churchCountLabel: string, countryCount: number): HomeFaq[] {
+  return [
     {
       q: "What is GospelChannel?",
-      a: "GospelChannel is The Church Guide. It helps you find the right church before your first visit by comparing worship style, tradition, language, service times, location, and visitor details before Sunday.",
+      a: "GospelChannel is The Church Guide: a church-discovery website and public church directory, not a television or radio broadcaster. It helps you compare worship style, tradition, language, service times, location, and visitor details before Sunday.",
     },
     {
-      q: "Can churches list themselves on GospelChannel?",
-      a: "Yes. Churches can suggest a missing page or claim an existing one. A claimed page shows service times, contact information, and details straight from the church itself, which helps first-time visitors feel confident before they arrive.",
+      q: "Where does GospelChannel's church information come from?",
+      a: "Church pages combine publicly available church sources, GospelChannel research, community corrections, and details submitted by church teams. Profiles show source and freshness information. Confirm time-sensitive details on the church's official website before travelling.",
     },
     {
-      q: "What churches are featured on GospelChannel?",
-      a: `GospelChannel features ${churchCountLabel} churches across ${countryCount} countries. Each church page helps you compare worship style, tradition, service times, and community life before your first visit. Anyone can suggest their church to be added.`,
+      q: "Does GospelChannel rank or endorse churches?",
+      a: "No. A listing is not an endorsement, and churches cannot pay for placement. Nearby results are ordered by approximate distance. Some collections use profile completeness so visitors can find useful published information, not popularity.",
     },
     {
-      q: "Is GospelChannel free to browse?",
-      a: "Yes. GospelChannel is completely free. Compare churches before your first visit, then hear each one for yourself through its music, videos, and service details.",
+      q: "Can a church add or correct its information?",
+      a: `Yes. Churches can suggest a missing page, request a correction, or claim an existing profile. GospelChannel currently covers ${churchCountLabel} churches across ${countryCount} countries, and the directory is free to browse and update.`,
     },
   ];
+}
+
+function buildHomeFaqSchema(questions: HomeFaq[], churchCountLabel: string, countryCount: number) {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -102,36 +107,22 @@ function buildHomeFaqSchema(churchCountLabel: string, countryCount: number) {
   };
 }
 
-function buildHomeSchema(churchCountLabel: string, countryCount: number) {
+function buildHomeSchema(churchCountLabel: string, countryCount: number, questions: HomeFaq[]) {
   return [
     {
       "@context": "https://schema.org",
-      "@type": "WebSite",
-      name: "GospelChannel",
+      "@type": "WebPage",
+      "@id": "https://gospelchannel.com/#webpage",
+      name: "GospelChannel Church Guide",
       url: "https://gospelchannel.com",
       description: `GospelChannel is The Church Guide, covering ${churchCountLabel} churches across ${countryCount} countries.`,
-      potentialAction: {
-        "@type": "SearchAction",
-        target: "https://gospelchannel.com/church?q={search_term_string}",
-        "query-input": "required name=search_term_string",
-      },
+      isPartOf: { "@id": "https://gospelchannel.com/#website" },
+      publisher: { "@id": "https://gospelchannel.com/#organization" },
       about: [
         { "@type": "Thing", name: "Church directory" },
         { "@type": "Thing", name: "Church service times and visitor information" },
         { "@type": "Thing", name: "Worship style" },
       ],
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "CollectionPage",
-      name: "GospelChannel",
-      url: "https://gospelchannel.com",
-      description: `GospelChannel is the global church guide for finding the right church across ${churchCountLabel} churches in ${countryCount} countries.`,
-      isPartOf: {
-        "@type": "WebSite",
-        name: "GospelChannel",
-        url: "https://gospelchannel.com",
-      },
     },
     buildItemListSchema({
       name: "GospelChannel church search options",
@@ -140,7 +131,7 @@ function buildHomeSchema(churchCountLabel: string, countryCount: number) {
         url: `https://gospelchannel.com${path.guideHref}`,
       })),
     }),
-    buildHomeFaqSchema(churchCountLabel, countryCount),
+    buildHomeFaqSchema(questions, churchCountLabel, countryCount),
   ];
 }
 
@@ -153,7 +144,8 @@ export default async function HomePage() {
   ]);
   const churchCountLabel = stats.churchCountLabel;
   const countryCount = stats.countryCount;
-  const homeSchema = buildHomeSchema(churchCountLabel, countryCount);
+  const homeFaqs = buildHomeFaqs(churchCountLabel, countryCount);
+  const homeSchema = buildHomeSchema(churchCountLabel, countryCount, homeFaqs);
   const featured = showcaseChurches.slice(0, 48);
   const surpriseSlugs = showcaseChurches.slice(0, 48).map((church) => church.slug);
   const churchNames = PRAYER_FEATURE_ENABLED
@@ -174,7 +166,7 @@ export default async function HomePage() {
           <span className="mx-3.5 opacity-40">·</span>
           <strong className="font-bold text-espresso">{countryCount}</strong> countries
           <span className="mx-3.5 opacity-40">·</span>
-          Free, no ads, no tracking
+          Free, no ads, privacy-first
         </p>
       </div>
 
@@ -426,6 +418,39 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* About the guide */}
+      <section className="mx-auto mt-20 max-w-[1280px] px-5 sm:px-12">
+        <div className="max-w-[720px]">
+          <p className="gc-eyebrow">About the guide</p>
+          <h2 className="mt-2 font-serif text-3xl font-semibold tracking-[-0.01em] text-espresso sm:text-[44px]">
+            Clear answers about GospelChannel.
+          </h2>
+          <p className="mt-3 text-base leading-relaxed text-warm-brown">
+            What the directory is, where its church information comes from, and how to read a result.
+          </p>
+        </div>
+        <div className="mt-8 grid gap-4 md:grid-cols-2">
+          {homeFaqs.map((item) => (
+            <article
+              key={item.q}
+              className="rounded-[20px] border border-rose-gold/[0.14] bg-white p-6 shadow-[0_14px_40px_rgba(72,39,24,0.04)] sm:p-7"
+            >
+              <h3 className="font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso">
+                {item.q}
+              </h3>
+              <p className="mt-3 text-[15px] leading-[1.7] text-warm-brown">{item.a}</p>
+            </article>
+          ))}
+        </div>
+        <Link
+          href="/about"
+          prefetch={false}
+          className="mt-5 inline-flex min-h-11 items-center text-sm font-bold text-rose-gold transition-colors hover:text-rose-gold-deep"
+        >
+          How GospelChannel works &rarr;
+        </Link>
+      </section>
+
       {/* 6. Suggest CTA */}
       <section className="mx-auto mt-20 max-w-[1280px] px-5 sm:px-12">
         <div
@@ -467,7 +492,7 @@ export default async function HomePage() {
                 "A premium church page (like the ones you see featured)",
                 "Spotify, YouTube & service times in one place",
                 "Verified badge once claimed",
-                "Free forever — no ads, no tracking",
+                "Free forever · no ads · privacy-first",
               ].map((b) => (
                 <li key={b} className="flex items-center gap-2.5 text-sm text-espresso">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b06a50" strokeWidth="2.5" className="shrink-0">

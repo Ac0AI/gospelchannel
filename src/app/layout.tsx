@@ -31,8 +31,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const siteDescription = `GospelChannel is the global church guide for comparing worship style, tradition, location, language, and service times across ${churchCountLabel} churches in ${countryCount} countries.`;
   return {
     metadataBase: new URL("https://gospelchannel.com"),
+    applicationName: "GospelChannel Church Guide",
     title: {
-      default: "Find the Right Church Before Your First Visit",
+      default: "GospelChannel Church Guide | Find a Church",
       template: "%s | GospelChannel",
     },
     description: siteDescription,
@@ -49,7 +50,7 @@ export async function generateMetadata(): Promise<Metadata> {
       "worship style churches",
     ],
     openGraph: {
-      title: "GospelChannel — The Church Guide",
+      title: "GospelChannel | The Church Guide",
       description: siteDescription,
       type: "website",
       url: "https://gospelchannel.com",
@@ -59,7 +60,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: "GospelChannel — The Church Guide",
+      title: "GospelChannel | The Church Guide",
       description: siteDescription,
       images: ["https://gospelchannel.com/hero-worship.jpg"],
     },
@@ -78,6 +79,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const alternateNames = ["GospelChannel Church Guide", "GospelChannel The Church Guide"];
+  const disambiguatingDescription = "GospelChannel is a church-discovery website and public church directory. It is not a television or radio broadcaster.";
   const scriptChurchCopy = "GospelChannel is The Church Guide, helping people find the right church before a first visit by comparing worship style, tradition, location, language, service times, music, and community life.";
   const scriptBrowseCopy = "The global church guide for exploring churches by worship style, tradition, language, city, service times, music, and visitor information.";
   const knowsAbout = [
@@ -113,11 +116,17 @@ export default function RootLayout({
                 "@type": "Organization",
                 "@id": "https://gospelchannel.com/#organization",
                 name: "GospelChannel",
+                alternateName: alternateNames,
                 legalName: "AC0 AI, S.L.U.",
                 taxID: "B26808741",
                 url: "https://gospelchannel.com",
                 slogan: "The Church Guide",
                 description: scriptChurchCopy,
+                disambiguatingDescription,
+                sameAs: [
+                  "https://github.com/Ac0AI/gospelchannel",
+                  "https://chatgpt.com/plugins/plugin_asdk_app_6a918a8b5e7c8191a13aee40ef088e7b",
+                ],
                 knowsAbout,
                 address: {
                   "@type": "PostalAddress",
@@ -137,8 +146,10 @@ export default function RootLayout({
                 "@type": "WebSite",
                 "@id": "https://gospelchannel.com/#website",
                 name: "GospelChannel",
+                alternateName: alternateNames,
                 url: "https://gospelchannel.com",
                 description: scriptBrowseCopy,
+                disambiguatingDescription,
                 inLanguage: "en",
                 about: knowsAbout,
                 isAccessibleForFree: true,

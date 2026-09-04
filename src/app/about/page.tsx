@@ -13,8 +13,8 @@ const PAGE_URL = `${SITE_URL}/about`;
 export async function generateMetadata(): Promise<Metadata> {
   const { churchCountLabel } = await getChurchStatsAsync();
   return {
-    title: "About GospelChannel",
-    description: `GospelChannel is The Church Guide, helping people compare worship style, tradition, location, language, and service times across ${churchCountLabel} churches.`,
+    title: "About GospelChannel Church Guide",
+    description: `GospelChannel is a church-discovery website and public church directory for comparing worship, tradition, location, language, and service times across ${churchCountLabel} churches.`,
     alternates: { canonical: PAGE_URL },
   };
 }
@@ -22,9 +22,9 @@ export async function generateMetadata(): Promise<Metadata> {
 const PRINCIPLES = [
   { n: "I.", t: "Free, always.", b: "Charging churches to be found is wrong. We'd rather grow slowly." },
   { n: "II.", t: "No ads.", b: "Not now, not ever. Not even tasteful ones. Not even from publishers." },
-  { n: "III.", t: "No data sold.", b: "We don't track visitors, we don't share emails, we don't have a CRM to leak. Less data is more peace." },
+  { n: "III.", t: "No data sold.", b: "We keep analytics minimal, never sell visitor data, and do not use session recording. Less data is more peace." },
   { n: "IV.", t: "Every tradition welcome.", b: "Catholic and Pentecostal. Lutheran and non-denominational. We don't editorialize on theology." },
-  { n: "V.", t: "Beauty is part of the mission.", b: "A page can be a sermon. We design like every visitor is making up their mind in 90 seconds — because they are." },
+  { n: "V.", t: "Beauty is part of the mission.", b: "A page can be a sermon. We design like every visitor is making up their mind in 90 seconds, because they are." },
 ];
 
 export default async function AboutPage() {
@@ -33,23 +33,12 @@ export default async function AboutPage() {
     {
       "@context": "https://schema.org",
       "@type": "AboutPage",
-      name: "About GospelChannel",
-      description: `GospelChannel is The Church Guide, with worship style, tradition, location, language, and service times for ${churchCountLabel} churches in ${countryCount} countries.`,
+      "@id": `${PAGE_URL}#webpage`,
+      name: "About GospelChannel Church Guide",
+      description: `GospelChannel is a church-discovery website and public church directory with worship, tradition, location, language, and service times for ${churchCountLabel} churches in ${countryCount} countries.`,
       url: PAGE_URL,
-      isPartOf: {
-        "@type": "WebSite",
-        name: "GospelChannel",
-        url: SITE_URL,
-      },
-      mainEntity: {
-        "@type": "Organization",
-        name: "GospelChannel",
-        url: SITE_URL,
-        legalName: "AC0 AI, S.L.U.",
-        taxID: "B26808741",
-        slogan: "The Church Guide",
-        description: "Free global church guide for people planning a first visit.",
-      },
+      isPartOf: { "@id": `${SITE_URL}/#website` },
+      mainEntity: { "@id": `${SITE_URL}/#organization` },
       about: [
         { "@type": "Thing", name: "Church directory" },
         { "@type": "Thing", name: "Church service times and visitor information" },
@@ -103,10 +92,10 @@ export default async function AboutPage() {
             >
               G
             </span>
-            ospelChannel started because two of us moved to a new city and couldn&rsquo;t find a church we&rsquo;d want to walk into. Not because there weren&rsquo;t any &mdash; there were dozens &mdash; but because every one of their websites looked like it was designed by someone who didn&rsquo;t believe people would actually visit.
+            ospelChannel started because two of us moved to a new city and couldn&rsquo;t find a church we&rsquo;d want to walk into. Not because there weren&rsquo;t any &ndash; there were dozens &ndash; but because every one of their websites looked like it was designed by someone who didn&rsquo;t believe people would actually visit.
           </p>
           <p className="mt-5">
-            The information we needed &mdash; what time, what kind of music, will I be the only person under 60, do they have anything for kids &mdash; was buried. Or missing. Or last updated in 2014.
+            The information we needed &ndash; what time, what kind of music, will I be the only person under 60, do they have anything for kids &ndash; was buried. Or missing. Or last updated in 2014.
           </p>
           <p className="mt-5">
             We&rsquo;re not pastors. We&rsquo;re designers and engineers who love the church. And we kept asking: <em className="text-rose-gold-deep">why does the place that&rsquo;s supposed to welcome strangers have the worst onboarding on the internet?</em>
@@ -120,6 +109,75 @@ export default async function AboutPage() {
           <p className="mt-5">
             We&rsquo;re small. We&rsquo;re independent. We&rsquo;re <em className="text-rose-gold-deep">{churchCountLabel} churches in</em>. Most days we still can&rsquo;t believe it.
           </p>
+        </div>
+      </section>
+
+      {/* Entity and sourcing */}
+      <section id="what-gospelchannel-is" className="mx-auto mt-20 max-w-[1280px] px-5 sm:px-12 sm:mt-24">
+        <div className="max-w-[760px]">
+          <p className="gc-eyebrow">What GospelChannel is</p>
+          <h2
+            className="mt-3 font-serif font-semibold tracking-[-0.01em] text-espresso"
+            style={{ fontSize: "clamp(36px, 6vw, 56px)" }}
+          >
+            A church guide, built to be checked.
+          </h2>
+          <p className="mt-5 text-base leading-relaxed text-warm-brown sm:text-lg">
+            GospelChannel is a church-discovery website and public church directory. It is not a television
+            or radio broadcaster, a denomination, or a church.
+          </p>
+        </div>
+
+        <div className="mt-10 grid gap-5 lg:grid-cols-3">
+          {[
+            {
+              title: "The Church Guide",
+              body: "Use GospelChannel to compare location, worship style, tradition, language, recorded service times, music, and practical first-visit details.",
+            },
+            {
+              title: "Sources you can check",
+              body: "Church pages combine public church sources, GospelChannel research, community corrections, and details submitted by church teams. Profiles show source and freshness information, with the official church site for final confirmation.",
+            },
+            {
+              title: "No paid placement",
+              body: "A listing is not an endorsement or rating. Churches cannot buy a higher position. Nearby results use approximate distance, while some collections use the completeness of published profile information.",
+            },
+          ].map((item) => (
+            <article
+              key={item.title}
+              className="rounded-[22px] border border-rose-gold/[0.14] bg-white p-7 shadow-[0_16px_44px_rgba(72,39,24,0.05)]"
+            >
+              <h3 className="font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso">
+                {item.title}
+              </h3>
+              <p className="mt-3 text-[15px] leading-[1.7] text-warm-brown">{item.body}</p>
+            </article>
+          ))}
+        </div>
+
+        <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3">
+          <a
+            href="https://github.com/Ac0AI/gospelchannel"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex min-h-11 items-center text-sm font-bold text-rose-gold transition-colors hover:text-rose-gold-deep"
+          >
+            View the public source &rarr;
+          </a>
+          <a
+            href="https://chatgpt.com/plugins/plugin_asdk_app_6a918a8b5e7c8191a13aee40ef088e7b"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex min-h-11 items-center text-sm font-bold text-rose-gold transition-colors hover:text-rose-gold-deep"
+          >
+            Open the ChatGPT church finder &rarr;
+          </a>
+          <Link
+            href="/church"
+            className="inline-flex min-h-11 items-center text-sm font-bold text-rose-gold transition-colors hover:text-rose-gold-deep"
+          >
+            Browse church profiles &rarr;
+          </Link>
         </div>
       </section>
 

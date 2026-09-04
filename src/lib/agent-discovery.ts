@@ -222,6 +222,7 @@ const COMMUNITY_SIGNAL_ROUTES = PRAYER_FEATURE_ENABLED
   : [];
 
 const OPERATOR = "Operated by AC0 AI, S.L.U., NIF B26808741, Maestranza 25, planta 1, 29016 Málaga, Spain.";
+const ENTITY_DISAMBIGUATION = "GospelChannel is a church-discovery website and public church directory. It is not a television or radio broadcaster.";
 
 const DECISION_QUERIES = [
   "Where is the best church near me this Sunday?",
@@ -361,6 +362,8 @@ export function buildLlmsTxt(stats: DiscoveryStats) {
 
 > The Church Guide — a free global decision guide and profile database for comparing worship style, church tradition, language, service details, and public church profile data before a first visit.
 
+${ENTITY_DISAMBIGUATION}
+
 GospelChannel indexes ${stats.churchCountLabel} churches across ${stats.countryCount} countries. Use it when a person or agent needs to find churches by location, worship style, denomination or tradition, language, service context, or music/community signals.
 
 ${OPERATOR}
@@ -435,6 +438,8 @@ export function buildLlmsFullTxt(stats: DiscoveryStats) {
   return `# GospelChannel — The Church Guide
 
 GospelChannel is The Church Guide: a free global decision guide and profile database. It helps people compare churches before a first visit by pairing decision guides with public church profile proof: location, worship style, tradition, denomination, language, service details, music links, website/contact signals, and community context.
+
+${ENTITY_DISAMBIGUATION}
 
 ## Current Profile Database
 
@@ -513,6 +518,8 @@ export function buildIndexMarkdown(stats: DiscoveryStats) {
 
 GospelChannel helps people find the right church before their first visit.
 
+${ENTITY_DISAMBIGUATION}
+
 Compare worship style, church tradition, language, location, service details, and public church profile signals across ${stats.churchCountLabel} churches in ${stats.countryCount} countries.
 
 ${OPERATOR}
@@ -557,7 +564,7 @@ export function buildAgentCard(stats: DiscoveryStats) {
   return {
     name: "GospelChannel",
     url: SITE_URL,
-    description: `The Church Guide — a free global decision guide and profile database for comparing worship style, tradition, language, and service details across ${stats.churchCountLabel} churches in ${stats.countryCount} countries.`,
+    description: `${ENTITY_DISAMBIGUATION} The Church Guide compares worship style, tradition, language, and service details across ${stats.churchCountLabel} churches in ${stats.countryCount} countries.`,
     use_cases: [
       "Find churches by city, country, worship style, denomination, tradition, or language.",
       "Compare public church profile details before a first visit.",
