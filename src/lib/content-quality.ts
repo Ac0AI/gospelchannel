@@ -1,4 +1,5 @@
 import type { ServiceTime } from "@/types/gospel";
+import { isIndexableOfficialReview, type OfficialChurchReview } from "@/lib/official-church-review";
 
 export type PromotionTier = "promotable" | "catalog_only";
 
@@ -261,7 +262,7 @@ export function isCriticalDisplayFlag(flag: string): boolean {
 // Legacy content-substance floor (20 displayReady + one substance signal).
 // Still used by the related-churches internal-link guard (church.ts) so that
 // block never links to an outright empty stub. The detail-page index decision
-// now uses the stricter on-brand gate below.
+// uses the indexability paths below.
 export const INDEXABLE_DISPLAY_SCORE_MIN = 45;
 
 // On-brand concentration gate (2026-06-14). A near-zero-authority domain with
@@ -270,9 +271,9 @@ export const INDEXABLE_DISPLAY_SCORE_MIN = 45;
 // indexed"). The fix is to shrink the indexable set so crawl budget and link
 // equity land on pages that can actually compete: on-brand (free-church /
 // evangelical / charismatic) churches with real content, plus any church with
-// a worship playlist (the unique moat). Off-brand mainline/liturgical/
-// non-evangelical traditions stay in the DB and are served, but are excluded
-// from the index + sitemap. Single source of truth: the detail-page robots
+// a worship playlist. Substantial official visit reviews now provide another
+// path independent of denomination; other profiles retain this legacy gate.
+// Single source of truth: the detail-page robots
 // meta (church/[slug]) and the sitemap seed (content.ts) both read this rule.
 export const INDEXABLE_ONBRAND_SCORE_MIN = 65;
 
@@ -309,15 +310,14 @@ export type ChurchIndexabilityInput = {
   indexScore: number | null | undefined;
   denomination?: string | null;
   hasWorship?: boolean;
+  officialReview?: OfficialChurchReview;
 };
 
-// A church detail page is indexable (and sitemap-emitted) when EITHER it has a
-// worship playlist (the unique moat — always worth indexing) OR it is on-brand
-// (known, non-off-brand denomination) with real content (score >= the on-brand
-// floor). Everything else is served but noindex,follow so internal link equity
-// still flows.
+// Index worship playlists, substantial official visit reviews, and profiles
+// that meet the legacy denomination/content gate. The sitemap uses the same
+// review parser and predicate, so unpublished or invalid facts cannot qualify.
 export function isIndexableChurch(input: ChurchIndexabilityInput): boolean {
-  if (input.hasWorship) return true;
+  if (input.hasWorship || isIndexableOfficialReview(input.officialReview)) return true;
   const denomination = (input.denomination ?? "").trim();
   if (!denomination) return false;
   if (OFF_BRAND_DENOMINATION_SET.has(denomination)) return false;

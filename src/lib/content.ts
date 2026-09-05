@@ -18,7 +18,7 @@ import {
 } from "@/lib/content-quality";
 
 // Sitemap church section lists ONLY indexable churches — mirrors
-// isIndexableChurch (null score, or >= threshold). A noindex page in the
+// isIndexableChurch. A noindex page in the
 // sitemap is the "Submitted URL marked noindex" GSC anti-pattern: telling
 // Google to crawl pages we then tell it not to index wastes crawl budget.
 // Sitemap-seed count + chunk are the ONLY consumers of these two queries.
@@ -34,6 +34,7 @@ import {
   isExplicitNonChurchSlug,
 } from "@/lib/non-church-slugs";
 import { uniqueSpotifyPlaylistIds } from "@/lib/spotify-playlist";
+import { isIndexableOfficialReview, parseOfficialChurchReview } from "@/lib/official-church-review";
 
 const CHURCH_CONTENT_TAG = "church-content";
 export const CHURCH_INDEX_TAG = "church-index";
@@ -433,13 +434,30 @@ async function fetchSingleChurchBySlug(slug: string): Promise<ChurchConfig | und
   return isExplicitNonChurchSlug(church.slug) ? undefined : church;
 }
 
-// SQL form of isIndexableChurch (content-quality.ts) for the sitemap seed:
-// worship playlist OR on-brand denomination (known, not off-brand) with
-// display_score >= the on-brand floor. denylistParam/scoreParam are positional
-// placeholders ($N) the caller binds. Keep byte-identical to the TS predicate.
-function indexableSeedClause(denylistParam: string, scoreParam: string): string {
+// Validate the small editorial review set with the same parser used by profile
+// metadata. Cache only the eligible slugs, keeping raw sources out of sitemap
+// cache entries and avoiding a second implementation of JSON validation in SQL.
+const getIndexableOfficialReviewSlugsCached = unstable_cache(
+  async (): Promise<string[]> => {
+    const rows = await getSql().query(`
+      SELECT church_slug, sources->'official_review' AS review
+      FROM church_enrichments
+      WHERE sources ? 'official_review'
+    `) as Array<{ church_slug: string; review: unknown }>;
+    return rows.flatMap((row) => isIndexableOfficialReview(
+      parseOfficialChurchReview({ official_review: row.review }),
+    ) ? [row.church_slug] : []);
+  },
+  ["indexable-official-review-slugs-v1"],
+  { revalidate: 3600, tags: [CHURCH_CONTENT_TAG, CHURCH_INDEX_TAG] },
+);
+
+// SQL form of isIndexableChurch. The review slugs above use its shared
+// predicate; the other two paths retain the existing playlist/content gate.
+function indexableSeedClause(denylistParam: string, scoreParam: string, reviewSlugsParam: string): string {
   return `AND (
         (array_length(spotify_playlist_ids, 1) > 0 OR array_length(additional_playlists, 1) > 0)
+        OR slug = ANY(${reviewSlugsParam}::text[])
         OR (
           denomination IS NOT NULL AND length(denomination) > 0
           AND NOT (denomination = ANY(${denylistParam}::text[]))
@@ -452,14 +470,15 @@ async function fetchApprovedChurchDirectorySeedCountFromDb(
   indexableOnly = false,
 ): Promise<number> {
   const sql = getSql();
+  const reviewedSlugs = indexableOnly ? await getIndexableOfficialReviewSlugsCached() : [];
   const rawRows = (await sql.query(`
     SELECT COUNT(*)::int AS count
     FROM churches
     WHERE status = 'approved'
       AND NOT (slug = ANY($1::text[]))
-      ${indexableOnly ? indexableSeedClause("$2", "$3") : ""}
+      ${indexableOnly ? indexableSeedClause("$2", "$3", "$4") : ""}
   `, indexableOnly
-    ? [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS, [...OFF_BRAND_DENOMINATIONS], INDEXABLE_ONBRAND_SCORE_MIN]
+    ? [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS, [...OFF_BRAND_DENOMINATIONS], INDEXABLE_ONBRAND_SCORE_MIN, reviewedSlugs]
     : [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS])) as Array<{ count: number | string }>;
 
   return Number(rawRows[0]?.count ?? 0);
@@ -494,6 +513,7 @@ async function fetchApprovedChurchDirectorySeedChunkFromDb(
   chunkSize = CHURCH_DIRECTORY_SEED_CHUNK_SIZE,
 ): Promise<ChurchDirectorySeed[]> {
   const sql = getSql();
+  const reviewedSlugs = indexableOnly ? await getIndexableOfficialReviewSlugsCached() : [];
   const offset = chunkIndex * chunkSize;
   // CTE drives the ordered pagination via index-only scan on
   // (status, name, slug); JOIN back fetches the wide columns by PK.
@@ -504,7 +524,7 @@ async function fetchApprovedChurchDirectorySeedChunkFromDb(
       FROM churches
       WHERE status = 'approved'
         AND NOT (slug = ANY($1::text[]))
-        ${indexableOnly ? indexableSeedClause("$4", "$5") : ""}
+        ${indexableOnly ? indexableSeedClause("$4", "$5", "$6") : ""}
       ORDER BY name, slug
       LIMIT $2
       OFFSET $3
@@ -514,7 +534,7 @@ async function fetchApprovedChurchDirectorySeedChunkFromDb(
     JOIN churches c ON c.slug = r.slug
     ORDER BY c.name, c.slug
   `, indexableOnly
-    ? [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS, chunkSize, offset, [...OFF_BRAND_DENOMINATIONS], INDEXABLE_ONBRAND_SCORE_MIN]
+    ? [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS, chunkSize, offset, [...OFF_BRAND_DENOMINATIONS], INDEXABLE_ONBRAND_SCORE_MIN, reviewedSlugs]
     : [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS, chunkSize, offset])) as ChurchDirectorySeedRow[];
 
   return rawRows.map(mapRowToChurchDirectorySeed);
@@ -584,8 +604,8 @@ const getApprovedChurchDirectorySeedChunkCached = unstable_cache(
   { revalidate: 3600, tags: [CHURCH_CONTENT_TAG, CHURCH_INDEX_TAG] }
 );
 
-// Sitemap-ONLY church seed: same query + the isIndexableChurch filter
-// (display_score NULL or >= threshold). SEPARATE cache keys so the shared
+// Sitemap-ONLY church seed: same query + the isIndexableChurch filter.
+// SEPARATE cache keys so the shared
 // full directory seed (getChurchDirectorySeedAsync → prayer-filters /
 // prayerwall) stays UNFILTERED — filtering the shared path regressed prayer
 // sitemap parity (the gate caught it). count + chunk carry the SAME filter
@@ -597,7 +617,7 @@ const getSitemapChurchSeedCountCached = unstable_cache(
     }
     return fetchApprovedChurchDirectorySeedCountFromDb(true);
   },
-  ["sitemap-church-seed-count-v2-onbrand"],
+  ["sitemap-church-seed-count-v3-official-reviews"],
   { revalidate: 3600, tags: [CHURCH_CONTENT_TAG, CHURCH_INDEX_TAG] }
 );
 
@@ -614,7 +634,7 @@ const getSitemapChurchSeedChunkCached = unstable_cache(
       SITEMAP_CHURCH_SEED_CACHE_CHUNK_SIZE,
     );
   },
-  ["sitemap-church-seed-chunk-v3-onbrand-small"],
+  ["sitemap-church-seed-chunk-v4-official-reviews-small"],
   { revalidate: 3600, tags: [CHURCH_CONTENT_TAG, CHURCH_INDEX_TAG] }
 );
 

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { parseOfficialChurchReview } from "@/lib/official-church-review";
+import { isIndexableOfficialReview, parseOfficialChurchReview } from "@/lib/official-church-review";
 import { buildChurchProfileSource } from "@/lib/church-profile-source";
+import { isIndexableChurch } from "@/lib/content-quality";
 
 const facts = {
   services: { value: "Sunday 10:00 AM", sourceUrl: "https://example.org/visit" },
@@ -36,5 +37,41 @@ describe("official church reviews", () => {
     expect(parseOfficialChurchReview({ official_review: { checkedAt: "2026-09-05", facts: {
       services: facts.services,
     } } })).toBeUndefined();
+  });
+
+  it.each([null, "Episcopal", "Orthodox"])(
+    "indexes a substantial sourced visit review without music or an inferred denomination (%s)", (denomination) => {
+      const review = parseOfficialChurchReview({ official_review: { checkedAt: "2026-09-05", facts: {
+        ...facts,
+        firstVisit: { value: "Visitors can meet the welcome team in the lobby.", sourceUrl: "https://example.org/visit" },
+        children: { value: "Children's groups meet during the service.", sourceUrl: "https://example.org/children" },
+      } } });
+      expect(isIndexableChurch({ indexScore: null, denomination, officialReview: review })).toBe(true);
+    },
+  );
+
+  it("keeps a review with only a service time and address below the indexing floor", () => {
+    const review = parseOfficialChurchReview({ official_review: { checkedAt: "2026-09-05", facts } });
+    expect(review).toBeDefined();
+    expect(isIndexableOfficialReview(review)).toBe(false);
+    expect(isIndexableChurch({ indexScore: 100, denomination: null, officialReview: review })).toBe(false);
+  });
+
+  it("does not count an invalid source toward the review's indexing floor", () => {
+    const review = parseOfficialChurchReview({ official_review: { checkedAt: "2026-09-05", facts: {
+      ...facts,
+      firstVisit: { value: "Visitors can meet the welcome team in the lobby.", sourceUrl: "https://example.org/visit" },
+      children: { value: "Children's groups", sourceUrl: "javascript:alert(1)" },
+    } } });
+    expect(isIndexableOfficialReview(review)).toBe(false);
+  });
+
+  it("requires guidance for a first visit even when four other facts are published", () => {
+    const review = parseOfficialChurchReview({ official_review: { checkedAt: "2026-09-05", facts: {
+      ...facts,
+      languages: { value: "English", sourceUrl: "https://example.org/visit" },
+      children: { value: "Children's groups", sourceUrl: "https://example.org/children" },
+    } } });
+    expect(isIndexableOfficialReview(review)).toBe(false);
   });
 });

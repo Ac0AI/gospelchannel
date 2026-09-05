@@ -54,3 +54,9 @@ export function parseOfficialChurchReview(sources: unknown): OfficialChurchRevie
   if (!facts.services || !facts.address) return undefined;
   return { checkedAt: review.checkedAt, facts };
 }
+
+/** A parsed review must help plan a visit beyond publishing a time and address. */
+export function isIndexableOfficialReview(review: OfficialChurchReview | undefined): boolean {
+  return Boolean(review?.facts.services && review.facts.address && review.facts.firstVisit
+    && Object.keys(review.facts).length >= 4);
+}
