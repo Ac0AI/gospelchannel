@@ -15,6 +15,7 @@ import { ChurchLatestUpdatesSection } from "@/components/ChurchLatestUpdatesSect
 import { ChurchNetworkSection } from "@/components/ChurchNetworkSection";
 import { FollowChurchButton } from "@/components/FollowChurchButton";
 import { NearbyChurchesSection } from "@/components/NearbyChurchesSection";
+import { OfficialVisitDetails } from "@/components/OfficialVisitDetails";
 import { PlayAllButton } from "@/components/PlayAllButton";
 import { ServiceTimesDisplay } from "@/components/ServiceTimesDisplay";
 import { SpotifyEmbedCard } from "@/components/SpotifyEmbedCard";
@@ -970,6 +971,8 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
           </div>
         </div>
       </section>
+
+      {enrichment?.officialReview && <OfficialVisitDetails review={enrichment.officialReview} />}
 
       {/* ━━━━━━━━━━ 2. WORD FROM THE TEAM (only if pastor present) ━━━━━━━━━━ */}
       {pastorName && (

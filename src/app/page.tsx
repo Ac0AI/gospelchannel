@@ -41,7 +41,7 @@ const HOME_DECISION_PATHS = [
     answer: "Start with churches you can reach, then compare recorded service times and the details that shape a first visit.",
     guideHref: "/guides/first-visit-guide",
     guideLabel: "Plan my first visit",
-    proofHref: "#nearby-church-finder",
+    proofHref: "/church-near-me",
     proofLabel: "Find nearby churches",
   },
   {
@@ -67,6 +67,22 @@ const HOME_DECISION_PATHS = [
     guideLabel: "Compare denominations",
     proofHref: "/church/denomination",
     proofLabel: "Browse by denomination",
+  },
+  {
+    question: "I need an English-speaking church in Zürich.",
+    answer: "Compare local churches, published service languages, and practical details for your first Sunday.",
+    guideHref: "/church/english-speaking-churches-in-zurich",
+    guideLabel: "English-speaking churches in Zürich",
+    proofHref: "/church/city/zurich",
+    proofLabel: "All Zürich churches",
+  },
+  {
+    question: "I'm looking for a church in Austin.",
+    answer: "Explore churches by location and service time, with official sources for recently checked visit details.",
+    guideHref: "/church/city/austin#checked-visit-details",
+    guideLabel: "Checked Austin visit details",
+    proofHref: "/church/city/austin",
+    proofLabel: "Find an Austin church",
   },
 ];
 

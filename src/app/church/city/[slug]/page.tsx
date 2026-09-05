@@ -3,11 +3,13 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ChurchCollectionPage } from "@/components/ChurchCollectionPage";
 import { CityChurchFinder } from "@/components/CityChurchFinder";
+import { ReviewedCityChurches } from "@/components/ReviewedCityChurches";
 import { getChurchFacetPageData } from "@/lib/church";
 import { MIN_INDEXABLE_CITY_CHURCHES } from "@/lib/church-directory";
 import { getCityFinderData, type CityFinderData } from "@/lib/city-finder-data";
 import { getCityPageCopy, getCityGuideLinks } from "@/lib/city-page";
 import { buildCityHubContent } from "@/lib/hub-content";
+import { getOfficiallyReviewedChurches } from "@/lib/official-church-review-data";
 
 export const revalidate = 3600;
 
@@ -44,6 +46,16 @@ async function loadOptionalFinder(slug: string, page: number): Promise<CityFinde
   } catch (error) {
     console.error("[city-finder] failed to load Austin finder data", error);
     return null;
+  }
+}
+
+async function loadOptionalReviews(slug: string, page: number) {
+  if (slug !== "austin" || page !== 1) return [];
+  try {
+    return await getOfficiallyReviewedChurches(slug);
+  } catch (error) {
+    console.error("[city-reviews] failed to load Austin source checks", error);
+    return [];
   }
 }
 
@@ -89,7 +101,9 @@ export async function generateMetadata({ params, searchParams }: CityPageProps):
 export default async function CityPage({ params, searchParams }: CityPageProps) {
   const [{ slug }, qs] = await Promise.all([params, searchParams]);
   const page = readPositivePage(qs?.page);
-  const [data, finderData] = await Promise.all([loadCity(slug, page), loadOptionalFinder(slug, page)]);
+  const [data, finderData, reviewedChurches] = await Promise.all([
+    loadCity(slug, page), loadOptionalFinder(slug, page), loadOptionalReviews(slug, page),
+  ]);
   if (!data) notFound();
 
   const { currentPage, totalCount, totalPages, pageItems, label, relatedLinks, breadcrumbCountry } = data;
@@ -137,17 +151,20 @@ export default async function CityPage({ params, searchParams }: CityPageProps) 
       ]}
       editorial={editorial ?? undefined}
       quickAnswerLead={copy.quickAnswer}
-      featuredContent={hasFinder ? (
-        <CityChurchFinder
-          city="Austin"
-          cityCenter={{ label: "Central Austin", latitude: 30.2672, longitude: -97.7431 }}
-          maxLocalDistanceMiles={90}
-          churches={finderData!.churches}
-          areas={[...AUSTIN_AREAS]}
-          styleOptions={finderData!.styleOptions}
-          denominationOptions={finderData!.denominationOptions}
-          languageOptions={finderData!.languageOptions}
-        />
+      featuredContent={slug === "austin" && page === 1 ? (
+        <>
+          {hasFinder && <CityChurchFinder
+            city="Austin"
+            cityCenter={{ label: "Central Austin", latitude: 30.2672, longitude: -97.7431 }}
+            maxLocalDistanceMiles={90}
+            churches={finderData!.churches}
+            areas={[...AUSTIN_AREAS]}
+            styleOptions={finderData!.styleOptions}
+            denominationOptions={finderData!.denominationOptions}
+            languageOptions={finderData!.languageOptions}
+          />}
+          <ReviewedCityChurches churches={reviewedChurches} cityName="Austin" />
+        </>
       ) : undefined}
     />
   );

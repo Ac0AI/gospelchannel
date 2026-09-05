@@ -1,0 +1,1318 @@
+[
+  {
+    "slug": "austin-bible-church-austin",
+    "name": "Austin Bible Church",
+    "website": "https://austinbiblechurch.com/",
+    "address": "8405 Cross Park Drive, Austin, TX 78754",
+    "serviceTimes": [
+      {
+        "day": "Sunday",
+        "time": "9:30 AM",
+        "label": "Bible teaching"
+      },
+      {
+        "day": "Sunday",
+        "time": "11:00 AM",
+        "label": "Bible teaching"
+      }
+    ],
+    "languages": [],
+    "denomination": null,
+    "musicStyles": [],
+    "phone": null,
+    "serviceDurationMinutes": null,
+    "childrenMinistry": true,
+    "youthMinistry": null,
+    "summary": "Austin Bible Church in Austin. Sunday Bible teaching at 9:30 AM and 11:00 AM. The visitor guide describes verse-by-verse Bible teaching. Visitors are not asked to stand or introduce themselves.",
+    "review": {
+      "checkedAt": "2026-09-05",
+      "facts": {
+        "services": {
+          "value": "Sunday Bible teaching at 9:30 AM and 11:00 AM.",
+          "sourceUrl": "https://austinbiblechurch.com/"
+        },
+        "address": {
+          "value": "8405 Cross Park Drive, Austin, TX 78754",
+          "sourceUrl": "https://austinbiblechurch.com/"
+        },
+        "firstVisit": {
+          "value": "The visitor guide describes verse-by-verse Bible teaching. Visitors are not asked to stand or introduce themselves.",
+          "sourceUrl": "https://austinbiblechurch.com/visitors"
+        },
+        "worship": {
+          "value": "Bible teaching is central to the gathering.",
+          "sourceUrl": "https://austinbiblechurch.com/visitors"
+        },
+        "children": {
+          "value": "Sunday classes include ages 6–10 at 9:30 AM and ages 2–14 in separate groups at 11:00 AM.",
+          "sourceUrl": "https://austinbiblechurch.com/children-and-teens"
+        }
+      }
+    }
+  },
+  {
+    "slug": "christian-life-austin-austin",
+    "name": "Christian Life Austin",
+    "website": "https://www.wearechristianlife.com/",
+    "address": "4700 West Gate Boulevard, Austin, TX 78745",
+    "serviceTimes": [
+      {
+        "day": "Sunday",
+        "time": "8:30 AM",
+        "label": "Worship service"
+      },
+      {
+        "day": "Sunday",
+        "time": "10:00 AM",
+        "label": "Worship service"
+      },
+      {
+        "day": "Sunday",
+        "time": "11:30 AM",
+        "label": "Worship service"
+      },
+      {
+        "day": "Sunday",
+        "time": "1:00 PM",
+        "label": "Worship service"
+      }
+    ],
+    "languages": [
+      "Spanish",
+      "American Sign Language"
+    ],
+    "denomination": null,
+    "musicStyles": [],
+    "phone": "512-892-4200",
+    "serviceDurationMinutes": 65,
+    "childrenMinistry": true,
+    "youthMinistry": true,
+    "summary": "Christian Life Austin in Austin. Sunday services at 8:30 AM, 10:00 AM, 11:30 AM and 1:00 PM; Wednesday at 7:00 PM. Services last about 65 minutes. The Welcome Center and children's check-in are in the main lobby.",
+    "review": {
+      "checkedAt": "2026-09-05",
+      "facts": {
+        "services": {
+          "value": "Sunday services at 8:30 AM, 10:00 AM, 11:30 AM and 1:00 PM; Wednesday at 7:00 PM.",
+          "sourceUrl": "https://www.wearechristianlife.com/visit"
+        },
+        "address": {
+          "value": "4700 West Gate Boulevard, Austin, TX 78745",
+          "sourceUrl": "https://www.wearechristianlife.com/visit"
+        },
+        "firstVisit": {
+          "value": "Services last about 65 minutes. The Welcome Center and children's check-in are in the main lobby.",
+          "sourceUrl": "https://www.wearechristianlife.com/visit"
+        },
+        "languages": {
+          "value": "Spanish interpretation at every service via a headset. ASL interpretation on Sunday at 10:00 AM and Wednesday at 7:00 PM.",
+          "sourceUrl": "https://www.wearechristianlife.com/visit"
+        },
+        "children": {
+          "value": "Children from six weeks through fifth grade have Sunday and Wednesday programming.",
+          "sourceUrl": "https://www.wearechristianlife.com/visit"
+        },
+        "youth": {
+          "value": "Grades 6–12 meet on Wednesdays at 7:00 PM.",
+          "sourceUrl": "https://www.wearechristianlife.com/visit"
+        },
+        "accessibility": {
+          "value": "Reserved seating is available for access needs; ask an usher for assistance.",
+          "sourceUrl": "https://www.wearechristianlife.com/visit"
+        },
+        "transport": {
+          "value": "Overflow parking at Burger Activity Center has a shuttle; enter the remote lot from Pillow Road.",
+          "sourceUrl": "https://www.wearechristianlife.com/visit"
+        },
+        "contact": {
+          "value": "Call 512-892-4200 or use the official visitor page.",
+          "sourceUrl": "https://www.wearechristianlife.com/visit"
+        }
+      }
+    }
+  },
+  {
+    "slug": "austin-new-church-austin",
+    "name": "Austin New Church",
+    "website": "https://www.austinnewchurch.org/",
+    "address": "The 04 Center, 2701 S Lamar Boulevard, Austin, TX 78704",
+    "serviceTimes": [
+      {
+        "day": "Sunday",
+        "time": "10:30 AM",
+        "label": "Worship service"
+      }
+    ],
+    "languages": [],
+    "denomination": null,
+    "musicStyles": [],
+    "phone": null,
+    "serviceDurationMinutes": null,
+    "childrenMinistry": true,
+    "youthMinistry": true,
+    "summary": "Austin New Church in Austin. Sunday gathering at 10:30 AM, with children's and student programming and a livestream. Meet at The 04 Center on South Lamar. ANC Kids has separate nursery, preschool and elementary groups.",
+    "review": {
+      "checkedAt": "2026-09-05",
+      "facts": {
+        "services": {
+          "value": "Sunday gathering at 10:30 AM, with children's and student programming and a livestream.",
+          "sourceUrl": "https://www.austinnewchurch.org/"
+        },
+        "address": {
+          "value": "The 04 Center, 2701 S Lamar Boulevard, Austin, TX 78704",
+          "sourceUrl": "https://www.austinnewchurch.org/"
+        },
+        "firstVisit": {
+          "value": "Meet at The 04 Center on South Lamar. ANC Kids has separate nursery, preschool and elementary groups.",
+          "sourceUrl": "https://www.austinnewchurch.org/kids"
+        },
+        "children": {
+          "value": "ANC Kids serves children from six weeks through fifth grade.",
+          "sourceUrl": "https://www.austinnewchurch.org/kids"
+        },
+        "youth": {
+          "value": "Student programming is listed alongside the Sunday 10:30 AM gathering.",
+          "sourceUrl": "https://www.austinnewchurch.org/"
+        },
+        "contact": {
+          "value": "Use the official Connect with ANC link to contact the team.",
+          "sourceUrl": "https://www.austinnewchurch.org/"
+        }
+      }
+    }
+  },
+  {
+    "slug": "austin-christian-fellowship-austin",
+    "name": "Austin Christian Fellowship",
+    "website": "https://www.acfellowship.org/",
+    "address": "6401 River Place Boulevard, Austin, TX 78730",
+    "serviceTimes": [
+      {
+        "day": "Sunday",
+        "time": "10:00 AM",
+        "label": "Worship service"
+      }
+    ],
+    "languages": [],
+    "denomination": null,
+    "musicStyles": [
+      "Contemporary"
+    ],
+    "phone": "512-381-5700",
+    "serviceDurationMinutes": null,
+    "childrenMinistry": true,
+    "youthMinistry": true,
+    "summary": "Austin Christian Fellowship in Austin. Sunday worship at 10:00 AM. Allow time for parking and children's check-in. The Connect Counter is on the patio; casual and dressier clothes are welcome.",
+    "review": {
+      "checkedAt": "2026-09-05",
+      "facts": {
+        "services": {
+          "value": "Sunday worship at 10:00 AM.",
+          "sourceUrl": "https://www.acfellowship.org/new-here/"
+        },
+        "address": {
+          "value": "6401 River Place Boulevard, Austin, TX 78730",
+          "sourceUrl": "https://www.acfellowship.org/new-here/"
+        },
+        "firstVisit": {
+          "value": "Allow time for parking and children's check-in. The Connect Counter is on the patio; casual and dressier clothes are welcome.",
+          "sourceUrl": "https://www.acfellowship.org/new-here/"
+        },
+        "children": {
+          "value": "ACFkids serves infants through fifth grade. New families can register children before arriving.",
+          "sourceUrl": "https://www.acfellowship.org/connect/kids/"
+        },
+        "youth": {
+          "value": "Middle and high school students meet at 10:00 AM in the Students Building.",
+          "sourceUrl": "https://www.acfellowship.org/new-here/"
+        },
+        "worship": {
+          "value": "A band leads contemporary and reflective music, followed by Bible teaching.",
+          "sourceUrl": "https://www.acfellowship.org/new-here/"
+        },
+        "safeguarding": {
+          "value": "The church describes volunteer screening and criminal background checks, plus matching family security codes for pickup.",
+          "sourceUrl": "https://www.acfellowship.org/connect/kids/"
+        },
+        "accessibility": {
+          "value": "Contact the children's team about individual support; a volunteer companion can be arranged when needed.",
+          "sourceUrl": "https://www.acfellowship.org/connect/kids/"
+        },
+        "transport": {
+          "value": "Turn at the ACF sign on River Place Boulevard and follow the driveway to the parking lot.",
+          "sourceUrl": "https://www.acfellowship.org/new-here/"
+        },
+        "community": {
+          "value": "Small groups are offered for adults, including men, women and couples.",
+          "sourceUrl": "https://www.acfellowship.org/new-here/"
+        },
+        "contact": {
+          "value": "Call 512-381-5700 or use the official contact page.",
+          "sourceUrl": "https://www.acfellowship.org/new-here/"
+        }
+      }
+    }
+  },
+  {
+    "slug": "grace-covenant-church-austin",
+    "name": "Grace Covenant Church",
+    "website": "https://grace360.org/",
+    "address": "9431 Jollyville Road, Austin, TX 78759",
+    "serviceTimes": [
+      {
+        "day": "Sunday",
+        "time": "9:15 AM",
+        "label": "Worship service"
+      },
+      {
+        "day": "Sunday",
+        "time": "11:00 AM",
+        "label": "Worship service"
+      }
+    ],
+    "languages": [],
+    "denomination": "Bible Church",
+    "musicStyles": [
+      "Contemporary"
+    ],
+    "phone": "512-345-7840",
+    "serviceDurationMinutes": null,
+    "childrenMinistry": true,
+    "youthMinistry": true,
+    "summary": "Grace Covenant Church in Austin. Sunday worship at 9:15 AM and 11:00 AM, in person and online. Contemporary worship and Bible teaching. The children's spaces are in the Cornerstone and Live Oak buildings.",
+    "review": {
+      "checkedAt": "2026-09-05",
+      "facts": {
+        "services": {
+          "value": "Sunday worship at 9:15 AM and 11:00 AM, in person and online.",
+          "sourceUrl": "https://grace360.org/new/"
+        },
+        "address": {
+          "value": "9431 Jollyville Road, Austin, TX 78759",
+          "sourceUrl": "https://grace360.org/new/"
+        },
+        "firstVisit": {
+          "value": "Contemporary worship and Bible teaching. The children's spaces are in the Cornerstone and Live Oak buildings.",
+          "sourceUrl": "https://grace360.org/new/"
+        },
+        "tradition": {
+          "value": "Grace describes itself as a Bible church.",
+          "sourceUrl": "https://grace360.org/new/"
+        },
+        "worship": {
+          "value": "Contemporary worship with teaching from the Bible.",
+          "sourceUrl": "https://grace360.org/new/"
+        },
+        "children": {
+          "value": "Programming for six weeks through fifth grade at both Sunday services.",
+          "sourceUrl": "https://grace360.org/new/"
+        },
+        "youth": {
+          "value": "Middle school meets at 9:15 AM and high school at 11:00 AM in Live Oak.",
+          "sourceUrl": "https://grace360.org/new/"
+        },
+        "transport": {
+          "value": "Visitor spaces are by Cornerstone. Additional parking includes nearby office lots and the garage; golf-cart rides are available.",
+          "sourceUrl": "https://grace360.org/new/"
+        },
+        "contact": {
+          "value": "Call 512-345-7840 or use the official visitor page.",
+          "sourceUrl": "https://grace360.org/new/"
+        }
+      }
+    }
+  },
+  {
+    "slug": "high-pointe-baptist-church-austin",
+    "name": "High Pointe Baptist Church",
+    "website": "https://www.highpointeaustin.org/",
+    "address": "12030 Dessau Road, Austin, TX 78754",
+    "serviceTimes": [
+      {
+        "day": "Sunday",
+        "time": "10:00 AM",
+        "label": "Worship service"
+      }
+    ],
+    "languages": [
+      "Spanish"
+    ],
+    "denomination": "Baptist",
+    "musicStyles": [],
+    "phone": "512-837-7725",
+    "serviceDurationMinutes": null,
+    "childrenMinistry": true,
+    "youthMinistry": null,
+    "summary": "High Pointe Baptist Church in Austin. Sunday worship at 10:00 AM. Life Classes meet earlier, at 9:00 AM. Guest parking is to the left when entering from Dessau Road. Ask at the Connection Center about Spanish interpretation.",
+    "review": {
+      "checkedAt": "2026-09-05",
+      "facts": {
+        "services": {
+          "value": "Sunday worship at 10:00 AM. Life Classes meet earlier, at 9:00 AM.",
+          "sourceUrl": "https://www.highpointeaustin.org/visit-us"
+        },
+        "address": {
+          "value": "12030 Dessau Road, Austin, TX 78754",
+          "sourceUrl": "https://www.highpointeaustin.org/visit-us"
+        },
+        "firstVisit": {
+          "value": "Guest parking is to the left when entering from Dessau Road. Ask at the Connection Center about Spanish interpretation.",
+          "sourceUrl": "https://www.highpointeaustin.org/visit-us"
+        },
+        "tradition": {
+          "value": "Baptist church.",
+          "sourceUrl": "https://www.highpointeaustin.org/visit-us"
+        },
+        "languages": {
+          "value": "Spanish interpretation is available during morning worship; ask at the Connection Center.",
+          "sourceUrl": "https://www.highpointeaustin.org/visit-us"
+        },
+        "worship": {
+          "value": "The gathering includes Bible readings, singing, prayer and preaching.",
+          "sourceUrl": "https://www.highpointeaustin.org/visit-us"
+        },
+        "children": {
+          "value": "Nursery through pre-K care and K–5 Kids Pointe are offered during morning worship.",
+          "sourceUrl": "https://www.highpointeaustin.org/visit-us"
+        },
+        "safeguarding": {
+          "value": "The visitor page links to the church's Child Protection Policy.",
+          "sourceUrl": "https://www.highpointeaustin.org/visit-us"
+        },
+        "accessibility": {
+          "value": "Accessible parking is on the right; a covered entrance allows drop-off.",
+          "sourceUrl": "https://www.highpointeaustin.org/visit-us"
+        },
+        "transport": {
+          "value": "Guest parking is on the left of the Dessau Road entrance.",
+          "sourceUrl": "https://www.highpointeaustin.org/visit-us"
+        },
+        "contact": {
+          "value": "Call 512-837-7725 or use the official visitor page.",
+          "sourceUrl": "https://www.highpointeaustin.org/visit-us"
+        }
+      }
+    }
+  },
+  {
+    "slug": "hyde-park-christian-church-austin",
+    "name": "Hyde Park Christian Church",
+    "website": "https://www.hydeparkcc.org/",
+    "address": "610 E 45th Street, Austin, TX",
+    "serviceTimes": [
+      {
+        "day": "Sunday",
+        "time": "10:30 AM",
+        "label": "Worship service"
+      }
+    ],
+    "languages": [],
+    "denomination": "Christian Church (Disciples of Christ)",
+    "musicStyles": [],
+    "phone": "512-452-2596",
+    "serviceDurationMinutes": 75,
+    "childrenMinistry": true,
+    "youthMinistry": null,
+    "summary": "Hyde Park Christian Church in Austin. Sunday worship runs from 10:30 AM to 11:45 AM. Sunday school is 9:15–10:15 AM. The church welcomes visitors to worship and practices open communion.",
+    "review": {
+      "checkedAt": "2026-09-05",
+      "facts": {
+        "services": {
+          "value": "Sunday worship runs from 10:30 AM to 11:45 AM. Sunday school is 9:15–10:15 AM.",
+          "sourceUrl": "https://www.hydeparkcc.org/worship"
+        },
+        "address": {
+          "value": "610 E 45th Street, Austin, TX",
+          "sourceUrl": "https://www.hydeparkcc.org/worship"
+        },
+        "firstVisit": {
+          "value": "The church welcomes visitors to worship and practices open communion.",
+          "sourceUrl": "https://www.hydeparkcc.org/worship"
+        },
+        "tradition": {
+          "value": "Christian Church (Disciples of Christ).",
+          "sourceUrl": "https://www.hydeparkcc.org/worship"
+        },
+        "children": {
+          "value": "Sunday school is offered before worship; children's church uses Godly Play activities.",
+          "sourceUrl": "https://www.hydeparkcc.org/youth"
+        },
+        "contact": {
+          "value": "Call 512-452-2596 or use the official Contact page.",
+          "sourceUrl": "https://www.hydeparkcc.org/worship"
+        }
+      }
+    }
+  },
+  {
+    "slug": "gateway-community-church-austin",
+    "name": "Gateway Church — North Austin",
+    "website": "https://www.gatewaychurch.com/north-austin/",
+    "address": "7104 McNeil Drive, Austin, TX 78729",
+    "serviceTimes": [
+      {
+        "day": "Sunday",
+        "time": "9:15 AM",
+        "label": "Worship service"
+      },
+      {
+        "day": "Sunday",
+        "time": "11:15 AM",
+        "label": "Worship service"
+      }
+    ],
+    "languages": [],
+    "denomination": null,
+    "musicStyles": [],
+    "phone": "512-837-2162",
+    "serviceDurationMinutes": null,
+    "childrenMinistry": true,
+    "youthMinistry": true,
+    "summary": "Gateway Church — North Austin in Austin. North Austin Sunday services at 9:15 AM and 11:15 AM. Expect live worship music and a talk. Children's registration can be completed before your visit.",
+    "review": {
+      "checkedAt": "2026-09-05",
+      "facts": {
+        "services": {
+          "value": "North Austin Sunday services at 9:15 AM and 11:15 AM.",
+          "sourceUrl": "https://www.gatewaychurch.com/north-austin/"
+        },
+        "address": {
+          "value": "7104 McNeil Drive, Austin, TX 78729",
+          "sourceUrl": "https://www.gatewaychurch.com/north-austin/"
+        },
+        "firstVisit": {
+          "value": "Expect live worship music and a talk. Children's registration can be completed before your visit.",
+          "sourceUrl": "https://www.gatewaychurch.com/north-austin/"
+        },
+        "children": {
+          "value": "Children's programming runs during both Sunday services; advance registration is available.",
+          "sourceUrl": "https://www.gatewaychurch.com/north-austin/"
+        },
+        "youth": {
+          "value": "Students in grades 6–12 meet Wednesdays, 7:00–8:30 PM.",
+          "sourceUrl": "https://www.gatewaychurch.com/north-austin/"
+        },
+        "worship": {
+          "value": "Live music and a talk are part of the Sunday gathering.",
+          "sourceUrl": "https://www.gatewaychurch.com/north-austin/"
+        },
+        "contact": {
+          "value": "Call 512-837-2162 or use the North Austin page.",
+          "sourceUrl": "https://www.gatewaychurch.com/north-austin/"
+        }
+      }
+    }
+  },
+  {
+    "slug": "shoreline-church-north-campus-austin",
+    "name": "Shoreline Church — North Campus",
+    "website": "https://www.shoreline.net/north",
+    "address": "15201 Burnet Road, Austin, TX 78728",
+    "serviceTimes": [
+      {
+        "day": "Sunday",
+        "time": "9:30 AM",
+        "label": "Worship service"
+      },
+      {
+        "day": "Sunday",
+        "time": "11:30 AM",
+        "label": "Worship service"
+      }
+    ],
+    "languages": [
+      "Spanish",
+      "American Sign Language"
+    ],
+    "denomination": null,
+    "musicStyles": [],
+    "phone": null,
+    "serviceDurationMinutes": null,
+    "childrenMinistry": true,
+    "youthMinistry": true,
+    "summary": "Shoreline Church — North Campus in Austin. North Campus Sunday services at 9:30 AM and 11:30 AM. First Wednesday of the month at 7:00 PM. Children's check-in is in the lobby or the preschool area in the east hallway.",
+    "review": {
+      "checkedAt": "2026-09-05",
+      "facts": {
+        "services": {
+          "value": "North Campus Sunday services at 9:30 AM and 11:30 AM. First Wednesday of the month at 7:00 PM.",
+          "sourceUrl": "https://www.shoreline.net/north"
+        },
+        "address": {
+          "value": "15201 Burnet Road, Austin, TX 78728",
+          "sourceUrl": "https://www.shoreline.net/north"
+        },
+        "firstVisit": {
+          "value": "Children's check-in is in the lobby or the preschool area in the east hallway.",
+          "sourceUrl": "https://www.shoreline.net/kids"
+        },
+        "languages": {
+          "value": "Spanish and ASL interpretation are listed for the 11:30 AM Sunday service.",
+          "sourceUrl": "https://www.shoreline.net/north"
+        },
+        "children": {
+          "value": "Children's programming is available during normal service times.",
+          "sourceUrl": "https://www.shoreline.net/kids"
+        },
+        "safeguarding": {
+          "value": "A parent or guardian must show the pickup tag to collect a child.",
+          "sourceUrl": "https://www.shoreline.net/kids"
+        },
+        "youth": {
+          "value": "Shoreline lists a youth ministry; check its current schedule before visiting.",
+          "sourceUrl": "https://www.shoreline.net/ministries"
+        },
+        "community": {
+          "value": "Life Groups and a Thursday evening Celebrate Recovery gathering are listed for North Campus.",
+          "sourceUrl": "https://www.shoreline.net/ministries"
+        },
+        "contact": {
+          "value": "Use the Contact Us option on the official North Campus page.",
+          "sourceUrl": "https://www.shoreline.net/north"
+        }
+      }
+    }
+  },
+  {
+    "slug": "mosaic-church-austin-austin",
+    "name": "Mosaic Church — North Austin",
+    "website": "https://makingamosaic.com/north-austin-campus/",
+    "address": "12675 Research Boulevard, Austin, TX 78759",
+    "serviceTimes": [
+      {
+        "day": "Sunday",
+        "time": "8:30 AM",
+        "label": "Worship service"
+      },
+      {
+        "day": "Sunday",
+        "time": "10:00 AM",
+        "label": "Worship service"
+      },
+      {
+        "day": "Sunday",
+        "time": "11:30 AM",
+        "label": "Worship service"
+      }
+    ],
+    "languages": [],
+    "denomination": "Every Nation",
+    "musicStyles": [],
+    "phone": "512-537-0027",
+    "serviceDurationMinutes": null,
+    "childrenMinistry": true,
+    "youthMinistry": true,
+    "summary": "Mosaic Church — North Austin in Austin. North Austin Sunday services at 8:30 AM, 10:00 AM and 11:30 AM. Enter the parking area from Highway 183. Children's check-in is in the building to the left of the main entrance.",
+    "review": {
+      "checkedAt": "2026-09-05",
+      "facts": {
+        "services": {
+          "value": "North Austin Sunday services at 8:30 AM, 10:00 AM and 11:30 AM.",
+          "sourceUrl": "https://makingamosaic.com/north-austin-campus/"
+        },
+        "address": {
+          "value": "12675 Research Boulevard, Austin, TX 78759",
+          "sourceUrl": "https://makingamosaic.com/north-austin-campus/"
+        },
+        "firstVisit": {
+          "value": "Enter the parking area from Highway 183. Children's check-in is in the building to the left of the main entrance.",
+          "sourceUrl": "https://makingamosaic.com/north-austin-campus/"
+        },
+        "tradition": {
+          "value": "Part of the Every Nation church network.",
+          "sourceUrl": "https://makingamosaic.com/north-austin-campus/"
+        },
+        "children": {
+          "value": "mKids serves six weeks through fifth grade; advance registration is available.",
+          "sourceUrl": "https://makingamosaic.com/north-austin-campus/"
+        },
+        "youth": {
+          "value": "Grades 6–12 use the nearby Student Center at 12116 Jekel Circle.",
+          "sourceUrl": "https://makingamosaic.com/north-austin-campus/"
+        },
+        "accessibility": {
+          "value": "An All-Abilities team offers additional support for children; contact the team to discuss needs.",
+          "sourceUrl": "https://makingamosaic.com/north-austin-campus/"
+        },
+        "transport": {
+          "value": "Use the middle lot or parking by the Student Center. Follow the campus parking instructions.",
+          "sourceUrl": "https://makingamosaic.com/north-austin-campus/"
+        },
+        "contact": {
+          "value": "Call 512-537-0027 or use the official campus page.",
+          "sourceUrl": "https://makingamosaic.com/north-austin-campus/"
+        }
+      }
+    }
+  },
+  {
+    "slug": "austin-ridge-bible-church-bee-cave-austin",
+    "name": "Austin Ridge Bible Church — Bee Cave",
+    "website": "https://austinridge.org/campus/beecave",
+    "address": "9300 Bee Cave Road, Austin, TX 78733",
+    "serviceTimes": [
+      {
+        "day": "Sunday",
+        "time": "9:00 AM",
+        "label": "Worship service"
+      },
+      {
+        "day": "Sunday",
+        "time": "11:00 AM",
+        "label": "Worship service"
+      }
+    ],
+    "languages": [],
+    "denomination": "Bible Church",
+    "musicStyles": [],
+    "phone": null,
+    "serviceDurationMinutes": null,
+    "childrenMinistry": true,
+    "youthMinistry": null,
+    "summary": "Austin Ridge Bible Church — Bee Cave in Austin. Sunday services at 9:00 AM and 11:00 AM. Families can pre-register children for Ridge Kids before arriving at the Bee Cave campus.",
+    "review": {
+      "checkedAt": "2026-09-05",
+      "facts": {
+        "services": {
+          "value": "Sunday services at 9:00 AM and 11:00 AM.",
+          "sourceUrl": "https://austinridge.org/"
+        },
+        "address": {
+          "value": "9300 Bee Cave Road, Austin, TX 78733",
+          "sourceUrl": "https://austinridge.org/"
+        },
+        "firstVisit": {
+          "value": "Families can pre-register children for Ridge Kids before arriving at the Bee Cave campus.",
+          "sourceUrl": "https://austinridge.org/kids"
+        },
+        "tradition": {
+          "value": "Bible church.",
+          "sourceUrl": "https://austinridge.org/"
+        },
+        "children": {
+          "value": "Ridge Kids offers programming from birth through fifth grade.",
+          "sourceUrl": "https://austinridge.org/kids"
+        },
+        "accessibility": {
+          "value": "Embrace lists individual companions and classes for children, teens and young adults with special needs. Confirm campus arrangements in advance.",
+          "sourceUrl": "https://austinridge.org/kids"
+        },
+        "safeguarding": {
+          "value": "The Ridge Kids page provides a link to parent policies.",
+          "sourceUrl": "https://austinridge.org/kids"
+        },
+        "community": {
+          "value": "The church lists groups and pastoral care; contact the relevant team through the official website.",
+          "sourceUrl": "https://austinridge.org/"
+        },
+        "contact": {
+          "value": "Use Plan Your Visit or Contact Us on the church's official website.",
+          "sourceUrl": "https://austinridge.org/"
+        }
+      }
+    }
+  },
+  {
+    "slug": "austin-life-church-austin",
+    "name": "Austin Life Church",
+    "website": "https://www.austinlifechurch.com/",
+    "address": "Boy Scouts of America building, 12500 N Interstate Highway 35, Austin, TX 78753",
+    "serviceTimes": [
+      {
+        "day": "Sunday",
+        "time": "9:00 AM",
+        "label": "Worship service"
+      },
+      {
+        "day": "Sunday",
+        "time": "11:00 AM",
+        "label": "Worship service"
+      }
+    ],
+    "languages": [],
+    "denomination": null,
+    "musicStyles": [],
+    "phone": "512-640-9155",
+    "serviceDurationMinutes": 90,
+    "childrenMinistry": true,
+    "youthMinistry": true,
+    "summary": "Austin Life Church in Austin. Sunday worship at 9:00 AM and 11:00 AM. Services are described as about 90 minutes, with live music and Bible teaching. Greeters help visitors find the worship space and children's area.",
+    "review": {
+      "checkedAt": "2026-09-05",
+      "facts": {
+        "services": {
+          "value": "Sunday worship at 9:00 AM and 11:00 AM.",
+          "sourceUrl": "https://www.austinlifechurch.com/"
+        },
+        "address": {
+          "value": "Boy Scouts of America building, 12500 N Interstate Highway 35, Austin, TX 78753",
+          "sourceUrl": "https://www.austinlifechurch.com/"
+        },
+        "firstVisit": {
+          "value": "Services are described as about 90 minutes, with live music and Bible teaching. Greeters help visitors find the worship space and children's area.",
+          "sourceUrl": "https://www.austinlifechurch.com/new"
+        },
+        "children": {
+          "value": "The visitor page lists children's programming from birth through third grade; older children join family worship.",
+          "sourceUrl": "https://www.austinlifechurch.com/new"
+        },
+        "youth": {
+          "value": "Student ministry serves grades 6–12; students also participate in Sunday worship.",
+          "sourceUrl": "https://www.austinlifechurch.com/new"
+        },
+        "worship": {
+          "value": "Live worship music and Bible teaching in a casual setting.",
+          "sourceUrl": "https://www.austinlifechurch.com/new"
+        },
+        "transport": {
+          "value": "On-site parking is marked with Austin Life flags.",
+          "sourceUrl": "https://www.austinlifechurch.com/new"
+        },
+        "contact": {
+          "value": "Call 512-640-9155 or use the official Contact page.",
+          "sourceUrl": "https://www.austinlifechurch.com/new"
+        }
+      }
+    }
+  },
+  {
+    "slug": "bethel-austin-austin",
+    "name": "Bethel Austin",
+    "website": "https://bethelatx.com/",
+    "address": "7901 E Riverside Drive, Austin, TX 78744",
+    "serviceTimes": [
+      {
+        "day": "Sunday",
+        "time": "10:00 AM",
+        "label": "Worship service"
+      }
+    ],
+    "languages": [
+      "Spanish"
+    ],
+    "denomination": null,
+    "musicStyles": [],
+    "phone": "512-719-5273",
+    "serviceDurationMinutes": null,
+    "childrenMinistry": true,
+    "youthMinistry": null,
+    "summary": "Bethel Austin in Austin. Sunday service at 10:00 AM. Children's check-in opens at 9:45 AM. New families should pre-register children. Children's check-in closes at 10:15 AM, with pickup at noon.",
+    "review": {
+      "checkedAt": "2026-09-05",
+      "facts": {
+        "services": {
+          "value": "Sunday service at 10:00 AM. Children's check-in opens at 9:45 AM.",
+          "sourceUrl": "https://bethelatx.com/visit/"
+        },
+        "address": {
+          "value": "7901 E Riverside Drive, Austin, TX 78744",
+          "sourceUrl": "https://bethelatx.com/visit/"
+        },
+        "firstVisit": {
+          "value": "New families should pre-register children. Children's check-in closes at 10:15 AM, with pickup at noon.",
+          "sourceUrl": "https://bethelatx.com/visit/"
+        },
+        "children": {
+          "value": "Impact Kids serves six weeks through sixth grade.",
+          "sourceUrl": "https://bethelatx.com/visit/"
+        },
+        "languages": {
+          "value": "Spanish interpretation starts after worship. Bring headphones and install LiveVoice before arriving; the Spanish team can help in the lobby.",
+          "sourceUrl": "https://bethelatx.com/spanish/"
+        },
+        "community": {
+          "value": "The Spanish ministry lists life groups around Austin.",
+          "sourceUrl": "https://bethelatx.com/spanish/"
+        },
+        "contact": {
+          "value": "Call 512-719-5273 or use the official Plan Your Visit page.",
+          "sourceUrl": "https://bethelatx.com/visit/"
+        }
+      }
+    }
+  },
+  {
+    "slug": "christ-church-austin",
+    "name": "Christ Church Austin",
+    "website": "https://christchurchofaustin.org/",
+    "address": "112 Medina Street, Austin, TX 78702",
+    "serviceTimes": [
+      {
+        "day": "Sunday",
+        "time": "9:00 AM",
+        "label": "Worship service"
+      },
+      {
+        "day": "Sunday",
+        "time": "11:00 AM",
+        "label": "Worship service"
+      }
+    ],
+    "languages": [],
+    "denomination": "Anglican",
+    "musicStyles": [
+      "Liturgical"
+    ],
+    "phone": "512-410-7780",
+    "serviceDurationMinutes": null,
+    "childrenMinistry": true,
+    "youthMinistry": null,
+    "summary": "Christ Church Austin in Austin. Sunday worship at 9:00 AM and 11:00 AM; the 11:00 AM service is also streamed. Worship includes Bible readings, a sermon and Communion. Elementary children return from Kids Quest to join their families for Communion.",
+    "review": {
+      "checkedAt": "2026-09-05",
+      "facts": {
+        "services": {
+          "value": "Sunday worship at 9:00 AM and 11:00 AM; the 11:00 AM service is also streamed.",
+          "sourceUrl": "https://christchurchofaustin.org/about/"
+        },
+        "address": {
+          "value": "112 Medina Street, Austin, TX 78702",
+          "sourceUrl": "https://christchurchofaustin.org/about/"
+        },
+        "firstVisit": {
+          "value": "Worship includes Bible readings, a sermon and Communion. Elementary children return from Kids Quest to join their families for Communion.",
+          "sourceUrl": "https://christchurchofaustin.org/about/"
+        },
+        "tradition": {
+          "value": "The church provides an Anglican Heritage guide.",
+          "sourceUrl": "https://christchurchofaustin.org/"
+        },
+        "worship": {
+          "value": "Liturgical worship with both recent songs and older hymns.",
+          "sourceUrl": "https://christchurchofaustin.org/about/"
+        },
+        "children": {
+          "value": "Nursery through pre-K care and elementary Kids Quest are offered at both services.",
+          "sourceUrl": "https://christchurchofaustin.org/ministries/children/"
+        },
+        "safeguarding": {
+          "value": "The children's page describes screened and trained adult volunteers and matching security tags for pickup.",
+          "sourceUrl": "https://christchurchofaustin.org/ministries/children/"
+        },
+        "accessibility": {
+          "value": "Mobility parking is in the small lot beside the church at San Marcos and 2nd Street.",
+          "sourceUrl": "https://christchurchofaustin.org/about/"
+        },
+        "transport": {
+          "value": "Families are directed to the lot at Medina and 2nd Street, near children's check-in.",
+          "sourceUrl": "https://christchurchofaustin.org/about/"
+        },
+        "community": {
+          "value": "Community life groups meet across Austin.",
+          "sourceUrl": "https://christchurchofaustin.org/about/"
+        },
+        "contact": {
+          "value": "Call 512-410-7780 or use the church's official website.",
+          "sourceUrl": "https://christchurchofaustin.org/about/"
+        }
+      }
+    }
+  },
+  {
+    "slug": "st-andrew-s-presbyterian-church-austin",
+    "name": "St. Andrew's Presbyterian Church",
+    "website": "https://www.staopen.org/",
+    "address": "14311 Wells Port Drive, Austin, TX 78728",
+    "serviceTimes": [
+      {
+        "day": "Sunday",
+        "time": "8:30 AM",
+        "label": "Worship service"
+      },
+      {
+        "day": "Sunday",
+        "time": "11:00 AM",
+        "label": "Worship service"
+      }
+    ],
+    "languages": [],
+    "denomination": "Presbyterian",
+    "musicStyles": [],
+    "phone": "512-251-0698",
+    "serviceDurationMinutes": null,
+    "childrenMinistry": true,
+    "youthMinistry": true,
+    "summary": "St. Andrew's Presbyterian Church in Austin. Sunday services at 8:30 AM and 11:00 AM; the later service is also on YouTube and Zoom. The earlier service is more reflective; a choir usually sings at 11:00 AM. Visitors are not asked to stand or introduce themselves.",
+    "review": {
+      "checkedAt": "2026-09-05",
+      "facts": {
+        "services": {
+          "value": "Sunday services at 8:30 AM and 11:00 AM; the later service is also on YouTube and Zoom.",
+          "sourceUrl": "https://www.staopen.org/faq"
+        },
+        "address": {
+          "value": "14311 Wells Port Drive, Austin, TX 78728",
+          "sourceUrl": "https://www.staopen.org/faq"
+        },
+        "firstVisit": {
+          "value": "The earlier service is more reflective; a choir usually sings at 11:00 AM. Visitors are not asked to stand or introduce themselves.",
+          "sourceUrl": "https://www.staopen.org/faq"
+        },
+        "tradition": {
+          "value": "Presbyterian church.",
+          "sourceUrl": "https://www.staopen.org/faq"
+        },
+        "worship": {
+          "value": "Both services combine liturgy, music and a sermon.",
+          "sourceUrl": "https://www.staopen.org/faq"
+        },
+        "children": {
+          "value": "Nursery for ages four and under, with optional children's chapel during the 11:00 AM sermon.",
+          "sourceUrl": "https://www.staopen.org/faq"
+        },
+        "youth": {
+          "value": "A school-year youth group is listed for sixth grade and up; confirm its current dates.",
+          "sourceUrl": "https://www.staopen.org/faq"
+        },
+        "accessibility": {
+          "value": "The church lists ramps, accessible parking and restrooms, plus space for wheelchairs and walkers.",
+          "sourceUrl": "https://www.staopen.org/faq"
+        },
+        "community": {
+          "value": "Adult Sunday discussion classes are listed at 9:45 AM.",
+          "sourceUrl": "https://www.staopen.org/faq"
+        },
+        "contact": {
+          "value": "Call 512-251-0698 or use the official Contact Us page.",
+          "sourceUrl": "https://www.staopen.org/faq"
+        }
+      }
+    }
+  },
+  {
+    "slug": "st-john-s-episcopal-church-austin",
+    "name": "St. John's Episcopal Church",
+    "website": "https://www.austinstjohns.org/",
+    "address": "11201 Parkfield Drive, Austin, TX 78758",
+    "serviceTimes": [
+      {
+        "day": "Sunday",
+        "time": "8:30 AM",
+        "label": "Holy Eucharist, Rite I — English"
+      },
+      {
+        "day": "Sunday",
+        "time": "11:00 AM",
+        "label": "Holy Eucharist, Rite II — English"
+      },
+      {
+        "day": "Sunday",
+        "time": "1:00 PM",
+        "label": "Holy Eucharist — Spanish"
+      }
+    ],
+    "languages": [
+      "English",
+      "Spanish"
+    ],
+    "denomination": "Episcopal",
+    "musicStyles": [
+      "Liturgical"
+    ],
+    "phone": "512-580-0200",
+    "serviceDurationMinutes": null,
+    "childrenMinistry": true,
+    "youthMinistry": null,
+    "summary": "St. John's Episcopal Church in Austin. Sunday Eucharist: 8:30 AM in English without music, 11:00 AM in English with music, and 1:00 PM in Spanish. Ushers provide a bulletin to follow the liturgy. Sit in any pew and participate at a comfortable pace.",
+    "review": {
+      "checkedAt": "2026-09-05",
+      "facts": {
+        "services": {
+          "value": "Sunday Eucharist: 8:30 AM in English without music, 11:00 AM in English with music, and 1:00 PM in Spanish.",
+          "sourceUrl": "https://www.austinstjohns.org/plan-your-visit.html"
+        },
+        "address": {
+          "value": "11201 Parkfield Drive, Austin, TX 78758",
+          "sourceUrl": "https://www.austinstjohns.org/plan-your-visit.html"
+        },
+        "firstVisit": {
+          "value": "Ushers provide a bulletin to follow the liturgy. Sit in any pew and participate at a comfortable pace.",
+          "sourceUrl": "https://www.austinstjohns.org/plan-your-visit.html"
+        },
+        "languages": {
+          "value": "English at 8:30 AM and 11:00 AM; Spanish at 1:00 PM.",
+          "sourceUrl": "https://www.austinstjohns.org/plan-your-visit.html"
+        },
+        "tradition": {
+          "value": "Episcopal church with Rite I and Rite II Eucharist.",
+          "sourceUrl": "https://www.austinstjohns.org/plan-your-visit.html"
+        },
+        "worship": {
+          "value": "Liturgical worship; the 8:30 AM service has no music.",
+          "sourceUrl": "https://www.austinstjohns.org/plan-your-visit.html"
+        },
+        "children": {
+          "value": "Sunday children's formation is listed in the Annex. Ask the church for the current start time.",
+          "sourceUrl": "https://www.austinstjohns.org/children--youth.html"
+        },
+        "accessibility": {
+          "value": "Hearing receivers are available from ushers. Accessible text and Braille bulletins can be arranged in advance.",
+          "sourceUrl": "https://www.austinstjohns.org/plan-your-visit.html"
+        },
+        "transport": {
+          "value": "Enter parking from Parkfield Drive; spaces near the buildings are reserved for visitors and mobility needs.",
+          "sourceUrl": "https://www.austinstjohns.org/plan-your-visit.html"
+        },
+        "contact": {
+          "value": "Call 512-580-0200 or use the official Contact Us page.",
+          "sourceUrl": "https://www.austinstjohns.org/plan-your-visit.html"
+        }
+      }
+    }
+  },
+  {
+    "slug": "saint-elias-orthodox-christian-church-austin",
+    "name": "St. Elias Orthodox Church",
+    "website": "https://www.sainteliaschurch.org/",
+    "address": "408 E 11th Street, Austin, TX",
+    "serviceTimes": [
+      {
+        "day": "Sunday",
+        "time": "8:30 AM",
+        "label": "Orthros"
+      },
+      {
+        "day": "Sunday",
+        "time": "9:30 AM",
+        "label": "Divine Liturgy"
+      }
+    ],
+    "languages": [
+      "English"
+    ],
+    "denomination": "Antiochian Orthodox",
+    "musicStyles": [
+      "Liturgical"
+    ],
+    "phone": "512-476-2314",
+    "serviceDurationMinutes": 90,
+    "childrenMinistry": true,
+    "youthMinistry": true,
+    "summary": "St. Elias Orthodox Church in Austin. Sunday Orthros at 8:30 AM, followed by Divine Liturgy at 9:30 AM. Visitors may follow a printed service or observe. Divine Liturgy lasts about 90 minutes; visitors are invited to coffee afterwards.",
+    "review": {
+      "checkedAt": "2026-09-05",
+      "facts": {
+        "services": {
+          "value": "Sunday Orthros at 8:30 AM, followed by Divine Liturgy at 9:30 AM.",
+          "sourceUrl": "https://www.sainteliaschurch.org/"
+        },
+        "address": {
+          "value": "408 E 11th Street, Austin, TX",
+          "sourceUrl": "https://www.sainteliaschurch.org/"
+        },
+        "firstVisit": {
+          "value": "Visitors may follow a printed service or observe. Divine Liturgy lasts about 90 minutes; visitors are invited to coffee afterwards.",
+          "sourceUrl": "https://www.sainteliaschurch.org/visitors"
+        },
+        "tradition": {
+          "value": "Part of the Antiochian Orthodox Archdiocese of North America.",
+          "sourceUrl": "https://www.sainteliaschurch.org/"
+        },
+        "languages": {
+          "value": "Services are mainly in English, with occasional short portions in other languages.",
+          "sourceUrl": "https://www.sainteliaschurch.org/visitors"
+        },
+        "children": {
+          "value": "Children worship with their families. Sunday school follows Liturgy for preschool through high school, with a summer break.",
+          "sourceUrl": "https://www.sainteliaschurch.org/visitors"
+        },
+        "youth": {
+          "value": "High-school students are included in Sunday school after Liturgy during the school year.",
+          "sourceUrl": "https://www.sainteliaschurch.org/visitors"
+        },
+        "worship": {
+          "value": "Orthodox liturgy; visitors may observe and ask a greeter for help.",
+          "sourceUrl": "https://www.sainteliaschurch.org/visitors"
+        },
+        "contact": {
+          "value": "Call 512-476-2314 or use the church's Contact page.",
+          "sourceUrl": "https://www.sainteliaschurch.org/"
+        }
+      }
+    }
+  },
+  {
+    "slug": "south-austin-church-austin",
+    "name": "South Austin Church",
+    "website": "https://www.southaustinchurch.org/",
+    "address": "6711 Menchaca Road, Austin, TX 78745",
+    "serviceTimes": [],
+    "languages": [
+      "English",
+      "Spanish",
+      "Kinyarwanda"
+    ],
+    "denomination": null,
+    "musicStyles": [],
+    "phone": "512-442-8476",
+    "serviceDurationMinutes": null,
+    "childrenMinistry": true,
+    "youthMinistry": true,
+    "summary": "South Austin Church in Austin. Regular Sunday schedule: bilingual service 9:15 AM, English 10:45 AM, African-language service 12:15 PM. The church announces a combined service on September 6, 2026 at 10:00 AM. Check the current weekly bulletin before travelling, particularly on combined-service Sundays.",
+    "review": {
+      "checkedAt": "2026-09-05",
+      "facts": {
+        "services": {
+          "value": "Regular Sunday schedule: bilingual service 9:15 AM, English 10:45 AM, African-language service 12:15 PM. The church announces a combined service on September 6, 2026 at 10:00 AM.",
+          "sourceUrl": "https://www.southaustinchurch.org/"
+        },
+        "address": {
+          "value": "6711 Menchaca Road, Austin, TX 78745",
+          "sourceUrl": "https://www.southaustinchurch.org/"
+        },
+        "firstVisit": {
+          "value": "Check the current weekly bulletin before travelling, particularly on combined-service Sundays.",
+          "sourceUrl": "https://www.southaustinchurch.org/"
+        },
+        "languages": {
+          "value": "The church lists services in English, Spanish and Kinyarwanda.",
+          "sourceUrl": "https://www.southaustinchurch.org/"
+        },
+        "children": {
+          "value": "Pre-K through fifth grade programming is listed at 9:15 AM and 10:45 AM on regular Sundays.",
+          "sourceUrl": "https://www.southaustinchurch.org/"
+        },
+        "youth": {
+          "value": "Students in grades 6–12 have Sunday school and a Wednesday group; Sunday school time varies by month.",
+          "sourceUrl": "https://www.southaustinchurch.org/"
+        },
+        "community": {
+          "value": "Small groups and community-care activities are listed on the official website.",
+          "sourceUrl": "https://www.southaustinchurch.org/"
+        },
+        "contact": {
+          "value": "Call 512-442-8476 or follow the official weekly bulletin link.",
+          "sourceUrl": "https://www.southaustinchurch.org/"
+        }
+      }
+    }
+  },
+  {
+    "slug": "austin-vineyard-church-austin",
+    "name": "Austin Vineyard Church",
+    "website": "https://www.austinvineyardchurch.com/",
+    "address": "13208 Morris Road, Austin, TX 78729",
+    "serviceTimes": [
+      {
+        "day": "Sunday",
+        "time": "10:30 AM",
+        "label": "Worship service"
+      }
+    ],
+    "languages": [
+      "English"
+    ],
+    "denomination": "Vineyard",
+    "musicStyles": [
+      "Contemporary"
+    ],
+    "phone": "512-331-5200",
+    "serviceDurationMinutes": null,
+    "childrenMinistry": true,
+    "youthMinistry": true,
+    "summary": "Austin Vineyard Church in Austin. English-language Sunday service at 10:30 AM, in person and online. There is no dress code. Arrive early for refreshments; a welcome area is available after the service.",
+    "review": {
+      "checkedAt": "2026-09-05",
+      "facts": {
+        "services": {
+          "value": "English-language Sunday service at 10:30 AM, in person and online.",
+          "sourceUrl": "https://www.austinvineyardchurch.com/new-here"
+        },
+        "address": {
+          "value": "13208 Morris Road, Austin, TX 78729",
+          "sourceUrl": "https://www.austinvineyardchurch.com/new-here"
+        },
+        "firstVisit": {
+          "value": "There is no dress code. Arrive early for refreshments; a welcome area is available after the service.",
+          "sourceUrl": "https://www.austinvineyardchurch.com/new-here"
+        },
+        "languages": {
+          "value": "The Sunday 10:30 AM service is in English.",
+          "sourceUrl": "https://www.austinvineyardchurch.com/new-here"
+        },
+        "tradition": {
+          "value": "Member of Vineyard USA.",
+          "sourceUrl": "https://www.austinvineyardchurch.com/new-here"
+        },
+        "worship": {
+          "value": "Contemporary, expressive worship music.",
+          "sourceUrl": "https://www.austinvineyardchurch.com/new-here"
+        },
+        "children": {
+          "value": "Age-based classrooms are available; children may also stay with parents. A cry room is provided.",
+          "sourceUrl": "https://www.austinvineyardchurch.com/new-here"
+        },
+        "youth": {
+          "value": "Grades 6–12 begin in the main service, then leave for youth class during announcements.",
+          "sourceUrl": "https://www.austinvineyardchurch.com/new-here"
+        },
+        "contact": {
+          "value": "Call 512-331-5200 or use the contact form on the visitor page.",
+          "sourceUrl": "https://www.austinvineyardchurch.com/new-here"
+        }
+      }
+    }
+  },
+  {
+    "slug": "hill-country-bible-church-austin",
+    "name": "Hill Country Bible Church — Lakeline",
+    "website": "https://www.hcbc.com/",
+    "address": "12124 Ranch Road 620 N, Austin, TX 78750",
+    "serviceTimes": [
+      {
+        "day": "Sunday",
+        "time": "9:00 AM",
+        "label": "Worship service"
+      },
+      {
+        "day": "Sunday",
+        "time": "10:45 AM",
+        "label": "Worship service"
+      }
+    ],
+    "languages": [],
+    "denomination": "Bible Church",
+    "musicStyles": [],
+    "phone": "512-331-5050",
+    "serviceDurationMinutes": 70,
+    "childrenMinistry": true,
+    "youthMinistry": true,
+    "summary": "Hill Country Bible Church — Lakeline in Austin. Sunday services at 9:00 AM and 10:45 AM. Services last around 70 minutes, with music and Bible teaching. The Welcome Center can help with directions and children's check-in.",
+    "review": {
+      "checkedAt": "2026-09-05",
+      "facts": {
+        "services": {
+          "value": "Sunday services at 9:00 AM and 10:45 AM.",
+          "sourceUrl": "https://www.hcbc.com/visit"
+        },
+        "address": {
+          "value": "12124 Ranch Road 620 N, Austin, TX 78750",
+          "sourceUrl": "https://www.hcbc.com/visit"
+        },
+        "firstVisit": {
+          "value": "Services last around 70 minutes, with music and Bible teaching. The Welcome Center can help with directions and children's check-in.",
+          "sourceUrl": "https://www.hcbc.com/visit"
+        },
+        "tradition": {
+          "value": "Bible church.",
+          "sourceUrl": "https://www.hcbc.com/visit"
+        },
+        "children": {
+          "value": "Children's ministry serves infants through fifth grade.",
+          "sourceUrl": "https://www.hcbc.com/visit"
+        },
+        "youth": {
+          "value": "Sixth grade through high school students join family worship in the morning and have a Sunday evening gathering.",
+          "sourceUrl": "https://www.hcbc.com/visit"
+        },
+        "worship": {
+          "value": "Worship music and Bible teaching in a casual setting.",
+          "sourceUrl": "https://www.hcbc.com/visit"
+        },
+        "contact": {
+          "value": "Call 512-331-5050 or use the Plan a Visit form.",
+          "sourceUrl": "https://www.hcbc.com/visit"
+        }
+      }
+    }
+  }
+]

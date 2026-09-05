@@ -1,3 +1,5 @@
+import type { OfficialChurchReview } from "@/lib/official-church-review";
+
 export type ChurchSpotifyPlaylist = {
   id: string;
   title: string;
@@ -310,7 +312,8 @@ export type ChurchEnrichment = {
   summary?: string;
 
   // Metadata
-  sources?: { type: string; fetchedAt: string }[];
+  sources?: { type: string; fetchedAt: string }[] | Record<string, unknown>;
+  officialReview?: OfficialChurchReview;
   enrichmentStatus:
     | "pending"
     | "enriching"

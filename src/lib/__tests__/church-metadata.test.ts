@@ -29,6 +29,10 @@ vi.mock("@/lib/city-finder-data", () => ({
   })),
 }));
 
+vi.mock("@/lib/official-church-review-data", () => ({
+  getOfficiallyReviewedChurches: vi.fn(async () => []),
+}));
+
 import { generateMetadata as generateCityMetadata } from "@/app/church/city/[slug]/page";
 import { generateMetadata as generateCountryMetadata } from "@/app/church/country/[slug]/page";
 import { generateMetadata as generateDenominationMetadata } from "@/app/church/denomination/[slug]/page";

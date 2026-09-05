@@ -1,4 +1,5 @@
 import { revalidateTag, unstable_cache } from "next/cache";
+import { parseOfficialChurchReview } from "@/lib/official-church-review";
 import { getChurchLatestUpdates } from "@/lib/church-updates";
 import { uniqueSpotifyPlaylistIds } from "@/lib/spotify-playlist";
 import type { ChurchProfileEdit, YouTubeVideo, ChurchEnrichment, ChurchProfileScore } from "@/types/gospel";
@@ -591,6 +592,10 @@ export async function getChurchEnrichment(slug: string): Promise<ChurchEnrichmen
   // enrichment is verified ("complete"). Previously the whole row was gated on
   // "complete", which hid trustworthy facts for ~25.7k "pending" churches.
   const verified = row.enrichment_status === "complete";
+  const officialReview = parseOfficialChurchReview(row.sources);
+  const reviewedSummary = officialReview
+    ? [officialReview.facts.services!.value, officialReview.facts.firstVisit?.value].filter(Boolean).join(" ")
+    : undefined;
   return {
     id: row.id,
     churchSlug: row.church_slug ?? undefined,
@@ -629,19 +634,20 @@ export async function getChurchEnrichment(slug: string): Promise<ChurchEnrichmen
     coverImageUrl: row.cover_image_url ?? undefined,
     photoUrls: Array.isArray(row.photo_urls) && row.photo_urls.length > 0 ? row.photo_urls : undefined,
     logoImageUrl: row.logo_image_url ?? undefined,
-    seoDescription: verified ? (row.seo_description ?? undefined) : undefined,
-    summary: verified ? (row.summary ?? undefined) : undefined,
+    seoDescription: reviewedSummary?.slice(0, 160) ?? (verified ? (row.seo_description ?? undefined) : undefined),
+    summary: reviewedSummary ?? (verified ? (row.summary ?? undefined) : undefined),
     pastorName: verified ? (row.pastor_name ?? undefined) : undefined,
     pastorTitle: verified ? (row.pastor_title ?? undefined) : undefined,
     pastorPhotoUrl: verified ? (row.pastor_photo_url ?? undefined) : undefined,
     livestreamUrl: row.livestream_url ?? undefined,
     givingUrl: row.giving_url ?? undefined,
-    whatToExpect: verified ? (row.what_to_expect ?? undefined) : undefined,
+    whatToExpect: officialReview?.facts.firstVisit?.value ?? (verified ? (row.what_to_expect ?? undefined) : undefined),
     serviceDurationMinutes: row.service_duration_minutes ?? undefined,
     parkingInfo: row.parking_info ?? undefined,
     goodFitTags: verified ? (row.good_fit_tags ?? undefined) : undefined,
     visitorFaq: verified ? (row.visitor_faq ?? undefined) : undefined,
     sources: row.sources ?? undefined,
+    officialReview,
     enrichmentStatus: row.enrichment_status,
     confidence: row.confidence,
     schemaVersion: row.schema_version,
