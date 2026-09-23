@@ -84,14 +84,25 @@ export function joinDisplayParts(
 }
 
 export function isValidPublicUrl(value: string | null | undefined): value is string {
+  return Boolean(normalizePublicUrl(value));
+}
+
+export function normalizePublicUrl(value: string | null | undefined): string | undefined {
   const normalized = normalizeDisplayText(value);
-  if (!normalized) return false;
+  if (!normalized) return undefined;
+  const decoded = normalized
+    .replace(/&amp;/gi, "&")
+    .replace(/&#0*38;/gi, "&")
+    .replace(/&#x0*26;/gi, "&");
   try {
-    const parsed = new URL(normalized);
-    return (parsed.protocol === "https:" || parsed.protocol === "http:") && Boolean(parsed.hostname);
+    const parsed = new URL(decoded);
+    if ((parsed.protocol === "https:" || parsed.protocol === "http:") && parsed.hostname) {
+      return decoded;
+    }
   } catch {
-    return false;
+    // Invalid URLs are omitted from public links and structured data.
   }
+  return undefined;
 }
 
 function isBlockedOfficialWebsiteHost(hostname: string): boolean {
@@ -100,13 +111,15 @@ function isBlockedOfficialWebsiteHost(hostname: string): boolean {
 }
 
 export function isValidOfficialWebsiteUrl(value: string | null | undefined): value is string {
-  if (!isValidPublicUrl(value)) return false;
-  return !isBlockedOfficialWebsiteHost(new URL(value).hostname);
+  const normalized = normalizePublicUrl(value);
+  if (!normalized) return false;
+  return !isBlockedOfficialWebsiteHost(new URL(normalized).hostname);
 }
 
 export function isPlayableSpotifyUrl(value: string | null | undefined): value is string {
-  if (!isValidPublicUrl(value)) return false;
-  const parsed = new URL(value);
+  const normalized = normalizePublicUrl(value);
+  if (!normalized) return false;
+  const parsed = new URL(normalized);
   if (!/(\.|^)spotify\.com$/i.test(parsed.hostname)) return false;
   if (parsed.pathname.startsWith("/search")) return false;
   return PLAYABLE_SPOTIFY_PATH.test(parsed.pathname);
@@ -136,8 +149,9 @@ export function isValidPublicPhone(value: string | null | undefined): value is s
 }
 
 export function getPublicHostLabel(value: string | null | undefined): string | undefined {
-  if (!isValidPublicUrl(value)) return undefined;
-  return new URL(value).hostname.replace(/^www\./i, "");
+  const normalized = normalizePublicUrl(value);
+  if (!normalized) return undefined;
+  return new URL(normalized).hostname.replace(/^www\./i, "");
 }
 
 export function isValidMediaAsset(value: string | null | undefined): boolean {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { rewriteSpotifyArtUrl } from "../media";
+import { rewriteLegacyMediaUrl, rewriteSpotifyArtUrl } from "../media";
 
 describe("rewriteSpotifyArtUrl", () => {
   it("rewrites regional spotifycdn edge hosts to the canonical i.scdn.co", () => {
@@ -22,5 +22,13 @@ describe("rewriteSpotifyArtUrl", () => {
     expect(rewriteSpotifyArtUrl(null)).toBeNull();
     expect(rewriteSpotifyArtUrl(undefined)).toBeNull();
     expect(rewriteSpotifyArtUrl("  ")).toBeNull();
+  });
+});
+
+describe("rewriteLegacyMediaUrl", () => {
+  it("upgrades known Squarespace image URLs to HTTPS", () => {
+    expect(rewriteLegacyMediaUrl("http://static1.squarespace.com/static/logo.png?format=1500w")).toBe(
+      "https://static1.squarespace.com/static/logo.png?format=1500w",
+    );
   });
 });

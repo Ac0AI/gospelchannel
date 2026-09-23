@@ -10,6 +10,7 @@ import {
   isIndexableChurch,
   INDEXABLE_ONBRAND_SCORE_MIN,
   isValidOfficialWebsiteUrl,
+  normalizePublicUrl,
   sanitizeServiceTimes,
 } from "../content-quality";
 
@@ -112,6 +113,12 @@ describe("content-quality", () => {
     expect(isValidOfficialWebsiteUrl("https://www.eniro.se/")).toBe(false);
     expect(isValidOfficialWebsiteUrl("https://www.facebook.com/examplechurch")).toBe(false);
     expect(isValidOfficialWebsiteUrl("https://www.filadelfiakyrkan.se")).toBe(true);
+  });
+
+  it("decodes HTML entities before emitting public URLs", () => {
+    expect(normalizePublicUrl("https://www.facebook.com/page?id=1&amp;ref=bookmarks")).toBe(
+      "https://www.facebook.com/page?id=1&ref=bookmarks",
+    );
   });
 
   // Gate that drives robots noindex + sitemap inclusion on ~7,400 thin

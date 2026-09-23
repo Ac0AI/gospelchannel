@@ -42,6 +42,7 @@ import {
   isValidPublicPhone,
   isValidPublicUrl,
   normalizeDisplayText,
+  normalizePublicUrl,
   sanitizeServiceTimes,
 } from "@/lib/content-quality";
 import { getMusicPlatformLinks } from "@/lib/music-platform";
@@ -308,8 +309,9 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   const churchLogo = isRenderableImageUrl((mergedProfile.logoUrl as string | undefined) || enrichment?.logoImageUrl || church.logo)
     ? ((mergedProfile.logoUrl as string | undefined) || enrichment?.logoImageUrl || church.logo)!
     : null;
-  const websiteUrl = isValidOfficialWebsiteUrl((mergedProfile.websiteUrl as string | undefined) || enrichment?.websiteUrl || church.website)
-    ? ((mergedProfile.websiteUrl as string | undefined) || enrichment?.websiteUrl || church.website)
+  const rawWebsiteUrl = (mergedProfile.websiteUrl as string | undefined) || enrichment?.websiteUrl || church.website;
+  const websiteUrl = isValidOfficialWebsiteUrl(rawWebsiteUrl)
+    ? normalizePublicUrl(rawWebsiteUrl)
     : undefined;
   const profileSource = buildChurchProfileSource({
     isClaimed,
@@ -373,15 +375,9 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   const primaryDenominationFilter = getPrimaryDenominationFilter({ denomination: communityDenomination });
 
   const socialStats: { platform: string; count: number; url?: string }[] = [];
-  const youtubeUrl = isValidPublicUrl((mergedProfile.youtubeUrl as string | undefined) || enrichment?.youtubeUrl || church.youtubeUrl)
-    ? ((mergedProfile.youtubeUrl as string | undefined) || enrichment?.youtubeUrl || church.youtubeUrl)!
-    : undefined;
-  const instagramUrl = isValidPublicUrl((mergedProfile.instagramUrl as string | undefined) || enrichment?.instagramUrl || church.instagramUrl)
-    ? ((mergedProfile.instagramUrl as string | undefined) || enrichment?.instagramUrl || church.instagramUrl)!
-    : undefined;
-  const facebookUrl = isValidPublicUrl((mergedProfile.facebookUrl as string | undefined) || enrichment?.facebookUrl || church.facebookUrl)
-    ? ((mergedProfile.facebookUrl as string | undefined) || enrichment?.facebookUrl || church.facebookUrl)!
-    : undefined;
+  const youtubeUrl = normalizePublicUrl((mergedProfile.youtubeUrl as string | undefined) || enrichment?.youtubeUrl || church.youtubeUrl);
+  const instagramUrl = normalizePublicUrl((mergedProfile.instagramUrl as string | undefined) || enrichment?.instagramUrl || church.instagramUrl);
+  const facebookUrl = normalizePublicUrl((mergedProfile.facebookUrl as string | undefined) || enrichment?.facebookUrl || church.facebookUrl);
 
   if (enrichment?.youtubeSubscribers && youtubeUrl) {
     socialStats.push({ platform: "YouTube", count: enrichment.youtubeSubscribers, url: youtubeUrl });
@@ -623,7 +619,6 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
       ...(contactEmail && { email: contactEmail }),
       ...(communityDenomination && { additionalType: getProfileOptionLabel(communityDenomination) }),
       ...(church.founded && { foundingDate: `${church.founded}` }),
-      ...(communityLanguages.length > 0 && { knowsLanguage: communityLanguages.map(l => getProfileOptionLabel(l)) }),
       ...(serviceDurationMinutes && { eventSchedule: { "@type": "Schedule", duration: `PT${serviceDurationMinutes}M` } }),
       ...(parkingInfo && { amenityFeature: { "@type": "LocationFeatureSpecification", name: "Parking", value: parkingInfo } }),
       ...(goodFitTags && goodFitTags.length > 0 && { keywords: goodFitTags.join(", ") }),

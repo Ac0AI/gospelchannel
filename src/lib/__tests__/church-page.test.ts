@@ -200,5 +200,6 @@ describe("church page quality", () => {
     );
 
     expect(pageSource).not.toContain("aggregateRating");
+    expect(pageSource).not.toContain("knowsLanguage:");
   });
 });

@@ -51,6 +51,10 @@ export function rewriteLegacyMediaUrl(value: string | null | undefined): string 
 
   try {
     const parsed = new URL(trimmed);
+    if (parsed.protocol === "http:" && parsed.hostname.toLowerCase() === "static1.squarespace.com") {
+      parsed.protocol = "https:";
+      return parsed.toString();
+    }
     const index = parsed.pathname.indexOf(LEGACY_STORAGE_PREFIX);
     if (index < 0) {
       return trimmed;
