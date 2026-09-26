@@ -341,7 +341,9 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
   );
   const serviceTimeLabel = getFirstServiceTimeLabel(serviceTimes);
   const streetAddress = normalizeDisplayText((mergedProfile.streetAddress as string | undefined) || enrichment?.streetAddress);
-  const city = extractCity(church.location) || normalizeDisplayText(mergedProfile.city as string | undefined);
+  const city = mergedProfile.addressEdited
+    ? normalizeDisplayText(mergedProfile.city as string | undefined)
+    : extractCity(church.location) || normalizeDisplayText(mergedProfile.city as string | undefined);
   const mapsHref = buildGoogleMapsHref({
     googleMapsUrl: isValidPublicUrl(enrichment?.googleMapsUrl) ? enrichment?.googleMapsUrl : undefined,
     name: displayName,

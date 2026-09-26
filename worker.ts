@@ -188,16 +188,9 @@ function isHtmlCacheableRequest(request: Request): boolean {
   // Prayerwall (public)
   if (pathname.startsWith("/prayerwall")) return true;
 
-  // Church detail page only (exclude /manage, /embed, /claim, /suggest)
-  const churchDetailMatch = pathname.match(/^\/church\/([^/]+)$/);
-  if (churchDetailMatch) {
-    const slug = churchDetailMatch[1];
-    if (slug === "suggest" || slug === "country" || slug === "city" || slug === "style" || slug === "denomination") {
-      return false;
-    }
-    return true;
-  }
-
+  // Church profiles can be corrected by their verified owners. The Cache API
+  // is per data center and cannot be invalidated globally after an edit.
+  // Let Next's revalidatable page/data caches handle these URLs instead.
   return false;
 }
 

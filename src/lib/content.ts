@@ -947,12 +947,14 @@ export const getHomepageShowcaseChurches = unstable_cache(
  * the full scope of change is unknown.
  */
 export function revalidatePublicChurchContent(): void {
-  revalidateTag(CHURCH_CONTENT_TAG, "max");
-  revalidateTag(CHURCH_INDEX_TAG, "max");
-  revalidateTag(CHURCH_STATS_TAG, "max");
-  revalidateTag(CHURCH_PAGE_TAG, "max");
-  revalidateTag(CHURCH_PAGE_PUBLIC_TAG, "max");
-  revalidateTag(HOME_TAG, "max");
+  // Mutations require the next visitor to see fresh data, not one stale
+  // response while stale-while-revalidate refreshes in the background.
+  revalidateTag(CHURCH_CONTENT_TAG, { expire: 0 });
+  revalidateTag(CHURCH_INDEX_TAG, { expire: 0 });
+  revalidateTag(CHURCH_STATS_TAG, { expire: 0 });
+  revalidateTag(CHURCH_PAGE_TAG, { expire: 0 });
+  revalidateTag(CHURCH_PAGE_PUBLIC_TAG, { expire: 0 });
+  revalidateTag(HOME_TAG, { expire: 0 });
   revalidatePath("/");
   revalidatePath("/about");
   revalidatePath("/for-churches");

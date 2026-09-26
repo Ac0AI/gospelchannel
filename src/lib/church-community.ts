@@ -626,22 +626,22 @@ export async function getActiveChurchMembershipsByEmail(email: string): Promise<
 export async function ensureChurchAccessForEmail(email: string): Promise<ChurchMembership[]> {
   const normalizedEmail = normalizeEmail(email);
   const existingMemberships = await getActiveChurchMembershipsByEmail(normalizedEmail);
-  if (existingMemberships.length > 0) {
-    return existingMemberships;
+  if (!isAdminEnabled()) return existingMemberships;
+
+  const verifiedClaims = await getVerifiedClaimsByEmail(normalizedEmail);
+  const accessibleSlugs = new Set(existingMemberships.map(membership => membership.churchSlug));
+  let accessAdded = false;
+
+  for (const claim of verifiedClaims) {
+    if (accessibleSlugs.has(claim.church_slug)) continue;
+    await verifyChurchClaim(claim.id);
+    accessibleSlugs.add(claim.church_slug);
+    accessAdded = true;
   }
 
-  if (!isAdminEnabled()) return [];
-
-  const verifiedClaimIds = await getVerifiedClaimIdsByEmail(normalizedEmail);
-  if (verifiedClaimIds.length === 0) {
-    return [];
-  }
-
-  for (const claimId of verifiedClaimIds) {
-    await verifyChurchClaim(claimId);
-  }
-
-  return await getActiveChurchMembershipsByEmail(normalizedEmail);
+  return accessAdded
+    ? getActiveChurchMembershipsByEmail(normalizedEmail)
+    : existingMemberships;
 }
 
 export async function getChurchMembershipForUserAndSlug(
@@ -728,13 +728,13 @@ export async function verifyChurchClaim(id: string): Promise<{ email: string; ch
   return { email, churchSlug: claim.church_slug, name: claim.name || "" };
 }
 
-async function getVerifiedClaimIdsByEmail(email: string): Promise<string[]> {
+async function getVerifiedClaimsByEmail(email: string): Promise<Array<Pick<ClaimRow, 'id' | 'church_slug'>>> {
   if (!isAdminEnabled()) return [];
 
   const client = createAdminClient();
   const { data, error } = await client
-    .from<Pick<ClaimRow, "id">>("church_claims")
-    .select("id")
+    .from<Pick<ClaimRow, "id" | "church_slug">>("church_claims")
+    .select("id,church_slug")
     .ilike("email", normalizeEmail(email))
     .eq("status", "verified")
     .order("submitted_at", { ascending: true });
@@ -743,7 +743,7 @@ async function getVerifiedClaimIdsByEmail(email: string): Promise<string[]> {
     throw new Error(error.message);
   }
 
-  return ((data as Array<Pick<ClaimRow, "id">> | null) ?? []).map((claim) => claim.id);
+  return (data as Array<Pick<ClaimRow, 'id' | 'church_slug'>> | null) ?? [];
 }
 
 async function ensureAuthUserIdForClaimEmail(

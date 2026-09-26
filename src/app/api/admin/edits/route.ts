@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { requireAdminRoute } from '@/lib/admin-route';
 import { revalidatePublicChurchContent } from '@/lib/content';
 import { getPendingEdits, reviewProfileEdit } from '@/lib/church-profile';
@@ -32,13 +33,14 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    await reviewProfileEdit(
+    const churchSlug = await reviewProfileEdit(
       editId,
       action as 'approved' | 'rejected',
       admin.user.id,
       rejectionReason,
     );
     revalidatePublicChurchContent();
+    revalidatePath(`/church/${churchSlug}`);
     return admin.json({ success: true });
   } catch (err) {
     return admin.json({ error: (err as Error).message }, { status: 500 });

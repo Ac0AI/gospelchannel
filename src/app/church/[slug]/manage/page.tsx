@@ -57,6 +57,7 @@ export default async function ManagePage({ params }: { params: Promise<{ slug: s
 
       <ProfileManageClient
         slug={slug}
+        churchName={pageData.church.name}
         profileScore={pageData.profileScore}
         mergedProfile={pageData.mergedProfile}
         edits={edits}

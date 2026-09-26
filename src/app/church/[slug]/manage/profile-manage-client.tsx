@@ -7,6 +7,7 @@ import { getProfileOptionLabel } from '@/lib/profile-fields';
 
 interface Props {
   slug: string;
+  churchName: string;
   profileScore: ChurchProfileScore;
   mergedProfile: Record<string, unknown>;
   edits: ChurchProfileEdit[];
@@ -17,6 +18,7 @@ interface Props {
 
 export function ProfileManageClient({
   slug,
+  churchName,
   profileScore,
   mergedProfile,
   edits,
@@ -43,6 +45,17 @@ export function ProfileManageClient({
   }
 
   function getFieldValue(fieldName: string): unknown {
+    if (fieldName === 'name') return churchName;
+    if (fieldName === 'address') {
+      const address = mergedProfile.streetAddress;
+      if (typeof address !== 'string' || !address.trim()) return undefined;
+      return {
+        street: address.split(',')[0].trim(),
+        city: typeof mergedProfile.city === 'string' ? mergedProfile.city : '',
+        postal_code: typeof mergedProfile.postalCode === 'string' ? mergedProfile.postalCode : '',
+        country: typeof mergedProfile.country === 'string' ? mergedProfile.country : '',
+      };
+    }
     const keyMap: Record<string, string> = {
       service_times: 'serviceTimes',
       address: 'streetAddress',

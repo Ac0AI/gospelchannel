@@ -1,6 +1,15 @@
 import type { ProfileFieldDefinition } from '@/types/gospel';
 
 export const PROFILE_FIELDS: ProfileFieldDefinition[] = [
+  {
+    name: 'name',
+    label: 'Church name',
+    hint: 'Use the exact official name. Name changes are reviewed before publication.',
+    category: 'badge',
+    points: 0,
+    type: 'text',
+    validation: { minLength: 2, maxLength: 120 },
+  },
   // Badge requirements
   {
     name: 'service_times',

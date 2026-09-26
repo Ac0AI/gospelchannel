@@ -2,6 +2,12 @@ import { describe, it, expect } from 'vitest';
 import { validateField } from '../profile-validation';
 
 describe('validateField', () => {
+  it('allows an official name for review and rejects unknown fields', () => {
+    expect(validateField('name', 'River Church Frankfurt')).toBeNull();
+    expect(validateField('name', ' ')).toBe('Church name must be 2-120 characters');
+    expect(validateField('status', 'approved')).toBe('Unknown profile field');
+  });
+
   describe('phone', () => {
     it('accepts valid international phone', () => {
       expect(validateField('phone', '+46701234567')).toBeNull();
@@ -63,6 +69,9 @@ describe('validateField', () => {
       const times = Array.from({ length: 11 }, (_, i) => ({ day: 'Monday', time: `${i}:00` }));
       expect(validateField('service_times', times)).toBe('Maximum 10 service times');
     });
+    it('rejects malformed service entries', () => {
+      expect(validateField('service_times', [{ day: 'Sunday', time: '26:80' }])).toBe('Each service needs a day and a valid time');
+    });
   });
 
   describe('address', () => {
@@ -74,6 +83,9 @@ describe('validateField', () => {
     });
     it('rejects missing city', () => {
       expect(validateField('address', { street: 'Storgatan 1', city: '', country: 'Sweden' })).toBe('City is required');
+    });
+    it('rejects malformed address objects', () => {
+      expect(validateField('address', null)).toBe('Invalid address');
     });
   });
 

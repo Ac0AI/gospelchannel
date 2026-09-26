@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { createAdminClient } from '@/lib/neon-client';
 import { getServerUser } from '@/lib/auth/server';
 import { getChurchMembershipForUserAndSlug } from '@/lib/church-community';
@@ -98,6 +99,7 @@ export async function POST(request: NextRequest) {
     });
     await syncChurchUpdateSourcesFromProfileEdit(churchSlug, fieldName);
     revalidatePublicChurchContent();
+    revalidatePath(`/church/${churchSlug}`);
     return NextResponse.json({ success: true, edit });
   } catch (err) {
     const message = (err as Error).message;

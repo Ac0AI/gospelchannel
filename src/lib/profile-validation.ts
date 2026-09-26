@@ -1,8 +1,19 @@
+import { PROFILE_FIELDS } from '@/lib/profile-fields';
+
 type AddressValue = { street: string; city: string; postal_code?: string; country: string };
 type ServiceTimeValue = { day: string; time: string; label?: string };
+const editableFields = new Set(PROFILE_FIELDS.map(field => field.name));
 
 export function validateField(fieldName: string, value: unknown): string | null {
+  if (!editableFields.has(fieldName)) return 'Unknown profile field';
+
   switch (fieldName) {
+    case 'name': {
+      if (typeof value !== 'string') return 'Invalid church name';
+      const name = value.trim();
+      if (name.length < 2 || name.length > 120) return 'Church name must be 2-120 characters';
+      return null;
+    }
     case 'phone': {
       const v = String(value).trim();
       if (!v.startsWith('+')) return 'Phone number must start with +';
@@ -52,11 +63,15 @@ export function validateField(fieldName: string, value: unknown): string | null 
       const arr = value as ServiceTimeValue[];
       if (!Array.isArray(arr) || arr.length === 0) return 'Add at least one service time';
       if (arr.length > 10) return 'Maximum 10 service times';
+      if (arr.some(entry => !entry || typeof entry.day !== 'string' || !entry.day.trim() || typeof entry.time !== 'string' || !/^([01]?\d|2[0-3]):[0-5]\d$/.test(entry.time))) {
+        return 'Each service needs a day and a valid time';
+      }
       return null;
     }
 
     case 'address': {
       const addr = value as AddressValue;
+      if (!addr || typeof addr !== 'object' || Array.isArray(addr) || typeof addr.street !== 'string' || typeof addr.city !== 'string' || typeof addr.country !== 'string') return 'Invalid address';
       if (!addr.street?.trim()) return 'Street address is required';
       if (addr.street.trim().length < 2) return 'Street address is too short';
       if (!addr.city?.trim()) return 'City is required';

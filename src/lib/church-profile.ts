@@ -1,5 +1,5 @@
 import { createAdminClient, hasServiceConfig } from '@/lib/neon-client';
-import { getDb, schema } from '@/db';
+import { getDb, getSql, schema } from '@/db';
 import type {
   ChurchProfileEdit,
   ChurchConfig,
@@ -76,7 +76,9 @@ export async function submitProfileEdit(params: {
   const db = getDb();
 
   const enrichmentMatch = autoVerifyField(params.fieldName, params.fieldValue, params.enrichment);
-  const reviewStatus = enrichmentMatch === 'mismatch' ? 'pending' : 'auto_approved';
+  const reviewStatus = params.fieldName === 'name' || params.fieldName === 'logo_url' || params.fieldName === 'cover_image_url' || enrichmentMatch === 'mismatch'
+    ? 'pending'
+    : 'auto_approved';
   const reviewedAt = reviewStatus === 'auto_approved' ? new Date() : null;
   const now = new Date();
 
@@ -171,9 +173,45 @@ export async function reviewProfileEdit(
   action: 'approved' | 'rejected',
   reviewedBy: string,
   rejectionReason?: string,
-): Promise<void> {
+): Promise<string> {
   if (!hasServiceConfig()) throw new Error('Database not configured');
   const client = createAdminClient();
+
+  const { data: edit, error: lookupError } = await client
+    .from<ProfileEditRow>('church_profile_edits')
+    .select('id, church_slug, field_name, field_value, review_status')
+    .eq('id', editId)
+    .limit(1)
+    .maybeSingle();
+  if (lookupError) throw new Error(lookupError.message);
+  if (!edit) throw new Error('Profile edit not found');
+
+  if (action === 'approved' && edit.field_name === 'name') {
+    // A reviewed name changes the canonical record and official enrichment
+    // together, so H1, structured data, search and directory use one name.
+    const rows = await getSql().query(
+      `WITH approved_edit AS (
+         UPDATE church_profile_edits e
+         SET review_status = 'approved', reviewed_by = $2,
+             reviewed_at = NOW(), rejection_reason = NULL
+         WHERE e.id = $1 AND e.field_name = 'name' AND e.review_status = 'pending'
+           AND EXISTS (SELECT 1 FROM churches c WHERE c.slug = e.church_slug)
+         RETURNING e.church_slug, e.field_value
+       ), updated_church AS (
+         UPDATE churches c
+         SET name = approved_edit.field_value #>> '{}', updated_at = NOW()
+         FROM approved_edit WHERE c.slug = approved_edit.church_slug
+         RETURNING c.slug, c.name
+       ), updated_enrichment AS (
+         UPDATE church_enrichments e SET official_church_name = c.name
+         FROM updated_church c WHERE e.church_slug = c.slug RETURNING e.id
+       )
+       SELECT slug FROM updated_church`,
+      [editId, reviewedBy],
+    );
+    if (!Array.isArray(rows) || rows.length === 0) throw new Error('Name change could not be approved');
+    return edit.church_slug;
+  }
 
   const { error } = await client
     .from('church_profile_edits')
@@ -186,6 +224,7 @@ export async function reviewProfileEdit(
     .eq('id', editId);
 
   if (error) throw new Error(error.message);
+  return edit.church_slug;
 }
 
 // --- Merged Profile ---
@@ -283,7 +322,9 @@ export function buildMergedProfile(
       case 'service_times': merged.serviceTimes = edit.fieldValue; break;
       case 'address': {
         const addr = edit.fieldValue as { street: string; city: string; postal_code?: string; country: string };
-        merged.streetAddress = addr.street;
+        merged.streetAddress = [addr.street, [addr.postal_code, addr.city].filter(Boolean).join(' '), addr.country]
+          .filter(Boolean).join(', ');
+        merged.addressEdited = true;
         merged.city = addr.city;
         merged.country = addr.country;
         if (addr.postal_code) merged.postalCode = addr.postal_code;
