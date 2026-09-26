@@ -850,12 +850,15 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
               {nameFirst}
             </span>
             {nameRest && (
-              <span
-                className="mt-2 block max-w-[18ch] font-medium italic leading-[0.85] tracking-[-0.03em] text-blush sm:mt-3"
-                style={{ fontSize: "clamp(40px, 10vw, 140px)" }}
-              >
-                {nameRest.toLowerCase()}
-              </span>
+              <>
+                {" "}
+                <span
+                  className="mt-2 block max-w-[18ch] font-medium italic leading-[0.85] tracking-[-0.03em] text-blush sm:mt-3"
+                  style={{ fontSize: "clamp(40px, 10vw, 140px)" }}
+                >
+                  {nameRest}
+                </span>
+              </>
             )}
           </h1>
 
