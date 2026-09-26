@@ -255,8 +255,16 @@ async function fetchWithEdgeCache(
     return fetchWithHtmlEdgeCache(request, env, ctx);
   }
   // Non-cached paths still need the 200→404 rewrite for SEO hygiene.
-  const response = await openNextWorker.fetch(request, env, ctx);
-  return fixNotFoundStatus(request, response);
+  const response = await fixNotFoundStatus(request, await openNextWorker.fetch(request, env, ctx));
+  if (request.method === "GET" && /^\/church\/[^/]+$/.test(new URL(request.url).pathname)
+      && response.headers.get("content-type")?.includes("text/html")) {
+    // Next's ISR still serves from its internal cache. Prevent browsers and
+    // intermediaries from retaining profile HTML after an owner correction.
+    const headers = new Headers(response.headers);
+    headers.set("cache-control", "no-store");
+    return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+  }
+  return response;
 }
 
 async function fetchWithSitemapEdgeCache(
