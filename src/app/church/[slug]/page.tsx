@@ -45,6 +45,7 @@ import {
   normalizePublicUrl,
   sanitizeServiceTimes,
 } from "@/lib/content-quality";
+import { isGoogleHoldoutProfile } from "@/lib/google-profile-test";
 import { getMusicPlatformLinks } from "@/lib/music-platform";
 import { slugify } from "@/lib/prayer-filters";
 import { uniqueSpotifyPlaylistIds } from "@/lib/spotify-playlist";
@@ -218,6 +219,7 @@ export async function generateMetadata({ params }: ChurchPageProps): Promise<Met
     hasWorship: hasPlaylists,
     officialReview: enrichment?.officialReview,
   });
+  const googleHoldout = indexable && isGoogleHoldoutProfile(church.slug, hasPlaylists || Boolean(church.spotifyUrl));
 
   return {
     // Church-name queries need the identity and useful facts to fit in the
@@ -226,7 +228,11 @@ export async function generateMetadata({ params }: ChurchPageProps): Promise<Met
     description: seoDesc,
     keywords: Array.from(keywordSet).slice(0, 20),
     alternates: { canonical: pageUrl },
-    robots: indexable ? undefined : { index: false, follow: true },
+    robots: !indexable
+      ? { index: false, follow: true }
+      : googleHoldout
+        ? { index: true, follow: true, googleBot: { index: false, follow: true } }
+        : undefined,
     openGraph: {
       images: [{ url: "https://gospelchannel.com/hero-worship.jpg" }],
       title,
