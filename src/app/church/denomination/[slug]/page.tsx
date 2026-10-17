@@ -9,6 +9,12 @@ export const revalidate = 3600;
 
 const PAGE_SIZE = 48;
 
+// Side-by-side guides for traditions that have one; listed under the hub's related links.
+const COMPARE_LINKS_BY_DENOMINATION: Record<string, Array<{ href: string; label: string }>> = {
+  baptist: [{ href: "/compare/baptist-vs-pentecostal", label: "Baptist vs Pentecostal" }],
+  pentecostal: [{ href: "/compare/baptist-vs-pentecostal", label: "Baptist vs Pentecostal" }],
+};
+
 type DenominationPageProps = {
   params: Promise<{ slug: string }>;
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
@@ -85,6 +91,7 @@ export default async function DenominationPage({ params, searchParams }: Denomin
         { title: `${label} by Country`, links: relatedLinks.country },
         { title: `${label} by City`, links: relatedLinks.city },
         { title: `${label} Worship Styles`, links: relatedLinks.style },
+        { title: "Compare traditions", links: COMPARE_LINKS_BY_DENOMINATION[slug] ?? [] },
       ]}
     />
   );

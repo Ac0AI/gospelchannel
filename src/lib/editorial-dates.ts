@@ -22,6 +22,7 @@ export const EDITORIAL_CONTENT_DATES = {
   "/for/families": { published: "2026-05-14", modified: "2026-10-17" },
   "/for/new-believers": { published: "2026-05-14", modified: "2026-10-17" },
   "/for/deconstructing": { published: "2026-05-14", modified: "2026-10-17" },
+  "/compare/baptist-vs-pentecostal": { published: "2026-03-29", modified: "2026-10-17" },
 } as const satisfies Record<string, { published: string; modified: string }>;
 
 export type EditorialPath = keyof typeof EDITORIAL_CONTENT_DATES;

@@ -183,9 +183,10 @@ function buildFacetRoute(link: FacetLink, lastModified: Date, priority: number):
 }
 
 function buildCompareRoute(slug: string, lastModified: Date): SitemapEntry {
+  const contentDate = getEditorialContentDate(`/compare/${slug}`);
   return {
     url: `${BASE_URL}/compare/${slug}`,
-    lastModified,
+    lastModified: contentDate ? new Date(`${contentDate}T00:00:00.000Z`) : lastModified,
     changeFrequency: "weekly",
     priority: 0.7,
   };

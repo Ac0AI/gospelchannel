@@ -798,9 +798,10 @@ const COMPARE_GUIDE_DEFINITIONS: CompareGuideDefinition[] = [
     summary: "Choose between a steadier teaching lane and a more expressive worship lane.",
     intro: "This guide is not trying to flatten theology into one sentence. It helps a first-time visitor understand what Sunday often feels like at the room level.",
     checklist: [
-      "Choose Baptist if grounded teaching and steadier room energy matter most.",
-      "Choose Pentecostal if spiritual response, expressive worship, and expectancy matter most.",
-      "If you like both, use the fit quiz and check actual church pages before visiting.",
+      "Try a Baptist church first if you want the sermon at the center, a quieter room, and hymns alongside modern songs.",
+      "Try a Pentecostal church first if you want longer worship, prayer for healing, and room for gifts like tongues and prophecy.",
+      "If eternal security matters to you, read the statement of faith: Southern Baptist and Assemblies of God churches answer it differently.",
+      "Still unsure? Visit one of each. Most people know within one service which room feels like home.",
     ],
     sections: [
       {
@@ -1170,11 +1171,32 @@ type CompareAspect = {
   body: string;
 };
 
+type CompareBeliefRow = {
+  topic: string;
+  sideA: string;
+  sideB: string;
+};
+
+type CompareSource = {
+  label: string;
+  href: string;
+};
+
 type CompareGuideContent = {
   slug: string;
   eyebrow: string;
   title: string;
   intro: string;
+  /** <title> without the site suffix; falls back to "<guide title> - Compare Guide". */
+  seoTitle?: string;
+  /** Meta description; falls back to the intro. */
+  seoDescription?: string;
+  /** Direct answer for the quick-answer box; falls back to the guide summary. */
+  quickAnswer?: string;
+  beliefs?: { rows: CompareBeliefRow[]; note: string };
+  /** Denomination families in src/data/worship-by-denomination-2026.json to set side by side. */
+  worshipData?: { familyA: string; familyB: string; denominationSlugA: string; denominationSlugB: string };
+  sources?: CompareSource[];
   labelA: string;
   labelB: string;
   aspects: CompareAspect[];
@@ -1253,8 +1275,55 @@ const COMPARE_GUIDE_CONTENT: CompareGuideContent[] = [
   {
     slug: "baptist-vs-pentecostal",
     eyebrow: "Compare Guide",
-    title: "Baptist vs Pentecostal",
-    intro: "Two traditions that both love Jesus but feel very different on a Sunday morning. This guide is about what you will actually notice in the room, not theology textbooks.",
+    title: "Baptist vs Pentecostal: what's actually different",
+    intro: "Both are Protestant, both baptize believers by immersion, and both put the Bible at the center. The real differences are the Holy Spirit, how certain salvation is, who runs the church, and what Sunday sounds like.",
+    seoTitle: "Baptist vs Pentecostal: Key Differences",
+    seoDescription: "Baptist vs Pentecostal compared: tongues, healing, salvation, church government and worship, with official sources and real playlist data from 85 churches.",
+    quickAnswer: "The biggest difference is the Holy Spirit. Pentecostal churches teach a baptism in the Spirit after conversion, usually marked by speaking in tongues, and expect healing and prophecy today. Baptist churches center Sunday on the sermon and rarely practice tongues in services. They also split on salvation: Southern Baptists teach that true believers cannot fall away, while the Assemblies of God rejects that view.",
+    beliefs: {
+      rows: [
+        {
+          topic: "The Holy Spirit and tongues",
+          sideA: "Every believer receives the Spirit at conversion. The Baptist Faith and Message 2000 says the Spirit gives spiritual gifts but does not mention tongues, and many Baptist churches teach that the miraculous gifts are not part of today's services.",
+          sideB: "The Assemblies of God teaches a baptism in the Holy Spirit that is \"distinct from and subsequent to\" the new birth, with speaking in tongues as its \"initial physical sign\".",
+        },
+        {
+          topic: "Healing and prophecy today",
+          sideA: "Baptists pray for the sick, but healing is not usually a regular part of the Sunday service.",
+          sideB: "The Assemblies of God calls divine healing \"an integral part of the gospel\". Prayer for healing is often part of the service.",
+        },
+        {
+          topic: "Can a believer lose salvation?",
+          sideA: "Southern Baptists teach that true believers \"will never fall away from the state of grace\". Free Will Baptists, a smaller Baptist family, teach that final salvation is not certain.",
+          sideB: "The Assemblies of God rejects unconditional eternal security (\"once saved, always saved\") and teaches that a believer can fall away.",
+        },
+        {
+          topic: "Water baptism",
+          sideA: "Believers only, by full immersion. Baptism usually comes before church membership.",
+          sideB: "Also believers by immersion in most Pentecostal churches. Baptism in the Spirit is a separate, later experience.",
+        },
+        {
+          topic: "Who runs the church",
+          sideA: "Each congregation governs itself \"through democratic processes\", in the words of the Baptist Faith and Message 2000.",
+          sideB: "It varies. Assemblies of God churches govern themselves locally but credential pastors through district and national councils. Other Pentecostal bodies have more central oversight.",
+        },
+      ],
+      note: "These are the official positions of the largest body in each family. Individual churches vary, so read a church's own statement of faith before you join. Oneness Pentecostal churches, such as the United Pentecostal Church International, also differ from both on the Trinity, which Baptists and most Pentecostals hold.",
+    },
+    worshipData: {
+      familyA: "Baptist",
+      familyB: "Pentecostal",
+      denominationSlugA: "baptist",
+      denominationSlugB: "pentecostal",
+    },
+    sources: [
+      { label: "Assemblies of God: Statement of Fundamental Truths (articles 7, 8 and 12)", href: "https://ag.org/Beliefs/Statement-of-Fundamental-Truths" },
+      { label: "Assemblies of God: Assurance of Salvation, position paper (2017)", href: "https://ag.org/Beliefs/Position-Papers/Assurance-Of-Salvation" },
+      { label: "Southern Baptist Convention: The Baptist Faith and Message 2000 (articles II, V, VI and VII)", href: "https://bfm.sbc.net/bfm2000/" },
+      { label: "National Association of Free Will Baptists: Treatise of the Faith and Practices", href: "https://nafwb.org/site/treatise/" },
+      { label: "United Pentecostal Church International: Our Beliefs", href: "https://www.upci.org/about/our-beliefs" },
+      { label: "GospelChannel: Do Different Denominations Sing Different Worship Songs?", href: "/worship-by-denomination" },
+    ],
     labelA: "Baptist",
     labelB: "Pentecostal",
     aspects: [
@@ -1305,6 +1374,9 @@ const COMPARE_GUIDE_CONTENT: CompareGuideContent[] = [
     ctaA: { label: "Browse Baptist churches", href: "/church/denomination/baptist" },
     ctaB: { label: "Browse Pentecostal churches", href: "/church/denomination/pentecostal" },
     faq: [
+      { question: "Do Baptists believe in speaking in tongues?", answer: "Views differ. The Baptist Faith and Message 2000, the Southern Baptist confession, says the Holy Spirit gives spiritual gifts but does not mention tongues. Many Baptist churches teach that the miraculous gifts belonged to the apostles' era, while others are more open. In practice, you will rarely hear tongues during a Baptist Sunday service." },
+      { question: "What's the difference between Baptist and Pentecostal worship?", answer: "Less than you might think in the songs, more in the room. In the church playlists we measured, megachurch anthems from Hillsong, Bethel, Elevation and Passion show up in 66% of Baptist churches and 74% of Pentecostal churches. The split is hymns: 60% of Baptist churches also sing modern hymns from writers like the Gettys, CityAlight and Sovereign Grace, against 11% of Pentecostal churches. Pentecostal services also tend to run longer worship sets with open time for prayer and response." },
+      { question: "Can a Baptist attend a Pentecostal church?", answer: "Yes. Visitors are welcome at both, and nobody will expect you to speak in tongues or raise your hands. If you want to become a member, ask about baptism: both traditions baptize believers by immersion, and some churches will ask how and when you were baptized." },
       { question: "Do Baptist churches ever raise hands or get expressive?", answer: "Some do, especially more contemporary Baptist churches. The range is wide. But the overall culture tends to be more reserved than Pentecostal rooms." },
       { question: "Are Pentecostal churches welcoming to newcomers?", answer: "Most are very welcoming. The energy can feel intense at first, but Pentecostal churches are often warm and quick to connect with visitors." },
       { question: "Can I believe in the Holy Spirit and still go to a Baptist church?", answer: "Absolutely. Baptist churches believe in the Holy Spirit too. The difference is more about how openly spiritual gifts are practiced in the service, not whether the Spirit is valued." },

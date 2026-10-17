@@ -253,6 +253,19 @@ describe("sitemap-data", () => {
       .toBe(new Date(CONTENT_UPDATED_AT).toISOString());
   });
 
+  it("dates compare guides by their content when one is recorded", async () => {
+    getChurchDirectorySeedCountAsyncMock.mockResolvedValue(0);
+    getCompareGuideSlugsMock.mockReturnValue(["baptist-vs-pentecostal", "compare-a"]);
+
+    const entries = await buildSitemapEntriesForChunk(0);
+    const byUrl = new Map(entries.map((entry) => [entry.url, entry]));
+
+    expect(byUrl.get("https://gospelchannel.com/compare/baptist-vs-pentecostal")?.lastModified?.toISOString())
+      .toBe("2026-10-17T00:00:00.000Z");
+    expect(byUrl.get("https://gospelchannel.com/compare/compare-a")?.lastModified?.toISOString())
+      .toBe(new Date(CONTENT_UPDATED_AT).toISOString());
+  });
+
   it("builds later chunks in section order after the church slice ends", async () => {
     getChurchDirectorySeedCountAsyncMock.mockResolvedValue(5_002);
     getChurchDirectorySeedSliceAsyncMock.mockImplementation(async (offset: number, limit: number) => (

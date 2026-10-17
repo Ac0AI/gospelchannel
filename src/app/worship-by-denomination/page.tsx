@@ -263,7 +263,14 @@ export default function WorshipByDenominationPage() {
           churches carry a Getty, CityAlight, or Sovereign Grace hymn{" "}
           {baptist?.modernHymnPct}% of the time. Pentecostal churches, just{" "}
           {pentecostal?.modernHymnPct}%. So what separates traditions is not the
-          anthems they share, it is whether they also sing the new hymns.
+          anthems they share, it is whether they also sing the new hymns.{" "}
+          <Link
+            href="/compare/baptist-vs-pentecostal"
+            className="font-semibold text-rose-gold underline-offset-2 hover:underline"
+          >
+            See Baptist vs Pentecostal side by side
+          </Link>
+          .
         </p>
       </section>
 
