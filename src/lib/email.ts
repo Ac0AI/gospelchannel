@@ -316,6 +316,30 @@ export async function sendFeedbackAdminNotification(params: {
   await notifyAdmins(`Feedback: ${params.churchName} (${kindLabel})`, html);
 }
 
+export async function sendWebsiteRequestAdminNotification(params: {
+  website: string;
+  email: string;
+  name: string;
+  church: string;
+}): Promise<void> {
+  const row = (label: string, value: string) =>
+    value ? `<tr><td style="padding: 4px 12px 4px 0; color: #4b5665;">${label}</td><td>${escapeHtml(value)}</td></tr>` : "";
+  const html = `
+    <div style="font-family: system-ui, sans-serif; max-width: 520px; margin: 0 auto; color: #182333;">
+      <h2 style="margin-bottom: 4px;">New website preview request</h2>
+      <table style="font-size: 15px; margin: 16px 0; border-collapse: collapse;">
+        ${row("Current site", params.website)}
+        ${row("Church", params.church)}
+        ${row("Name", params.name)}
+        ${row("Email", params.email)}
+      </table>
+      <p style="font-size: 14px; color: #4b5665;">Build the preview, then reply to ${escapeHtml(params.email)} with the link.</p>
+    </div>
+  `.trim();
+
+  await notifyAdmins(`Website preview request: ${params.church || params.website}`, html);
+}
+
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")

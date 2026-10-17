@@ -4,6 +4,7 @@ import { Familjen_Grotesk } from "next/font/google";
 import { buildBreadcrumbSchema } from "@/lib/seo-schema";
 import { serializeJsonLd } from "@/lib/json-ld";
 import styles from "./websites.module.css";
+import { RequestForm } from "./RequestForm";
 
 // GospelChannel Websites: done-for-you church websites, a paid service that is
 // separate from the free church listing. The page has its own type and colors
@@ -16,14 +17,13 @@ const PAGE_TITLE = "Church Websites, Done for You";
 const PAGE_DESCRIPTION =
   "We rebuild your church website from your current one, host it, and make every change you send by text or email. $50 a month. See your new site before you subscribe.";
 const CONTACT_EMAIL = "hi@gospelchannel.com";
-const REQUEST_HREF = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Our church website")}&body=${encodeURIComponent("Our current website: ")}`;
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
   alternates: { canonical: PAGE_URL },
   openGraph: {
-    images: [{ url: `${SITE_URL}/websites/devices-1536.webp`, width: 1536, height: 864 }],
+    images: [{ url: `${SITE_URL}/websites/site-desktop-1600.webp`, width: 1600, height: 1000 }],
     title: `${PAGE_TITLE} | GospelChannel`,
     description: PAGE_DESCRIPTION,
     url: PAGE_URL,
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     siteName: "GospelChannel",
   },
   twitter: {
-    images: [`${SITE_URL}/websites/devices-1536.webp`],
+    images: [`${SITE_URL}/websites/site-desktop-1600.webp`],
     card: "summary_large_image",
     title: `${PAGE_TITLE} | GospelChannel`,
     description: PAGE_DESCRIPTION,
@@ -110,6 +110,40 @@ const FAQ = [
   },
 ];
 
+const LOOKS = [
+  { id: "chapel", name: "Chapel", text: "Navy and gold." },
+  { id: "clay", name: "Clay", text: "Terracotta and warm sand." },
+  { id: "sage", name: "Sage", text: "Deep green and gold." },
+  { id: "own", name: "Your colors", text: "Taken from your logo. Looks finished even before you have photos." },
+];
+
+// A sharp iPhone frame drawn in CSS around a real screenshot: titanium edge,
+// side buttons, Dynamic Island and a status bar, so the site reads as a phone
+// without a stock device image.
+function IPhone({ src, srcSet, sizes, alt, eager = false }: { src: string; srcSet: string; sizes: string; alt: string; eager?: boolean }) {
+  return (
+    <div className={styles.iphone}>
+      <span className={styles.btnAction} aria-hidden="true" />
+      <span className={styles.btnUp} aria-hidden="true" />
+      <span className={styles.btnDown} aria-hidden="true" />
+      <span className={styles.btnPower} aria-hidden="true" />
+      <div className={styles.iphoneScreen}>
+        <div className={styles.statusBar} aria-hidden="true">
+          <span>9:41</span>
+          <span className={styles.statusIcons}>
+            <svg viewBox="0 0 18 12" width="18" height="12"><rect x="0" y="8" width="3" height="4" rx="1" /><rect x="5" y="5.5" width="3" height="6.5" rx="1" /><rect x="10" y="3" width="3" height="9" rx="1" /><rect x="15" y="0" width="3" height="12" rx="1" /></svg>
+            <svg viewBox="0 0 16 12" width="16" height="12"><path d="M8 11.5 5.6 9a3.4 3.4 0 0 1 4.8 0Z" /><path d="M3.5 6.9a6.4 6.4 0 0 1 9 0l-1.4 1.4a4.4 4.4 0 0 0-6.2 0Z" /><path d="M1.2 4.6a9.6 9.6 0 0 1 13.6 0l-1.4 1.4a7.6 7.6 0 0 0-10.8 0Z" /></svg>
+            <svg viewBox="0 0 27 12" width="27" height="12"><rect x="0.5" y="0.5" width="22" height="11" rx="3.2" fill="none" stroke="currentColor" opacity="0.4" /><rect x="2.2" y="2.2" width="16" height="7.6" rx="1.8" /><rect x="24" y="4" width="1.8" height="4" rx="0.9" opacity="0.4" /></svg>
+          </span>
+        </div>
+        <span className={styles.island} aria-hidden="true" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={src} srcSet={srcSet} sizes={sizes} width={600} height={1298} alt={alt} loading={eager ? "eager" : "lazy"} decoding="async" />
+      </div>
+    </div>
+  );
+}
+
 export default function WebsitesPage() {
   const jsonLd = [
     {
@@ -173,15 +207,13 @@ export default function WebsitesPage() {
               fetchPriority="high"
             />
           </div>
-          <div className={styles.phone}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+          <div className={styles.heroPhone}>
+            <IPhone
               src="/websites/site-phone-600.webp"
               srcSet="/websites/site-phone-390.webp 390w, /websites/site-phone-600.webp 600w"
-              sizes="150px"
-              width={600}
-              height={1298}
-              alt="The same home page on a phone."
+              sizes="170px"
+              alt="The same home page on an iPhone."
+              eager
             />
           </div>
           <figcaption className={styles.caption}>A real site from our template, for a fictional example church.</figcaption>
@@ -212,21 +244,44 @@ export default function WebsitesPage() {
         </div>
       </section>
 
+      <section className={`${styles.wrap} ${styles.looks}`} aria-labelledby="looks-heading">
+        <h2 id="looks-heading">Pick a look. We make it yours.</h2>
+        <p className={styles.lead}>
+          Every look shares one layout, built around what a first-time visitor needs. We set it in your logo&apos;s colors with your own photos, or start you on one of ours. Switching later is one message.
+        </p>
+        <ul className={styles.looksGrid}>
+          {LOOKS.map((look) => (
+            <li key={look.id}>
+              <div className={styles.browser}>
+                <div className={styles.browserBar} aria-hidden="true"><span /><span /><span /></div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/websites/look-${look.id}-1040.webp`}
+                  srcSet={`/websites/look-${look.id}-560.webp 560w, /websites/look-${look.id}-1040.webp 1040w`}
+                  sizes="(min-width: 760px) 520px, 92vw"
+                  width={1040}
+                  height={650}
+                  alt={`The example church home page in the ${look.name} look.`}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <p className={styles.lookName}><strong>{look.name}</strong> {look.text}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
       <section className={`${styles.wrap} ${styles.features}`} aria-label="What you get">
         {FEATURES.map((f) => (
           <article key={f.title} className={styles.feature}>
             {f.kind === "phone" && (
-              <div className={styles.phone}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+              <div className={styles.featurePhone}>
+                <IPhone
                   src={`/websites/${f.image}-600.webp`}
                   srcSet={`/websites/${f.image}-390.webp 390w, /websites/${f.image}-600.webp 600w`}
-                  sizes="220px"
-                  width={600}
-                  height={1298}
+                  sizes="240px"
                   alt={f.alt}
-                  loading="lazy"
-                  decoding="async"
                 />
               </div>
             )}
@@ -278,18 +333,6 @@ export default function WebsitesPage() {
           <ul className={styles.included}>
             {INCLUDED.map((item) => <li key={item}>{item}</li>)}
           </ul>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            className={styles.devices}
-            src="/websites/devices-1536.webp"
-            srcSet="/websites/devices-800.webp 800w, /websites/devices-1536.webp 1536w"
-            sizes="(min-width: 960px) 480px, 100vw"
-            width={1536}
-            height={864}
-            alt="Laptop, tablet and phone on a desk, each showing the same example church website."
-            loading="lazy"
-            decoding="async"
-          />
         </div>
         <div className={styles.faq}>
           {FAQ.map((item) => (
@@ -301,14 +344,15 @@ export default function WebsitesPage() {
         </div>
       </section>
 
-      <section id="request" className={`${styles.wrap} ${styles.request}`} aria-labelledby="request-heading">
-        <div>
-          <h2 id="request-heading">Let&apos;s start with your current website.</h2>
-          <p>Email us your church&apos;s website address. We&apos;ll build your preview and send you the link. No call needed.</p>
-        </div>
-        <div className={styles.requestActions}>
-          <a className={styles.button} href={REQUEST_HREF}>Send us your website</a>
-          <a className={styles.mail} href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+      <section id="request" className={styles.cta} aria-labelledby="request-heading">
+        <div className={`${styles.wrap} ${styles.ctaInner}`}>
+          <div>
+            <p className={styles.ctaEyebrow}>Free preview</p>
+            <h2 id="request-heading">See your church&apos;s new website.</h2>
+            <p>Tell us where your current site is. We build the new one from it and send you a private link. You subscribe only if you like it.</p>
+            <p className={styles.ctaMail}>Prefer email? <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
+          </div>
+          <RequestForm />
         </div>
       </section>
 
