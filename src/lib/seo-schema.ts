@@ -1,4 +1,5 @@
 import { CONTENT_UPDATED_AT } from "@/lib/utils";
+import { getEditorialDates } from "@/lib/editorial-dates";
 
 const SITE_URL = "https://gospelchannel.com";
 
@@ -34,8 +35,10 @@ function buildThingSchema(thing: SchemaThingInput) {
 }
 
 export function buildArticleSchema(input: ArticleSchemaInput) {
-  const dateModified = input.dateModified ?? CONTENT_UPDATED_AT;
-  const datePublished = input.datePublished ?? dateModified;
+  // Editorial pages take their dates from the same record as the sitemap lastmod.
+  const editorial = getEditorialDates(new URL(input.url, SITE_URL).pathname);
+  const dateModified = input.dateModified ?? editorial?.modified ?? CONTENT_UPDATED_AT;
+  const datePublished = input.datePublished ?? editorial?.published ?? dateModified;
   return {
     "@context": "https://schema.org",
     "@type": "Article",

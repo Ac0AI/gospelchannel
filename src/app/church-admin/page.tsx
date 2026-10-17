@@ -10,7 +10,7 @@ import { ChurchAdminUpdateForm } from "@/components/church-admin/ChurchAdminUpda
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Church Admin — Gospel Channel",
+  title: "Church Admin – Gospel Channel",
   robots: { index: false, follow: false },
 };
 

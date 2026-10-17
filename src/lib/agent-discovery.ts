@@ -337,19 +337,19 @@ function formatAnswerMap() {
 
 function formatAudienceLinks() {
   return AUDIENCE_LINKS
-    .map((link) => `- [${link.label}](${link.url}) — ${link.intent} Proof routes: ${link.proof_routes.join(", ")}.`)
+    .map((link) => `- [${link.label}](${link.url}) – ${link.intent} Proof routes: ${link.proof_routes.join(", ")}.`)
     .join("\n");
 }
 
 function formatProofRoutes() {
   return PROOF_ROUTES
-    .map((route) => `- [${route.label}](${route.url}) — ${route.proof}.`)
+    .map((route) => `- [${route.label}](${route.url}) – ${route.proof}.`)
     .join("\n");
 }
 
 function formatCommunitySignalRoutes() {
   return COMMUNITY_SIGNAL_ROUTES
-    .map((route) => `- [${route.label}](${route.url}) — ${route.signal}.`)
+    .map((route) => `- [${route.label}](${route.url}) – ${route.signal}.`)
     .join("\n");
 }
 
@@ -360,7 +360,7 @@ function formatBullets(items: string[]) {
 export function buildLlmsTxt(stats: DiscoveryStats) {
   return `# GospelChannel
 
-> The Church Guide — a free global decision guide and profile database for comparing worship style, church tradition, language, service details, and public church profile data before a first visit.
+> The Church Guide – a free global decision guide and profile database for comparing worship style, church tradition, language, service details, and public church profile data before a first visit.
 
 ${ENTITY_DISAMBIGUATION}
 
@@ -435,7 +435,7 @@ User-directed retrieval and search citation agents are welcome on public pages. 
 }
 
 export function buildLlmsFullTxt(stats: DiscoveryStats) {
-  return `# GospelChannel — The Church Guide
+  return `# GospelChannel – The Church Guide
 
 GospelChannel is The Church Guide: a free global decision guide and profile database. It helps people compare churches before a first visit by pairing decision guides with public church profile proof: location, worship style, tradition, denomination, language, service details, music links, website/contact signals, and community context.
 
@@ -514,7 +514,7 @@ ${formatLinks([...PRIMARY_LINKS, ...DISCOVERY_LINKS])}
 }
 
 export function buildIndexMarkdown(stats: DiscoveryStats) {
-  return `# GospelChannel — The Church Guide
+  return `# GospelChannel – The Church Guide
 
 GospelChannel helps people find the right church before their first visit.
 

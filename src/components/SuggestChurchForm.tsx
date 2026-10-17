@@ -72,7 +72,7 @@ export function SuggestChurchForm() {
         <p className="text-4xl" aria-hidden="true">🙏</p>
         <h2 className="mt-4 font-serif text-2xl font-semibold text-espresso">Thank You!</h2>
         <p className="mt-3 text-warm-brown">
-          Your church suggestion has been received. We&apos;ll review it and add it to the community — you might just
+          Your church suggestion has been received. We&apos;ll review it and add it to the community – you might just
           help someone discover their new worship home.
         </p>
         <button

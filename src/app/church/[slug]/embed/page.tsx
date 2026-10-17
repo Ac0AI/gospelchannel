@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   return {
-    title: `Verified Badge — ${slug}`,
+    title: `Verified Badge – ${slug}`,
     robots: { index: false },
   };
 }

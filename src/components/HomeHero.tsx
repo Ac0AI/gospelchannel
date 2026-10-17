@@ -119,7 +119,7 @@ export function HomeHero({ surpriseSlugs, churchCountLabel }: Props) {
         </div>
       </div>
 
-      {/* Hidden honest count for crawlers — visible stats live in the strip below */}
+      {/* Hidden honest count for crawlers – visible stats live in the strip below */}
       <span className="sr-only">
         Browse {churchCountLabel} churches.
       </span>

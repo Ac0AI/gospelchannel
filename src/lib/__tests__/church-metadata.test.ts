@@ -413,16 +413,16 @@ describe("facet metadata titles", () => {
 
   it("uses the required country title format", async () => {
     const metadata = await generateCountryMetadata(metadataProps("united-kingdom"));
-    expect(metadata.title).toBe("United Kingdom Churches: Cities, Worship Styles & Service Times");
+    expect(metadata.title).toBe("United Kingdom Churches: Cities & Service Times");
   });
 
   it("uses the required denomination title format", async () => {
     const metadata = await generateDenominationMetadata(metadataProps("pentecostal"));
-    expect(metadata.title).toBe("Pentecostal Churches: Worship, Service Times & Locations");
+    expect(metadata.title).toBe("Pentecostal Churches: Worship & Service Times");
   });
 
   it("uses the required worship-style title format", async () => {
     const metadata = await generateStyleMetadata(metadataProps("contemporary-worship"));
-    expect(metadata.title).toBe("Contemporary Worship Churches: Music, Service Times & Locations");
+    expect(metadata.title).toBe("Contemporary Worship Churches: Music & Service Times");
   });
 });

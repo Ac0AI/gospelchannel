@@ -29,7 +29,7 @@ export function GET(): Response {
   // HTTP spec, respond 405 to GET and point clients at POST.
   return new Response(
     JSON.stringify({
-      error: "Method Not Allowed. This is a Model Context Protocol endpoint — send JSON-RPC over POST.",
+      error: "Method Not Allowed. This is a Model Context Protocol endpoint – send JSON-RPC over POST.",
       server: SERVER_CONFIG.serverInfo.name,
     }),
     {

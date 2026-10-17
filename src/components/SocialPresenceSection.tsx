@@ -230,7 +230,7 @@ export function SocialPresenceSection({
                 </span>
               </div>
 
-              {/* Count — only when data exists */}
+              {/* Count – only when data exists */}
               {hasCount && (
                 <div>
                   <span className="text-2xl font-black leading-none tracking-tight text-espresso sm:text-3xl">

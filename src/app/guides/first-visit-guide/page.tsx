@@ -25,7 +25,7 @@ export const revalidate = 3600;
 const MEDIA = "https://media.gospelchannel.com/guides/first-visit";
 const PAGE_URL = "https://gospelchannel.com/guides/first-visit-guide";
 const META_DESCRIPTION =
-  "Honest step-by-step guide for your first worship service. What the music is like, whether you need to raise your hands, what to do during an altar call, and everything else nobody tells you.";
+  "Your first church service, step by step: what the music is like, whether to raise your hands, what an altar call is, and everything else nobody tells you.";
 
 const FIRST_VISIT_EVIDENCE = [
   {
@@ -93,7 +93,7 @@ const FIRST_VISIT_STEPS = [
 ] as const;
 
 export const metadata: Metadata = {
-  title: "First-Time Church Visit Guide - What to Actually Expect",
+  title: "First Time at Church: What to Expect",
   description: META_DESCRIPTION,
   alternates: { canonical: PAGE_URL },
   openGraph: {

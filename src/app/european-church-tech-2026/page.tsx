@@ -21,9 +21,9 @@ const HUGGINGFACE_URL =
 const GITHUB_URL = "https://github.com/Ac0AI/european-church-tech-2026";
 
 export const metadata: Metadata = {
-  title: "European Church Tech Index 2026 — What 14 000 Churches Actually Run",
+  title: "European Church Tech Index 2026",
   description:
-    "First observed-data report on European church technology. Measured across 14 000 churches in 12 countries. UK leads social presence at 84% Facebook adoption, Italy uses a federation model. Survey-free methodology.",
+    "What 14,000 churches in 12 European countries run online, measured from their sites. UK leads at 84% Facebook adoption, Italy runs on a federation model.",
   alternates: { canonical: PAGE_URL },
   openGraph: {
     title: "84% of UK churches are on Facebook. In Italy: 7%.",
@@ -164,12 +164,12 @@ export default async function EuropeanChurchTechReportPage() {
   const datasetSchema = {
     "@context": "https://schema.org",
     "@type": "Dataset",
-    name: "European Church Tech 2026 — Observed Data",
+    name: "European Church Tech 2026 – Observed Data",
     alternateName: "European Church Tech Index 2026",
     description:
       "Country-level and platform-by-country measurements of digital adoption across " +
       `${data.totals.churches.toLocaleString("en-GB")} evangelical and Protestant churches in ` +
-      `${data.totals.countries} European countries. Observed-data methodology — every coverage rate ` +
+      `${data.totals.countries} European countries. Observed-data methodology – every coverage rate ` +
       "is derived from publicly observable signals about each church's web presence. We did not survey.",
     url: PAGE_URL,
     sameAs: [DOI_URL, KAGGLE_URL, HUGGINGFACE_URL, GITHUB_URL],
@@ -241,7 +241,7 @@ export default async function EuropeanChurchTechReportPage() {
       {/* ── Hero ── */}
       <header className="text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-mauve">
-          European Church Tech Index — {formatDate(data.generatedAt)}
+          European Church Tech Index – {formatDate(data.generatedAt)}
         </p>
         <h1 className="mx-auto mt-4 max-w-4xl font-serif text-4xl font-semibold leading-[1.1] text-espresso sm:text-6xl">
           {ukStats ? `${ukStats.pct.facebook}% of UK churches are on Facebook.` : "UK leads on Facebook."}{" "}
@@ -279,7 +279,7 @@ export default async function EuropeanChurchTechReportPage() {
               </strong>{" "}
               {ukStats.pct.facebook}% of British churches have a verifiable
               Facebook presence; {ukStats.pct.youtube}% have an active
-              YouTube channel — both far ahead of any other primary market.
+              YouTube channel – both far ahead of any other primary market.
             </li>
           ) : null}
           {italyStats ? (
@@ -288,7 +288,7 @@ export default async function EuropeanChurchTechReportPage() {
                 Italy looks last on paper, but it is not absent online.
               </strong>{" "}
               Just {italyStats.pct.facebook}% of Italian churches have an own
-              Facebook page — because Italian Pentecostalism is federated,
+              Facebook page – because Italian Pentecostalism is federated,
               and most local congregations share their denomination&apos;s
               digital presence rather than maintaining their own.
             </li>
@@ -300,7 +300,7 @@ export default async function EuropeanChurchTechReportPage() {
               </strong>{" "}
               The Netherlands, Denmark, Finland, and Belgium all show
               70-90% coverage on websites and social channels despite
-              small church bases — small markets, mature digital habits.
+              small church bases – small markets, mature digital habits.
             </li>
           ) : null}
           <li>
@@ -309,7 +309,7 @@ export default async function EuropeanChurchTechReportPage() {
             </strong>{" "}
             We did not. We measured what {data.totals.churches.toLocaleString("en-GB")}{" "}
             individual church URLs, Facebook pages, and YouTube channels
-            actually show — a methodology no European church-tech report
+            actually show – a methodology no European church-tech report
             has used at this scale before.
           </li>
         </ul>
@@ -326,7 +326,7 @@ export default async function EuropeanChurchTechReportPage() {
         <p className="mt-4 text-base leading-relaxed text-espresso/80">
           Every existing report on church technology surveys leaders. Pastors
           self-report adoption. Survey responses for technology are notoriously
-          generous — leaders over-report best practices and under-report
+          generous – leaders over-report best practices and under-report
           legacy infrastructure. We took a different path: we measured what
           each church&apos;s public presence shows. CMS detection ran against
           live websites. Facebook and YouTube presence came from page-level
@@ -338,7 +338,7 @@ export default async function EuropeanChurchTechReportPage() {
           A church with no detected website may still have one we missed; a
           church without a detected Facebook page may run one under a
           denomination-shared account. Where we could not verify, we counted
-          zero. The result is a conservative floor — and the first
+          zero. The result is a conservative floor – and the first
           country-by-country comparison built this way.
         </p>
       </section>
@@ -391,7 +391,7 @@ export default async function EuropeanChurchTechReportPage() {
               <BigStat
                 number={`${ukCms.modernDiyPct}%`}
                 headline="The UK leads on &lsquo;modern DIY&rsquo; web stacks"
-                body={`${ukCms.modernDiyPct}% of detected UK church sites run on Squarespace, Wix, or Webflow — the highest rate in Europe. By contrast, most other primary markets sit at 7-15%. UK churches are clearly the early movers on no-code DIY tools.`}
+                body={`${ukCms.modernDiyPct}% of detected UK church sites run on Squarespace, Wix, or Webflow – the highest rate in Europe. By contrast, most other primary markets sit at 7-15%. UK churches are clearly the early movers on no-code DIY tools.`}
               />
             ) : null;
           })()}
@@ -399,7 +399,7 @@ export default async function EuropeanChurchTechReportPage() {
           <BigStat
             number={`${data.cmsBreakdown.churchPlatformCount}`}
             headline="Church-tech platforms have not crossed the Atlantic"
-            body={`Subsplash, Faithlife, Tithe.ly, Pushpay, and PlanningCenter — the household names of US church tech — are running on just ${data.cmsBreakdown.churchPlatformCount} European church websites combined. In a market of ${data.cmsBreakdown.totalDetected.toLocaleString("en-GB")} detected sites, that is a rounding error.`}
+            body={`Subsplash, Faithlife, Tithe.ly, Pushpay, and PlanningCenter – the household names of US church tech – are running on just ${data.cmsBreakdown.churchPlatformCount} European church websites combined. In a market of ${data.cmsBreakdown.totalDetected.toLocaleString("en-GB")} detected sites, that is a rounding error.`}
           />
 
           {(() => {
@@ -409,7 +409,7 @@ export default async function EuropeanChurchTechReportPage() {
               <BigStat
                 number={`${nl.pct}%`}
                 headline="The Netherlands tops Europe on church Spotify presence"
-                body={`${nl.pct}% of mapped Dutch churches have a verifiable Spotify presence — ahead of the UK at ${uk.pct}% and Sweden at ${data.spotifyRates.find((r) => r.country === "Sweden")?.pct ?? "—"}%. ${nl.active} of ${nl.total} Dutch churches we measured were active on Spotify.`}
+                body={`${nl.pct}% of mapped Dutch churches have a verifiable Spotify presence – ahead of the UK at ${uk.pct}% and Sweden at ${data.spotifyRates.find((r) => r.country === "Sweden")?.pct ?? "–"}%. ${nl.active} of ${nl.total} Dutch churches we measured were active on Spotify.`}
               />
             ) : null;
           })()}
@@ -425,7 +425,7 @@ export default async function EuropeanChurchTechReportPage() {
           <BigStat
             number={`${data.cmsBreakdown.modernFrameworkCount}`}
             headline="A few European churches went modern frontend"
-            body={`${data.cmsBreakdown.modernFrameworkCount} European church sites are running modern JS frameworks — Next.js, Nuxt, Gatsby, or Framer. Vanishingly small as a share, but striking that any churches at all are shipping React/Vue-based stacks.`}
+            body={`${data.cmsBreakdown.modernFrameworkCount} European church sites are running modern JS frameworks – Next.js, Nuxt, Gatsby, or Framer. Vanishingly small as a share, but striking that any churches at all are shipping React/Vue-based stacks.`}
           />
         </div>
       </section>
@@ -441,7 +441,7 @@ export default async function EuropeanChurchTechReportPage() {
           </h2>
           <p className="mt-3 text-base text-espresso/70">
             Share of detected church websites running Squarespace, Wix, or
-            Webflow — versus the WordPress baseline. A rough proxy for how
+            Webflow – versus the WordPress baseline. A rough proxy for how
             recently each country&apos;s churches refreshed their tooling.
           </p>
 
@@ -533,7 +533,7 @@ export default async function EuropeanChurchTechReportPage() {
       {italyStats ? (
         <section className="mt-16">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-mauve">
-            Case study — Italy
+            Case study – Italy
           </p>
           <h2 className="mt-2 font-serif text-3xl font-semibold text-espresso sm:text-4xl">
             Italy&apos;s missing 90%: a federation, not a desert
@@ -542,7 +542,7 @@ export default async function EuropeanChurchTechReportPage() {
           <div className="mt-6 overflow-hidden rounded-2xl">
             <Image
               src="/european-church-tech/italy-federation.png"
-              alt="Network diagram showing one central node connected to many smaller satellite nodes — visualising a federation model"
+              alt="Network diagram showing one central node connected to many smaller satellite nodes – visualising a federation model"
               width={1456}
               height={819}
               className="h-auto w-full"
@@ -557,7 +557,7 @@ export default async function EuropeanChurchTechReportPage() {
             Italian Pentecostalism is structured federally: most local
             Assemblee di Dio congregations share the national umbrella
             organisation&apos;s website, Facebook page, and YouTube
-            channel. The local church is present digitally — through
+            channel. The local church is present digitally – through
             its denomination, not its own URL.
           </p>
           <p className="mt-3 text-base leading-relaxed text-espresso/80">
@@ -567,7 +567,7 @@ export default async function EuropeanChurchTechReportPage() {
             local congregations genuinely do not maintain their own
             websites, Facebook pages, or YouTube channels at any
             measurable rate. The digital presence lives at the federation
-            layer, not the local one — and that is the structure, not a
+            layer, not the local one – and that is the structure, not a
             data gap.
           </p>
 
@@ -575,7 +575,7 @@ export default async function EuropeanChurchTechReportPage() {
             This pattern is invisible in surveys. A pastor asked
             &ldquo;does your church have a website?&rdquo; says no. Asked
             &ldquo;is your church online?&rdquo; says yes. The honest answer
-            requires observed data — and reframes the question from
+            requires observed data – and reframes the question from
             &ldquo;is Italy behind?&rdquo; to &ldquo;does Italian Christianity
             organise its digital presence at a different layer of the
             denomination?&rdquo; The data says it does.

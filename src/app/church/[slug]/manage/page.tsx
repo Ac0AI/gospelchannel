@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   return {
-    title: `Manage Profile — ${slug}`,
+    title: `Manage Profile – ${slug}`,
     robots: { index: false },
   };
 }
@@ -45,7 +45,7 @@ export default async function ManagePage({ params }: { params: Promise<{ slug: s
             ← Back to church page
           </a>
           <h1 className="mt-2 font-serif text-3xl font-bold">
-            Manage profile — {pageData.church.name}
+            Manage profile – {pageData.church.name}
           </h1>
         </div>
         {hasMultipleChurches ? (

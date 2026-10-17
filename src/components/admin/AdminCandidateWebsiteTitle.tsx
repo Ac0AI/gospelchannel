@@ -55,7 +55,7 @@ export function AdminCandidateWebsiteTitle({
 
   return (
     <dd className={className}>
-      {resolvedTitle || initialTitle || "—"}
+      {resolvedTitle || initialTitle || "–"}
     </dd>
   );
 }

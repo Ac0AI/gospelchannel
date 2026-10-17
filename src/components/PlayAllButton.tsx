@@ -53,7 +53,7 @@ export function PlayAllButton({ videos }: { videos: Video[] }) {
           <div className="mb-3 flex items-center justify-between">
             <div className="min-w-0 flex-1">
               <p className="text-xs font-semibold uppercase tracking-[0.15em] text-mauve">
-                Now Playing — {currentIndex + 1} of {videos.length}
+                Now Playing – {currentIndex + 1} of {videos.length}
               </p>
               <p className="mt-1 truncate font-serif text-sm font-semibold text-espresso">
                 {videos[currentIndex].title}

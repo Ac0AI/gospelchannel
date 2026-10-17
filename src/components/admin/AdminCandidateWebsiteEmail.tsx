@@ -55,7 +55,7 @@ export function AdminCandidateWebsiteEmail({
 
   return (
     <dd className={className}>
-      {resolvedEmail || initialEmail || "—"}
+      {resolvedEmail || initialEmail || "–"}
     </dd>
   );
 }

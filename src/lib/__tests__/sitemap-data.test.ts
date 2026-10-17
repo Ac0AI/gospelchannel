@@ -246,9 +246,9 @@ describe("sitemap-data", () => {
     const byUrl = new Map(entries.map((entry) => [entry.url, entry]));
 
     expect(byUrl.get("https://gospelchannel.com/worship-songs-2026")?.lastModified?.toISOString())
-      .toBe("2026-07-26T00:00:00.000Z");
+      .toBe("2026-10-17T00:00:00.000Z");
     expect(byUrl.get("https://gospelchannel.com/worship-by-denomination")?.lastModified?.toISOString())
-      .toBe("2026-07-26T00:00:00.000Z");
+      .toBe("2026-10-17T00:00:00.000Z");
     expect(byUrl.get("https://gospelchannel.com/church")?.lastModified?.toISOString())
       .toBe(new Date(CONTENT_UPDATED_AT).toISOString());
   });

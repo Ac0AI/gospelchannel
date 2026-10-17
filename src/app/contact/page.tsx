@@ -10,7 +10,7 @@ const PAGE_DESCRIPTION =
   "Contact GospelChannel for church page claims, corrections, information updates, partnerships, or press.";
 
 export const metadata: Metadata = {
-  title: PAGE_TITLE,
+  title: "Contact Us",
   description: PAGE_DESCRIPTION,
   alternates: { canonical: PAGE_URL },
   openGraph: {

@@ -176,7 +176,7 @@ export function ChurchContactButton({
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="mt-5 space-y-4">
-                {/* Honeypot — hidden from real users, attractive to bots */}
+                {/* Honeypot – hidden from real users, attractive to bots */}
                 <input
                   type="text"
                   name="website_url"

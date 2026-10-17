@@ -84,7 +84,7 @@ export async function SiteFooter() {
               {churchCountLabel} churches &middot; {countryCount} countries
             </p>
             <p className="mt-3 font-serif text-xs italic text-[rgba(253,248,244,0.45)]">
-              &ldquo;Praise the Lord. Praise God in his sanctuary.&rdquo; &mdash; Psalm 150:1
+              &ldquo;Praise the Lord. Praise God in his sanctuary.&rdquo; &ndash; Psalm 150:1
             </p>
           </div>
 

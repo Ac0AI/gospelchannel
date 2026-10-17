@@ -65,7 +65,7 @@ export default function PrivacyPage() {
           <h2 className="m-0 font-serif text-2xl font-semibold tracking-[-0.01em] text-espresso">Assistant app (ChatGPT, Claude, and other AI assistants)</h2>
           <p className="mt-3 text-base text-warm-brown">
             GospelChannel offers a read-only church-finder app over the Model Context Protocol at{" "}
-            <a href="https://gospelchannel.com/mcp" className="font-bold text-rose-gold transition-colors hover:text-rose-gold-deep">gospelchannel.com/mcp</a>,
+            <span className="font-bold text-espresso">gospelchannel.com/mcp</span>,
             usable inside AI assistants such as ChatGPT and Claude. When you use it:
           </p>
           <ul className="mt-3 list-disc space-y-2 pl-6 text-base text-warm-brown">

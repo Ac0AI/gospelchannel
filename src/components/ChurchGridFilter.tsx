@@ -117,7 +117,7 @@ export function ChurchGridFilter({ churches, totalCount }: ChurchGridFilterProps
               role="tab"
               aria-selected={activeTab === tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors sm:px-4 sm:py-2 sm:text-sm ${
+              className={`inline-flex min-h-11 shrink-0 items-center rounded-full px-3.5 text-xs font-semibold transition-colors sm:px-4 sm:text-sm ${
                 activeTab === tab.key
                   ? "bg-rose-gold text-white shadow-sm"
                   : "border border-blush text-warm-brown hover:border-rose-300 hover:bg-blush-light"

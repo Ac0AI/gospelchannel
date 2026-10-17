@@ -9,9 +9,9 @@ import { serializeJsonLd } from "@/lib/json-ld";
 
 export const revalidate = 86400;
 
-const META_TITLE = "How to Find the Right Church — A Practical Step-by-Step Guide";
+const META_TITLE = "How to Find a Church: A Step-by-Step Guide";
 const META_DESCRIPTION =
-  "A plain-spoken seven-step framework for finding a church that fits — your worship style, your denomination, your city, your season of life. No shortcuts, no jargon.";
+  "How to find and choose a church that fits: seven plain steps covering worship style, denomination, city and season of life. No shortcuts, no jargon.";
 const PAGE_URL = "https://gospelchannel.com/guides/how-to-find-the-right-church";
 
 const HOW_TO_STEPS = [
@@ -164,7 +164,7 @@ export default async function HowToFindTheRightChurchPage() {
         <p className="text-base leading-relaxed text-warm-brown sm:text-lg">
           Most people search for a church the same wrong way: they ask a friend, visit one
           church, find something off about it, and then drift for months without going anywhere
-          else. The drifting isn't a faith problem — it's a logistics problem. This guide
+          else. The drifting isn't a faith problem – it's a logistics problem. This guide
           rebuilds the search from the start, with a clear sequence and a small set of decisions
           at each step.
         </p>
@@ -219,7 +219,7 @@ export default async function HowToFindTheRightChurchPage() {
         </p>
         <p>
           This step takes ten minutes and saves weeks. Most people skip it because it feels
-          obvious — but the act of writing it down clarifies what you've been carrying around
+          obvious – but the act of writing it down clarifies what you've been carrying around
           implicitly. Couples should do it separately and compare; the overlap is where to
           start.
         </p>
@@ -236,14 +236,14 @@ export default async function HowToFindTheRightChurchPage() {
         <p>
           Of all the filters available, worship style is the one most people get wrong by
           ignoring it. Two free-church congregations on the same street can sound completely
-          different on a Sunday — one might be a Hillsong-style band-led set, the next a
+          different on a Sunday – one might be a Hillsong-style band-led set, the next a
           hymn-led service with an organ and a choir. Neither is wrong; they're just different
           rooms.
         </p>
         <p>
           Decide which sonic family fits your season: contemporary, gospel, charismatic,
           Hillsong-style, Bethel-influenced, Pentecostal, hymn-led, or blended. If you don't
-          know what those words mean, read the worship-styles guide first — it describes each
+          know what those words mean, read the worship-styles guide first – it describes each
           one plainly with examples.
         </p>
         <GuideTip label="Two styles is fine">
@@ -257,7 +257,7 @@ export default async function HowToFindTheRightChurchPage() {
 
       <GuideStep id={HOW_TO_STEPS[2].id} step={3} title={HOW_TO_STEPS[2].title}>
         <p>
-          Some readers know exactly what tradition they want — Baptist, Vineyard, Pentecostal,
+          Some readers know exactly what tradition they want – Baptist, Vineyard, Pentecostal,
           Anglican. If that's you, filter by denomination as your second criterion. If you
           don't have strong feelings, skip this step entirely. Denomination matters less for
           week-to-week fit than worship style does, and over-filtering eliminates churches that
@@ -299,8 +299,8 @@ export default async function HowToFindTheRightChurchPage() {
         </p>
         <GuideTip label="Look for specifics">
           <p>
-            Church pages with specifics — what to expect on a first visit, kids ministry details,
-            service times, what a normal Sunday looks like — usually belong to congregations
+            Church pages with specifics – what to expect on a first visit, kids ministry details,
+            service times, what a normal Sunday looks like – usually belong to congregations
             that put thought into welcoming visitors. That's a good sign, not a
             requirement.
           </p>
@@ -321,7 +321,7 @@ export default async function HowToFindTheRightChurchPage() {
           back, come back. If you don't, that's information; try another from your list.
         </p>
         <p>
-          If you've never been to a church before — or never to a church in this country —
+          If you've never been to a church before – or never to a church in this country –
           read the first-visit guide before your first Sunday. It walks you through what
           actually happens on a Sunday morning, from the parking lot to the dismissal, so
           nothing surprises you.
@@ -332,14 +332,14 @@ export default async function HowToFindTheRightChurchPage() {
         <p>
           After two or three visits, pick a congregation and commit to giving it eight Sundays
           before deciding. Eight is the rough number where a church stops being a place you
-          visit and starts being a place you know — you recognise faces, you understand the
+          visit and starts being a place you know – you recognise faces, you understand the
           rhythm, you can tell the difference between a one-off awkward Sunday and a real
           pattern.
         </p>
         <p>
           Commit before perfect certainty. Most people who land somewhere good landed there
           before they were sure. The certainty came from showing up. If after eight weeks the
-          church isn't right, you'll know — and you'll have learned more about what fits than
+          church isn't right, you'll know – and you'll have learned more about what fits than
           any quiz could surface.
         </p>
       </GuideStep>

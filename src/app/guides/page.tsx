@@ -323,7 +323,7 @@ export default async function GuidesPage() {
               ChurchFinder.com alternative
             </h3>
             <p className="mt-2.5 text-sm leading-[1.6] text-warm-brown">
-              How GospelChannel compares with the largest US directory — what we cover better, where they still win.
+              How GospelChannel compares with the largest US directory – what we cover better, where they still win.
             </p>
             <Link
               href="/alternatives/churchfinder"
@@ -337,7 +337,7 @@ export default async function GuidesPage() {
               Gospel Coalition alternative
             </h3>
             <p className="mt-2.5 text-sm leading-[1.6] text-warm-brown">
-              Why people use GospelChannel alongside The Gospel Coalition — broader than Reformed, music on every profile.
+              Why people use GospelChannel alongside The Gospel Coalition – broader than Reformed, music on every profile.
             </p>
             <Link
               href="/alternatives/gospel-coalition"

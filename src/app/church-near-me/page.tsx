@@ -87,6 +87,7 @@ function buildPageSchema(churchCountLabel: string, countryCount: number) {
         description: `Location-searchable church profile data covering ${churchCountLabel} churches across ${countryCount} countries.`,
         creator: { "@id": "https://gospelchannel.com/#organization" },
         isAccessibleForFree: true,
+        license: "https://gospelchannel.com/terms",
       },
     },
     buildBreadcrumbSchema([

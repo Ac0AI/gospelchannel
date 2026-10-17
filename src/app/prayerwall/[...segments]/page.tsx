@@ -75,9 +75,9 @@ export async function generateMetadata({
   if (!filter) return { title: "Not Found" };
 
   const titles: Record<string, string> = {
-    country: `Prayer Wall ${filter.displayName} — GospelChannel`,
-    city: `Prayer Wall ${filter.displayName} — GospelChannel`,
-    church: `Prayer Wall — ${filter.displayName} — GospelChannel`,
+    country: `Prayer Wall ${filter.displayName} – GospelChannel`,
+    city: `Prayer Wall ${filter.displayName} – GospelChannel`,
+    church: `Prayer Wall – ${filter.displayName} – GospelChannel`,
   };
 
   const descriptions: Record<string, string> = {
@@ -178,7 +178,7 @@ export default async function FilteredPrayerWallPage({
   };
 
   const emptyMessages: Record<string, string> = {
-    country: `No prayers from churches in ${filter.displayName} yet. Be the first — visit a church page to share your prayer.`,
+    country: `No prayers from churches in ${filter.displayName} yet. Be the first – visit a church page to share your prayer.`,
     city: `No prayers from ${filter.displayName} yet.`,
     church: `No prayers for ${filter.displayName} yet. Be the first!`,
   };
@@ -202,7 +202,7 @@ export default async function FilteredPrayerWallPage({
     {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
-      name: `Prayer Wall — ${filter.displayName}`,
+      name: `Prayer Wall – ${filter.displayName}`,
       description: subtitles[filter.type],
       url: `https://gospelchannel.com/prayerwall/${segments.join("/")}`,
       isPartOf: {

@@ -49,6 +49,16 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "Applebot-Extended", allow: "/", disallow: PRIVATE_DISALLOW },
       { userAgent: "meta-externalagent", allow: "/", disallow: PRIVATE_DISALLOW },
 
+      // SEO-tool crawlers: allowed (Cloudflare WAF lets verified Ahrefs/Semrush
+      // and DataForSEO through) so backlink and ranking tools see the real site,
+      // throttled so they cannot load the Worker the way they did in April.
+      {
+        userAgent: ["AhrefsBot", "SemrushBot", "DataForSeoBot"],
+        allow: "/",
+        disallow: INDEXING_DISALLOW,
+        crawlDelay: 10,
+      },
+
       // Bulk dataset scrapers with little citation value — stay blocked.
       { userAgent: "CCBot", disallow: "/" },
       { userAgent: "Bytespider", disallow: "/" },

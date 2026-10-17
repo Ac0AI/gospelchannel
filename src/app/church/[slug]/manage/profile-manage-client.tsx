@@ -162,7 +162,7 @@ export function ProfileManageClient({
     approved: '✓',
     pending: '⏳',
     rejected: '✗',
-    missing: '—',
+    missing: '–',
   };
 
   const statusColors: Record<string, string> = {

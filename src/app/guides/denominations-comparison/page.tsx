@@ -9,9 +9,9 @@ import { serializeJsonLd } from "@/lib/json-ld";
 
 export const revalidate = 86400;
 
-const META_TITLE = "Free-Church Denominations Compared — A Plain-Spoken Guide";
+const META_TITLE = "Christian Denomination Differences Explained";
 const META_DESCRIPTION =
-  "Baptist, Pentecostal, charismatic, non-denominational, Vineyard, Methodist, Anglican — how the major free-church and evangelical traditions differ and who tends to land where.";
+  "How Baptist, Pentecostal, charismatic, non-denominational, Vineyard, Methodist and Anglican churches differ in worship, beliefs and Sunday feel.";
 
 export const metadata: Metadata = {
   title: META_TITLE,
@@ -59,7 +59,7 @@ const DENOMINATIONS: Array<{
     name: "Pentecostal",
     oneLine: "Spirit-empowered worship, expectation of the gifts, deep tradition.",
     shape:
-      "Pentecostal denominations share an emphasis on the work of the Holy Spirit — baptism in the Spirit, the contemporary use of spiritual gifts including tongues and prophecy, and prayer for healing as a normal part of church life. Includes Assemblies of God, Foursquare, Church of God (Cleveland), Pingst (Sweden), and many international Pentecostal movements. Often intergenerational, with children visible in the main service.",
+      "Pentecostal denominations share an emphasis on the work of the Holy Spirit – baptism in the Spirit, the contemporary use of spiritual gifts including tongues and prophecy, and prayer for healing as a normal part of church life. Includes Assemblies of God, Foursquare, Church of God (Cleveland), Pingst (Sweden), and many international Pentecostal movements. Often intergenerational, with children visible in the main service.",
     worship:
       "Expressive and Spirit-led. Strong tradition of expectant prayer, altar response, and full-voiced worship. Ranges from traditional Pentecostal hymnody to contemporary charismatic worship.",
     fits:
@@ -71,11 +71,11 @@ const DENOMINATIONS: Array<{
     name: "Non-denominational",
     oneLine: "Each congregation defines itself; no formal denomination above the local church.",
     shape:
-      "Non-denominational churches don't formally belong to a denomination. Each congregation defines its own doctrinal statement, governance, and culture — though most sit broadly in the evangelical tradition. This gives enormous variation: a non-denominational church might be charismatic, Reformed, family-focused, or seeker-friendly. The denomination label tells you less than it would for, say, a Baptist congregation.",
+      "Non-denominational churches don't formally belong to a denomination. Each congregation defines its own doctrinal statement, governance, and culture – though most sit broadly in the evangelical tradition. This gives enormous variation: a non-denominational church might be charismatic, Reformed, family-focused, or seeker-friendly. The denomination label tells you less than it would for, say, a Baptist congregation.",
     worship:
       "Almost always contemporary, often charismatic or charismatic-adjacent. Many of the larger non-denominational churches in North America and beyond lean heavily on the contemporary worship songbook.",
     fits:
-      "If you want a tradition-flexible church or you don't have a denominational background to anchor on. Read individual profiles carefully — non-denominational covers a wider range of expressions than most other labels.",
+      "If you want a tradition-flexible church or you don't have a denominational background to anchor on. Read individual profiles carefully – non-denominational covers a wider range of expressions than most other labels.",
     href: "/church/denomination/non-denominational",
   },
   {
@@ -85,7 +85,7 @@ const DENOMINATIONS: Array<{
     shape:
       "Charismatic Christianity emerged from the mid-20th-century renewal movements and now spans many independent networks rather than a single central denomination. Key networks listed under this label include Vineyard, Hillsong Network, C3, Newfrontiers, Bethel, Every Nation, ICF, and Planetshakers. Shared distinctives: openness to the Holy Spirit's gifts (prophecy, healing, tongues), an emphasis on the Kingdom of God breaking into the present, and warm, low-jargon culture.",
     worship:
-      "Contemporary and often spontaneous — extended worship sets, intentional space for prayer and prophecy, full-band music drawn from the Vineyard, Hillsong, Bethel, and Elevation songbooks. Production values range from intimate (Vineyard) to high-energy concert-feel (Hillsong-network).",
+      "Contemporary and often spontaneous – extended worship sets, intentional space for prayer and prophecy, full-band music drawn from the Vineyard, Hillsong, Bethel, and Elevation songbooks. Production values range from intimate (Vineyard) to high-energy concert-feel (Hillsong-network).",
     fits:
       "If you want Spirit-led worship and expect prayer for healing and prophecy as normal parts of church life. The Vineyard end of the spectrum is particularly welcoming to people new to faith or processing church history; the Hillsong end skews bigger and more produced. Browse the network range to find which fits.",
     href: "/church/denomination/charismatic",
@@ -97,7 +97,7 @@ const DENOMINATIONS: Array<{
     shape:
       "Methodist churches trace back to the Wesley brothers in 18th-century England, with an emphasis on sanctification (growing in holiness), small-group accountability, and an active concern for social justice and personal piety. Includes United Methodist, Free Methodist, Wesleyan, Nazarene, and many international Methodist bodies. Methodist worship varies but often retains hymn-led elements alongside contemporary songs.",
     worship:
-      "Often blended — hymn-led with contemporary songs added. Free Methodist and Wesleyan congregations sometimes lean fully contemporary. Communion is typically more frequent than in Baptist or non-denominational settings.",
+      "Often blended – hymn-led with contemporary songs added. Free Methodist and Wesleyan congregations sometimes lean fully contemporary. Communion is typically more frequent than in Baptist or non-denominational settings.",
     fits:
       "If you want a tradition with strong roots in personal holiness and small-group discipleship, with a flexible approach to worship style. Often a comfortable fit for visitors who want sermons that take seriously how faith shapes daily life.",
     href: "/church/denomination/methodist",
@@ -107,11 +107,11 @@ const DENOMINATIONS: Array<{
     name: "Anglican / Episcopal",
     oneLine: "Liturgical structure, broad theological range, deep historical roots.",
     shape:
-      "Anglican churches (called Episcopal in the United States) share a liturgical tradition rooted in the Book of Common Prayer and the historic creeds. Within Anglicanism the theological range is wide — from evangelical and charismatic congregations to Anglo-Catholic and broad-church streams. Many evangelical Anglican churches sit comfortably in free-church-adjacent space, with strong contemporary worship and serious Scripture preaching.",
+      "Anglican churches (called Episcopal in the United States) share a liturgical tradition rooted in the Book of Common Prayer and the historic creeds. Within Anglicanism the theological range is wide – from evangelical and charismatic congregations to Anglo-Catholic and broad-church streams. Many evangelical Anglican churches sit comfortably in free-church-adjacent space, with strong contemporary worship and serious Scripture preaching.",
     worship:
       "Liturgical structure as a foundation, with worship style varying from traditional hymn-led with organ to fully contemporary with a band. Communion is typically weekly and central to the service.",
     fits:
-      "If you want the rhythm and depth of a liturgical service, or you've found unstructured services overwhelming. Evangelical Anglican congregations are also a common landing point for people processing church history — the tradition handles questions well.",
+      "If you want the rhythm and depth of a liturgical service, or you've found unstructured services overwhelming. Evangelical Anglican congregations are also a common landing point for people processing church history – the tradition handles questions well.",
     href: "/church/denomination/anglican",
   },
   {
@@ -131,9 +131,9 @@ const DENOMINATIONS: Array<{
     name: "Reformed",
     oneLine: "Calvinist theology, robust teaching, strong confessional clarity.",
     shape:
-      "Reformed churches share a Calvinist theological framework — God's sovereignty in salvation, the historic Reformation confessions (Westminster, Belgic, Heidelberg), and an emphasis on doctrinal precision. Includes Presbyterian, Reformed Baptist, Free Reformed, and many Reformed evangelical congregations. Sermon-centred services are typical, with serious expositional preaching as the heart of Sunday worship.",
+      "Reformed churches share a Calvinist theological framework – God's sovereignty in salvation, the historic Reformation confessions (Westminster, Belgic, Heidelberg), and an emphasis on doctrinal precision. Includes Presbyterian, Reformed Baptist, Free Reformed, and many Reformed evangelical congregations. Sermon-centred services are typical, with serious expositional preaching as the heart of Sunday worship.",
     worship:
-      "Often hymn-led or simple worship — psalms in traditional congregations, hymns in most, sometimes contemporary songs in newer Reformed plants. Music typically serves the Word rather than carrying the service.",
+      "Often hymn-led or simple worship – psalms in traditional congregations, hymns in most, sometimes contemporary songs in newer Reformed plants. Music typically serves the Word rather than carrying the service.",
     fits:
       "If you want clear, robust teaching with strong confessional clarity and a service centred on the sermon. Reformed congregations tend to be a comfortable fit for visitors who value theological precision and intellectual engagement with Scripture.",
     href: "/church/denomination/reformed",
@@ -220,7 +220,7 @@ export default async function DenominationsComparisonPage() {
         eyebrow="Free guide"
         title="Free-church denominations,"
         titleAccent="compared plainly"
-        intro="Eight traditions you'll meet across free-church and evangelical Christianity — what each emphasises, how Sunday usually feels, and who tends to land where. Every tradition described here is held warmly by the people who gather around it; none is presented as the right answer."
+        intro="Eight traditions you'll meet across free-church and evangelical Christianity – what each emphasises, how Sunday usually feels, and who tends to land where. Every tradition described here is held warmly by the people who gather around it; none is presented as the right answer."
       />
 
       <section className="mt-12 max-w-[760px]">
@@ -234,7 +234,7 @@ export default async function DenominationsComparisonPage() {
         <p className="mt-4 text-base leading-relaxed text-warm-brown sm:text-lg">
           What you'll see below: a short summary of each tradition's shape, the kind of worship
           you'll usually find, who tends to land where, and the link to every church we list in
-          that denomination. None of these traditions is ranked — they are different families,
+          that denomination. None of these traditions is ranked – they are different families,
           not better or worse versions of the same thing.
         </p>
         <p className="mt-4 text-base leading-relaxed text-warm-brown sm:text-lg">

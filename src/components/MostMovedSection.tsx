@@ -63,7 +63,7 @@ export function MostMovedSection({ initialVideos }: MostMovedSectionProps) {
       <SectionHeader
         eyebrow="Your Community Worships"
         title="Most Moved This Week"
-        subtitle="These are the songs that touched people the deepest. Real reactions from real worshippers — just like you."
+        subtitle="These are the songs that touched people the deepest. Real reactions from real worshippers – just like you."
       />
       <VideoGrid videos={videos} />
     </section>

@@ -17,9 +17,9 @@ const ZENODO_DOI = "10.5281/zenodo.21603991";
 const ZENODO_URL = `https://doi.org/${ZENODO_DOI}`;
 
 const META_TITLE =
-  "The Worship Songs Churches Actually Sing (2026): A Data Study";
+  "Most Popular Worship Songs in Churches (2026 Data)";
 const META_DESCRIPTION =
-  "We read the real Spotify worship playlists of 825 churches in 31 countries. What A Beautiful Name and Great Are You Lord lead the chart, and four worship houses reach most churches. An independent, playlist-based measurement of modern worship.";
+  "The most popular worship songs in the real Spotify playlists of 825 churches in 31 countries. What A Beautiful Name and Great Are You Lord lead the 2026 chart.";
 
 export const metadata: Metadata = {
   title: META_TITLE,
@@ -122,7 +122,7 @@ export default function WorshipSongs2026Page() {
 
   const articleSchema = buildArticleSchema({
     url: PAGE_URL,
-    headline: "The Worship Songs Churches Actually Sing (2026)",
+    headline: "The Most Popular Worship Songs Churches Actually Sing (2026)",
     description: META_DESCRIPTION,
     datePublished: EDITORIAL_CONTENT_DATES["/worship-songs-2026"].published,
     dateModified: EDITORIAL_CONTENT_DATES["/worship-songs-2026"].modified,
@@ -218,7 +218,7 @@ export default function WorshipSongs2026Page() {
       <header>
         <p className="gc-eyebrow">Data study · 2026</p>
         <h1 className="mt-3 font-serif text-4xl font-semibold leading-[1.08] tracking-[-0.01em] text-espresso sm:text-6xl">
-          The worship songs churches actually sing
+          The most popular worship songs churches actually sing
         </h1>
         <p className="mt-5 max-w-[720px] text-lg leading-relaxed text-warm-brown">
           We read the real Spotify worship playlists of{" "}

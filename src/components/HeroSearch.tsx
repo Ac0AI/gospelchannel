@@ -86,7 +86,7 @@ export function HeroSearch({ churches = [], surpriseSlugs = [], variant = "hero"
         <button
           type="button"
           onClick={handleSurprise}
-          className="mt-3 w-full text-center text-sm font-medium tracking-wide text-white/80 drop-shadow-sm transition-colors hover:text-white"
+          className="w-full py-3 text-center text-sm font-medium tracking-wide text-white/80 drop-shadow-sm transition-colors hover:text-white"
         >
           or surprise me →
         </button>

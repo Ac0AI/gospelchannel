@@ -40,7 +40,7 @@ const FAITH_PROOF_LINKS = [
 ];
 
 export const metadata: Metadata = {
-  title: "Common Questions About Faith - Honest Answers",
+  title: "Common Faith Questions, Honest Answers",
   description: META_DESCRIPTION,
   alternates: { canonical: PAGE_URL },
   openGraph: {

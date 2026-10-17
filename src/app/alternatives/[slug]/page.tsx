@@ -62,7 +62,7 @@ export default async function AlternativePage({
   const schema = [
     buildArticleSchema({
       url,
-      headline: `${data.competitor_name} alternative — GospelChannel`,
+      headline: `${data.competitor_name} alternative – GospelChannel`,
       description: data.meta_description,
       about: [
         "Church finder comparison",

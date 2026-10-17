@@ -218,9 +218,9 @@ export default async function BestWorshipChurchesPage() {
                               {church.name}
                             </Link>
                           </td>
-                          <td className="px-4 py-3 text-espresso/75">{place ?? "—"}</td>
-                          <td className="px-4 py-3 text-espresso/75">{church.denomination ?? "—"}</td>
-                          <td className="px-4 py-3 text-espresso/75">{style ?? "—"}</td>
+                          <td className="px-4 py-3 text-espresso/75">{place ?? "–"}</td>
+                          <td className="px-4 py-3 text-espresso/75">{church.denomination ?? "–"}</td>
+                          <td className="px-4 py-3 text-espresso/75">{style ?? "–"}</td>
                           <td className="px-4 py-3 text-espresso/75">
                             {details.length > 0 ? details.slice(0, 3).join(" · ") : "Church details available"}
                           </td>
@@ -235,7 +235,7 @@ export default async function BestWorshipChurchesPage() {
                                 Visit
                               </a>
                             ) : (
-                              <span className="text-muted-warm">—</span>
+                              <span className="text-muted-warm">–</span>
                             )}
                           </td>
                         </tr>

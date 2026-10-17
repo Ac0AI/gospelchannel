@@ -49,7 +49,7 @@ const WHY = [
   {
     num: "03",
     title: "Stay out of the way after.",
-    body: "We don't email your visitors. We don't sell their data. We don't advertise. The page is a doorway — what happens inside is yours.",
+    body: "We don't email your visitors. We don't sell their data. We don't advertise. The page is a doorway – what happens inside is yours.",
   },
 ];
 

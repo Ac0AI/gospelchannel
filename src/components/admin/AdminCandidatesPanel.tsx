@@ -423,11 +423,11 @@ export function AdminCandidatesPanel({ candidates }: Props) {
                           </div>
                           <div>
                             <dt className="font-semibold text-espresso">Location</dt>
-                            <dd>{candidate.location || "—"}</dd>
+                            <dd>{candidate.location || "–"}</dd>
                           </div>
                           <div>
                             <dt className="font-semibold text-espresso">Country</dt>
-                            <dd>{candidate.country || "—"}</dd>
+                            <dd>{candidate.country || "–"}</dd>
                           </div>
                           <div>
                             <dt className="font-semibold text-espresso">Email</dt>

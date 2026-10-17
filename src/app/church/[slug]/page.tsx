@@ -925,7 +925,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
       {/* Campus note */}
       {isCampus && parentChurchName && (
         <div className="border-b border-rose-gold/10 bg-amber-50/50 px-5 py-3 text-center text-sm text-warm-brown sm:px-12">
-          Music from <span className="font-semibold text-espresso">{parentChurchName}</span> &mdash; shared across all {network?.name} campuses.
+          Music from <span className="font-semibold text-espresso">{parentChurchName}</span> &ndash; shared across all {network?.name} campuses.
         </div>
       )}
 
@@ -1660,7 +1660,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
           {/*
             Deploy 1 (2026-05-20): reads the precomputed related_church_slugs
             column (city → country → style/denom backfill ladder, reciprocity
-            guarantee). No coord gating — the previous lat/long requirement
+            guarantee). No coord gating – the previous lat/long requirement
             was the root cause of mass orphan pages at 66k scale.
           */}
           <NearbyChurchesSection churchSlug={church.slug} />
@@ -1726,7 +1726,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
             </p>
 
             <div className="mt-14 flex flex-wrap items-center justify-center gap-3.5">
-              {/* Primary — keep the visitor on-site (scroll to our aggregated
+              {/* Primary – keep the visitor on-site (scroll to our aggregated
                   planner) when we have one, else the strongest direct action. */}
               {visitPrimary === "plan" && (
                 <TrackedChurchActionLink
@@ -1789,7 +1789,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                 </TrackedChurchActionLink>
               )}
 
-              {/* Secondary — our mediated contact-through-us, now a first-class
+              {/* Secondary – our mediated contact-through-us, now a first-class
                   action (not just a no-website fallback), plus livestream. */}
               {hasValidEmail && visitPrimary !== "message" && (
                 <ChurchContactButton

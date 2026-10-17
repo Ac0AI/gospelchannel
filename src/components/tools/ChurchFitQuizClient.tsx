@@ -228,7 +228,7 @@ export function ChurchFitQuizClient({ lanes }: { lanes: DiscoveryLane[] }) {
               Three churches <em className="gc-italic">for you</em>.
             </h2>
             <p className="mt-4 max-w-[580px] text-base leading-relaxed text-warm-brown sm:text-lg">
-              Based on your answers. Visit one this Sunday &mdash; or save them and decide later.
+              Based on your answers. Visit one this Sunday &ndash; or save them and decide later.
             </p>
 
             <div className="mt-10 grid gap-4 xl:grid-cols-3">

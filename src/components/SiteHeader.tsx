@@ -65,7 +65,7 @@ export function SiteHeader() {
         <Link
           href="/"
           prefetch={false}
-          aria-label="GospelChannel — The Church Guide"
+          aria-label="GospelChannel – The Church Guide"
           className="flex min-h-11 shrink-0 flex-col justify-center text-espresso no-underline"
         >
           <span className="font-serif text-2xl font-semibold leading-none tracking-[-0.01em]">

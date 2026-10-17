@@ -7,7 +7,7 @@ import type {
 
 function CellGlyph({ state }: { state: CellState }) {
   if (state === "yes") return <span className="text-rose-gold">✓</span>;
-  if (state === "no") return <span className="text-muted-warm">—</span>;
+  if (state === "no") return <span className="text-muted-warm">–</span>;
   if (state === "partial") return <span className="text-warm-brown">◐</span>;
   return null;
 }

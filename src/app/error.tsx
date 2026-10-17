@@ -36,7 +36,7 @@ export default function GlobalError({
           </Link>
         </div>
         <p className="mx-auto mt-10 max-w-[440px] font-serif text-base italic leading-relaxed text-muted-warm sm:text-lg">
-          &ldquo;The Lord is close to the brokenhearted.&rdquo; &mdash; Psalm 34:18
+          &ldquo;The Lord is close to the brokenhearted.&rdquo; &ndash; Psalm 34:18
         </p>
       </div>
     </section>

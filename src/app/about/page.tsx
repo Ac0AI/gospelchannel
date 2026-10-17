@@ -13,8 +13,8 @@ const PAGE_URL = `${SITE_URL}/about`;
 export async function generateMetadata(): Promise<Metadata> {
   const { churchCountLabel } = await getChurchStatsAsync();
   return {
-    title: "About GospelChannel Church Guide",
-    description: `GospelChannel is a church-discovery website and public church directory for comparing worship, tradition, location, language, and service times across ${churchCountLabel} churches.`,
+    title: "About the Church Guide",
+    description: `GospelChannel is a church-discovery website and directory for comparing worship, tradition, location, language and service times across ${churchCountLabel} churches.`,
     alternates: { canonical: PAGE_URL },
   };
 }

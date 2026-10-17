@@ -15,7 +15,7 @@ describe("agent discovery", () => {
     expect(card.description).toContain("church-discovery website and public church directory");
     expect(card.description).toContain("not a television or radio broadcaster");
     expect(llms).toContain("> The Church Guide");
-    expect(full).toContain("# GospelChannel — The Church Guide");
+    expect(full).toContain("# GospelChannel – The Church Guide");
     for (const text of [llms, full, markdown]) {
       expect(text).toContain("GospelChannel is a church-discovery website and public church directory.");
       expect(text).toContain("It is not a television or radio broadcaster.");

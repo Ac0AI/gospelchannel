@@ -365,7 +365,7 @@ function MockEnrichedProfile({
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-[10px] font-semibold uppercase tracking-wider text-white/60">Worship playlist</p>
-            <p className="truncate text-xs font-semibold text-white">{church.name} — Sunday Worship</p>
+            <p className="truncate text-xs font-semibold text-white">{church.name} – Sunday Worship</p>
             <p className="mt-0.5 text-[10px] text-white/50">12 songs · Spotify + Apple Music</p>
           </div>
           <button className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/10 text-white" aria-label="Play">

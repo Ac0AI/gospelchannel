@@ -253,7 +253,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 3. Featured churches — magazine grid */}
+      {/* 3. Featured churches – magazine grid */}
       <section className="mx-auto max-w-[1280px] px-5 pt-20 sm:px-12">
         <div className="mb-9 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -291,7 +291,7 @@ export default async function HomePage() {
         />
       </section>
 
-      {/* 4. Browse by tradition — magazine cards */}
+      {/* 4. Browse by tradition – magazine cards */}
       <section className="mx-auto max-w-[1280px] px-5 pt-20 sm:px-12">
         <div className="mb-9 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -380,7 +380,7 @@ export default async function HomePage() {
             <PrayerFeed initialPrayers={recentPrayers} churchNames={churchNames} limit={5} showChurch />
           ) : (
             <div className="rounded-[18px] border border-rose-gold/[0.14] bg-white p-6 text-center">
-              <p className="text-sm text-warm-brown">No prayers yet &mdash; be the first to share one.</p>
+              <p className="text-sm text-warm-brown">No prayers yet &ndash; be the first to share one.</p>
               <Link
                 href="/prayerwall"
                 prefetch={false}
@@ -416,7 +416,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Browse-by hub links — feed the spine */}
+      {/* Browse-by hub links – feed the spine */}
       <section className="mx-auto mt-16 max-w-[1280px] px-5 sm:px-12">
         <p className="gc-eyebrow">More ways to browse</p>
         <div className="mt-4 flex flex-wrap gap-2">

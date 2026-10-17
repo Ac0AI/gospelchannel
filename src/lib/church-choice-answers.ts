@@ -3,7 +3,7 @@ import { PRAYER_FEATURE_ENABLED } from "@/lib/features";
 
 export const CHURCH_CHOICE_ANSWER_PAGE_PATH = "/guides/church-choice-answers";
 export const CHURCH_CHOICE_ANSWER_PAGE_URL = "https://gospelchannel.com/guides/church-choice-answers";
-export const CHURCH_CHOICE_ANSWER_PAGE_TITLE = "Church Choice Guide - What Church Should I Visit?";
+export const CHURCH_CHOICE_ANSWER_PAGE_TITLE = "What Church Should I Visit? Direct Answers";
 export const CHURCH_CHOICE_ANSWER_PAGE_DESCRIPTION =
   "A church choice guide for deciding what church to visit, with worship style, denomination, size, service times, and church details.";
 

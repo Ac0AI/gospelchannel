@@ -195,8 +195,8 @@ export async function generateMetadata({ searchParams }: ChurchIndexPageProps): 
   }
 
   return {
-    title: "Find a Church",
-    description: `Compare ${churchCountLabel} churches in ${countryCount} countries by worship style, tradition, city, language, and service times.`,
+    title: "Find a Church by Worship Style and Tradition",
+    description: `Compare ${churchCountLabel} churches in ${countryCount} countries by worship style, tradition, city, language and service times, and hear the music before you visit.`,
     alternates: { canonical: "https://gospelchannel.com/church" },
     openGraph: {
       images: [{ url: "https://gospelchannel.com/hero-worship.jpg" }],

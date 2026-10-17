@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Admin — Gospel Channel",
+  title: "Admin – Gospel Channel",
   robots: { index: false, follow: false },
 };
 

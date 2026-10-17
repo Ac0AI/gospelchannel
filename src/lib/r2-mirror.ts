@@ -117,7 +117,7 @@ export async function mirrorImageToR2(
   sourceUrl: string,
   opts: { maxBytes?: number; timeoutMs?: number } = {},
 ): Promise<string | null> {
-  const maxBytes = opts.maxBytes ?? 8 * 1024 * 1024; // 8 MB cap — these are church hero/logo, not video.
+  const maxBytes = opts.maxBytes ?? 8 * 1024 * 1024; // 8 MB cap – these are church hero/logo, not video.
   const timeoutMs = opts.timeoutMs ?? 12_000;
   if (!sourceUrl.startsWith("http")) return null;
   if (isAlreadyMirrored(sourceUrl)) return sourceUrl;

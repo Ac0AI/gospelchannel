@@ -14,7 +14,7 @@ import { serializeJsonLd } from "@/lib/json-ld";
 export const revalidate = 3600;
 
 const PAGE_URL = "https://gospelchannel.com/guides/church-fit-quiz";
-const PAGE_TITLE = "Church Fit Quiz";
+const PAGE_TITLE = "Church Fit Quiz: Which Church Suits You?";
 const META_DESCRIPTION =
   "Answer seven fast questions about worship style, tradition, and Sunday priorities to find where you'll fit before your first visit.";
 

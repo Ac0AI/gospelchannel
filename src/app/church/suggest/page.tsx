@@ -101,7 +101,7 @@ export default function SuggestChurchPage() {
               <div className="rounded-[18px] border border-rose-gold/[0.14] bg-white p-7 shadow-[var(--shadow-sm)]">
                 <p className="gc-eyebrow">What happens next?</p>
                 <ol className="mt-3.5 list-decimal space-y-1.5 pl-5 text-sm leading-relaxed text-warm-brown">
-                  <li>We review for spam &mdash; usually within 24h</li>
+                  <li>We review for spam &ndash; usually within 24h</li>
                   <li>The page goes live as a community-listed profile</li>
                   <li>You (or someone at the church) can claim it to confirm the details</li>
                 </ol>
@@ -159,7 +159,7 @@ export default function SuggestChurchPage() {
         </div>
 
         <p className="mt-16 text-center font-serif text-sm italic text-muted-warm">
-          &ldquo;For where two or three gather in my name, there am I with them.&rdquo; &mdash; Matthew 18:20
+          &ldquo;For where two or three gather in my name, there am I with them.&rdquo; &ndash; Matthew 18:20
         </p>
       </section>
     </>

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ChurchCollectionPage } from "@/components/ChurchCollectionPage";
 import { getChurchFacetPageData } from "@/lib/church";
+import { getDenominationEditorial } from "@/lib/denomination-editorial";
 
 export const revalidate = 3600;
 
@@ -30,7 +31,7 @@ export async function generateMetadata({ params, searchParams }: DenominationPag
   if (!data) return { title: "Not Found" };
 
   const basePath = `https://gospelchannel.com/church/denomination/${slug}`;
-  const title = `${data.label} Churches: Worship, Service Times & Locations`;
+  const title = `${data.label} Churches: Worship & Service Times`;
   const description = `A list of ${data.totalCount.toLocaleString("en-US")} ${data.label.toLowerCase()} churches based on published worship style, service times, location, language, and visitor details.`;
 
   return {
@@ -79,6 +80,7 @@ export default async function DenominationPage({ params, searchParams }: Denomin
         { href: "/church", label: "Churches" },
         { href: basePath, label },
       ]}
+      editorial={currentPage === 1 ? getDenominationEditorial(slug, totalCount) ?? undefined : undefined}
       relatedSections={[
         { title: `${label} by Country`, links: relatedLinks.country },
         { title: `${label} by City`, links: relatedLinks.city },

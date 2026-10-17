@@ -13,9 +13,9 @@ const PLAYLIST_CHURCH = "https://playlist.church";
 const SIBLING = "https://gospelchannel.com/worship-songs-2026";
 
 const META_TITLE =
-  "Do Different Denominations Sing Different Worship Songs? (2026 Data)";
+  "Worship Songs by Denomination (2026 Data)";
 const META_DESCRIPTION =
-  "We joined the real Spotify playlists of 258 churches to their denomination. Everyone sings the megachurch anthems, but modern-hymn adoption splits hard by tradition: Baptist 60%, Pentecostal 11%.";
+  "Do denominations sing different songs? 258 church playlists say yes: everyone sings the big anthems, but modern hymns split Baptist 60%, Pentecostal 11%.";
 
 export const metadata: Metadata = {
   title: META_TITLE,

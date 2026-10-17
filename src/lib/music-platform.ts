@@ -34,7 +34,7 @@ function cleanupTitle(value: string): string {
 }
 
 function splitArtistAndSong(value: string): { artist?: string; song: string } {
-  const match = value.match(/^(.{2,80})\s(?:-|[\u2013\u2014])\s(.{2,120})$/);
+  const match = value.match(/^(.{2,80})\s(?:-|[\u2013\u2013])\s(.{2,120})$/);
   if (!match) {
     return { song: value };
   }
