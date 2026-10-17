@@ -2,21 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { HeroSearch } from "@/components/HeroSearch";
-
-const HERO_SLIDES = [
-  {
-    avif: "/hero/worship-arena.avif",
-    webp: "/hero/worship-arena.webp",
-  },
-  {
-    avif: "/hero/intimate-worship.avif",
-    webp: "/hero/intimate-worship.webp",
-  },
-  {
-    avif: "/hero/outdoor-gathering.avif",
-    webp: "/hero/outdoor-gathering.webp",
-  },
-];
+import { HERO_SLIDES } from "@/components/home-hero-slides";
 
 type Props = {
   surpriseSlugs: string[];

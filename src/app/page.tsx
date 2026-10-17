@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { preload } from "react-dom";
 import { ChurchGridFilter } from "@/components/ChurchGridFilter";
 import { HomeHero } from "@/components/HomeHero";
+import { HERO_SLIDES } from "@/components/home-hero-slides";
 import { NearbyChurchFinder } from "@/components/NearbyChurchFinder";
 import { getPrayers } from "@/lib/prayer";
 import { PrayerFeed } from "@/components/PrayerFeed";
@@ -152,6 +154,10 @@ function buildHomeSchema(churchCountLabel: string, countryCount: number, questio
 }
 
 export default async function HomePage() {
+  // The first hero slide is the LCP element; fetch it alongside the CSS
+  // instead of after it. type lets non-AVIF browsers skip to the webp source.
+  preload(HERO_SLIDES[0].avif, { as: "image", type: "image/avif", fetchPriority: "high" });
+
   const [showcaseChurches, stats, recentPrayers, claimedSlugs] = await Promise.all([
     getHomepageShowcaseChurches(),
     getChurchStatsAsync(),
