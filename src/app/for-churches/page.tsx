@@ -182,6 +182,13 @@ export default async function ForChurchesPage() {
               </Link>
             </div>
             <p className="mt-4 text-xs text-muted-warm">Free forever. Claiming takes about two minutes.</p>
+            <p className="mt-2 text-xs text-muted-warm">
+              Need your church website looked after too?{" "}
+              <Link href="/websites" className="underline underline-offset-2 hover:text-espresso">
+                See church websites, done for you
+              </Link>
+              .
+            </p>
           </div>
 
           <div className="relative">

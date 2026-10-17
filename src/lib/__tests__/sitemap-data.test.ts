@@ -164,7 +164,7 @@ describe("sitemap-data", () => {
   it("computes the total sitemap entry count from section counts", async () => {
     getChurchDirectorySeedCountAsyncMock.mockResolvedValue(3);
 
-    await expect(getSitemapEntryCount()).resolves.toBe(53);
+    await expect(getSitemapEntryCount()).resolves.toBe(54);
   });
 
   it("drops thin city hubs (<MIN_INDEXABLE_CITY_CHURCHES) from the sitemap", async () => {
@@ -231,9 +231,10 @@ describe("sitemap-data", () => {
     expect(entries[40]?.url).toBe("https://gospelchannel.com/church-near-me");
     expect(entries[41]?.url).toBe("https://gospelchannel.com/worship-songs-2026");
     expect(entries[42]?.url).toBe("https://gospelchannel.com/worship-by-denomination");
-    expect(entries[43]?.url).toBe("https://gospelchannel.com/church/church-0");
-    expect(entries.at(-1)?.url).toBe("https://gospelchannel.com/church/church-2456");
-    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(0, 2_457);
+    expect(entries[43]?.url).toBe("https://gospelchannel.com/websites");
+    expect(entries[44]?.url).toBe("https://gospelchannel.com/church/church-0");
+    expect(entries.at(-1)?.url).toBe("https://gospelchannel.com/church/church-2455");
+    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(0, 2_456);
     expect(getNetworksSliceMock).not.toHaveBeenCalled();
     expect(getPublishedCampusesSliceMock).not.toHaveBeenCalled();
   });
@@ -261,6 +262,7 @@ describe("sitemap-data", () => {
     const entries = await buildSitemapEntriesForChunk(2);
 
     expect(entries.map((entry) => entry.url)).toEqual([
+      "https://gospelchannel.com/church/church-4956",
       "https://gospelchannel.com/church/church-4957",
       "https://gospelchannel.com/church/church-4958",
       "https://gospelchannel.com/church/church-4959",
@@ -314,7 +316,7 @@ describe("sitemap-data", () => {
       "https://gospelchannel.com/network/network-1",
       "https://gospelchannel.com/church/campus-1",
     ]);
-    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(4_957, 45);
+    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(4_956, 46);
     expect(getNetworksSliceMock).toHaveBeenCalledWith(0, 1);
     expect(getPublishedCampusesSliceMock).toHaveBeenCalledWith(0, 1);
   });

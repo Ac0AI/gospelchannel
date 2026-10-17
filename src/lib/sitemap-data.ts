@@ -77,6 +77,7 @@ const STATIC_ROUTE_PATHS = [
   "/church-near-me",
   "/worship-songs-2026",
   "/worship-by-denomination",
+  "/websites",
 ] as const;
 
 export type SitemapEntry = {

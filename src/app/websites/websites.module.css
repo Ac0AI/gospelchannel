@@ -1,0 +1,117 @@
+/* GospelChannel Websites: white surfaces, navy ink, one bold grotesk. Kept
+   apart from the warm directory palette on purpose: this page sells a
+   product that looks like the church sites it makes. */
+
+.page {
+  --navy: #23395b;
+  --navy-deep: #152942;
+  --ink: #182333;
+  --muted: #4b5665;
+  --line: #e1e6ed;
+  --soft: #f4f6f8;
+  background: #fff;
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page h1, .page h2, .page h3, .page p { margin: 0; }
+.page h1, .page h2, .page h3 { font-family: inherit; color: var(--ink); line-height: 1.08; letter-spacing: -0.035em; font-weight: 700; }
+.page h1 { font-size: clamp(42px, 6.4vw, 72px); }
+.page h2 { font-size: clamp(30px, 3.6vw, 42px); }
+.page h3 { font-size: 22px; letter-spacing: -0.02em; }
+.page p { color: var(--muted); max-width: 62ch; }
+.page a { color: var(--navy); text-underline-offset: 4px; }
+.page img { display: block; max-width: 100%; height: auto; }
+
+.wrap { width: min(100%, 1120px); margin-inline: auto; padding-inline: 28px; }
+
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+.eyebrow { font-size: 14px; font-weight: 700; letter-spacing: 0.02em; color: var(--navy) !important; margin-bottom: 18px !important; }
+
+.button {
+  display: inline-flex; min-height: 48px; padding: 11px 22px; align-items: center; justify-content: center;
+  background: var(--navy); color: #fff !important; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: 700; text-align: center;
+}
+.button:hover { background: var(--navy-deep); }
+.button:focus-visible, .page a:focus-visible, .page summary:focus-visible { outline: 3px solid #945700; outline-offset: 4px; }
+
+/* hero */
+.hero { display: grid; gap: 40px; align-items: center; padding-block: 56px 72px; }
+.intro { font-size: 21px; margin-top: 24px !important; }
+.actions { display: flex; align-items: center; flex-wrap: wrap; gap: 20px 24px; margin-top: 30px; }
+.price { color: var(--muted); }
+.price strong { font-size: 28px; color: var(--ink); letter-spacing: -0.02em; }
+.quiet { font-size: 15px; margin-top: 14px !important; }
+.heroImage { width: 100%; border-radius: 14px; aspect-ratio: 16 / 9; object-fit: cover; }
+
+/* comparison */
+.compare { background: var(--soft); padding-block: 64px; }
+.lead { font-size: 19px; margin-top: 18px !important; }
+.tableWrap { margin-top: 32px; overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; font-size: 16px; }
+.table th, .table td { padding: 14px 18px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+.table thead th { font-size: 14px; color: var(--muted); font-weight: 700; }
+.table thead th:last-child, .table td:last-child { color: var(--navy); font-weight: 700; }
+.table tbody th { font-weight: 700; color: var(--ink); }
+.table td { color: var(--muted); }
+.total th, .total td { border-bottom: 0; background: #eef2f7; }
+.note { font-size: 13px !important; margin-top: 14px !important; }
+
+/* features */
+.features { padding-block: 48px 64px; }
+.feature { display: grid; gap: 20px; align-items: center; padding-block: 28px; border-top: 1px solid var(--line); }
+.feature:first-child { border-top: 0; }
+.feature img { width: 100%; max-width: 280px; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 12px; }
+.feature h2 { font-size: clamp(26px, 3vw, 34px); }
+.feature p { margin-top: 12px !important; }
+
+/* steps */
+.steps { background: var(--soft); padding-block: 64px; }
+.steps ol { display: grid; gap: 28px; padding: 0; margin: 32px 0 0; list-style: none; counter-reset: step; }
+.steps li { counter-increment: step; }
+.steps li::before { content: counter(step); display: inline-flex; width: 36px; height: 36px; border-radius: 50%; align-items: center; justify-content: center; background: var(--navy); color: #fff; font-weight: 700; font-size: 16px; }
+.steps h3 { margin-top: 14px; }
+.steps li p { margin-top: 10px !important; font-size: 16px; }
+
+/* pricing and questions */
+.pricing { display: grid; gap: 40px; padding-block: 72px; }
+.included { list-style: none; padding: 0; margin: 24px 0 0; display: grid; gap: 10px; }
+.included li { position: relative; padding-left: 28px; color: var(--ink); font-size: 17px; }
+.included li::before { content: ""; position: absolute; left: 2px; top: 9px; width: 12px; height: 7px; border-left: 2.5px solid var(--navy); border-bottom: 2.5px solid var(--navy); transform: rotate(-45deg); }
+.devices { margin-top: 32px; border-radius: 12px; width: 100%; }
+.faq details { border-top: 1px solid var(--line); }
+.faq details:last-child { border-bottom: 1px solid var(--line); }
+.faq summary { padding-block: 16px; min-height: 56px; font-weight: 700; cursor: pointer; color: var(--ink); }
+.faq p { padding-bottom: 18px; font-size: 16px; }
+
+/* request */
+.request { display: flex; flex-direction: column; gap: 24px; padding-block: 44px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.request h2 { font-size: clamp(28px, 3vw, 34px); }
+.request p { margin-top: 12px !important; font-size: 17px; }
+.requestActions { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; flex-shrink: 0; }
+.mail { font-size: 15px; min-height: 44px; display: inline-flex; align-items: center; }
+.listing { font-size: 15px; color: var(--muted); padding-block: 28px 0; }
+
+@media (min-width: 760px) {
+  .feature { grid-template-columns: 280px minmax(0, 1fr); gap: 44px; }
+  .steps ol { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px; }
+  .request { flex-direction: row; align-items: center; justify-content: space-between; }
+  .requestActions { align-items: flex-end; }
+}
+
+@media (min-width: 960px) {
+  .hero { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 56px; padding-block: 80px 88px; }
+  .pricing { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 64px; }
+}
+
+@media (max-width: 700px) {
+  .wrap { padding-inline: 20px; }
+  .hero { padding-block: 36px 52px; }
+  .intro { font-size: 19px; }
+  .compare, .steps { padding-block: 48px; }
+  .table th, .table td { padding: 12px; font-size: 15px; }
+  .pricing { padding-block: 52px; }
+}

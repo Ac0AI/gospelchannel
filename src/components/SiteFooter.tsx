@@ -55,6 +55,7 @@ export const SITE_FOOTER_COLUMNS = [
       { label: "About", href: "/about" },
       { label: "Add your church", href: "/church/suggest" },
       { label: "For church teams", href: "/for-churches" },
+      { label: "Church websites", href: "/websites" },
       { label: "Contact", href: "/contact" },
       { label: "Privacy", href: "/privacy" },
       { label: "Terms", href: "/terms" },
