@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getWorshipByDenominationReport } from "@/lib/worship-by-denomination-report";
+import { EDITORIAL_CONTENT_DATES } from "@/lib/editorial-dates";
 import { buildArticleSchema, buildBreadcrumbSchema } from "@/lib/seo-schema";
 import { serializeJsonLd } from "@/lib/json-ld";
 
@@ -141,8 +142,8 @@ export default function WorshipByDenominationPage() {
     url: PAGE_URL,
     headline: "Do Different Denominations Sing Different Worship Songs?",
     description: META_DESCRIPTION,
-    datePublished: "2026-07-26",
-    dateModified: "2026-07-26",
+    datePublished: EDITORIAL_CONTENT_DATES["/worship-by-denomination"].published,
+    dateModified: EDITORIAL_CONTENT_DATES["/worship-by-denomination"].modified,
     about: [
       "Worship music",
       "Christian denominations",

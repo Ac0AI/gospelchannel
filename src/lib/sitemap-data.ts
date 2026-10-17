@@ -22,6 +22,7 @@ import { getChurchSlugsWithPrayers } from "@/lib/prayer";
 import { buildScopedPrayerIndex } from "@/lib/prayer-scoped-index";
 import { getCompareGuideSlugs } from "@/lib/tooling";
 import { CONTENT_UPDATED_AT } from "@/lib/utils";
+import { getEditorialContentDate } from "@/lib/editorial-dates";
 import { PRAYER_FEATURE_ENABLED } from "@/lib/features";
 
 export const BASE_URL = "https://gospelchannel.com";
@@ -74,6 +75,8 @@ const STATIC_ROUTE_PATHS = [
   "/network",
   "/church/english-speaking-churches-in-zurich",
   "/church-near-me",
+  "/worship-songs-2026",
+  "/worship-by-denomination",
 ] as const;
 
 export type SitemapEntry = {
@@ -142,10 +145,13 @@ async function getSitemapLastModified(): Promise<Date> {
   return base;
 }
 
+// Editorial pages carry their own content date; directory hubs that render
+// church data keep the site-wide lastModified (freshest church update).
 function buildStaticRoute(path: string, lastModified: Date): SitemapEntry {
+  const contentDate = getEditorialContentDate(path);
   return {
     url: `${BASE_URL}${path}`,
-    lastModified,
+    lastModified: contentDate ? new Date(`${contentDate}T00:00:00.000Z`) : lastModified,
     changeFrequency: "daily",
     priority: path === "" ? 1 : 0.8,
   };

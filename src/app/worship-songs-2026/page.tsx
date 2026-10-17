@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getWorshipSongsReport } from "@/lib/worship-songs-report";
+import { EDITORIAL_CONTENT_DATES } from "@/lib/editorial-dates";
 import { buildArticleSchema, buildBreadcrumbSchema } from "@/lib/seo-schema";
 import { serializeJsonLd } from "@/lib/json-ld";
 
@@ -123,8 +124,8 @@ export default function WorshipSongs2026Page() {
     url: PAGE_URL,
     headline: "The Worship Songs Churches Actually Sing (2026)",
     description: META_DESCRIPTION,
-    datePublished: "2026-07-26",
-    dateModified: "2026-07-26",
+    datePublished: EDITORIAL_CONTENT_DATES["/worship-songs-2026"].published,
+    dateModified: EDITORIAL_CONTENT_DATES["/worship-songs-2026"].modified,
     about: [
       "Contemporary worship music",
       "Worship songs",

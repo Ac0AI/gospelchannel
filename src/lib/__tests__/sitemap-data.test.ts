@@ -94,6 +94,7 @@ vi.mock("@/lib/tooling", () => ({
 }));
 
 import { buildSitemapEntriesForChunk, getSitemapEntryCount } from "@/lib/sitemap-data";
+import { CONTENT_UPDATED_AT } from "@/lib/utils";
 
 function makeChurch(slug: string) {
   return {
@@ -163,7 +164,7 @@ describe("sitemap-data", () => {
   it("computes the total sitemap entry count from section counts", async () => {
     getChurchDirectorySeedCountAsyncMock.mockResolvedValue(3);
 
-    await expect(getSitemapEntryCount()).resolves.toBe(51);
+    await expect(getSitemapEntryCount()).resolves.toBe(53);
   });
 
   it("drops thin city hubs (<MIN_INDEXABLE_CITY_CHURCHES) from the sitemap", async () => {
@@ -228,11 +229,27 @@ describe("sitemap-data", () => {
     expect(entries[38]?.url).toBe("https://gospelchannel.com/network");
     expect(entries[39]?.url).toBe("https://gospelchannel.com/church/english-speaking-churches-in-zurich");
     expect(entries[40]?.url).toBe("https://gospelchannel.com/church-near-me");
-    expect(entries[41]?.url).toBe("https://gospelchannel.com/church/church-0");
-    expect(entries.at(-1)?.url).toBe("https://gospelchannel.com/church/church-2458");
-    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(0, 2_459);
+    expect(entries[41]?.url).toBe("https://gospelchannel.com/worship-songs-2026");
+    expect(entries[42]?.url).toBe("https://gospelchannel.com/worship-by-denomination");
+    expect(entries[43]?.url).toBe("https://gospelchannel.com/church/church-0");
+    expect(entries.at(-1)?.url).toBe("https://gospelchannel.com/church/church-2456");
+    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(0, 2_457);
     expect(getNetworksSliceMock).not.toHaveBeenCalled();
     expect(getPublishedCampusesSliceMock).not.toHaveBeenCalled();
+  });
+
+  it("dates editorial pages by their content, not by the freshest church update", async () => {
+    getChurchDirectorySeedCountAsyncMock.mockResolvedValue(0);
+
+    const entries = await buildSitemapEntriesForChunk(0);
+    const byUrl = new Map(entries.map((entry) => [entry.url, entry]));
+
+    expect(byUrl.get("https://gospelchannel.com/worship-songs-2026")?.lastModified?.toISOString())
+      .toBe("2026-07-26T00:00:00.000Z");
+    expect(byUrl.get("https://gospelchannel.com/worship-by-denomination")?.lastModified?.toISOString())
+      .toBe("2026-07-26T00:00:00.000Z");
+    expect(byUrl.get("https://gospelchannel.com/church")?.lastModified?.toISOString())
+      .toBe(new Date(CONTENT_UPDATED_AT).toISOString());
   });
 
   it("builds later chunks in section order after the church slice ends", async () => {
@@ -244,6 +261,8 @@ describe("sitemap-data", () => {
     const entries = await buildSitemapEntriesForChunk(2);
 
     expect(entries.map((entry) => entry.url)).toEqual([
+      "https://gospelchannel.com/church/church-4957",
+      "https://gospelchannel.com/church/church-4958",
       "https://gospelchannel.com/church/church-4959",
       "https://gospelchannel.com/church/church-4960",
       "https://gospelchannel.com/church/church-4961",
@@ -295,7 +314,7 @@ describe("sitemap-data", () => {
       "https://gospelchannel.com/network/network-1",
       "https://gospelchannel.com/church/campus-1",
     ]);
-    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(4_959, 43);
+    expect(getChurchDirectorySeedSliceAsyncMock).toHaveBeenCalledWith(4_957, 45);
     expect(getNetworksSliceMock).toHaveBeenCalledWith(0, 1);
     expect(getPublishedCampusesSliceMock).toHaveBeenCalledWith(0, 1);
   });

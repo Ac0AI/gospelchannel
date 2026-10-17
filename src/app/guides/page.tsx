@@ -50,6 +50,24 @@ const GUIDE_DECISION_PATHS = [
   },
 ] as const;
 
+const DATA_STUDIES = [
+  {
+    title: "The worship songs churches actually sing (2026)",
+    description: "We read the Spotify worship playlists of 825 churches in 31 countries. Four worship houses reach most of them.",
+    href: "/worship-songs-2026",
+  },
+  {
+    title: "Do different denominations sing different worship songs?",
+    description: "258 church playlists joined to denomination. Everyone sings the big anthems. Modern hymns split hard: Baptist 60%, Pentecostal 11%.",
+    href: "/worship-by-denomination",
+  },
+  {
+    title: "European Church Tech Index 2026",
+    description: "What 14,000 churches in 12 countries actually run online, measured from their sites instead of a survey.",
+    href: "/european-church-tech-2026",
+  },
+] as const;
+
 export async function generateMetadata(): Promise<Metadata> {
   const { churchCountLabel, countryCount } = await getChurchStatsAsync();
   const description = `Practical church-choice guides followed by ${churchCountLabel} church pages with service times, location, worship, language, and visitor details across ${countryCount} countries.`;
@@ -342,6 +360,33 @@ export default async function GuidesPage() {
               Read comparison &rarr;
             </Link>
           </article>
+        </div>
+      </section>
+
+      {/* Data studies */}
+      <section className="mx-auto mt-20 max-w-[1280px] px-5 sm:px-12">
+        <p className="gc-eyebrow">Data studies</p>
+        <h2 className="mt-3 font-serif text-3xl font-semibold tracking-[-0.01em] text-espresso sm:text-4xl">
+          What churches actually do, measured.
+        </h2>
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {DATA_STUDIES.map((study) => (
+            <article
+              key={study.href}
+              className="rounded-[18px] border border-rose-gold/[0.10] bg-white p-7"
+            >
+              <h3 className="font-serif text-xl font-semibold tracking-[-0.01em] text-espresso">
+                {study.title}
+              </h3>
+              <p className="mt-2.5 text-sm leading-[1.6] text-warm-brown">{study.description}</p>
+              <Link
+                href={study.href}
+                className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-rose-gold transition-colors hover:text-rose-gold-deep"
+              >
+                Read the study &rarr;
+              </Link>
+            </article>
+          ))}
         </div>
       </section>
 
