@@ -48,30 +48,25 @@ const COMPARISON = [
 
 const FEATURES = [
   {
-    image: "phone",
-    width: 900,
-    height: 1125,
-    alt: "Illustrative photograph of hands holding a phone showing an example church website at a café table.",
+    kind: "phone",
+    image: "visit-phone",
+    alt: "Plan a visit page of the example church on a phone: Sunday and Wednesday service times, the address, the service language and a map.",
     title: "Ready for someone's first Sunday.",
     body: "Service times and the address on every page, a real map with directions, and what to expect, kids and parking a tap away. Clear on a phone, where most visitors look first.",
   },
   {
-    image: "search",
-    width: 900,
-    height: 675,
-    alt: "Illustrative photograph of a man who just moved, looking at a church website on his phone among moving boxes.",
+    kind: "browser",
+    image: "find-us",
+    alt: "Find us section of the example church website: the street address, parking notes, directions and contact buttons, and a map with a pin on the church.",
     title: "Easy to find on Google, Maps and ChatGPT.",
     body: "Built the way search engines and AI assistants read a church: service times and address as real text, structured data, a sitemap and open doors for AI search. We can't promise rankings. We make sure your site isn't what's holding you back.",
   },
   {
-    image: "text-a-change",
-    width: 900,
-    height: 1125,
-    alt: "Illustrative photograph of a pastor typing a message on his phone in a small church office.",
+    kind: "messages",
     title: "Send the change. We'll handle the website.",
     body: "A new service time, a new photo, an Easter page. Text or email it to us and we make the change. Nobody at church has to learn a website editor.",
   },
-];
+] as const;
 
 const STEPS = [
   { title: "We build it first.", body: "Send us your current website. We move your words, photos and colors into a new site and send you a private preview link." },
@@ -164,17 +159,33 @@ export default function WebsitesPage() {
           </div>
           <p className={styles.quiet}>We build it first. You subscribe only if you like it.</p>
         </div>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          className={styles.heroImage}
-          src="/websites/hero-1536.webp"
-          srcSet="/websites/hero-800.webp 800w, /websites/hero-1536.webp 1536w"
-          sizes="(min-width: 960px) 520px, 100vw"
-          width={1536}
-          height={864}
-          alt="Illustrative photograph of a family walking to a small brick church, the father checking the church's website on his phone."
-          fetchPriority="high"
-        />
+        <figure className={styles.showcase}>
+          <div className={styles.browser}>
+            <div className={styles.browserBar} aria-hidden="true"><span /><span /><span /><em>yourchurch.org</em></div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/websites/site-desktop-1600.webp"
+              srcSet="/websites/site-desktop-960.webp 960w, /websites/site-desktop-1600.webp 1600w"
+              sizes="(min-width: 960px) 600px, 92vw"
+              width={1600}
+              height={1000}
+              alt="Home page of the example church website on a laptop: a photo of people talking over coffee, the headline You're welcome here this Sunday, service times and the street address, and buttons to plan a visit and get directions."
+              fetchPriority="high"
+            />
+          </div>
+          <div className={styles.phone}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/websites/site-phone-600.webp"
+              srcSet="/websites/site-phone-390.webp 390w, /websites/site-phone-600.webp 600w"
+              sizes="150px"
+              width={600}
+              height={1298}
+              alt="The same home page on a phone."
+            />
+          </div>
+          <figcaption className={styles.caption}>A real site from our template, for a fictional example church.</figcaption>
+        </figure>
       </section>
 
       <section className={styles.compare} aria-labelledby="compare-heading">
@@ -204,24 +215,50 @@ export default function WebsitesPage() {
       <section className={`${styles.wrap} ${styles.features}`} aria-label="What you get">
         {FEATURES.map((f) => (
           <article key={f.title} className={styles.feature}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={`/websites/${f.image}-900.webp`}
-              srcSet={`/websites/${f.image}-480.webp 480w, /websites/${f.image}-900.webp 900w`}
-              sizes="(min-width: 760px) 280px, 100vw"
-              width={f.width}
-              height={f.height}
-              alt={f.alt}
-              loading="lazy"
-              decoding="async"
-            />
+            {f.kind === "phone" && (
+              <div className={styles.phone}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/websites/${f.image}-600.webp`}
+                  srcSet={`/websites/${f.image}-390.webp 390w, /websites/${f.image}-600.webp 600w`}
+                  sizes="220px"
+                  width={600}
+                  height={1298}
+                  alt={f.alt}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            )}
+            {f.kind === "browser" && (
+              <div className={styles.browser}>
+                <div className={styles.browserBar} aria-hidden="true"><span /><span /><span /><em>yourchurch.org</em></div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/websites/${f.image}-1600.webp`}
+                  srcSet={`/websites/${f.image}-960.webp 960w, /websites/${f.image}-1600.webp 1600w`}
+                  sizes="(min-width: 760px) 520px, 92vw"
+                  width={1600}
+                  height={618}
+                  alt={f.alt}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            )}
+            {f.kind === "messages" && (
+              <div className={styles.messages} role="img" aria-label="Example text messages: a pastor asks to add a Christmas Eve service on December 24 at 6 PM, and GospelChannel replies that it is on the events page and the home page.">
+                <p className={styles.them}>Can you add our Christmas Eve service? Dec 24, 6 PM, same address.</p>
+                <p className={styles.us}>Done. It&apos;s on your Events page and on the home page until Christmas.</p>
+              </div>
+            )}
             <div>
               <h2>{f.title}</h2>
               <p>{f.body}</p>
             </div>
           </article>
         ))}
-        <p className={styles.note}>Illustrative photographs. The screens show our fictional example church. Your website uses your own photographs.</p>
+        <p className={styles.note}>Screens show our fictional example church. Your website uses your own words and photographs.</p>
       </section>
 
       <section className={styles.steps} aria-labelledby="how-heading">
@@ -249,7 +286,7 @@ export default function WebsitesPage() {
             sizes="(min-width: 960px) 480px, 100vw"
             width={1536}
             height={864}
-            alt="Illustrative photograph of a laptop, tablet and phone on a desk, each showing the same example church website."
+            alt="Laptop, tablet and phone on a desk, each showing the same example church website."
             loading="lazy"
             decoding="async"
           />
