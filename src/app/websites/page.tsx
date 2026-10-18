@@ -110,11 +110,15 @@ const FAQ = [
   },
 ];
 
+// Each look is a live example site built from the same template
+// (gospelchannel-websites: scripts/build-examples.mjs). noindex, fictional church.
+const EXAMPLE_URL = (look: string) => `https://example-${look}.sites.gospelchannel.com/`;
+
 const LOOKS = [
-  { id: "chapel", name: "Chapel", text: "Navy and gold." },
-  { id: "clay", name: "Clay", text: "Terracotta and warm sand." },
-  { id: "sage", name: "Sage", text: "Deep green and gold." },
-  { id: "own", name: "Your colors", text: "Taken from your logo. Looks finished even before you have photos." },
+  { id: "chapel", site: "chapel", name: "Chapel", text: "Navy and gold." },
+  { id: "clay", site: "clay", name: "Clay", text: "Terracotta and warm sand." },
+  { id: "sage", site: "sage", name: "Sage", text: "Deep green and gold." },
+  { id: "own", site: "yourcolors", name: "Your colors", text: "Taken from your logo. Looks finished even before you have photos." },
 ];
 
 // A sharp iPhone frame drawn in CSS around a real screenshot: titanium edge,
@@ -216,7 +220,10 @@ export default function WebsitesPage() {
               eager
             />
           </div>
-          <figcaption className={styles.caption}>A real site from our template, for a fictional example church.</figcaption>
+          <figcaption className={styles.caption}>
+            A real site from our template, for a fictional example church.{" "}
+            <a href={EXAMPLE_URL("chapel")} target="_blank" rel="noopener">Click around it<span className={styles.srOnly}> (opens in a new tab)</span></a>
+          </figcaption>
         </figure>
       </section>
 
@@ -247,11 +254,12 @@ export default function WebsitesPage() {
       <section className={`${styles.wrap} ${styles.looks}`} aria-labelledby="looks-heading">
         <h2 id="looks-heading">Pick a look. We make it yours.</h2>
         <p className={styles.lead}>
-          Every look shares one layout, built around what a first-time visitor needs. We set it in your logo&apos;s colors with your own photos, or start you on one of ours. Switching later is one message.
+          Every look shares one layout, built around what a first-time visitor needs. We set it in your logo&apos;s colors with your own photos, or start you on one of ours. Switching later is one message. Every example is a working site: open one and click around.
         </p>
         <ul className={styles.looksGrid}>
           {LOOKS.map((look) => (
             <li key={look.id}>
+              <a className={styles.lookLink} href={EXAMPLE_URL(look.site)} target="_blank" rel="noopener">
               <div className={styles.browser}>
                 <div className={styles.browserBar} aria-hidden="true"><span /><span /><span /></div>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -261,12 +269,13 @@ export default function WebsitesPage() {
                   sizes="(min-width: 760px) 520px, 92vw"
                   width={1040}
                   height={650}
-                  alt={`The example church home page in the ${look.name} look.`}
+                  alt={`The example church home page in the ${look.name} look`}
                   loading="lazy"
                   decoding="async"
                 />
               </div>
-              <p className={styles.lookName}><strong>{look.name}</strong> {look.text}</p>
+              <p className={styles.lookName}><strong>{look.name}</strong> {look.text} <span className={styles.lookOpen}>Open the example</span><span className={styles.srOnly}> (opens in a new tab)</span></p>
+              </a>
             </li>
           ))}
         </ul>
