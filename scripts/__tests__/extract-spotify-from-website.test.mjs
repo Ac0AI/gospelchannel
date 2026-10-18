@@ -4,6 +4,7 @@ import {
   acceptPlaylist,
   extractSpotifyLinks,
   findMusicPageLinks,
+  isChurchOwned,
   isOwnSite,
 } from "../extract-spotify-from-website.mjs";
 
@@ -59,5 +60,18 @@ describe("Spotify links on church websites", () => {
     expect(acceptArtist("BEYOND MUS!C", "Every Nation Tshwane Mooikloof")).toBe(false);
     expect(acceptArtist("Bethel Music", "Bethel Baptist Church")).toBe(false);
     expect(acceptArtist("Grace Church Worship", "First Baptist Church")).toBe(false);
+    expect(acceptArtist("Calvary Worship Live", "Calvary Christian Center")).toBe(false);
+  });
+
+  it("keeps a playlist only when it is the church's own, found in the 520-match audit", () => {
+    const pl = (name, owner) => ({ name, owner, type: "playlist" });
+    expect(isChurchOwned(pl("ANF Song List", "Tommy Seo"), "All Nations Fellowship of Dallas")).toBe(true);
+    expect(isChurchOwned(pl("Weekend Worship", "hopefrisco"), "Hope Fellowship Frisco East")).toBe(true);
+    expect(isChurchOwned(pl("Hope Church Sunday Morning Songs", "Hope Community Church"), "Hope Community Church")).toBe(true);
+    expect(isChurchOwned(pl("Nocona FBC Worship", "Mudd"), "First Baptist Church", "https://fbcnocona.org")).toBe(true);
+    expect(isChurchOwned(pl("Bel Air Church Sunday Playlist", "Creative Bel Air"), "Eagle Rock Presbyterian Church")).toBe(false);
+    expect(isChurchOwned(pl("Keith & Kristyn Getty - Essentials", "Getty Music"), "Community Bible Church")).toBe(false);
+    expect(isChurchOwned(pl("LIFE Church Songpool", "alessazeiser"), "Freie Christengemeinde e.V.")).toBe(false);
+    expect(isChurchOwned(pl("One Of Them Days Official Playlist", "Madison Gate Records"), "Jesus Lifted Me")).toBe(false);
   });
 });

@@ -15,8 +15,8 @@
  *      Podcasts/episodes are sermons, not music, and are ignored.
  *   3. Verify each candidate with the Spotify Web API. Playlists must exist
  *      and not be owned by Spotify itself (editorial lists would falsely
- *      suggest ownership). Artists must share a distinctive word with the
- *      church name and not be a widely linked worship artist.
+ *      suggest ownership). Playlists and artists must be recognisably the
+ *      church's own (isChurchOwned) and never a widely linked worship artist.
  *   4. Write playlists to spotify_playlist_ids + spotify_url (first playlist),
  *      or the artist URL when the site links an artist and no playlist.
  *
@@ -130,13 +130,22 @@ function acceptPlaylist(playlist) {
   return ownerId !== "spotify" && ownerName !== "spotify";
 }
 
-// Words that say nothing about which church an artist belongs to.
+// Words that say nothing about which church a playlist or artist belongs to.
 const GENERIC_WORDS = new Set([
-  "the", "of", "and", "a", "worship", "music", "church", "band", "collective", "live", "ministries",
-  "ministry", "community", "christian", "center", "centre", "fellowship", "chapel", "international",
-  "family", "city", "new", "first", "global", "praise", "choir", "gospel", "official", "team", "youth",
-  "kids", "sounds", "songs", "records", "united", "baptist", "methodist", "pentecostal", "assembly",
-  "god", "evangelical", "free", "st", "saint", "kirche", "iglesia", "eglise", "igreja", "kyrka",
+  "the", "of", "and", "a", "an", "at", "in", "on", "for", "to", "de", "la", "el", "los", "las", "da", "do",
+  "worship", "music", "church", "band", "collective", "live", "ministries", "ministry", "community",
+  "christian", "center", "centre", "fellowship", "chapel", "international", "family", "city", "new",
+  "first", "global", "praise", "choir", "gospel", "official", "team", "youth", "kids", "sounds", "songs",
+  "song", "records", "united", "baptist", "methodist", "pentecostal", "assembly", "assemblies", "god",
+  "evangelical", "free", "st", "saint", "kirche", "iglesia", "eglise", "igreja", "kyrka", "campus", "inc",
+  "playlist", "sunday", "spotify", "weekly", "weekend", "list",
+]);
+
+// Church-name words so common that sharing one proves nothing ("Calvary
+// Christian Center" is not "Calvary Worship").
+const COMMON_CHURCH_WORDS = new Set([
+  "calvary", "grace", "victory", "hope", "faith", "trinity", "christ", "jesus", "lord", "holy", "word",
+  "bible", "life",
 ]);
 
 // Worship artists so widely linked that a church sharing a word with them
@@ -147,21 +156,64 @@ const FAMOUS_ARTISTS = new Set([
   "planetshakers", "housefires", "life church worship", "red rocks worship", "north point worship",
   "cityalight", "sovereign grace music", "the belonging co", "kingdom city", "influence music",
   "seu worship", "phil wickham", "chris tomlin", "brandon lake", "matt redman", "matt papa",
-  "keith kristyn getty", "cece winans", "kari jobe", "lauren daigle",
+  "keith kristyn getty", "getty music", "cece winans", "kari jobe", "lauren daigle",
 ]);
+const FAMOUS_WORDS = new Set(["getty", "hillsong", "elevation", "maverick", "upperroom"]);
 
 function wordsOf(name) {
   return String(name || "").toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "")
     .split(/[^a-z0-9]+/).filter(Boolean);
 }
 
-// An artist link only counts when the artist is recognisably the church's own
-// worship team: it shares a distinctive word with the church name.
-function acceptArtist(artistName, churchName) {
-  const artistWords = wordsOf(artistName);
-  if (FAMOUS_ARTISTS.has(artistWords.join(" "))) return false;
-  const churchWords = new Set(wordsOf(churchName).filter((w) => !GENERIC_WORDS.has(w)));
-  return artistWords.some((w) => !GENERIC_WORDS.has(w) && w.length > 2 && churchWords.has(w));
+function hostOf(website) {
+  try {
+    return new URL(/^https?:\/\//i.test(website) ? website : `https://${website}`).hostname.replace(/^www\./, "").toLowerCase();
+  } catch {
+    return "";
+  }
+}
+
+// A link on the church's site can still point at someone else's music (another
+// church's playlist, a label, a famous songwriter). It only counts when the
+// playlist/artist name or the playlist owner is recognisably the church's own:
+// a distinctive word in common, two consecutive name words, the church's
+// initials, or a distinctive word that is part of the church's own web host.
+// A 520-match run audited at 85% precision before this rule, 45 dropped by it.
+function isChurchOwned({ name, owner = "", type }, churchName, website = "") {
+  const textWords = wordsOf(`${name} ${owner}`);
+  if (type === "artist" && FAMOUS_ARTISTS.has(wordsOf(name).join(" "))) return false;
+  const churchWords = wordsOf(churchName);
+  if (textWords.some((w) => FAMOUS_WORDS.has(w)) && !churchWords.some((w) => FAMOUS_WORDS.has(w))) return false;
+
+  const distinctive = new Set(
+    churchWords.filter((w) => !GENERIC_WORDS.has(w) && !COMMON_CHURCH_WORDS.has(w) && w.length > 2),
+  );
+  if (textWords.some((w) => distinctive.has(w))) return true;
+
+  const joined = ` ${textWords.join(" ")} `;
+  for (let i = 0; i < churchWords.length - 1; i += 1) {
+    const [x, y] = [churchWords[i], churchWords[i + 1]];
+    if (GENERIC_WORDS.has(x) && GENERIC_WORDS.has(y)) continue;
+    if (joined.includes(` ${x} ${y} `)) return true;
+  }
+
+  const stop = new Set(["of", "the", "and", "de", "la", "el"]);
+  for (const seq of [churchWords, churchWords.filter((w) => !stop.has(w))]) {
+    for (let k = seq.length; k >= 3; k -= 1) {
+      const initials = seq.slice(0, k).map((w) => w[0]).join("");
+      if (textWords.some((t) => t === initials || (t.length <= initials.length + 4 && t.startsWith(initials)))) return true;
+    }
+  }
+
+  const host = hostOf(website);
+  if (host && textWords.some((t) => t.length >= 4 && !GENERIC_WORDS.has(t) && !COMMON_CHURCH_WORDS.has(t) && host.includes(t))) {
+    return true;
+  }
+  return [...distinctive].some((w) => w.length >= 5 && textWords.some((t) => t.includes(w)));
+}
+
+function acceptArtist(artistName, churchName, website = "") {
+  return isChurchOwned({ name: artistName, type: "artist" }, churchName, website);
 }
 
 /* ── IO ── */
@@ -215,16 +267,18 @@ async function spotifyGet(path, attempt = 0) {
   return res.json();
 }
 
-async function verifyCandidates(candidates, churchName) {
+async function verifyCandidates(candidates, churchName, website) {
   const playlists = [];
   let artist = null;
   for (const c of candidates) {
     if (c.type === "playlist" && playlists.length < MAX_PLAYLISTS) {
       const p = await spotifyGet(`playlists/${c.id}?fields=id,name,owner(id,display_name)`);
-      if (acceptPlaylist(p)) playlists.push({ id: p.id, name: p.name, owner: p.owner.display_name });
+      if (acceptPlaylist(p) && isChurchOwned({ name: p.name, owner: p.owner.display_name, type: "playlist" }, churchName, website)) {
+        playlists.push({ id: p.id, name: p.name, owner: p.owner.display_name });
+      }
     } else if (c.type === "artist" && !artist) {
       const a = await spotifyGet(`artists/${c.id}`);
-      if (a?.id && acceptArtist(a.name, churchName)) artist = { id: a.id, name: a.name };
+      if (a?.id && acceptArtist(a.name, churchName, website)) artist = { id: a.id, name: a.name };
     }
   }
   return { playlists, artist };
@@ -243,7 +297,7 @@ async function scanChurch(church) {
     }
   }
   if (candidates.length === 0) return { status: "none" };
-  const verified = await verifyCandidates(candidates, church.name);
+  const verified = await verifyCandidates(candidates, church.name, church.website);
   if (verified.playlists.length === 0 && !verified.artist) return { status: "rejected", candidates };
   return { status: "match", ...verified };
 }
@@ -339,7 +393,7 @@ async function main() {
   console.log(`\n--- Summary ---\n${JSON.stringify(counts, null, 2)}\nMatches written to ${auditPath}`);
 }
 
-export { acceptArtist, acceptPlaylist, extractSpotifyLinks, findMusicPageLinks, isOwnSite, siteHost };
+export { acceptArtist, acceptPlaylist, isChurchOwned, extractSpotifyLinks, findMusicPageLinks, isOwnSite, siteHost };
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   main().catch((error) => {
