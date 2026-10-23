@@ -5,6 +5,7 @@ import {
   buildChurchTitle,
   classifyChurchTier,
   getChurchSearchAliases,
+  hasChurchVisitFacts,
   type ChurchMetadataInput,
 } from "../church-metadata";
 
@@ -202,6 +203,32 @@ describe("buildChurchTitle", () => {
     expect(buildChurchTitle(input)).not.toContain("Zone Industrielle");
   });
 
+  it("uses the town from the address when the location is a street and postcode", () => {
+    const input = makeInput(
+      { name: "Lansdowne Church", slug: "lansdowne-church", location: "Lansdowne Road BH1 1SB", country: "United Kingdom" },
+      {
+        streetAddress: "Lansdowne Road, Bournemouth, BH1 1SB, United Kingdom",
+        serviceTimes: [{ day: "Sunday", time: "10:30" }],
+      },
+    );
+    expect(buildChurchTitle(input)).toBe("Lansdowne Church in Bournemouth · Service Times & Address");
+    expect(buildChurchDescription(input)).toMatch(/^Lansdowne Church in Bournemouth, United Kingdom\./);
+  });
+
+  it("strips a postcode from an otherwise valid town", () => {
+    expect(buildChurchTitle(makeInput({ name: "Shofar", location: "3572VT Utrecht", country: "Netherlands" }))).toContain("Shofar in Utrecht");
+    expect(buildChurchTitle(makeInput({ name: "LICC", location: "London W2 5HS", country: "United Kingdom" }))).toContain("LICC in London");
+  });
+
+  it("falls back to the country when neither location nor address names a town", () => {
+    const input = makeInput({ name: "Warley Woods Church", location: "Maurice Road", country: "United Kingdom" });
+    expect(buildChurchTitle(input)).toContain("Warley Woods Church in United Kingdom");
+  });
+
+  it("keeps a town whose name starts with a street word", () => {
+    expect(buildChurchTitle(makeInput({ name: "Grace Chapel", location: "Ave Maria", country: "United States" }))).toContain("Grace Chapel in Ave Maria");
+  });
+
   it("uses reviewed query variants for specific ranking church pages", () => {
     const input = makeInput({ slug: "every-nation-dalung-bali", name: "Every Nation Dalung, Bali" });
     expect(buildChurchTitle(input)).toBe("Every Nation Dalung, Bali · Church in Kabupaten Badung");
@@ -221,6 +248,15 @@ describe("buildChurchTitle", () => {
     );
     expect(buildChurchDescription(input)).toContain("service times, address, visitor details");
     expect(getChurchSearchAliases(input.church.slug)).toContain("ICF Church Zürich");
+  });
+});
+
+describe("hasChurchVisitFacts", () => {
+  it("is true with a street address or a service time, false with neither", () => {
+    expect(hasChurchVisitFacts(makeInput({}, { streetAddress: "1 High Street, Bath" }))).toBe(true);
+    expect(hasChurchVisitFacts(makeInput({}, { serviceTimes: [{ day: "Sunday", time: "10:30" }] }))).toBe(true);
+    expect(hasChurchVisitFacts(makeInput({}, null, { streetAddress: "1 High Street, Bath" }))).toBe(true);
+    expect(hasChurchVisitFacts(makeInput({ denomination: "Baptist" }))).toBe(false);
   });
 });
 
@@ -284,6 +320,20 @@ describe("buildChurchDescription", () => {
     const desc = buildChurchDescription(input);
     expect(desc).toContain("Address: 1000 N Ventura Ave, Ventura, CA 93001.");
     expect(desc).toContain("Services Sunday 10AM.");
+  });
+
+  it("does not double the full stop after times or addresses that end in one", () => {
+    const input = makeInput(
+      { name: "Mount Sinai Church", location: "Queens Village", country: "United States" },
+      {
+        streetAddress: "217-10 93rd Ave., Queens Village, NY 11428",
+        serviceTimes: [{ day: "Saturday", time: "9:15 a.m." }],
+      },
+    );
+    const desc = buildChurchDescription(input);
+    expect(desc).toContain("Services Saturday 9:15 a.m.");
+    expect(desc).toContain("NY 11428.");
+    expect(desc).not.toMatch(/\.\./);
   });
 
   it("falls back to country alone when city missing", () => {

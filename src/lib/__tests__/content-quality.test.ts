@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildChurchCardMetaLabel,
   deriveDisplayAssessment,
+  getChurchRobotsPolicy,
   getFirstServiceTimeLabel,
   getNearbyChurchPlaceLabel,
   getValidServiceTimeLabel,
@@ -151,6 +152,31 @@ describe("content-quality", () => {
 
     it("null score on-brand without worship → not indexable", () => {
       expect(isIndexableChurch({ indexScore: null, denomination: "Baptist" })).toBe(false);
+    });
+  });
+
+  describe("getChurchRobotsPolicy (Bing gate)", () => {
+    const below = INDEXABLE_ONBRAND_SCORE_MIN - 10;
+
+    it("indexable profiles are indexed everywhere", () => {
+      expect(getChurchRobotsPolicy({ indexScore: INDEXABLE_ONBRAND_SCORE_MIN, denomination: "Baptist", hasVisitFacts: false })).toBe("index");
+      expect(getChurchRobotsPolicy({ indexScore: 0, denomination: "Catholic", hasWorship: true, hasVisitFacts: false })).toBe("index");
+    });
+
+    it("on-brand or unknown-denomination profiles with visit facts stay open to Bing, not Google", () => {
+      expect(getChurchRobotsPolicy({ indexScore: below, denomination: "Baptist", hasVisitFacts: true })).toBe("google-noindex");
+      expect(getChurchRobotsPolicy({ indexScore: null, denomination: "Pentecostal", hasVisitFacts: true })).toBe("google-noindex");
+      expect(getChurchRobotsPolicy({ indexScore: 100, denomination: null, hasVisitFacts: true })).toBe("google-noindex");
+    });
+
+    it("profiles without an address or service times stay noindex everywhere", () => {
+      expect(getChurchRobotsPolicy({ indexScore: below, denomination: "Baptist", hasVisitFacts: false })).toBe("noindex");
+      expect(getChurchRobotsPolicy({ indexScore: null, denomination: "", hasVisitFacts: false })).toBe("noindex");
+    });
+
+    it("off-brand denominations stay noindex everywhere, with or without facts", () => {
+      expect(getChurchRobotsPolicy({ indexScore: 100, denomination: "Catholic", hasVisitFacts: true })).toBe("noindex");
+      expect(getChurchRobotsPolicy({ indexScore: below, denomination: " Seventh-day Adventist ", hasVisitFacts: true })).toBe("noindex");
     });
   });
 

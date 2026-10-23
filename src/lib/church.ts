@@ -21,6 +21,7 @@ import {
 } from "@/lib/church-slugs";
 import { filterExplicitNonChurchRows, getExplicitNonChurchSlugs } from "@/lib/non-church-slugs";
 import { computeDataRichnessScore } from "@/lib/enrichment-richness";
+import { cleanDenominationNetwork } from "@/lib/denomination-taxonomy";
 import {
   deriveDisplayAssessment,
   getFirstServiceTimeLabel,
@@ -615,7 +616,7 @@ export async function getChurchEnrichment(slug: string): Promise<ChurchEnrichmen
         : undefined,
     serviceTimes: row.service_times ?? undefined,
     theologicalOrientation: verified ? (row.theological_orientation ?? undefined) : undefined,
-    denominationNetwork: row.denomination_network ?? undefined,
+    denominationNetwork: cleanDenominationNetwork(row.denomination_network),
     languages: row.languages ?? undefined,
     phone: row.phone ?? undefined,
     contactEmail: row.contact_email ?? undefined,

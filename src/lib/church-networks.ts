@@ -2,6 +2,7 @@ import { and, asc, eq, ilike, sql } from "drizzle-orm";
 import { getDb, hasDatabaseConfig, schema } from "@/db";
 import type { ChurchNetwork, ChurchCampus, ChurchCampusWithDetails, ChurchEnrichment } from "@/types/gospel";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
+import { cleanDenominationNetwork } from "@/lib/denomination-taxonomy";
 
 const NETWORK_CACHE_SECONDS = 60 * 60;
 type CacheEntry<T> = { value: T; expiresAt: number };
@@ -87,7 +88,7 @@ function mapEnrichment(row: typeof schema.churchEnrichments.$inferSelect): Churc
     longitude: row.longitude ?? undefined,
     serviceTimes: (row.serviceTimes as ChurchEnrichment["serviceTimes"]) ?? undefined,
     theologicalOrientation: row.theologicalOrientation ?? undefined,
-    denominationNetwork: row.denominationNetwork ?? undefined,
+    denominationNetwork: cleanDenominationNetwork(row.denominationNetwork),
     languages: row.languages ?? undefined,
     phone: row.phone ?? undefined,
     contactEmail: row.contactEmail ?? undefined,

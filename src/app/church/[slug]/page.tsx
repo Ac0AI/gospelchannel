@@ -33,9 +33,9 @@ import {
 } from "@/lib/church-directory";
 import { buildChurchAliases, checkChurchClaimed, getChurchPublicPageData, resolveChurchImageCandidates } from "@/lib/church";
 import {
+  getChurchRobotsPolicy,
   getFirstServiceTimeLabel,
   getPublicHostLabel,
-  isIndexableChurch,
   isPlayableSpotifyUrl,
   isValidPublicEmail,
   isValidOfficialWebsiteUrl,
@@ -54,7 +54,7 @@ import { HeroImage } from "@/components/HeroImage";
 import { isRenderableImageUrl } from "@/lib/media";
 import { resolveCanonicalChurchSlug } from "@/lib/church-slugs";
 import { CHURCH_SIZE_LABELS, getProfileOptionLabel } from "@/lib/profile-fields";
-import { buildChurchDescription, buildChurchTitle, getChurchSearchAliases } from "@/lib/church-metadata";
+import { buildChurchDescription, buildChurchTitle, getChurchSearchAliases, hasChurchVisitFacts } from "@/lib/church-metadata";
 import { serializeJsonLd } from "@/lib/json-ld";
 import { getVideoThumbnailPath, proxyYouTubeThumbnailUrl } from "@/lib/video-thumbnail";
 import { buildOpeningHours } from "@/lib/seo-schema";
@@ -212,14 +212,17 @@ export async function generateMetadata({ params }: ChurchPageProps): Promise<Met
   const pageUrl = `https://gospelchannel.com/church/${church.slug}`;
 
   // Substantial official visit reviews qualify independently of denomination
-  // or playlists. Keep this aligned with the sitemap seed in content.ts.
-  const indexable = isIndexableChurch({
+  // or playlists. Keep "index" aligned with the sitemap seed in content.ts;
+  // "google-noindex" profiles stay out of the sitemap and out of Google.
+  const robotsPolicy = getChurchRobotsPolicy({
     indexScore: church.indexScore,
     denomination: church.denomination,
     hasWorship: hasPlaylists,
     officialReview: enrichment?.officialReview,
+    hasVisitFacts: hasChurchVisitFacts(metadataInput),
   });
-  const googleHoldout = indexable && isGoogleHoldoutProfile(church.slug, hasPlaylists || Boolean(church.spotifyUrl));
+  const googleHoldout = robotsPolicy === "index"
+    && isGoogleHoldoutProfile(church.slug, hasPlaylists || Boolean(church.spotifyUrl));
 
   return {
     // Church-name queries need the identity and useful facts to fit in the
@@ -228,9 +231,9 @@ export async function generateMetadata({ params }: ChurchPageProps): Promise<Met
     description: seoDesc,
     keywords: Array.from(keywordSet).slice(0, 20),
     alternates: { canonical: pageUrl },
-    robots: !indexable
+    robots: robotsPolicy === "noindex"
       ? { index: false, follow: true }
-      : googleHoldout
+      : robotsPolicy === "google-noindex" || googleHoldout
         ? { index: true, follow: true, googleBot: { index: false, follow: true } }
         : undefined,
     openGraph: {

@@ -1,6 +1,6 @@
 import type { ChurchConfig, ChurchEnrichment, ServiceTime } from "@/types/gospel";
 import { extractCity } from "@/lib/church-directory";
-import { getFirstServiceTimeLabel, normalizeDisplayText } from "@/lib/content-quality";
+import { getFirstServiceTimeLabel, normalizeDisplayText, sanitizeServiceTimes } from "@/lib/content-quality";
 import { getProfileOptionLabel } from "@/lib/profile-fields";
 
 export type ChurchMetadataInput = {
@@ -56,14 +56,41 @@ function readMerged<T>(merged: Record<string, unknown> | null | undefined, key: 
   return merged[key] as T | undefined;
 }
 
+// Some imported locations are a street or a postcode, not a town: "Lansdowne
+// Road BH1 1SB" put a street in the title of a church Bing shows for
+// "lansdowne church bournemouth". Postcodes are stripped (UK, Dutch,
+// hyphenated, plain numeric) and street names are rejected.
+const POSTCODE_PATTERN = /\b(?:[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}|\d{4}\s?[A-Z]{2}|[A-Z]-\d{4}|\d{2,5}-\d{3}|\d{4,6})\b/g;
+const STREET_PATTERN = /\p{L}\s+(?:road|street|avenue|ave|lane|drive|boulevard|blvd|parade|quay|crescent|terrace|highway|hwy)\b|^(?:rue|calle|avenida|via)\s|\p{L}(?:strasse|straße|gade|gatan|vej)\b|^\d+[a-z]?\s+\p{L}/iu;
+const REGION_CODE_PATTERN = /^[A-Z]{2,3}$/;
+
+function cleanLocality(value: string | null | undefined): string | undefined {
+  const text = normalizeDisplayText(value);
+  if (!text || STREET_PATTERN.test(text)) return undefined;
+  const locality = text
+    .replace(POSTCODE_PATTERN, " ")
+    .replace(/\s+/g, " ")
+    .replace(/^[\s,.;:-]+|[\s,.;:-]+$/g, "");
+  if (!/\p{L}/u.test(locality) || REGION_CODE_PATTERN.test(locality)) return undefined;
+  return locality;
+}
+
 function resolveCity(input: ChurchMetadataInput): string | undefined {
   // The curated location is normally the city and is safer than inferring a
   // city from multi-part street addresses. Example: a Gisors address contains
   // "Zone Industrielle" as its second segment, which is a district, not a city.
-  const locationCity = extractCity(input.church.location);
+  const locationCity = cleanLocality(extractCity(input.church.location));
   if (locationCity) return locationCity;
-  const merged = normalizeDisplayText(readMerged<string>(input.mergedProfile, "city"));
+  const merged = cleanLocality(readMerged<string>(input.mergedProfile, "city"));
   if (merged) return merged;
+  // Last resort when the location is a street: the first town-like segment of
+  // the address after the street ("Lansdowne Road, Bournemouth, BH1 1SB").
+  const country = normalizeDisplayText(input.church.country)?.toLowerCase();
+  const addressParts = resolveStreetAddress(input)?.split(",").slice(1) ?? [];
+  for (const part of addressParts) {
+    const locality = cleanLocality(part);
+    if (locality && locality.toLowerCase() !== country) return locality;
+  }
   return undefined;
 }
 
@@ -102,6 +129,12 @@ function resolveLongDescription(input: ChurchMetadataInput): string | undefined 
   const merged = normalizeDisplayText(readMerged<string>(input.mergedProfile, "description"));
   if (merged) return merged;
   return normalizeDisplayText(input.church.description);
+}
+
+// A street address or a service time: what someone searching a church's name
+// usually came for. Profiles below the index gate need one to stay open to Bing.
+export function hasChurchVisitFacts(input: ChurchMetadataInput): boolean {
+  return Boolean(resolveStreetAddress(input)) || sanitizeServiceTimes(resolveServiceTimes(input)).length > 0;
 }
 
 function hasMusicData(church: ChurchConfig): boolean {
@@ -171,8 +204,10 @@ export function buildChurchTitle(input: ChurchMetadataInput): string {
   return buildTitleWithSuffix(identity, [tier === "thin" ? "Church Profile" : "Church Info"]);
 }
 
+// Facts that already end in a full stop ("Sunday 9:00 a.m.", "Acme Church
+// Inc.") must not gain a second one.
 function joinSentences(sentences: string[]): string {
-  return sentences.filter(Boolean).join(" ");
+  return sentences.filter(Boolean).map((sentence) => sentence.replace(/([.!?])\.$/, "$1")).join(" ");
 }
 
 function clip(text: string, max: number): string {

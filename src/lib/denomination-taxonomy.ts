@@ -182,6 +182,18 @@ export function normalizeDenomination(raw: string | null | undefined): string | 
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+// One import stored its source ("OpenStreetMap", ~6,900 churches) as the
+// denomination network, and some rows say "unknown". Neither is a tradition,
+// and both leaked into descriptions as "OpenStreetMap church.", so they read
+// as no value and the church's own denomination wins.
+const NON_DENOMINATION_NETWORKS = new Set(["openstreetmap", "unknown"]);
+
+export function cleanDenominationNetwork(network: string | null | undefined): string | undefined {
+  const value = network?.trim();
+  if (!value || NON_DENOMINATION_NETWORKS.has(value.toLowerCase())) return undefined;
+  return value;
+}
+
 /**
  * Classify a church by its denomination_network value.
  * "Hillsong Church" → "Charismatic"

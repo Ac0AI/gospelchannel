@@ -340,6 +340,22 @@ export function isIndexableChurch(input: ChurchIndexabilityInput): boolean {
   return score >= INDEXABLE_ONBRAND_SCORE_MIN;
 }
 
+export type ChurchRobotsPolicy = "index" | "google-noindex" | "noindex";
+
+// Bing gate (2026-10-22). The gate above was set on Google evidence, but Bing
+// is the engine that sends visitors: in a 160-profile sample, 55 profiles
+// below the gate carried 131 of 362 Bing clicks over eight weeks, and every
+// one of them had an address or service times. Such profiles stay out of
+// Google (googlebot noindex) and open to Bing and other engines. Off-brand
+// denominations and profiles with no visit facts stay noindex everywhere.
+export function getChurchRobotsPolicy(
+  input: ChurchIndexabilityInput & { hasVisitFacts: boolean },
+): ChurchRobotsPolicy {
+  if (isIndexableChurch(input)) return "index";
+  if (OFF_BRAND_DENOMINATION_SET.has((input.denomination ?? "").trim())) return "noindex";
+  return input.hasVisitFacts ? "google-noindex" : "noindex";
+}
+
 export function deriveDisplayAssessment(input: DisplayAssessmentInput): {
   promotionTier: PromotionTier;
   displayScore: number;
