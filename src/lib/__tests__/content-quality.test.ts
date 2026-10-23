@@ -178,6 +178,11 @@ describe("content-quality", () => {
       expect(getChurchRobotsPolicy({ indexScore: 100, denomination: "Catholic", hasVisitFacts: true })).toBe("noindex");
       expect(getChurchRobotsPolicy({ indexScore: below, denomination: " Seventh-day Adventist ", hasVisitFacts: true })).toBe("noindex");
     });
+
+    it("an off-brand denomination shown from enrichment keeps the profile noindex", () => {
+      expect(getChurchRobotsPolicy({ indexScore: 100, denomination: null, displayDenomination: "Church of Christ", hasVisitFacts: true })).toBe("noindex");
+      expect(getChurchRobotsPolicy({ indexScore: below, denomination: null, displayDenomination: "Assemblies of God", hasVisitFacts: true })).toBe("google-noindex");
+    });
   });
 
   // Orphan-pages plan, deploy 1 (2026-05-20). Prayer wall as the 4th content

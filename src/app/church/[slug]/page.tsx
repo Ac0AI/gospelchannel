@@ -220,6 +220,7 @@ export async function generateMetadata({ params }: ChurchPageProps): Promise<Met
     hasWorship: hasPlaylists,
     officialReview: enrichment?.officialReview,
     hasVisitFacts: hasChurchVisitFacts(metadataInput),
+    displayDenomination: (mergedProfile?.denomination as string | undefined) ?? enrichment?.denominationNetwork,
   });
   const googleHoldout = robotsPolicy === "index"
     && isGoogleHoldoutProfile(church.slug, hasPlaylists || Boolean(church.spotifyUrl));

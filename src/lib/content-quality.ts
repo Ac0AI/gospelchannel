@@ -347,12 +347,16 @@ export type ChurchRobotsPolicy = "index" | "google-noindex" | "noindex";
 // below the gate carried 131 of 362 Bing clicks over eight weeks, and every
 // one of them had an address or service times. Such profiles stay out of
 // Google (googlebot noindex) and open to Bing and other engines. Off-brand
-// denominations and profiles with no visit facts stay noindex everywhere.
+// denominations and profiles with no visit facts stay noindex everywhere. The
+// shown denomination often comes from enrichment (displayDenomination) when
+// the church row has none, so it counts for the off-brand check too.
 export function getChurchRobotsPolicy(
-  input: ChurchIndexabilityInput & { hasVisitFacts: boolean },
+  input: ChurchIndexabilityInput & { hasVisitFacts: boolean; displayDenomination?: string | null },
 ): ChurchRobotsPolicy {
   if (isIndexableChurch(input)) return "index";
-  if (OFF_BRAND_DENOMINATION_SET.has((input.denomination ?? "").trim())) return "noindex";
+  const offBrand = [input.denomination, input.displayDenomination]
+    .some((value) => OFF_BRAND_DENOMINATION_SET.has((value ?? "").trim()));
+  if (offBrand) return "noindex";
   return input.hasVisitFacts ? "google-noindex" : "noindex";
 }
 
