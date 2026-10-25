@@ -45,7 +45,7 @@ const MODELS = {
   haiku: { provider: "anthropic", id: "claude-haiku-4-5-20251001", label: "Haiku 4.5" },
   "gemini-flash": { provider: "gemini", id: "gemini-2.5-flash", label: "Gemini 2.5 Flash" },
   "gemini-flash-lite": { provider: "gemini", id: "gemini-2.5-flash-lite", label: "Gemini 2.5 Flash-Lite" },
-  "gpt-4.1-nano": { provider: "openai", id: "gpt-4.1-nano", label: "GPT-4.1 nano" },
+  "gpt-5.6-luna": { provider: "openai", id: "gpt-5.6-luna", label: "GPT-5.6 Luna" },
   "gpt-5-nano": { provider: "openai", id: "gpt-5-nano", label: "GPT-5 nano" },
   "gpt-5-mini": { provider: "openai", id: "gpt-5-mini", label: "GPT-5 mini" },
 };
@@ -228,6 +228,8 @@ async function callGemini({ systemPrompt, userPrompt, modelId }) {
 
 async function callOpenAI({ systemPrompt, userPrompt, modelId }) {
   const isReasoning = /^(gpt-5|o1|o3|o4)/.test(modelId);
+  const reasoningEffort = modelId === "gpt-5.6-luna" ? "none" : isReasoning ? "minimal" : undefined;
+  const usesReasoning = isReasoning && reasoningEffort !== "none";
   const body = {
     model: modelId,
     messages: [
@@ -235,11 +237,10 @@ async function callOpenAI({ systemPrompt, userPrompt, modelId }) {
       { role: "user", content: userPrompt },
     ],
     response_format: { type: "json_object" },
-    // Reasoning models spend completion-token budget on chain-of-thought before
-    // emitting visible output; bump budget and set effort=minimal to keep cost
-    // down.
-    max_completion_tokens: isReasoning ? 8000 : 2000,
-    ...(isReasoning ? { reasoning_effort: "minimal" } : {}),
+    // Keep Luna's extraction call without reasoning; preserve the existing
+    // reasoning budget for the older GPT-5 options.
+    max_completion_tokens: usesReasoning ? 8000 : 2000,
+    ...(reasoningEffort ? { reasoning_effort: reasoningEffort } : {}),
   };
   const res = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",

@@ -48,7 +48,7 @@ if (!OPENAI_API_KEY) { console.error("Missing OPENAI_API_KEY"); process.exit(1);
 
 const sql = neon(DATABASE_URL);
 
-const MODEL_ID = "gpt-4.1-nano";
+const MODEL_ID = "gpt-5.6-luna";
 const UA = "Mozilla/5.0 (compatible; GospelChannelBot/1.0; +https://gospelchannel.com)";
 const DEFAULT_CONCURRENCY = 10;
 const DEFAULT_STALE_DAYS = 30;
@@ -285,6 +285,7 @@ async function doPrepare() {
           ],
           response_format: { type: "json_object" },
           max_completion_tokens: 2000,
+          reasoning_effort: "none",
         },
       };
       const metadata = {
