@@ -162,12 +162,12 @@ const SECTIONS: FaqSection[] = [
 const ALL_FAQS = SECTIONS.flatMap((s) => s.items);
 
 const SOURCES = [
-  { label: "GotQuestions.org - What is salvation?", url: "https://www.gotquestions.org/what-is-salvation.html" },
+  { label: "GotQuestions.org - What is salvation?", url: "https://www.gotquestions.org/Christian-doctrine-salvation.html" },
   { label: "GotQuestions.org - Why read the Bible?", url: "https://www.gotquestions.org/why-read-Bible.html" },
   { label: "GotQuestions.org - What is prayer?", url: "https://www.gotquestions.org/what-is-prayer.html" },
   { label: "Assemblies of God - Statement of Fundamental Truths", url: "https://ag.org/Beliefs/Statement-of-Fundamental-Truths" },
   { label: "Chase Oaks - Seven Common Questions About Baptism", url: "https://www.chaseoaks.org/articles/seven-common-questions-about-baptism" },
-  { label: "EFCA - What We Believe", url: "https://www.efca.org/about/who-we-are/what-we-believe" },
+  { label: "EFCA - Statement of Faith", url: "https://www.efca.org/sof" },
   { label: "EFCA Blog - Autonomous and Interdependent", url: "https://blogs.efca.org/posts/autonomous-and-interdependent" },
   { label: "EFCA Blog - Salvation and the Church: Baptism", url: "https://blogs.efca.org/strands-of-thought/posts/salvation-and-the-church-the-church-and-ordinances-baptism-and-the-efca" },
   { label: "EFCA - Membership Statement", url: "https://data.efca.org/files/view/699" },
