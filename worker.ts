@@ -24,6 +24,8 @@ type WorkerHandler = {
 const openNextWorker = generatedOpenNextWorker as OpenNextWorkerModule;
 const SITEMAP_EDGE_CACHE_NAME = "gospelchannel-sitemaps";
 const HTML_EDGE_CACHE_NAME = "gospelchannel-html-v2";
+// Give the home page a fresh namespace after replacing its offline build seed.
+const HOME_EDGE_CACHE_NAME = "gospelchannel-home-v3";
 // 24h fresh + 7d stale-while-revalidate. Near-static directory/content pages;
 // long TTL collapses crawler-driven cold renders (per-colo Cache API misses ×
 // ~65k slugs × ~10 Neon queries each) into background revalidations.
@@ -199,7 +201,8 @@ async function fetchWithHtmlEdgeCache(
   env: CloudflareEnv,
   ctx: WorkerExecutionContext,
 ): Promise<Response> {
-  const edgeCache = await caches.open(`${HTML_EDGE_CACHE_NAME}-${await getBuildId(env)}`);
+  const cacheName = new URL(request.url).pathname === "/" ? HOME_EDGE_CACHE_NAME : HTML_EDGE_CACHE_NAME;
+  const edgeCache = await caches.open(`${cacheName}-${await getBuildId(env)}`);
   const cacheKey = new Request(request.url, { method: "GET" });
 
   const cached = await edgeCache.match(cacheKey);
