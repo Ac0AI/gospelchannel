@@ -5,11 +5,10 @@ import { HeroSearch } from "@/components/HeroSearch";
 import { HERO_SLIDES } from "@/components/home-hero-slides";
 
 type Props = {
-  surpriseSlugs: string[];
   churchCountLabel: string;
 };
 
-export function HomeHero({ surpriseSlugs, churchCountLabel }: Props) {
+export function HomeHero({ churchCountLabel }: Props) {
   const [idx, setIdx] = useState(0);
   const [showAll, setShowAll] = useState(false);
 
@@ -30,8 +29,9 @@ export function HomeHero({ surpriseSlugs, churchCountLabel }: Props) {
       ?.click();
   }
 
+  // min-height, not height: the search answer panel grows the hero when it opens.
   return (
-    <section className="relative h-[560px] overflow-hidden sm:h-[680px] lg:h-[760px]">
+    <section className="relative flex min-h-[560px] flex-col overflow-hidden sm:min-h-[680px] lg:min-h-[760px]">
       {/* Rotating background images */}
       {HERO_SLIDES.map((slide, i) => {
         const shouldRender = i === 0 || showAll;
@@ -74,7 +74,7 @@ export function HomeHero({ surpriseSlugs, churchCountLabel }: Props) {
       />
 
       {/* Hero content */}
-      <div className="relative z-[2] flex h-full flex-col items-center justify-center px-5 text-center sm:px-12">
+      <div className="relative z-[2] flex flex-1 flex-col items-center justify-center px-5 pb-16 pt-24 text-center sm:px-12 sm:pt-28">
         <p className="font-serif text-base italic text-white/70 sm:text-[17px]">
           GospelChannel Church Guide &middot; Compare service times, location, worship, and visitor details.
         </p>
@@ -86,7 +86,7 @@ export function HomeHero({ surpriseSlugs, churchCountLabel }: Props) {
         </p>
 
         <div className="mt-9 w-full max-w-[620px]">
-          <HeroSearch surpriseSlugs={surpriseSlugs} variant="page" />
+          <HeroSearch variant="page" />
           <button
             type="button"
             onClick={startNearbySearch}

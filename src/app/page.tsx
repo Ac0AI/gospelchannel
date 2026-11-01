@@ -169,7 +169,6 @@ export default async function HomePage() {
   const homeFaqs = buildHomeFaqs(churchCountLabel, countryCount);
   const homeSchema = buildHomeSchema(churchCountLabel, countryCount, homeFaqs);
   const featured = showcaseChurches.slice(0, 48);
-  const surpriseSlugs = showcaseChurches.slice(0, 48).map((church) => church.slug);
   const churchNames = PRAYER_FEATURE_ENABLED
     ? await getChurchNamesBySlugsAsync(recentPrayers.map((prayer) => prayer.churchSlug))
     : {};
@@ -179,7 +178,7 @@ export default async function HomePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(homeSchema) }} />
 
       {/* 1. Cinematic full-bleed hero */}
-      <HomeHero surpriseSlugs={surpriseSlugs} churchCountLabel={churchCountLabel} />
+      <HomeHero churchCountLabel={churchCountLabel} />
 
       {/* 2. Stats strip */}
       <div className="border-y border-rose-gold/[0.12] bg-linen-deep px-5 py-5 text-center sm:px-12">

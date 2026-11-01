@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ChurchDirectoryGrid } from "@/components/ChurchDirectoryGrid";
+import { ChurchAskDirectoryForm } from "@/components/ChurchAskDirectoryForm";
 import { TrackedChurchSearchForm } from "@/components/ChurchJourneyAnalytics";
 import { ChurchSearchAutocomplete } from "@/components/ChurchSearchAutocomplete";
 import {
@@ -342,7 +343,7 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
           ) : null}
 
           {/* Premium search pill */}
-          <TrackedChurchSearchForm action="/church" method="get" variant="directory" className="mt-7 max-w-[760px]">
+          <ChurchAskDirectoryForm action="/church" method="get" className="mt-7 max-w-[760px]" showExample={!claimIntent}>
             {claimIntent ? <input type="hidden" name="intent" value="claim" /> : null}
             {filters.styleSlug ? <input type="hidden" name="style" value={filters.styleSlug} /> : null}
             {filters.denominationSlug ? <input type="hidden" name="denomination" value={filters.denominationSlug} /> : null}
@@ -380,7 +381,7 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
                 Search
               </button>
             </div>
-          </TrackedChurchSearchForm>
+          </ChurchAskDirectoryForm>
 
           {/* Refine chips */}
           <div className="mt-5 max-w-[860px] flex flex-wrap items-center gap-2">
