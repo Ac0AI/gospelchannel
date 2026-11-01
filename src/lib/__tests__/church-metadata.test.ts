@@ -193,6 +193,25 @@ describe("buildChurchTitle", () => {
     expect(buildChurchTitle(input)).toBe("Stone Edge Church in Macon · Service Times & Address");
   });
 
+  it("does not promise service times when no slot has an actual time", () => {
+    // Real shape on ~4,800 approved profiles, e.g. Concord Baptist Church, Cohutta.
+    const withAddress = makeInput(
+      { name: "Concord Baptist Church", location: "Cohutta", country: "United States" },
+      {
+        streetAddress: "1054 Hopewell Rd",
+        serviceTimes: [{ day: "Sunday", time: null as unknown as string, label: "Main Service" }],
+      },
+    );
+    expect(buildChurchTitle(withAddress)).toBe("Concord Baptist Church in Cohutta · Address & Church Info");
+
+    const timesOnly = makeInput(
+      { name: "The Way World Outreach", location: "San Bernardino", country: "United States" },
+      { serviceTimes: [{ day: "Sunday", time: "" }] },
+    );
+    expect(buildChurchTitle(timesOnly)).not.toContain("Service Times");
+    expect(hasChurchVisitFacts(timesOnly)).toBe(false);
+  });
+
   it("prefers curated location over a district inferred from the street address", () => {
     const input = makeInput(
       { name: "Église Source de Siloé", slug: "not-overridden", location: "Gisors", country: "France" },

@@ -119,10 +119,16 @@ function formatLanguageLabel(value: string): string {
   return label ? `${label[0].toLocaleUpperCase()}${label.slice(1)}` : label;
 }
 
-function resolveServiceTimes(input: ChurchMetadataInput): ServiceTime[] | undefined {
+// Sanitized here so the title, the tier and the visit-facts check see the same
+// times the page renders. ~4,800 approved profiles store slots like
+// { day: "Sunday", time: null }; unsanitized, their titles said "Service Times"
+// while the page showed none and asked visitors to supply them (2026-11-01).
+function resolveServiceTimes(input: ChurchMetadataInput): ServiceTime[] {
   const merged = readMerged<unknown>(input.mergedProfile, "serviceTimes");
-  if (Array.isArray(merged) && merged.length > 0) return merged as ServiceTime[];
-  return input.enrichment?.serviceTimes;
+  const raw = Array.isArray(merged) && merged.length > 0
+    ? (merged as ServiceTime[])
+    : input.enrichment?.serviceTimes;
+  return sanitizeServiceTimes(raw);
 }
 
 function resolveLongDescription(input: ChurchMetadataInput): string | undefined {
@@ -134,7 +140,7 @@ function resolveLongDescription(input: ChurchMetadataInput): string | undefined 
 // A street address or a service time: what someone searching a church's name
 // usually came for. Profiles below the index gate need one to stay open to Bing.
 export function hasChurchVisitFacts(input: ChurchMetadataInput): boolean {
-  return Boolean(resolveStreetAddress(input)) || sanitizeServiceTimes(resolveServiceTimes(input)).length > 0;
+  return Boolean(resolveStreetAddress(input)) || resolveServiceTimes(input).length > 0;
 }
 
 function hasMusicData(church: ChurchConfig): boolean {
@@ -147,7 +153,7 @@ export function classifyChurchTier(input: ChurchMetadataInput): ChurchTier {
 
   const description = resolveLongDescription(input);
   const hasProfileSignal =
-    (resolveServiceTimes(input)?.length ?? 0) > 0
+    resolveServiceTimes(input).length > 0
     || !!resolveStreetAddress(input)
     || !!resolveDenomination(input)
     || resolveLanguages(input).length > 0
@@ -183,8 +189,7 @@ export function buildChurchTitle(input: ChurchMetadataInput): string {
   const tier = classifyChurchTier(input);
   const city = resolveCity(input);
   const country = normalizeDisplayText(input.church.country);
-  const serviceTimes = resolveServiceTimes(input);
-  const hasServiceTimes = (serviceTimes?.length ?? 0) > 0;
+  const hasServiceTimes = resolveServiceTimes(input).length > 0;
   const hasAddress = !!resolveStreetAddress(input);
   const fallbackGeo = city ?? country;
   const identity = appendCityIfNew(input.displayName, fallbackGeo);
