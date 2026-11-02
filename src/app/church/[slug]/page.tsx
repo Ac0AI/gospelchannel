@@ -439,7 +439,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
     : null;
 
   // Which action leads the final "plan your visit" CTA. Prefer keeping the
-  // visitor on-site (scroll to our aggregated "Your first Sunday" planner), then
+  // visitor on-site (scroll to our aggregated "Your first visit" planner), then
   // our own mediated contact-through-us, then a direct action. Never a dead CTA.
   const visitPrimary: "plan" | "message" | "directions" | "call" | "website" | null =
     hasAboutData ? "plan"
@@ -502,7 +502,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
       ? { key: "google-rating", label: "Google rating", value: `${googleRating!.toFixed(1)} of 5 (${googleReviewsCount!.toLocaleString("en-US")} Google reviews)`, href: mapsHref }
       : null,
     serviceTimeLabel
-      ? { key: "service-times", label: "Sunday timing", value: serviceTimeLabel, href: "#your-first-sunday" }
+      ? { key: "service-times", label: "Service times", value: serviceTimeLabel, href: "#your-first-sunday" }
       : null,
     serviceDurationMinutes
       ? { key: "service-length", label: "Service length", value: `${serviceDurationMinutes} minutes`, href: "#your-first-sunday" }
@@ -652,7 +652,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
         potentialAction: {
           "@type": "WatchAction",
           target: livestreamUrl,
-          name: "Watch the Sunday service online",
+          name: "Watch a service online",
         },
       }),
     },
@@ -922,7 +922,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
             {serviceTimeLabel && (
               <div className="inline-flex items-center gap-2 rounded-full border border-white/[0.15] bg-white/[0.08] px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.24em] text-white backdrop-blur-md">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]" />
-                Service {serviceTimeLabel}
+                Listed time: {serviceTimeLabel}
               </div>
             )}
             <div className="hidden text-xs font-semibold uppercase tracking-[0.2em] text-blush/50 md:block">
@@ -994,7 +994,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                 A word from the team
               </div>
               <p className="m-0 font-serif text-3xl font-medium italic leading-[1.15] tracking-[-0.02em] text-white sm:text-5xl lg:text-6xl">
-                &ldquo;{aboutDescription ? firstSentence(aboutDescription) : `We&rsquo;d love to meet you on Sunday at ${displayName}.`}&rdquo;
+                &ldquo;{aboutDescription ? firstSentence(aboutDescription) : `Learn what to expect before visiting ${displayName}.`}&rdquo;
               </p>
               <div className="mt-16 inline-flex items-center gap-5">
                 {pastorPhotoUrl ? (
@@ -1177,7 +1177,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
         </ScrollReveal>
       )}
 
-      {/* ━━━━━━━━━━ 4. YOUR FIRST SUNDAY ━━━━━━━━━━ */}
+      {/* ━━━━━━━━━━ 4. YOUR FIRST VISIT ━━━━━━━━━━ */}
       {hasAboutData && (
         <ScrollReveal>
           <section id="your-first-sunday" className="scroll-mt-24 px-5 pt-32 sm:px-12 sm:pt-40">
@@ -1185,7 +1185,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
               <div className="grid items-start gap-16 lg:grid-cols-2 lg:gap-20">
                 <div>
                   <div className="mb-6 text-[11px] font-bold uppercase tracking-[0.36em] text-rose-gold">
-                    Your first Sunday
+                    Your first visit
                   </div>
                   <h2 className="m-0 font-serif text-4xl font-semibold leading-[0.95] tracking-[-0.025em] text-espresso sm:text-6xl lg:text-[80px]">
                     You&rsquo;ll know
@@ -1472,7 +1472,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                     </p>
                   )}
                   <p className="mt-8 max-w-md font-serif text-lg italic leading-[1.5] text-blush/85 sm:text-xl">
-                    Hear what Sunday sounds like before you go.
+                    Hear the worship before you go.
                   </p>
                 </div>
               </div>
@@ -1620,7 +1620,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                     See what it&rsquo;s like inside
                   </h2>
                   <p className="mt-1 text-sm text-warm-brown">
-                    Sermons, worship nights, and Sunday mornings.
+                    Sermons, worship nights, and services.
                   </p>
                 </div>
                 <div className="flex shrink-0 items-center gap-3">
@@ -1721,7 +1721,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
 
           <div className="relative mx-auto max-w-[1100px] px-5 py-32 text-center sm:px-12 sm:py-36">
             <div className="mb-8 text-[11px] font-bold uppercase tracking-[0.4em] text-blush">
-              See you Sunday?
+              Planning a visit?
             </div>
             <h2
               className="m-0 font-serif font-semibold leading-[0.92] tracking-[-0.03em]"
@@ -1820,7 +1820,7 @@ export default async function ChurchDetailPage({ params }: ChurchPageProps) {
                   rel="noreferrer"
                   className="rounded-full border border-white/50 bg-transparent px-10 py-5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
                 >
-                  Watch this Sunday&rsquo;s service
+                  Watch a service
                 </TrackedChurchActionLink>
               )}
             </div>
