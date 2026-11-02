@@ -2,19 +2,19 @@
 
 ## Canonical data
 
-- `public.churches` is the canonical source for approved church records and explicit Spotify fields:
+- `churches` is the canonical source for approved church records and explicit Spotify fields:
   - `spotify_url`
   - `spotify_playlist_ids`
   - `additional_playlists`
   - `spotify_playlists`
-- `public.church_networks` and `public.church_campuses` are the canonical source for network and campus pages.
+- `church_networks` and `church_campuses` are the canonical source for network and campus pages.
 - Campus pages can inherit music from their parent church at read time in [src/lib/church.ts](../src/lib/church.ts).
 
 ## Snapshot and fallback
 
 - `src/data/churches.json` is an offline/build fallback, not the write source.
-- The live Neon directory is much larger, so exact slug parity is intentionally not required.
-- A full export can be generated with `node scripts/generate-churches-json.mjs` when explicitly needed. Review it for public-repository privacy before committing.
+- The live D1 directory is much larger, so exact slug parity is intentionally not required.
+- Keep exports private and review them for personal data before publishing a fallback. The legacy Postgres export scripts are archived and must not be used against the live D1 database.
 
 ## Public page model
 
@@ -33,21 +33,21 @@
 
 ## Operational rules
 
-- Write approved church data to Neon first.
+- Write approved church data to D1 first.
 - Keep fallback rows valid, but do not regenerate the full snapshot after every approved church update.
 - Do not count `src/data/churches.json` alone when the question is about public pages; campuses live outside that snapshot.
 - For Google indexing, use `sitemap.xml` as the canonical public URL list. `scripts/push-to-google.mjs` preserves the old queue order first, then appends any extra sitemap URLs so existing checkpoints remain valid.
 
-## Playlist backfill flow
+## Scheduled writes
 
-- `scripts/backfill-website-playlists.mjs` is the deterministic backfill path for explicit playlist fields.
-- It only promotes playlist URLs that were already discovered in `src/data/cache/church-candidate-screening.json`.
-- It writes only to approved rows in `public.churches` that do not already have explicit playlist fields.
-- After a successful backfill run:
-  - regenerate `src/data/churches.json`
-  - run `npm run churches:audit`
+- Gospel's Spotify enrichment and directory reconciliation jobs write to D1.
+- The playlist.church pipeline reads D1 and atomically replaces `church_songs`.
+- Local image mirroring uses the existing Wrangler login through
+  `scripts/with-d1-wrangler-auth.mjs`.
+- Historical Postgres backfills must be ported and checked before reuse; do not
+  restore a legacy database URL to an active scheduled job.
 
 ## Verification
 
-- Run `pnpm churches:check` to verify live directory invariants and confirm that every fallback slug still resolves to an approved Neon row.
+- Run `pnpm churches:check` to verify live directory invariants and confirm that every fallback slug still resolves to an approved D1 row.
 - If the check reports fallback rows that are no longer approved, review the sample and run `pnpm churches:check -- --fix-fallback` to prune only those stale rows.
