@@ -430,7 +430,7 @@ ${formatLinks(DISCOVERY_LINKS)}
 
 ## Crawler Policy
 
-User-directed retrieval and search citation agents are welcome on public pages. Model-training crawlers remain blocked by robots.txt and Cloudflare content signals.
+User-directed retrieval and search citation agents are welcome on public pages. The robots.txt policy permits selected model-training crawlers and restricts others; security rules also apply.
 `;
 }
 
@@ -505,7 +505,7 @@ GospelChannel provides a public read-only Model Context Protocol endpoint at ${S
 
 ## Trust And Policy
 
-GospelChannel is accessible for free. Public pages may be used for user-directed retrieval, search indexing, citation, and real-time grounding according to robots.txt. Model training and bulk AI training crawlers are restricted by robots.txt and Cloudflare content signals.
+GospelChannel is accessible for free. Public pages may be used for user-directed retrieval, search indexing, citation, and real-time grounding according to robots.txt. The robots.txt policy permits selected model-training crawlers and restricts others; security rules also apply.
 
 ## Important Links
 
