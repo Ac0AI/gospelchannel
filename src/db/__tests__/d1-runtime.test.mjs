@@ -2,12 +2,15 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { DatabaseSync } from "node:sqlite";
 import { readFileSync } from "node:fs";
 
-const context = vi.hoisted(() => ({ binding: null }));
-vi.mock("@opennextjs/cloudflare", () => ({ getCloudflareContext: () => ({ env: { GOSPEL_D1: context.binding } }) }));
+const context = vi.hoisted(() => ({ binding: null, worker: true }));
+vi.mock("@opennextjs/cloudflare", () => ({ getCloudflareContext: () => {
+  if (!context.worker) throw new Error("No Worker context");
+  return { env: { GOSPEL_D1: context.binding } };
+} }));
 vi.mock("next/cache", () => ({ unstable_cache: (fn) => fn, revalidateTag: vi.fn() }));
 vi.mock("server-only", () => ({}));
 
-import { getDb, getSql, schema } from "@/db";
+import { getDb, getSql, hasDatabaseConfig, schema } from "@/db";
 import { createAdminClient } from "@/lib/data-client";
 import { getChurchIndexPageData, getChurchDirectoryFilterOptions, fetchFacetRelatedLinks } from "@/lib/church";
 import { getChurchSearchSuggestions } from "@/lib/search-suggestions";
@@ -17,6 +20,7 @@ import { eq } from "drizzle-orm";
 
 let db;
 beforeEach(() => {
+  context.worker = true;
   vi.stubEnv("GOSPEL_D1_DATABASE_ID", "");
   vi.stubEnv("GOSPEL_BUILD_OFFLINE", "0");
   db = new DatabaseSync(":memory:");
@@ -55,6 +59,43 @@ beforeEach(() => {
 afterEach(() => { db.close(); vi.restoreAllMocks(); vi.unstubAllEnvs(); });
 
 describe("D1 runtime", () => {
+  it("retains HTTP access for Node jobs without a Worker context", async () => {
+    context.worker = false;
+    vi.stubEnv("GOSPEL_D1_DATABASE_ID", "node-only-database");
+    vi.stubEnv("CLOUDFLARE_ACCOUNT_ID", "node-only-account");
+    vi.stubEnv("GOSPEL_D1_API_TOKEN", "node-only-token");
+    const http = vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify({
+      success: true, result: [{ success: true, results: [{ count: 3 }] }],
+    })));
+    expect(hasDatabaseConfig()).toBe(true);
+    expect(await getSql().query("SELECT count(*) AS count FROM churches")).toEqual([{ count: 3 }]);
+    expect(http).toHaveBeenCalledOnce();
+  });
+
+  it("uses the Worker binding even when Node-only D1 credentials are present", async () => {
+    vi.stubEnv("GOSPEL_D1_DATABASE_ID", "node-only-database");
+    vi.stubEnv("CLOUDFLARE_ACCOUNT_ID", "");
+    vi.stubEnv("CLOUDFLARE_API_TOKEN", "");
+    vi.stubEnv("GOSPEL_D1_API_TOKEN", "");
+    const http = vi.spyOn(globalThis, "fetch");
+
+    expect(hasDatabaseConfig()).toBe(true);
+    expect(await getSql().query("SELECT count(*) AS count FROM churches")).toEqual([{ count: 1 }]);
+    const users = await getDb().select().from(schema.user);
+    expect(users).toHaveLength(1);
+    expect(http).not.toHaveBeenCalled();
+  });
+
+  it("fails closed when the Worker has no binding instead of using Node credentials", () => {
+    context.binding = null;
+    vi.stubEnv("GOSPEL_D1_DATABASE_ID", "node-only-database");
+    vi.stubEnv("CLOUDFLARE_ACCOUNT_ID", "node-only-account");
+    vi.stubEnv("GOSPEL_D1_API_TOKEN", "node-only-token");
+    expect(hasDatabaseConfig()).toBe(false);
+    expect(() => getSql()).toThrow("Missing GOSPEL_D1 database binding");
+    expect(() => getDb()).toThrow("Missing GOSPEL_D1 database binding");
+  });
+
   it("binds numbered values without altering SQL literals and decodes stored values", async () => {
     expect(await getSql().query("SELECT '$1' AS literal, $2 AS second, $1 AS first", ["one", "two"]))
       .toEqual([{ literal: "$1", second: "two", first: "one" }]);

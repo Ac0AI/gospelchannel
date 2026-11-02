@@ -15,6 +15,7 @@ const DEFAULT_WARM_PATHS = [
   "/for-churches",
   "/contact",
   "/robots.txt",
+  "/sitemap.xml",
 ];
 const SKIP_WARM_FLAGS = new Set(["--skip-warm", "--no-warm"]);
 const SITEMAP_WARM_PASSES = 2;
@@ -149,6 +150,7 @@ function logWarmResults(results) {
     .map((result) => `${result.status} ${result.ms}ms ${result.url}`);
 
   if (failures.length > 0) {
+    process.exitCode = 1;
     console.warn("[deploy] Prewarm completed with warnings:");
     for (const failure of failures.slice(0, 10)) {
       console.warn(`- ${failure.status} ${failure.ms}ms ${failure.url}${failure.error ? ` (${failure.error})` : ""}`);
@@ -178,6 +180,7 @@ async function prewarmSite() {
     const passResults = await warmUrls(sitemapUrls, SITEMAP_WARM_CONCURRENCY);
     const failures = passResults.filter((result) => result.status !== 200);
     if (failures.length > 0) {
+      process.exitCode = 1;
       console.warn(`[deploy] Sitemap warm pass ${pass} completed with warnings.`);
       for (const failure of failures.slice(0, 10)) {
         console.warn(`- ${failure.status} ${failure.ms}ms ${failure.url}${failure.error ? ` (${failure.error})` : ""}`);
@@ -199,8 +202,7 @@ function shouldSkipWarm() {
 async function revalidateAfterDeploy() {
   const secret = (process.env.CRON_SECRET || "").trim();
   if (!secret) {
-    console.warn("[deploy] CRON_SECRET missing in env; skipping post-deploy revalidation (facet/stat pages stay empty until their hourly TTL).");
-    return;
+    throw new Error("[deploy] CRON_SECRET missing; cannot revalidate the offline build cache.");
   }
   try {
     const response = await fetch(`${SITE_URL}/api/cron/sync?full=true`, {
@@ -209,12 +211,12 @@ async function revalidateAfterDeploy() {
     if (response.ok) {
       console.log("[deploy] Post-deploy revalidation OK (full cache flush).");
     } else if (response.status === 401) {
-      console.warn("[deploy] Post-deploy revalidation got 401: CRON_SECRET in .env.local does not match the deployed secret. Sync it with: grep '^CRON_SECRET=' .env.local | cut -d= -f2- | pnpm exec wrangler secret put CRON_SECRET");
+      throw new Error("[deploy] Post-deploy revalidation got 401: local CRON_SECRET does not match the deployed secret.");
     } else {
-      console.warn(`[deploy] Post-deploy revalidation failed with ${response.status}: ${(await response.text().catch(() => "")).slice(0, 200)}`);
+      throw new Error(`[deploy] Post-deploy revalidation failed with ${response.status}.`);
     }
   } catch (error) {
-    console.warn(`[deploy] Post-deploy revalidation errored: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error("[deploy] Post-deploy revalidation failed; release verification is incomplete.", { cause: error });
   }
 }
 
