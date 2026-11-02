@@ -148,7 +148,7 @@ function pct(numerator: number, denominator: number): number {
 
 /**
  * Run the per-country aggregation. One query for the whole leaderboard +
- * smaller markets — Neon handles this comfortably under the church_index_tag
+ * smaller markets — D1 handles this comfortably under the church_index_tag
  * cache window.
  */
 async function fetchCountryStats(): Promise<CountryStats[]> {
@@ -158,17 +158,17 @@ async function fetchCountryStats(): Promise<CountryStats[]> {
     `
     SELECT
       c.country AS country,
-      COUNT(*)::int AS total,
-      COUNT(*) FILTER (WHERE c.website IS NOT NULL OR e.website_url IS NOT NULL)::int AS with_website,
-      COUNT(t.primary_platform)::int AS with_cms,
-      COUNT(*) FILTER (WHERE c.facebook_url IS NOT NULL OR e.facebook_url IS NOT NULL)::int AS with_facebook,
-      COUNT(*) FILTER (WHERE c.youtube_channel_id IS NOT NULL OR e.youtube_url IS NOT NULL)::int AS with_youtube,
-      COUNT(*) FILTER (WHERE e.livestream_url IS NOT NULL)::int AS with_livestream
+      COUNT(*) AS total,
+      COUNT(*) FILTER (WHERE c.website IS NOT NULL OR e.website_url IS NOT NULL) AS with_website,
+      COUNT(t.primary_platform) AS with_cms,
+      COUNT(*) FILTER (WHERE c.facebook_url IS NOT NULL OR e.facebook_url IS NOT NULL) AS with_facebook,
+      COUNT(*) FILTER (WHERE c.youtube_channel_id IS NOT NULL OR e.youtube_url IS NOT NULL) AS with_youtube,
+      COUNT(*) FILTER (WHERE e.livestream_url IS NOT NULL) AS with_livestream
     FROM churches c
     LEFT JOIN church_enrichments e ON e.church_slug = c.slug
     LEFT JOIN church_website_tech t ON t.church_slug = c.slug
     WHERE c.status = 'approved'
-      AND c.country = ANY($1)
+      AND c.country IN (SELECT value FROM json_each($1))
     GROUP BY c.country
     `,
     [ALL_COUNTRIES],
@@ -215,11 +215,11 @@ async function fetchTopPlatforms(): Promise<ReportData["topPlatforms"]> {
     `
     SELECT
       t.primary_platform AS platform,
-      COUNT(*)::int AS n
+      COUNT(*) AS n
     FROM churches c
     JOIN church_website_tech t ON t.church_slug = c.slug
     WHERE c.status = 'approved'
-      AND c.country = ANY($1)
+      AND c.country IN (SELECT value FROM json_each($1))
       AND t.primary_platform IS NOT NULL
       AND t.primary_platform <> ''
     GROUP BY t.primary_platform
@@ -254,15 +254,15 @@ async function fetchCmsBreakdown(): Promise<{
     `
     SELECT
       c.country AS country,
-      COUNT(t.primary_platform)::int AS detected,
-      COUNT(*) FILTER (WHERE t.primary_platform = 'WordPress')::int AS wordpress,
-      COUNT(*) FILTER (WHERE t.primary_platform = ANY($2))::int AS modern_diy,
-      COUNT(*) FILTER (WHERE t.primary_platform = ANY($3))::int AS church_platform,
-      COUNT(*) FILTER (WHERE t.primary_platform = ANY($4))::int AS modern_framework
+      COUNT(t.primary_platform) AS detected,
+      COUNT(*) FILTER (WHERE t.primary_platform = 'WordPress') AS wordpress,
+      COUNT(*) FILTER (WHERE t.primary_platform IN (SELECT value FROM json_each($2))) AS modern_diy,
+      COUNT(*) FILTER (WHERE t.primary_platform IN (SELECT value FROM json_each($3))) AS church_platform,
+      COUNT(*) FILTER (WHERE t.primary_platform IN (SELECT value FROM json_each($4))) AS modern_framework
     FROM churches c
     LEFT JOIN church_website_tech t ON t.church_slug = c.slug
     WHERE c.status = 'approved'
-      AND c.country = ANY($1)
+      AND c.country IN (SELECT value FROM json_each($1))
     GROUP BY c.country
     `,
     [
@@ -315,11 +315,11 @@ async function fetchSpotifyRates(): Promise<SpotifyRate[]> {
     `
     SELECT
       country,
-      COUNT(spotify_url)::int AS active,
-      COUNT(*)::int AS total
+      COUNT(spotify_url) AS active,
+      COUNT(*) AS total
     FROM churches
     WHERE status = 'approved'
-      AND country = ANY($1)
+      AND country IN (SELECT value FROM json_each($1))
     GROUP BY country
     HAVING COUNT(spotify_url) > 0
     `,
@@ -337,7 +337,7 @@ async function fetchSpotifyRates(): Promise<SpotifyRate[]> {
 }
 
 async function buildReport(): Promise<ReportData> {
-  // CI / build-time prerender runs without DATABASE_URL; return a stub so
+  // CI / build-time prerender runs without a D1 binding; return a stub so
   // the page and JSON API can be statically built. First runtime request
   // re-fetches with real data.
   if (isOfflinePublicBuild()) return EMPTY_REPORT;
@@ -381,7 +381,7 @@ async function buildReport(): Promise<ReportData> {
 }
 
 /**
- * Cached entrypoint. 1-hour revalidate keeps Neon load low while data updates
+ * Cached entrypoint. 1-hour revalidate keeps D1 load low while data updates
  * naturally as enrichment runs land.
  */
 export const getEuropeanChurchTechReport = unstable_cache(

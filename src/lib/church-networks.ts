@@ -1,4 +1,4 @@
-import { and, asc, eq, ilike, sql } from "drizzle-orm";
+import { and, asc, eq, like, sql } from "drizzle-orm";
 import { getDb, hasDatabaseConfig, schema } from "@/db";
 import type { ChurchNetwork, ChurchCampus, ChurchCampusWithDetails, ChurchEnrichment } from "@/types/gospel";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
@@ -164,7 +164,7 @@ export async function getNetworkCampusCount(networkId: string): Promise<number> 
   try {
     const db = getDb();
     const rows = await db
-      .select({ count: sql<number>`count(*)::int` })
+      .select({ count: sql<number>`count(*)` })
       .from(schema.churchCampuses)
       .where(and(eq(schema.churchCampuses.networkId, networkId), eq(schema.churchCampuses.status, "published")));
 
@@ -262,7 +262,7 @@ export async function getNetworkCount(): Promise<number> {
   try {
     const db = getDb();
     const rows = await db
-      .select({ count: sql<number>`count(*)::int` })
+      .select({ count: sql<number>`count(*)` })
       .from(schema.churchNetworks);
 
     return setCachedValue(networkCountCache, "all", Number(rows[0]?.count ?? 0));
@@ -320,7 +320,7 @@ export async function getPublishedCampusCount(): Promise<number> {
   try {
     const db = getDb();
     const rows = await db
-      .select({ count: sql<number>`count(*)::int` })
+      .select({ count: sql<number>`count(*)` })
       .from(schema.churchCampuses)
       .where(eq(schema.churchCampuses.status, "published"));
 
@@ -355,7 +355,7 @@ export async function getPublishedCampusesSlice(offset: number, limit: number): 
 }
 
 async function getPublishedCampusesFiltered(
-  filter: ReturnType<typeof eq> | ReturnType<typeof ilike>,
+  filter: ReturnType<typeof eq> | ReturnType<typeof like>,
 ): Promise<ChurchCampusWithDetails[]> {
   if (isOfflinePublicBuild() || networkReadsUnavailable) return [];
   try {
@@ -386,10 +386,10 @@ async function getPublishedCampusesFiltered(
 
 export async function getPublishedCampusesByCountry(country: string): Promise<ChurchCampusWithDetails[]> {
   if (!hasDatabaseConfig()) return [];
-  return getPublishedCampusesFiltered(ilike(schema.churchCampuses.country, country));
+  return getPublishedCampusesFiltered(like(schema.churchCampuses.country, country));
 }
 
 export async function getPublishedCampusesByCity(city: string): Promise<ChurchCampusWithDetails[]> {
   if (!hasDatabaseConfig()) return [];
-  return getPublishedCampusesFiltered(ilike(schema.churchCampuses.city, city));
+  return getPublishedCampusesFiltered(like(schema.churchCampuses.city, city));
 }

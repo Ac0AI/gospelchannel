@@ -29,7 +29,7 @@
 
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1TaggedSql } from "./lib/cloudflare-d1.mjs";
 import { chromium } from "playwright";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
@@ -459,13 +459,13 @@ function pickExistingMatch(church, searchResult) {
 /* ── DB ── */
 
 async function loadTargets(sql, options) {
-  const recheckInterval = `${options.recheckAfterDays} days`;
+  const recheckBefore = Date.now() - options.recheckAfterDays * 86_400_000;
 
   if (options.slugs.length > 0) {
     return sql`
       SELECT slug, name, location, country, website, spotify_url, spotify_searched_at
       FROM churches
-      WHERE slug = ANY(${options.slugs}::text[])
+      WHERE slug IN (SELECT value FROM json_each(${options.slugs}))
         AND status = 'approved'
     `;
   }
@@ -478,7 +478,7 @@ async function loadTargets(sql, options) {
       FROM churches
       WHERE status = 'approved'
         AND spotify_url IS NOT NULL
-        AND spotify_searched_at >= ${options.auditSince}::timestamp
+        AND spotify_searched_at >= ${Date.parse(options.auditSince)}
       ORDER BY slug
       LIMIT ${options.limit > 0 ? options.limit : 100000}
     `;
@@ -492,13 +492,13 @@ async function loadTargets(sql, options) {
       FROM churches
       WHERE status = 'approved'
         AND spotify_url IS NULL
-        AND (spotify_searched_at IS NULL OR spotify_searched_at < ${options.searchedBefore}::timestamp)
+        AND (spotify_searched_at IS NULL OR spotify_searched_at < ${Date.parse(options.searchedBefore)})
       ORDER BY (
         CASE WHEN youtube_channel_id IS NOT NULL THEN 30 ELSE 0 END
-        + CASE WHEN jsonb_array_length(coalesce(youtube_videos, '[]'::jsonb)) > 0 THEN 25 ELSE 0 END
-        + CASE WHEN cardinality(music_style) > 0 THEN 20 ELSE 0 END
+        + CASE WHEN json_array_length(coalesce(youtube_videos, '[]')) > 0 THEN 25 ELSE 0 END
+        + CASE WHEN json_array_length(music_style) > 0 THEN 20 ELSE 0 END
         + CASE WHEN website IS NOT NULL THEN 5 ELSE 0 END
-        + least(coalesce(display_score, 0), 125) / 25
+        + min(coalesce(display_score, 0), 125) / 25
       ) DESC, directory_score DESC NULLS LAST, slug
       LIMIT ${options.limit > 0 ? options.limit : 100000}
     `;
@@ -529,20 +529,20 @@ async function loadTargets(sql, options) {
       FROM churches
       WHERE status = 'approved'
         AND spotify_url IS NULL
-        AND country = ANY(${HIGH_HIT_COUNTRIES}::text[])
+        AND country IN (SELECT value FROM json_each(${HIGH_HIT_COUNTRIES}))
         AND (
           youtube_channel_id IS NOT NULL
-          OR jsonb_array_length(coalesce(youtube_videos, '[]'::jsonb)) > 0
-          OR cardinality(music_style) > 0
+          OR json_array_length(coalesce(youtube_videos, '[]')) > 0
+          OR json_array_length(music_style) > 0
         )
       ORDER BY (
         CASE WHEN youtube_channel_id IS NOT NULL THEN 30 ELSE 0 END
-        + CASE WHEN jsonb_array_length(coalesce(youtube_videos, '[]'::jsonb)) > 0 THEN 25 ELSE 0 END
-        + CASE WHEN cardinality(music_style) > 0 THEN 20 ELSE 0 END
+        + CASE WHEN json_array_length(coalesce(youtube_videos, '[]')) > 0 THEN 25 ELSE 0 END
+        + CASE WHEN json_array_length(music_style) > 0 THEN 20 ELSE 0 END
         + CASE WHEN verified_at IS NOT NULL THEN 15 ELSE 0 END
         + CASE WHEN website IS NOT NULL THEN 5 ELSE 0 END
         + CASE WHEN spotify_searched_at IS NULL THEN 5 ELSE 0 END
-        + least(coalesce(display_score, 0), 125) / 25
+        + min(coalesce(display_score, 0), 125) / 25
       ) DESC, directory_score DESC NULLS LAST, slug
       LIMIT ${options.limit > 0 ? options.limit : 1000}
       OFFSET ${options.offset}
@@ -571,9 +571,9 @@ async function loadTargets(sql, options) {
       WHERE status = 'approved'
         AND spotify_url IS NULL
         AND (spotify_searched_at IS NULL
-             OR spotify_searched_at < NOW() - ${recheckInterval}::interval)
+             OR spotify_searched_at < ${recheckBefore})
       ORDER BY
-        CASE WHEN country = ANY(${HIGH_PRIORITY_COUNTRIES}::text[]) THEN 0 ELSE 1 END,
+        CASE WHEN country IN (SELECT value FROM json_each(${HIGH_PRIORITY_COUNTRIES})) THEN 0 ELSE 1 END,
         spotify_searched_at NULLS FIRST,
         slug
       LIMIT ${options.dailyLimit}
@@ -587,7 +587,7 @@ async function loadTargets(sql, options) {
       FROM churches
       WHERE reason LIKE ${like}
         AND status = 'approved'
-        AND (spotify_url IS NULL OR ${options.force}::boolean)
+        AND (spotify_url IS NULL OR ${options.force})
       ORDER BY slug
       LIMIT ${options.limit > 0 ? options.limit : 10000}
     `;
@@ -613,18 +613,20 @@ async function loadTargets(sql, options) {
 }
 
 async function markSearched(sql, slug) {
-  await sql`UPDATE churches SET spotify_searched_at = NOW(), updated_at = NOW() WHERE slug = ${slug}`;
+  await sql`UPDATE churches SET spotify_searched_at = (unixepoch() * 1000), updated_at = (unixepoch() * 1000) WHERE slug = ${slug}`;
 }
 
 async function writeMatch(sql, slug, match, ownerIdToClaim = null) {
   await sql`
     UPDATE churches
     SET spotify_url = ${match.url},
-        spotify_playlist_ids = ARRAY(
-          SELECT DISTINCT UNNEST(COALESCE(spotify_playlist_ids, ARRAY[]::text[]) || ARRAY[${match.entity.id}])
+        spotify_playlist_ids = (
+          SELECT json_group_array(value) FROM (
+            SELECT value FROM json_each(spotify_playlist_ids) UNION SELECT ${match.entity.id}
+          )
         ),
         spotify_owner_id = COALESCE(spotify_owner_id, ${ownerIdToClaim}),
-        updated_at = NOW()
+        updated_at = (unixepoch() * 1000)
     WHERE slug = ${slug}
   `;
 }
@@ -634,13 +636,13 @@ async function clearAutomatedMatch(sql, church) {
   await sql`
     UPDATE churches
     SET spotify_playlist_ids = CASE
-          WHEN ${playlistId}::text IS NULL THEN spotify_playlist_ids
-          ELSE array_remove(spotify_playlist_ids, ${playlistId})
+          WHEN ${playlistId} IS NULL THEN spotify_playlist_ids
+          ELSE (SELECT json_group_array(value) FROM json_each(spotify_playlist_ids) WHERE value <> ${playlistId})
         END,
         spotify_url = NULL,
         spotify_owner_id = NULL,
-        spotify_searched_at = NOW(),
-        updated_at = NOW()
+        spotify_searched_at = (unixepoch() * 1000),
+        updated_at = (unixepoch() * 1000)
     WHERE slug = ${church.slug}
   `;
 }
@@ -678,10 +680,7 @@ function buildQuery(church) {
 async function main() {
   loadLocalEnv(ROOT_DIR);
   const options = parseArgs(process.argv.slice(2));
-  if (!process.env.DATABASE_URL && !process.env.DATABASE_URL_UNPOOLED) {
-    throw new Error("Missing DATABASE_URL or DATABASE_URL_UNPOOLED");
-  }
-  const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+  const sql = createD1TaggedSql(process.env);
 
   const targets = await loadTargets(sql, options);
   console.log(`Targets: ${targets.length} churches`);
@@ -692,7 +691,7 @@ async function main() {
     SELECT lower(name) AS name
     FROM churches
     WHERE status = 'approved'
-      AND lower(name) = ANY(${targetNames}::text[])
+      AND lower(name) IN (SELECT value FROM json_each(${targetNames}))
     GROUP BY lower(name)
     HAVING count(*) > 1
   `;

@@ -39,6 +39,14 @@
       "preview_bucket_name": "gospelchannel-next-cache-preview"
     }
   ],
+  "d1_databases": [
+    {
+      "binding": "GOSPEL_D1",
+      "database_name": "gospelchannel",
+      "database_id": "4e2cba8a-5e0b-4c7b-aea3-6c6440b39d09",
+      "migrations_dir": "drizzle-d1"
+    }
+  ],
   "vars": {
     "NEXT_PUBLIC_SITE_URL": "https://gospelchannel.com",
     "NEXT_PUBLIC_MEDIA_BASE_URL": "https://media.gospelchannel.com"

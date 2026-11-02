@@ -442,10 +442,10 @@ const getIndexableOfficialReviewSlugsCached = unstable_cache(
     const rows = await getSql().query(`
       SELECT church_slug, sources->'official_review' AS review
       FROM church_enrichments
-      WHERE sources ? 'official_review'
+      WHERE json_type(sources, '$.official_review') IS NOT NULL
     `) as Array<{ church_slug: string; review: unknown }>;
     return rows.flatMap((row) => isIndexableOfficialReview(
-      parseOfficialChurchReview({ official_review: row.review }),
+      parseOfficialChurchReview({ official_review: typeof row.review === "string" ? JSON.parse(row.review) : row.review }),
     ) ? [row.church_slug] : []);
   },
   ["indexable-official-review-slugs-v1"],
@@ -456,11 +456,11 @@ const getIndexableOfficialReviewSlugsCached = unstable_cache(
 // predicate; the other two paths retain the existing playlist/content gate.
 function indexableSeedClause(denylistParam: string, scoreParam: string, reviewSlugsParam: string): string {
   return `AND (
-        (array_length(spotify_playlist_ids, 1) > 0 OR array_length(additional_playlists, 1) > 0)
-        OR slug = ANY(${reviewSlugsParam}::text[])
+        (json_array_length(spotify_playlist_ids) > 0 OR json_array_length(additional_playlists) > 0)
+        OR slug IN (SELECT value FROM json_each(${reviewSlugsParam}))
         OR (
           denomination IS NOT NULL AND length(denomination) > 0
-          AND NOT (denomination = ANY(${denylistParam}::text[]))
+          AND NOT (denomination IN (SELECT value FROM json_each(${denylistParam})))
           AND display_score IS NOT NULL AND display_score >= ${scoreParam}
         )
       )`;
@@ -472,10 +472,10 @@ async function fetchApprovedChurchDirectorySeedCountFromDb(
   const sql = getSql();
   const reviewedSlugs = indexableOnly ? await getIndexableOfficialReviewSlugsCached() : [];
   const rawRows = (await sql.query(`
-    SELECT COUNT(*)::int AS count
+    SELECT COUNT(*) AS count
     FROM churches
     WHERE status = 'approved'
-      AND NOT (slug = ANY($1::text[]))
+      AND NOT (slug IN (SELECT value FROM json_each($1)))
       ${indexableOnly ? indexableSeedClause("$2", "$3", "$4") : ""}
   `, indexableOnly
     ? [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS, [...OFF_BRAND_DENOMINATIONS], INDEXABLE_ONBRAND_SCORE_MIN, reviewedSlugs]
@@ -492,11 +492,11 @@ async function fetchApprovedChurchStatsFromDb(): Promise<{
   const sql = getSql();
   const rows = (await sql.query(`
     SELECT
-      COUNT(*)::int AS church_count,
-      COUNT(DISTINCT NULLIF(country, ''))::int AS country_count
+      COUNT(*) AS church_count,
+      COUNT(DISTINCT NULLIF(country, '')) AS country_count
     FROM churches
     WHERE status = 'approved'
-      AND NOT (slug = ANY($1::text[]))
+      AND NOT (slug IN (SELECT value FROM json_each($1)))
   `, [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS])) as ChurchStatsRow[];
 
   const churchCount = Number(rows[0]?.church_count ?? 0);
@@ -523,7 +523,7 @@ async function fetchApprovedChurchDirectorySeedChunkFromDb(
       SELECT slug
       FROM churches
       WHERE status = 'approved'
-        AND NOT (slug = ANY($1::text[]))
+        AND NOT (slug IN (SELECT value FROM json_each($1)))
         ${indexableOnly ? indexableSeedClause("$4", "$5", "$6") : ""}
       ORDER BY name, slug
       LIMIT $2
@@ -567,8 +567,8 @@ export async function getChurchDirectorySeedsBySlugs(
     SELECT c.slug, c.name, c.country, c.location, c.music_style, c.denomination, c.updated_at
     FROM churches c
     WHERE c.status = 'approved'
-      AND c.slug = ANY($1::text[])
-      AND NOT (c.slug = ANY($2::text[]))
+      AND c.slug IN (SELECT value FROM json_each($1))
+      AND NOT (c.slug IN (SELECT value FROM json_each($2)))
   `, [slugs, CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS])) as ChurchDirectorySeedRow[];
   return rawRows.map(mapRowToChurchDirectorySeed);
 }
@@ -848,7 +848,7 @@ export async function getChurchNamesBySlugsAsync(slugs: string[]): Promise<Recor
       SELECT slug, name
       FROM churches
       WHERE status = 'approved'
-        AND slug = ANY($1::text[])
+        AND slug IN (SELECT value FROM json_each($1))
     `, [uniqueCanonicalSlugs])) as ChurchNameRow[];
 
     return buildNameMap(new Map(rows.map((row) => [row.slug, row.name])));

@@ -3,7 +3,7 @@
 # Mirrors rotating Google image hosts (Place Photos, Street View thumbnails)
 # to our own R2 bucket so stored DB URLs stay permanent and CSP-safe.
 # Schedule via crontab, e.g.:
-#   47 4 * * * /Users/dpr/Code/Projekt/gospelmigration/scripts/cron/nightly-mirror-images.sh >> /tmp/mirror-images-cron.log 2>&1
+#   47 4 * * * /path/to/repo/scripts/cron/nightly-mirror-images.sh >> /tmp/mirror-images-cron.log 2>&1
 # The odd minute avoids the :00 thundering herd; 04:47 stays clear of the
 # 03:03 Spotify enrich job and the Worker crons (04:00, 06:23 UTC).
 
@@ -21,5 +21,5 @@ export npm_config_engine_strict=false
 echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] mirror-foreign-images nightly run"
 # Steady-state this is a no-op scan (new enrichments are protected within
 # ~24h). Cap the batch so a sudden backlog never runs unbounded overnight.
-pnpm exec tsx scripts/backfill-mirror-foreign-images.ts --limit=2000
+node scripts/with-d1-wrangler-auth.mjs pnpm exec tsx scripts/backfill-mirror-foreign-images.ts --limit=2000
 echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] done"

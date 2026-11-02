@@ -1,8 +1,18 @@
 export async function readRelatedCandidates(client, minScore) {
-  const rows = await client.query(`SELECT c.slug, c.country, c.city_slug, c.directory_rank, c.display_score,
+  const rows = [];
+  let cursor = "";
+  for (;;) {
+    const page = await client.query(`SELECT c.slug, c.country, c.city_slug, c.directory_rank, c.display_score,
       c.music_style, c.denomination, ce.latitude, ce.longitude
-    FROM churches c LEFT JOIN church_enrichments ce ON ce.church_slug = c.slug
-    WHERE c.status = 'approved' AND (c.display_score IS NULL OR c.display_score >= ?)`, [minScore]);
+    FROM churches c LEFT JOIN church_enrichments ce ON ce.id = (
+      SELECT id FROM church_enrichments WHERE church_slug = c.slug ORDER BY updated_at DESC, id DESC LIMIT 1
+    )
+    WHERE c.status = 'approved' AND (c.display_score IS NULL OR c.display_score >= ?) AND c.slug > ?
+    ORDER BY c.slug LIMIT 1000`, [minScore, cursor]);
+    rows.push(...page);
+    if (page.length < 1000) break;
+    cursor = page.at(-1).slug;
+  }
   return rows.map((row) => ({ ...row, music_style: row.music_style == null ? null : JSON.parse(row.music_style) }));
 }
 

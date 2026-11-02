@@ -7,12 +7,31 @@ on:
   schedule:
     - cron: '3 1 * * *'
   workflow_dispatch:
+    inputs:
+      verify_only:
+        description: Check D1 access without running enrichment
+        type: boolean
+        default: false
 
 concurrency:
   group: spotify-enrich
 
 jobs:
+  verify:
+    if: inputs.verify_only == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - run: node scripts/check-d1-access.mjs
+        env:
+          GOSPEL_D1_DATABASE_ID: ${{ vars.GOSPEL_D1_DATABASE_ID }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          GOSPEL_D1_API_TOKEN: ${{ secrets.GOSPEL_D1_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
   enrich:
+    if: inputs.verify_only != true
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -30,8 +49,9 @@ jobs:
       # No-op once the legacy pool is drained; capped to leave quota for phase 2.
       - name: Phase 1 revalidate-legacy
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
+          GOSPEL_D1_DATABASE_ID: ${{ vars.GOSPEL_D1_DATABASE_ID }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          GOSPEL_D1_API_TOKEN: ${{ secrets.GOSPEL_D1_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
         run: node scripts/enrich-spotify-by-church-name.mjs --revalidate-legacy --limit=50 --throttle=400 --concurrency=2
@@ -41,8 +61,9 @@ jobs:
 
       - name: Phase 2 daily enrichment
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
+          GOSPEL_D1_DATABASE_ID: ${{ vars.GOSPEL_D1_DATABASE_ID }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          GOSPEL_D1_API_TOKEN: ${{ secrets.GOSPEL_D1_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
         run: node scripts/enrich-spotify-by-church-name.mjs --daily --daily-limit=500 --throttle=400 --concurrency=2

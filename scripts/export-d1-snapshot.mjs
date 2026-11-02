@@ -1,6 +1,6 @@
 import { Client } from "@neondatabase/serverless";
 import { createHash } from "node:crypto";
-import { closeSync, existsSync, openSync, readFileSync, readdirSync, unlinkSync, writeFileSync, writeSync } from "node:fs";
+import { closeSync, existsSync, openSync, readFileSync, unlinkSync, writeFileSync, writeSync } from "node:fs";
 import { DatabaseSync } from "node:sqlite";
 import { ident, rowStatements } from "./d1-snapshot-codec.mjs";
 
@@ -8,8 +8,9 @@ const output = process.argv[2];
 const url = process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL;
 if (!output || !url) throw new Error("Usage: DATABASE_URL=... node scripts/export-d1-snapshot.mjs /private/path/snapshot.sql");
 if (existsSync(output) || existsSync(`${output}.manifest.json`)) throw new Error("Refusing to overwrite an existing snapshot");
-const migrationFiles = readdirSync("drizzle-d1").filter((file) => /^\d+.*\.sql$/.test(file)).sort();
-const ddl = migrationFiles.map((file) => readFileSync(`drizzle-d1/${file}`, "utf8")).join("\n");
+// Import the exact source records before adding derived search indexes and
+// mutation triggers. Otherwise triggers would rewrite the exported snapshot.
+const ddl = readFileSync("drizzle-d1/0000_initial.sql", "utf8");
 const sqlite = new DatabaseSync(":memory:");
 sqlite.exec(ddl);
 const client = new Client(url);

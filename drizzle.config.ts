@@ -1,15 +1,10 @@
-import { loadEnvConfig } from "@next/env";
 import { defineConfig } from "drizzle-kit";
 
-loadEnvConfig(process.cwd());
-
+// Schema tooling only. Apply versioned SQL through Wrangler (pnpm db:migrate).
 export default defineConfig({
-  dialect: "postgresql",
-  schema: "./src/db/schema/index.ts",
-  out: "./drizzle",
-  dbCredentials: {
-    url: process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL || "",
-  },
+  dialect: "sqlite",
+  schema: "./src/db/d1-schema/index.ts",
+  out: "./drizzle-d1",
   strict: true,
   verbose: true,
 });

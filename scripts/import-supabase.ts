@@ -2,7 +2,16 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { AnyPgTable } from "drizzle-orm/pg-core";
-import { getDb, getSql, schema } from "../src/db";
+import { neon } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-http";
+import * as schema from "../src/db/schema";
+
+function getSql() {
+  const url = process.env.LEGACY_NEON_DATABASE_URL;
+  if (!url) throw new Error("Legacy importer requires LEGACY_NEON_DATABASE_URL; use D1 migrations for the live database");
+  return neon(url);
+}
+function getDb() { return drizzle(getSql(), { schema }); }
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));

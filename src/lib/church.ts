@@ -1121,7 +1121,7 @@ export async function getRelatedChurches(
   const hydrated = (await sqlClient`
     SELECT slug, name, country, location
       FROM churches
-     WHERE slug = ANY(${related}::text[])
+     WHERE slug IN (SELECT value FROM json_each(${related}))
        AND status = 'approved'
        AND (display_score IS NULL OR display_score >= ${INDEXABLE_DISPLAY_SCORE_MIN})
   `) as Array<{ slug: string; name: string; country: string | null; location: string | null }>;
@@ -1162,7 +1162,7 @@ async function fetchAllRows<T = any>(
   let from = 0;
   while (true) {
     const { data, error } = await buildQuery(sb, from, from + PAGE_SIZE - 1);
-    if (error || !data) break;
+    if (error || !data) throw new Error("Directory pagination failed");
     all.push(...data);
     if (data.length < PAGE_SIZE) break;
     from += PAGE_SIZE;
@@ -1512,21 +1512,24 @@ function buildChurchIndexWhereClause(filters: ChurchDirectoryFilters) {
   const params: unknown[] = [getChurchIndexExcludedSlugs()];
   const clauses = [
     "status = 'approved'",
-    "NOT (slug = ANY($1::text[]))",
+    "NOT (slug IN (SELECT value FROM json_each($1)))",
   ];
   const trimmedQuery = filters.query?.trim() ?? "";
 
   if (trimmedQuery) {
     const pattern = `%${trimmedQuery}%`;
     params.push(pattern);
+    const unicodeMatch = [...trimmedQuery].length >= 3;
+    if (unicodeMatch) params.push(`"${trimmedQuery.replaceAll('"', '""')}"`);
     clauses.push(`(
-          name ILIKE $2
-          OR description ILIKE $2
-          OR country ILIKE $2
-          OR location ILIKE $2
-          OR denomination ILIKE $2
-          OR array_to_string(music_style, ' ') ILIKE $2
-          OR array_to_string(aliases, ' ') ILIKE $2
+          name LIKE $2
+          OR description LIKE $2
+          OR country LIKE $2
+          OR location LIKE $2
+          OR denomination LIKE $2
+          OR (SELECT group_concat(value, ' ') FROM json_each(music_style)) LIKE $2
+          OR (SELECT group_concat(value, ' ') FROM json_each(aliases)) LIKE $2
+          ${unicodeMatch ? `OR rowid IN (SELECT rowid FROM churches_search WHERE churches_search MATCH $${params.length})` : ""}
         )`);
   }
 
@@ -1534,7 +1537,7 @@ function buildChurchIndexWhereClause(filters: ChurchDirectoryFilters) {
     const filter = getStyleFilterBySlug(filters.styleSlug);
     if (filter) {
       params.push(getSqlLikePatterns(filter.match));
-      clauses.push(`array_to_string(music_style, ' ') ILIKE ANY($${params.length}::text[])`);
+      clauses.push(`EXISTS (SELECT 1 FROM json_each($${params.length}) pattern WHERE (SELECT group_concat(value, ' ') FROM json_each(music_style)) LIKE pattern.value)`);
     }
   }
 
@@ -1542,7 +1545,7 @@ function buildChurchIndexWhereClause(filters: ChurchDirectoryFilters) {
     const filter = getDenominationFilterBySlug(filters.denominationSlug);
     if (filter) {
       params.push(getSqlLikePatterns(filter.match));
-      clauses.push(`denomination ILIKE ANY($${params.length}::text[])`);
+      clauses.push(`EXISTS (SELECT 1 FROM json_each($${params.length}) pattern WHERE denomination LIKE pattern.value)`);
     }
   }
 
@@ -1572,14 +1575,14 @@ function buildChurchIndexWhereClause(filters: ChurchDirectoryFilters) {
     clauses.push(`(
       EXISTS (
         SELECT 1
-        FROM regexp_split_to_table(coalesce(language, ''), '\\s*[,;/]\\s*') AS church_language(value)
-        WHERE lower(btrim(church_language.value)) = ANY($${index}::text[])
+        FROM json_each('[' || replace(replace(replace(json_quote(coalesce(language, '')), ',', '","'), ';', '","'), '/', '","') || ']') church_language
+        WHERE lower(trim(church_language.value)) IN (SELECT value FROM json_each($${index}))
       )
       OR EXISTS (
         SELECT 1 FROM church_enrichments ce
-        CROSS JOIN LATERAL unnest(coalesce(ce.languages, '{}'::text[])) AS enrichment_language(value)
+        CROSS JOIN json_each(ce.languages) enrichment_language
         WHERE ce.church_slug = churches.slug
-          AND lower(btrim(enrichment_language.value)) = ANY($${index}::text[])
+          AND lower(trim(enrichment_language.value)) IN (SELECT value FROM json_each($${index}))
       )
     )`);
   }
@@ -1597,14 +1600,14 @@ function buildChurchIndexWhereClause(filters: ChurchDirectoryFilters) {
       SELECT 1 FROM church_enrichments ce
       WHERE ce.church_slug = churches.slug
         AND ce.service_times IS NOT NULL
-        AND jsonb_typeof(ce.service_times) = 'array'
-        AND jsonb_array_length(ce.service_times) > 0
+        AND json_type(ce.service_times) = 'array'
+        AND json_array_length(ce.service_times) > 0
     )`);
   }
 
   if (filters.hasMusic) {
     clauses.push(`(
-      coalesce(cardinality(spotify_playlist_ids), 0) + coalesce(cardinality(additional_playlists), 0) > 0
+      coalesce(json_array_length(spotify_playlist_ids), 0) + coalesce(json_array_length(additional_playlists), 0) > 0
       OR coalesce(spotify_url, '') <> ''
     )`);
   }
@@ -1639,19 +1642,19 @@ async function fetchChurchIndexPageRows(filters: ChurchDirectoryFilters, current
       WHERE ${where.sql}
       ORDER BY
         CASE
-          WHEN name ILIKE $${where.params.length + 1} THEN 110
-          WHEN name ILIKE $${where.params.length + 2} THEN 100
-          WHEN location ILIKE $${where.params.length + 1} THEN 95
-          WHEN location ILIKE $${where.params.length + 2} THEN 85
-          WHEN name ILIKE $2 THEN 70
-          WHEN location ILIKE $2 THEN 60
-          WHEN country ILIKE $${where.params.length + 1} THEN 45
-          WHEN country ILIKE $${where.params.length + 2} THEN 35
-          WHEN country ILIKE $2 THEN 30
+          WHEN name LIKE $${where.params.length + 1} THEN 110
+          WHEN name LIKE $${where.params.length + 2} THEN 100
+          WHEN location LIKE $${where.params.length + 1} THEN 95
+          WHEN location LIKE $${where.params.length + 2} THEN 85
+          WHEN name LIKE $2 THEN 70
+          WHEN location LIKE $2 THEN 60
+          WHEN country LIKE $${where.params.length + 1} THEN 45
+          WHEN country LIKE $${where.params.length + 2} THEN 35
+          WHEN country LIKE $2 THEN 30
           ELSE 10
         END DESC,
         CASE
-          WHEN coalesce(cardinality(spotify_playlist_ids), 0) + coalesce(cardinality(additional_playlists), 0) > 0
+          WHEN coalesce(json_array_length(spotify_playlist_ids), 0) + coalesce(json_array_length(additional_playlists), 0) > 0
             OR coalesce(spotify_url, '') <> ''
           THEN 1 ELSE 0
         END DESC,
@@ -1685,7 +1688,7 @@ async function fetchChurchIndexTotalCount(filters: ChurchDirectoryFilters): Prom
   const where = buildChurchIndexWhereClause(filters);
 
   const rows = (await sql.query(`
-    SELECT count(*)::int AS count
+    SELECT count(*) AS count
     FROM churches
     WHERE ${where.sql}
   `, where.params)) as Array<{ count: number | string | bigint }>;
@@ -1754,12 +1757,12 @@ function buildCanonicalLanguageSql(params: unknown[]): string {
     const valuesIndex = params.length;
     params.push(definition.label);
     const labelIndex = params.length;
-    return `WHEN lower(btrim(raw_language)) = ANY($${valuesIndex}::text[]) THEN $${labelIndex}::text`;
+    return `WHEN lower(trim(raw_language)) IN (SELECT value FROM json_each($${valuesIndex})) THEN $${labelIndex}`;
   });
 
   return `CASE
       ${clauses.join("\n      ")}
-      ELSE initcap(lower(btrim(raw_language)))
+      ELSE upper(substr(trim(raw_language), 1, 1)) || lower(substr(trim(raw_language), 2))
     END`;
 }
 
@@ -1779,7 +1782,7 @@ async function fetchChurchDirectoryFilterOptions(filters: ChurchDirectoryFilters
 
   const [rawCountryRows, rawLanguageRows] = await Promise.all([
     sql.query(`
-      SELECT country AS label, count(*)::int AS count
+      SELECT country AS label, count(*) AS count
       FROM churches
       WHERE ${countryWhere.sql}
         AND country <> ''
@@ -1795,24 +1798,21 @@ async function fetchChurchDirectoryFilterOptions(filters: ChurchDirectoryFilters
       language_values AS (
         SELECT eligible.slug, primary_language.value AS raw_language
         FROM eligible
-        CROSS JOIN LATERAL regexp_split_to_table(
-          coalesce(eligible.language, ''),
-          '\\s*[,;/]\\s*'
-        ) AS primary_language(value)
+        CROSS JOIN json_each('[' || replace(replace(replace(json_quote(coalesce(eligible.language, '')), ',', '","'), ';', '","'), '/', '","') || ']') primary_language
 
         UNION ALL
 
         SELECT eligible.slug, enrichment_language.value AS raw_language
         FROM eligible
         JOIN church_enrichments ce ON ce.church_slug = eligible.slug
-        CROSS JOIN LATERAL unnest(coalesce(ce.languages, '{}'::text[])) AS enrichment_language(value)
+        CROSS JOIN json_each(ce.languages) enrichment_language
       ),
       canonical_languages AS (
         SELECT slug, ${canonicalLanguageSql} AS label
         FROM language_values
-        WHERE btrim(raw_language) <> ''
+        WHERE trim(raw_language) <> ''
       )
-      SELECT label, count(DISTINCT slug)::int AS count
+      SELECT label, count(DISTINCT slug) AS count
       FROM canonical_languages
       GROUP BY label
       ORDER BY count DESC, label ASC
@@ -1876,19 +1876,19 @@ export async function fetchFacetRelatedLinks(
   const styleExprs = STYLE_FILTERS.map((f) => {
     const ors = f.match.map((cand) => {
       params.push(cand.toLowerCase());
-      return `position($${params.length} in lower(ms)) > 0`;
+      return `instr(lower(ms.value), $${params.length}) > 0`;
     });
     return `count(*) FILTER (WHERE EXISTS (
-      SELECT 1 FROM unnest(coalesce(music_style, '{}'::text[])) ms
+      SELECT 1 FROM json_each(music_style) ms
       WHERE ${ors.join(" OR ")}
-    ))::int`;
+    ))`;
   });
   const denomExprs = DENOMINATION_FILTERS.map((f) => {
     const ors = f.match.map((cand) => {
       params.push(cand.toLowerCase());
-      return `position($${params.length} in lower(denomination)) > 0`;
+      return `instr(lower(denomination), $${params.length}) > 0`;
     });
-    return `count(*) FILTER (WHERE denomination IS NOT NULL AND (${ors.join(" OR ")}))::int`;
+    return `count(*) FILTER (WHERE denomination IS NOT NULL AND (${ors.join(" OR ")}))`;
   });
 
   const aggSelect = [
@@ -1919,7 +1919,7 @@ export async function fetchFacetRelatedLinks(
   );
 
   const countryRows = (await sql.query(
-    `SELECT country, count(*)::int AS count
+    `SELECT country, count(*) AS count
      FROM churches
      WHERE ${where.sql} AND coalesce(country, '') <> ''
      GROUP BY country`,
@@ -1959,12 +1959,13 @@ export async function fetchFacetRelatedLinks(
   // not alphabetically, or label spellings diverge ("Saint Denis" vs
   // "Saint-Denis") whenever churches write the city differently.
   const cityRows = (await sql.query(
-    `SELECT city_slug,
-            count(*)::int AS count,
-            (array_agg(location ORDER BY directory_rank ASC NULLS LAST, slug ASC))[1] AS sample_location
-     FROM churches
-     WHERE ${where.sql} AND city_slug IS NOT NULL AND city_slug <> ''
-     GROUP BY city_slug`,
+    `WITH ranked AS (
+       SELECT city_slug, location,
+         count(*) OVER (PARTITION BY city_slug) AS count,
+         row_number() OVER (PARTITION BY city_slug ORDER BY directory_rank ASC NULLS LAST, slug ASC) AS position
+       FROM churches
+       WHERE ${where.sql} AND city_slug IS NOT NULL AND city_slug <> ''
+     ) SELECT city_slug, count, location AS sample_location FROM ranked WHERE position = 1`,
     where.params,
   )) as Array<{ city_slug: string; count: number; sample_location: string | null }>;
   const city = sortFacetLinks(
@@ -2200,8 +2201,9 @@ export async function getChurchFacetPageData(input: {
 // Exported for scripts/backfill-facet-columns.ts: the backfill ranks the
 // EXACT array this returns (same enrichment-meta dedup, same mappers) so
 // directory_rank/score/city_slug cannot drift from the runtime old path.
-export async function _getChurchIndexData() {
+export async function _getChurchIndexData({ strict = false } = {}) {
   if (isOfflinePublicBuild() || !hasServiceConfig()) {
+    if (strict) throw new Error("Database unavailable for directory reconciliation");
     return filterCanonicalChurchSlugRecords(getLocalChurchSnapshot()).map((church) => mapChurchToIndexRecord(church));
   }
 
@@ -2212,6 +2214,7 @@ export async function _getChurchIndexData() {
     ]);
 
     if (rows.length === 0) {
+      if (strict) throw new Error("Database returned no churches for reconciliation");
       console.error("[church-index] Falling back to local snapshot: public query returned 0 churches");
       return filterCanonicalChurchSlugRecords(getLocalChurchSnapshot()).map((church) => mapChurchToIndexRecord(church));
     }
@@ -2222,12 +2225,14 @@ export async function _getChurchIndexData() {
     });
 
     if (churches.length === 0) {
+      if (strict) throw new Error("Canonical directory is empty");
       console.error("[church-index] Falling back to local snapshot: mapped church index was empty");
       return filterCanonicalChurchSlugRecords(getLocalChurchSnapshot()).map((church) => mapChurchToIndexRecord(church));
     }
 
     return churches;
   } catch (error) {
+    if (strict) throw error;
     const detail = error instanceof Error ? error.message : String(error);
     console.error(`[church-index] Falling back to local snapshot: ${detail}`);
     return filterCanonicalChurchSlugRecords(getLocalChurchSnapshot()).map((church) => mapChurchToIndexRecord(church));

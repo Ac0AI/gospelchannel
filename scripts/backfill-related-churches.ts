@@ -35,7 +35,6 @@
 
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { INDEXABLE_DISPLAY_SCORE_MIN } from "../src/lib/content-quality";
 import { createD1Client } from "./lib/cloudflare-d1.mjs";
@@ -44,10 +43,7 @@ import { readRelatedCandidates, writeRelatedRows } from "./lib/d1-directory.mjs"
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(resolve(__dirname, ".."));
 
-const DATABASE_URL = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
-const d1 = process.env.GOSPEL_D1_DATABASE_ID ? createD1Client(process.env) : null;
-if (!d1 && !DATABASE_URL) throw new Error("Missing DATABASE_URL");
-const sql = d1 ? null : neon(DATABASE_URL!);
+const d1 = createD1Client(process.env);
 
 const DRY_RUN = process.argv.includes("--dry-run");
 const K = Number.parseInt(process.argv.find((a) => a.startsWith("--k="))?.slice(4) ?? "8", 10);
@@ -106,16 +102,7 @@ async function main() {
 
   // ONE read pass — only the indexable set crosses the wire. Cost-safe:
   // <= ~tens of thousands of rows, lean columns, never raw_* blobs.
-  const rows = (d1 ? await readRelatedCandidates(d1, INDEXABLE_DISPLAY_SCORE_MIN) : await sql!.query(
-    `SELECT c.slug, c.country, c.city_slug, c.directory_rank, c.display_score,
-            c.music_style, c.denomination,
-            ce.latitude, ce.longitude
-       FROM churches c
-       LEFT JOIN church_enrichments ce ON ce.church_slug = c.slug
-      WHERE c.status = 'approved'
-        AND (c.display_score IS NULL OR c.display_score >= $1)`,
-    [INDEXABLE_DISPLAY_SCORE_MIN],
-  )) as Row[];
+  const rows = await readRelatedCandidates(d1, INDEXABLE_DISPLAY_SCORE_MIN) as Row[];
 
   const entries: Entry[] = rows
     .filter((r) => isIndexable(r.display_score))
@@ -352,27 +339,12 @@ async function main() {
     return;
   }
 
-  // Write back as text[] using the same batched jsonb_to_recordset pattern
-  // backfill-facet-columns.ts uses. Cast through text[] via Postgres
-  // string_to_array of a comma-joined list is brittle (slugs may contain
-  // commas in theory) — use array() over a CTE of jsonb_array_elements_text
-  // instead, which preserves each slug exactly.
+  // JSON arrays preserve each related slug exactly.
   const updates = [...emit.entries()].map(([slug, related]) => ({ slug, related }));
   let written = 0;
   for (let i = 0; i < updates.length; i += BATCH) {
     const slice = updates.slice(i, i + BATCH);
-    if (d1) await writeRelatedRows(d1, slice);
-    else await sql!.query(
-      `UPDATE churches AS c
-          SET related_church_slugs = d.related
-         FROM (
-           SELECT (elem->>'slug') AS slug,
-                  ARRAY(SELECT jsonb_array_elements_text(elem->'related')) AS related
-             FROM jsonb_array_elements($1::jsonb) AS elem
-         ) AS d
-        WHERE c.slug = d.slug`,
-      [JSON.stringify(slice)],
-    );
+    await writeRelatedRows(d1, slice);
     written += slice.length;
     process.stdout.write(`\r  written ${written}/${updates.length}`);
   }

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { neon } from "@neondatabase/serverless";
+import { getSql, hasDatabaseConfig } from "@/db";
 import { sendChurchContactInquiry } from "@/lib/email";
 import { getClientIp, hasKvRateLimit, setKvRateLimit } from "@/lib/request-guards";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
@@ -57,13 +57,12 @@ export async function POST(
     );
   }
 
-  const databaseUrl = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
-  if (!databaseUrl) {
-    console.error("[church-contact] Missing DATABASE_URL");
+  if (!hasDatabaseConfig()) {
+    console.error("[church-contact] Missing GOSPEL_D1");
     return NextResponse.json({ error: "Service unavailable. Please try again later." }, { status: 503 });
   }
 
-  const sql = neon(databaseUrl);
+  const sql = getSql();
   const rows = await sql`
     SELECT slug, name, email
     FROM churches

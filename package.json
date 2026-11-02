@@ -16,8 +16,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
+    "db:migrate": "wrangler d1 migrations apply gospelchannel --remote",
     "db:seed": "tsx scripts/db-seed.ts",
     "export:supabase": "tsx scripts/export-supabase.ts",
     "import:supabase": "tsx scripts/import-supabase.ts",
@@ -43,7 +42,9 @@
     "dataset:export": "node scripts/export-european-church-tech-dataset.mjs",
     "dataset:publish:kaggle": "node scripts/publish-kaggle-dataset.mjs",
     "dataset:publish:zenodo": "node scripts/publish-zenodo-dataset.mjs",
-    "dataset:publish:huggingface": "node scripts/publish-huggingface-dataset.mjs"
+    "dataset:publish:huggingface": "node scripts/publish-huggingface-dataset.mjs",
+    "db:new-migration": "wrangler d1 migrations create gospelchannel",
+    "db:migrate:local": "wrangler d1 migrations apply gospelchannel --local"
   },
   "dependencies": {
     "@better-auth/drizzle-adapter": "^1.3.7",

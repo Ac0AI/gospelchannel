@@ -6,7 +6,7 @@ import { readRelatedCandidates, writeRelatedRows } from "../lib/d1-directory.mjs
 test("loads and writes related churches without losing array contents", async () => {
   const db = new DatabaseSync(":memory:");
   db.exec(`CREATE TABLE churches (slug TEXT PRIMARY KEY, country TEXT, city_slug TEXT, directory_rank INTEGER, display_score INTEGER, music_style TEXT, denomination TEXT, status TEXT, related_church_slugs TEXT);
-    CREATE TABLE church_enrichments (church_slug TEXT, latitude REAL, longitude REAL);
+    CREATE TABLE church_enrichments (id TEXT, church_slug TEXT, latitude REAL, longitude REAL, updated_at INTEGER);
     INSERT INTO churches VALUES ('a', 'SE', 'city', 1, 5, '["Worship"]', NULL, 'approved', NULL);
     INSERT INTO churches VALUES ('b', 'SE', 'city', 2, 2, NULL, NULL, 'archived', NULL);`);
   const client = { async query(sql, params) { const statement = db.prepare(sql); return sql.trimStart().startsWith("SELECT") ? statement.all(...params) : statement.run(...params); } };

@@ -34,7 +34,7 @@ Auditen gjordes före releaserna av `/church-near-me`, nearby-sökningen på sta
 ### Regler för AI-searcharbetet
 
 - Skapa inte nya sidor direkt från varje fanout. Förstärk befintlig canonical eller datan bakom den först.
-- Neon är canonical för kyrkodata. Fält som saknas ska visas som "Not published", aldrig tolkas som att kyrkan saknar egenskapen.
+- Cloudflare D1 är canonical för kyrkodata. Fält som saknas ska visas som "Not published", aldrig tolkas som att kyrkan saknar egenskapen.
 - Officiella kyrksidor vinner lokala AI-svar. Varje profil ska därför visa kontrollerade fakta, freshness och tydliga officiella länkar, inte bara generell katalogtext.
 - Använd samma bild- och kortdesign som den ordinarie kyrkolistan för nearby- och stadsresultat.
 - Lagra eller analysera inte användarens exakta koordinater. Mät verktyg och utfall utan rå position.
@@ -54,7 +54,7 @@ Aldrig pusha utan att deploya - koden är inte live förrän den når Cloudflare
 
 - **Framework:** Next.js 16 (App Router, webpack via OpenNext)
 - **Hosting:** Cloudflare Workers via OpenNext (`pnpm run deploy`)
-- **Databas:** Neon Postgres (via `@neondatabase/serverless`)
+- **Databas:** Cloudflare D1 (Worker-binding `GOSPEL_D1`, Drizzle SQLite)
 - **Bildlagring:** Cloudflare R2 (`church-assets` bucket)
 - **Bildoptimering:** Cloudflare Image Resizing (Enterprise) via `cfImage()` i `src/lib/media.ts`
 - **Bild-CDN:** `media.gospelchannel.com` (R2 custom domain)

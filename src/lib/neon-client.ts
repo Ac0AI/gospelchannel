@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { eq, sql as drizzleSql } from "drizzle-orm";
 import { getDb, getSql, hasDatabaseConfig, schema } from "@/db";
+import { encodeD1Value } from "@/db/d1-values";
 import { ensureAuthUser, ensurePasswordAccount, getServerUser, hasBetterAuthConfig } from "@/lib/auth/server";
 
 type QueryError = { message: string };
@@ -90,7 +91,7 @@ function buildSelectClause(columns: string): string {
     .join(", ");
 }
 
-function buildWhereClause(filters: FilterOp[]) {
+function buildWhereClause(filters: FilterOp[], table: string) {
   const conditions: string[] = [];
   const params: unknown[] = [];
 
@@ -107,11 +108,11 @@ function buildWhereClause(filters: FilterOp[]) {
 
     if (filter.kind === "in") {
       params.push(filter.value);
-      conditions.push(`${column} = ANY($${params.length})`);
+      conditions.push(`${column} IN (SELECT value FROM json_each($${params.length}))`);
       continue;
     }
 
-    params.push(filter.value);
+    params.push(encodeD1Value(table, filter.column, filter.value));
     const placeholder = `$${params.length}`;
 
     switch (filter.kind) {
@@ -132,7 +133,7 @@ function buildWhereClause(filters: FilterOp[]) {
         }
         break;
       case "ilike":
-        conditions.push(`${column} ILIKE ${placeholder}`);
+        conditions.push(`${column} LIKE ${placeholder}`);
         break;
       case "gte":
         conditions.push(`${column} >= ${placeholder}`);
@@ -291,11 +292,11 @@ class NeonTableQuery<T = unknown>
 
   private async executeSelect(): Promise<QueryResult<T>> {
     const table = ensureTableName(this.tableName);
-    const { clause, params } = buildWhereClause(this.filters);
+    const { clause, params } = buildWhereClause(this.filters, this.tableName);
 
     if (this.selectOptions?.count === "exact" && this.selectOptions.head) {
       const countRows = await getSql().query(
-        `SELECT COUNT(*)::int AS count FROM ${table}${clause}`,
+        `SELECT COUNT(*) AS count FROM ${table}${clause}`,
         params,
       ) as Array<{ count: number }>;
 
@@ -321,6 +322,7 @@ class NeonTableQuery<T = unknown>
     const rows = await getSql().query(
       `SELECT ${buildSelectClause(this.selectColumns)} FROM ${table}${clause}${orderClause}${limitClause}${offsetClause}`,
       params,
+      this.tableName,
     ) as T;
 
     return {
@@ -337,20 +339,12 @@ class NeonTableQuery<T = unknown>
 
     const columns = [...new Set(rows.flatMap((row) => Object.keys(row)))];
     const table = ensureTableName(this.tableName);
-    const params: unknown[] = [];
-    const valuesClause = rows
-      .map((row) => {
-        const placeholders = columns.map((column) => {
-          params.push(row[column] ?? null);
-          return `$${params.length}`;
-        });
-        return `(${placeholders.join(", ")})`;
-      })
-      .join(", ");
+    const params = [JSON.stringify(rows.map((row) => Object.fromEntries(columns.map((column) => [column, encodeD1Value(this.tableName, column, row[column])]))))];
+    const valuesClause = `SELECT ${columns.map((column) => `json_extract(value, '$.${JSON.stringify(column).replaceAll("'", "''")}')`).join(", ")} FROM json_each($1)`;
 
     const returningClause = this.selectCalled ? ` RETURNING ${buildSelectClause(this.selectColumns)}` : "";
-    const query = `INSERT INTO ${table} (${columns.map(quoteIdentifier).join(", ")}) VALUES ${valuesClause}${returningClause}`;
-    const result = await getSql().query(query, params) as T;
+    const query = `INSERT INTO ${table} (${columns.map(quoteIdentifier).join(", ")}) ${valuesClause}${returningClause}`;
+    const result = await getSql().query(query, params, this.tableName) as T;
     return { data: returningClause ? (result as T) : null, error: null };
   }
 
@@ -365,18 +359,18 @@ class NeonTableQuery<T = unknown>
     const params: unknown[] = [];
     const setClause = setKeys
       .map((key) => {
-        params.push(values[key] ?? null);
+        params.push(encodeD1Value(this.tableName, key, values[key]));
         return `${quoteIdentifier(key)} = $${params.length}`;
       })
       .join(", ");
 
-    const where = buildWhereClause(this.filters);
+    const where = buildWhereClause(this.filters, this.tableName);
     const queryParams = [...params, ...where.params];
     const whereClause = where.clause
       ? ` WHERE ${where.clause.replace(/^ WHERE /, "").replace(/\$(\d+)/g, (_, n) => `$${Number(n) + params.length}`)}`
       : "";
     const returningClause = this.selectCalled ? ` RETURNING ${buildSelectClause(this.selectColumns)}` : "";
-    const result = await getSql().query(`UPDATE ${table} SET ${setClause}${whereClause}${returningClause}`, queryParams) as T;
+    const result = await getSql().query(`UPDATE ${table} SET ${setClause}${whereClause}${returningClause}`, queryParams, this.tableName) as T;
 
     return {
       data: returningClause ? (result as T) : null,
@@ -392,17 +386,8 @@ class NeonTableQuery<T = unknown>
 
     const table = ensureTableName(this.tableName);
     const columns = [...new Set(rows.flatMap((row) => Object.keys(row)))];
-    const params: unknown[] = [];
-
-    const valuesClause = rows
-      .map((row) => {
-        const placeholders = columns.map((column) => {
-          params.push(row[column] ?? null);
-          return `$${params.length}`;
-        });
-        return `(${placeholders.join(", ")})`;
-      })
-      .join(", ");
+    const params = [JSON.stringify(rows.map((row) => Object.fromEntries(columns.map((column) => [column, encodeD1Value(this.tableName, column, row[column])]))))];
+    const valuesClause = `SELECT ${columns.map((column) => `json_extract(value, '$.${JSON.stringify(column).replaceAll("'", "''")}')`).join(", ")} FROM json_each($1) WHERE true`;
 
     const conflictColumns = this.onConflict.length > 0 ? this.onConflict : columns;
     const updateColumns = columns.filter((column) => !conflictColumns.includes(column));
@@ -413,12 +398,12 @@ class NeonTableQuery<T = unknown>
 
     const query = [
       `INSERT INTO ${table} (${columns.map(quoteIdentifier).join(", ")})`,
-      `VALUES ${valuesClause}`,
+      valuesClause,
       `ON CONFLICT (${conflictColumns.map(quoteIdentifier).join(", ")})${updateClause}`,
       returningClause,
     ].join(" ");
 
-    const result = await getSql().query(query, params) as T;
+    const result = await getSql().query(query, params, this.tableName) as T;
     return { data: returningClause ? (result as T) : null, error: null };
   }
 }

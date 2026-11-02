@@ -126,10 +126,10 @@ function makeParamBuilder() {
 // on-brand denomination with display_score above the floor.
 function indexableClause(c: string, denylistToken: string, scoreToken: string): string {
   return `AND (
-    (array_length(${c}.spotify_playlist_ids, 1) > 0 OR array_length(${c}.additional_playlists, 1) > 0)
+    (json_array_length(${c}.spotify_playlist_ids) > 0 OR json_array_length(${c}.additional_playlists) > 0)
     OR (
       ${c}.denomination IS NOT NULL AND length(${c}.denomination) > 0
-      AND NOT (${c}.denomination = ANY(${denylistToken}::text[]))
+      AND NOT (${c}.denomination IN (SELECT value FROM json_each(${denylistToken})))
       AND ${c}.display_score IS NOT NULL AND ${c}.display_score >= ${scoreToken}
     )
   )`;
@@ -141,20 +141,20 @@ function buildFilters(p: (value: unknown) => string, filters: Filters, c = "c", 
     // Contains-match, not exact: stored values are phrases like "contemporary
     // worship", so a search for "contemporary" should still hit.
     const token = p(`%${filters.style}%`);
-    clauses.push(`AND EXISTS (SELECT 1 FROM unnest(${c}.music_style) ms WHERE ms ILIKE ${token})`);
+    clauses.push(`AND EXISTS (SELECT 1 FROM json_each(${c}.music_style) ms WHERE ms.value LIKE ${token})`);
   }
   if (filters.denomination) {
     const token = p(`%${filters.denomination}%`);
-    clauses.push(`AND ${c}.denomination ILIKE ${token}`);
+    clauses.push(`AND ${c}.denomination LIKE ${token}`);
   }
   if (filters.language) {
     const token = p(`%${filters.language}%`);
     clauses.push(
-      `AND (${c}.language ILIKE ${token} OR EXISTS (SELECT 1 FROM unnest(${e}.languages) lg WHERE lg ILIKE ${token}))`,
+      `AND (${c}.language LIKE ${token} OR EXISTS (SELECT 1 FROM json_each(${e}.languages) lg WHERE lg.value LIKE ${token}))`,
     );
   }
   if (filters.hasServiceTimes) {
-    clauses.push(`AND ${e}.service_times IS NOT NULL AND jsonb_typeof(${e}.service_times) = 'array' AND jsonb_array_length(${e}.service_times) > 0`);
+    clauses.push(`AND ${e}.service_times IS NOT NULL AND json_type(${e}.service_times) = 'array' AND json_array_length(${e}.service_times) > 0`);
   }
   if (filters.kids) {
     clauses.push(`AND (${e}.children_ministry IS TRUE OR ${e}.youth_ministry IS TRUE)`);
@@ -193,9 +193,9 @@ function mapRow(row: ChurchRow): ChurchResult {
   if (Array.isArray(row.languages) && row.languages.length > 0) {
     result.languages = [...new Set(row.languages.map((value) => value.trim()).filter(Boolean))];
   }
-  result.hasKids = row.has_kids === true;
-  result.hasVisitorDetails = row.has_visitor_details === true;
-  result.hasParkingInfo = row.has_parking_info === true;
+  result.hasKids = Boolean(row.has_kids);
+  result.hasVisitorDetails = Boolean(row.has_visitor_details);
+  result.hasParkingInfo = Boolean(row.has_parking_info);
   if (row.last_enriched_at) {
     const checkedAt = new Date(row.last_enriched_at);
     if (!Number.isNaN(checkedAt.getTime())) result.checkedAt = checkedAt.toISOString();
@@ -240,7 +240,7 @@ async function queryNear(input: {
         (e.enrichment_status = 'complete' AND NULLIF(trim(e.what_to_expect), '') IS NOT NULL) AS has_visitor_details,
         (NULLIF(trim(e.parking_info), '') IS NOT NULL) AS has_parking_info,
         e.last_enriched_at,
-        (6371 * acos(least(1, greatest(-1,
+        (6371 * acos(min(1, max(-1,
           sin(radians(${latToken})) * sin(radians(e.latitude)) +
           cos(radians(${latToken})) * cos(radians(e.latitude)) * cos(radians(e.longitude - ${lngToken}))
         )))) AS distance_km

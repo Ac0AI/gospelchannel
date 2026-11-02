@@ -63,7 +63,7 @@ function ensureAuthConfig() {
     throw new Error("Missing BETTER_AUTH_URL");
   }
   if (!hasDatabaseConfig()) {
-    throw new Error("Missing DATABASE_URL");
+    throw new Error("Missing GOSPEL_D1 binding");
   }
 }
 
@@ -75,7 +75,7 @@ function getAuth(): ReturnType<typeof betterAuth> {
   if (!authInstance) {
     authInstance = betterAuth({
       database: drizzleAdapter(getDb(), {
-        provider: "pg",
+        provider: "sqlite",
         schema,
         camelCase: true,
       }),

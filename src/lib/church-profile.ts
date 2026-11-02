@@ -190,23 +190,12 @@ export async function reviewProfileEdit(
     // A reviewed name changes the canonical record and official enrichment
     // together, so H1, structured data, search and directory use one name.
     const rows = await getSql().query(
-      `WITH approved_edit AS (
-         UPDATE church_profile_edits e
-         SET review_status = 'approved', reviewed_by = $2,
-             reviewed_at = NOW(), rejection_reason = NULL
-         WHERE e.id = $1 AND e.field_name = 'name' AND e.review_status = 'pending'
-           AND EXISTS (SELECT 1 FROM churches c WHERE c.slug = e.church_slug)
-         RETURNING e.church_slug, e.field_value
-       ), updated_church AS (
-         UPDATE churches c
-         SET name = approved_edit.field_value #>> '{}', updated_at = NOW()
-         FROM approved_edit WHERE c.slug = approved_edit.church_slug
-         RETURNING c.slug, c.name
-       ), updated_enrichment AS (
-         UPDATE church_enrichments e SET official_church_name = c.name
-         FROM updated_church c WHERE e.church_slug = c.slug RETURNING e.id
-       )
-       SELECT slug FROM updated_church`,
+      `UPDATE church_profile_edits
+       SET review_status = 'approved', reviewed_by = $2,
+           reviewed_at = unixepoch() * 1000, rejection_reason = NULL
+       WHERE id = $1 AND field_name = 'name' AND review_status = 'pending'
+         AND EXISTS (SELECT 1 FROM churches c WHERE c.slug = church_profile_edits.church_slug)
+       RETURNING church_slug`,
       [editId, reviewedBy],
     );
     if (!Array.isArray(rows) || rows.length === 0) throw new Error('Name change could not be approved');

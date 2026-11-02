@@ -22,7 +22,8 @@
 
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { randomUUID } from "node:crypto";
+import { getSql } from "../src/db";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { _getChurchIndexData } from "../src/lib/church";
 import { computeCitySlug, computeDirectoryScore } from "../src/lib/facet-scoring";
@@ -30,17 +31,15 @@ import { compareDirectoryEntries } from "../src/lib/church-directory";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(resolve(__dirname, ".."));
-const DATABASE_URL = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
-if (!DATABASE_URL) throw new Error("Missing DATABASE_URL");
-const sql = neon(DATABASE_URL);
+const sql = getSql();
 const DRY_RUN = process.argv.includes("--dry-run");
-const BATCH = 5000;
+const BATCH = 500;
 
 async function main() {
   console.log(`backfill-facet-columns  ${DRY_RUN ? "DRY-RUN" : "WRITE"}`);
 
   // The exact records the old facet path consumed via getChurchIndexData().
-  const all = await _getChurchIndexData();
+  const all = await _getChurchIndexData({ strict: true });
   console.log(`  loaded ${all.length} index records`);
 
   // Global rank: sort a copy with the exact browse comparator.
@@ -60,6 +59,7 @@ async function main() {
   const avg = updates.reduce((s, u) => s + u.directory_score, 0) / (updates.length || 1);
 
   if (!DRY_RUN) {
+    const runId = randomUUID();
     for (let i = 0; i < updates.length; i += BATCH) {
       const slice = updates.slice(i, i + BATCH);
       await sql.query(
@@ -67,16 +67,17 @@ async function main() {
            SET city_slug = d.city_slug,
                directory_score = d.directory_score,
                directory_ready = d.directory_ready,
-               directory_rank = d.directory_rank
-         FROM jsonb_to_recordset($1::jsonb)
-           AS d(slug text, city_slug text, directory_score real, directory_ready boolean, directory_rank int)
+               directory_rank = d.directory_rank,
+               directory_reconcile_id = $2
+         FROM (SELECT json_extract(value, '$.slug') AS slug, json_extract(value, '$.city_slug') AS city_slug,
+               json_extract(value, '$.directory_score') AS directory_score, json_extract(value, '$.directory_ready') AS directory_ready,
+               json_extract(value, '$.directory_rank') AS directory_rank FROM json_each($1)) AS d
          WHERE c.slug = d.slug`,
-        [JSON.stringify(slice)],
+        [JSON.stringify(slice), runId],
       );
       process.stdout.write(`\r  written ${Math.min(i + BATCH, updates.length)}/${updates.length}`);
     }
 
-    const indexedSlugs = updates.map((u) => u.slug);
     const cleared = await sql.query(
       `UPDATE churches
           SET city_slug = NULL,
@@ -84,15 +85,15 @@ async function main() {
               directory_ready = FALSE,
               directory_rank = NULL
         WHERE status = 'approved'
-          AND NOT (slug = ANY($1::text[]))
+          AND coalesce(directory_reconcile_id, '') <> $1
           AND (
             city_slug IS NOT NULL
             OR directory_score IS NOT NULL
-            OR directory_ready IS DISTINCT FROM FALSE
+            OR directory_ready IS NOT FALSE
             OR directory_rank IS NOT NULL
           )
         RETURNING slug`,
-      [indexedSlugs],
+      [runId],
     );
     if (cleared.length > 0) {
       console.log(`\n  cleared ${cleared.length} approved rows outside the canonical index`);

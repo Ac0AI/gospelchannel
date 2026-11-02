@@ -28,7 +28,7 @@ const HTML_EDGE_CACHE_NAME = "gospelchannel-html-v2";
 const HOME_EDGE_CACHE_NAME = "gospelchannel-home-v3";
 // 24h fresh + 7d stale-while-revalidate. Near-static directory/content pages;
 // long TTL collapses crawler-driven cold renders (per-colo Cache API misses ×
-// ~65k slugs × ~10 Neon queries each) into background revalidations.
+// ~65k slugs × ~10 D1 queries each) into background revalidations.
 const HTML_EDGE_CACHE_TTL_SECONDS = 86400;
 const HTML_EDGE_CACHE_SWR_SECONDS = 604800;
 const AUTH_COOKIE_PATTERN = /(?:^|;\s*)(?:better-auth|session|auth)/i;

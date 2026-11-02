@@ -2,7 +2,7 @@
 
 Find the right church before your first visit.
 
-Free global church guide with worship-aware profiles, built with Next.js 16, OpenNext on Cloudflare Workers, Neon, Spotify, and YouTube.
+Free global church guide with worship-aware profiles, built with Next.js 16, OpenNext on Cloudflare Workers, Cloudflare D1, Spotify, and YouTube.
 
 > Solo-maintained project, and my first open source project. This repository is public so people can report bugs, suggest improvements, and send small focused pull requests. I am still learning the open source side of things, so patience and clarity help a lot.
 
@@ -25,7 +25,7 @@ Free global church guide with worship-aware profiles, built with Next.js 16, Ope
 
 - Next.js 16 (App Router)
 - OpenNext + Cloudflare Workers
-- Neon Postgres + Drizzle
+- Cloudflare D1 + Drizzle
 - Better Auth
 - Spotify Web API
 - YouTube Data API
@@ -62,18 +62,37 @@ pnpm smoke
 pnpm check:env
 ```
 
-## Database (Neon)
+## Database (Cloudflare D1)
 
-This project uses [Neon](https://neon.tech) serverless Postgres with Drizzle ORM.
+Cloudflare D1 is the canonical database. The Worker uses the `GOSPEL_D1`
+binding in `wrangler.jsonc`; it does not need a database URL or API token.
+Local development uses an isolated local D1 database by default.
 
-1. Create a free project at [neon.tech](https://neon.tech)
-2. Copy the connection strings into `.env.local`:
-   - `DATABASE_URL` - pooled connection string
-   - `DATABASE_URL_UNPOOLED` - direct connection (used by Drizzle migrations)
-3. Run migrations:
-   ```bash
-   npx drizzle-kit push
-   ```
+```bash
+pnpm db:migrate:local
+pnpm dev
+```
+
+Node maintenance jobs use `GOSPEL_D1_DATABASE_ID`, `CLOUDFLARE_ACCOUNT_ID`,
+and `GOSPEL_D1_API_TOKEN` (or the existing `CLOUDFLARE_API_TOKEN`). The token
+needs Account / D1 / Edit for jobs that write. Missing credentials fail closed.
+For local jobs, an existing `wrangler login` can supply a refreshed token
+without saving a second secret:
+
+```bash
+node scripts/with-d1-wrangler-auth.mjs node scripts/check-d1-access.mjs
+```
+
+Create a versioned SQL migration with `pnpm db:new-migration -- descriptive_name`,
+keep the Drizzle models in `src/db/d1-schema` in sync, and apply with
+`pnpm db:migrate` after checking the configured remote database. Production
+imports must apply `0000_initial.sql`, load data, then apply the remaining
+migrations so derived search triggers do not rewrite imported source rows.
+
+The old Postgres schema and one-off import/research scripts remain for archival
+use. They are not production jobs. Do not configure `DATABASE_URL` in the app
+or scheduled jobs after cutover. The legacy Supabase importer requires an
+explicit `LEGACY_NEON_DATABASE_URL`.
 
 ## Environment variables
 
@@ -85,7 +104,7 @@ Typical local development:
 - `NEXT_PUBLIC_MEDIA_BASE_URL`
 - `BETTER_AUTH_URL`
 - `BETTER_AUTH_SECRET`
-- `DATABASE_URL`
+- Local D1 initialized with `pnpm db:migrate:local`
 
 Needed for specific integrations and production-like flows:
 

@@ -32,7 +32,7 @@
 
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { getSql } from "../src/db";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { mirrorImageToR2, isAlreadyMirrored } from "../src/lib/r2-mirror";
 import { INDEXABLE_DISPLAY_SCORE_MIN } from "../src/lib/content-quality";
@@ -40,9 +40,7 @@ import { INDEXABLE_DISPLAY_SCORE_MIN } from "../src/lib/content-quality";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(resolve(__dirname, ".."));
 
-const DATABASE_URL = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
-if (!DATABASE_URL) throw new Error("Missing DATABASE_URL");
-const sql = neon(DATABASE_URL);
+const sql = getSql();
 
 const DRY_RUN = process.argv.includes("--dry-run");
 const LIMIT = Number.parseInt(
@@ -112,8 +110,9 @@ async function main() {
      WHERE c.status='approved'
        AND (c.display_score IS NULL OR c.display_score >= $1)
        AND (
-         c.header_image LIKE ANY($2::text[]) OR c.logo LIKE ANY($2::text[])
-         OR ce.cover_image_url LIKE ANY($2::text[]) OR ce.logo_image_url LIKE ANY($2::text[])
+         EXISTS (SELECT 1 FROM json_each($2) host WHERE
+           c.header_image LIKE host.value OR c.logo LIKE host.value
+           OR ce.cover_image_url LIKE host.value OR ce.logo_image_url LIKE host.value)
        )`;
   const rows = (LIMIT
     ? ((await sql.query(`${baseQuery} LIMIT $3`, [INDEXABLE_DISPLAY_SCORE_MIN, hostLike, LIMIT])) as Row[])
@@ -195,19 +194,18 @@ async function main() {
     if (updates.length === 0) continue;
     const table = FIELDS_ON_CHURCHES.includes(field) ? "churches" : "church_enrichments";
     const slugCol = table === "churches" ? "slug" : "church_slug";
-    // Per-row UPDATE — different newUrl per slug, so a single batch UPDATE
-    // would need CASE or jsonb_to_recordset. Use jsonb_to_recordset for
-    // efficiency (single query covers many rows).
+    // One JSON parameter keeps batches below D1's bind limit.
+    // Match the original URL to preserve concurrent profile edits.
     const CHUNK = 1000;
     for (let i = 0; i < updates.length; i += CHUNK) {
       const slice = updates.slice(i, i + CHUNK);
       await sql.query(
         `UPDATE "${table}" AS t
-            SET "${field}" = d.new_url
-           FROM jsonb_to_recordset($1::jsonb) AS d(slug text, new_url text)
-          WHERE t."${slugCol}" = d.slug
-            AND t."${field}" IS NOT NULL`,
-        [JSON.stringify(slice.map((u) => ({ slug: u.slug, new_url: u.newUrl })))],
+            SET "${field}" = json_extract(d.value, '$.new_url')
+           FROM json_each($1) AS d
+          WHERE t."${slugCol}" = json_extract(d.value, '$.slug')
+            AND t."${field}" = json_extract(d.value, '$.old_url')`,
+        [JSON.stringify(slice.map((u) => ({ slug: u.slug, old_url: u.oldUrl, new_url: u.newUrl })))],
       );
     }
     console.log(`  ${field}: rewrote ${updates.length} ${table} rows`);

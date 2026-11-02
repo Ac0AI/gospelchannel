@@ -3,7 +3,7 @@
 /**
  * Read-only health gate for the live church directory and offline fallback.
  *
- * Neon is the canonical source. src/data/churches.json is intentionally a
+ * D1 is the canonical source. src/data/churches.json is intentionally a
  * smaller offline/build fallback, so exact slug parity is no longer a valid
  * invariant after the global directory imports.
  */
@@ -11,7 +11,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1TaggedSql } from "./lib/cloudflare-d1.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -22,13 +22,7 @@ const fixFallback = process.argv.includes("--fix-fallback");
 
 loadLocalEnv(ROOT_DIR);
 
-const databaseUrl = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
-if (!databaseUrl) {
-  console.error("Missing DATABASE_URL or DATABASE_URL_UNPOOLED");
-  process.exit(1);
-}
-
-const sql = neon(databaseUrl);
+const sql = createD1TaggedSql(process.env);
 
 function percentage(part, total) {
   return total > 0 ? `${((part / total) * 100).toFixed(1)}%` : "0.0%";
@@ -55,44 +49,44 @@ async function main() {
   const [summaryRows, approvedSlugRows] = await Promise.all([
     sql`
       SELECT
-        count(*) FILTER (WHERE status = 'approved')::int AS approved,
-        count(*) FILTER (WHERE status = 'archived')::int AS archived,
-        count(*) FILTER (WHERE status NOT IN ('approved', 'archived') OR status IS NULL)::int AS invalid_status,
+        count(*) FILTER (WHERE status = 'approved') AS approved,
+        count(*) FILTER (WHERE status = 'archived') AS archived,
+        count(*) FILTER (WHERE status NOT IN ('approved', 'archived') OR status IS NULL) AS invalid_status,
         count(*) FILTER (
           WHERE status = 'approved'
-            AND (slug IS NULL OR btrim(slug) = '' OR name IS NULL OR btrim(name) = '' OR country IS NULL OR btrim(country) = '')
-        )::int AS missing_required,
-        count(*) FILTER (WHERE status = 'approved' AND directory_ready IS NULL)::int AS missing_directory_ready,
-        count(*) FILTER (WHERE status = 'approved' AND directory_ready IS TRUE AND directory_rank IS NULL)::int AS ready_missing_rank,
-        count(*) FILTER (WHERE status = 'approved' AND directory_ready IS TRUE AND directory_score IS NULL)::int AS ready_missing_score,
-        count(*) FILTER (
-          WHERE status = 'approved'
-            AND (display_score IS NULL OR display_score >= ${INDEXABLE_DISPLAY_SCORE_MIN})
-        )::int AS indexable,
+            AND (slug IS NULL OR trim(slug) = '' OR name IS NULL OR trim(name) = '' OR country IS NULL OR trim(country) = '')
+        ) AS missing_required,
+        count(*) FILTER (WHERE status = 'approved' AND directory_ready IS NULL) AS missing_directory_ready,
+        count(*) FILTER (WHERE status = 'approved' AND directory_ready IS TRUE AND directory_rank IS NULL) AS ready_missing_rank,
+        count(*) FILTER (WHERE status = 'approved' AND directory_ready IS TRUE AND directory_score IS NULL) AS ready_missing_score,
         count(*) FILTER (
           WHERE status = 'approved'
             AND (display_score IS NULL OR display_score >= ${INDEXABLE_DISPLAY_SCORE_MIN})
-            AND coalesce(cardinality(related_church_slugs), 0) = 0
-        )::int AS indexable_missing_related,
+        ) AS indexable,
+        count(*) FILTER (
+          WHERE status = 'approved'
+            AND (display_score IS NULL OR display_score >= ${INDEXABLE_DISPLAY_SCORE_MIN})
+            AND coalesce(json_array_length(related_church_slugs), 0) = 0
+        ) AS indexable_missing_related,
         count(*) FILTER (
           WHERE status = 'approved'
             AND (
-              (churches.service_times IS NOT NULL AND churches.service_times <> '[]'::jsonb AND churches.service_times <> '{}'::jsonb)
+              (churches.service_times IS NOT NULL AND churches.service_times <> '[]' AND churches.service_times <> '{}')
               OR EXISTS (
                 SELECT 1
                 FROM church_enrichments ce
                 WHERE ce.church_slug = churches.slug
                   AND ce.service_times IS NOT NULL
-                  AND ce.service_times <> '[]'::jsonb
-                  AND ce.service_times <> '{}'::jsonb
+                  AND ce.service_times <> '[]'
+                  AND ce.service_times <> '{}'
               )
             )
-        )::int AS with_service_times,
-        count(*) FILTER (WHERE status = 'approved' AND coalesce(cardinality(music_style), 0) > 0)::int AS with_music_style,
+        ) AS with_service_times,
+        count(*) FILTER (WHERE status = 'approved' AND coalesce(json_array_length(music_style), 0) > 0) AS with_music_style,
         count(*) FILTER (
           WHERE status = 'approved'
-            AND (coalesce(cardinality(spotify_playlist_ids), 0) > 0 OR coalesce(spotify_url, '') <> '')
-        )::int AS with_spotify,
+            AND (coalesce(json_array_length(spotify_playlist_ids), 0) > 0 OR coalesce(spotify_url, '') <> '')
+        ) AS with_spotify,
         count(*) FILTER (
           WHERE status = 'approved'
             AND (
@@ -103,12 +97,12 @@ async function main() {
                 WHERE ce.church_slug = churches.slug
                   AND (
                     coalesce(ce.cover_image_url, '') <> ''
-                    OR (ce.photo_urls IS NOT NULL AND ce.photo_urls <> '[]'::jsonb AND ce.photo_urls <> '{}'::jsonb)
+                    OR (ce.photo_urls IS NOT NULL AND ce.photo_urls <> '[]' AND ce.photo_urls <> '{}')
                   )
               )
             )
-        )::int AS with_header_image,
-        count(*) FILTER (WHERE status = 'approved' AND verified_at IS NOT NULL)::int AS verified
+        ) AS with_header_image,
+        count(*) FILTER (WHERE status = 'approved' AND verified_at IS NOT NULL) AS verified
       FROM churches
     `,
     sql`SELECT slug FROM churches WHERE status = 'approved'`,
@@ -131,7 +125,7 @@ async function main() {
 
   if (duplicateSnapshotSlugs.length > 0) failures.push(`${duplicateSnapshotSlugs.length} duplicate fallback slugs`);
   if (invalidSnapshotRows.length > 0) failures.push(`${invalidSnapshotRows.length} fallback rows missing slug, name, or country`);
-  if (snapshotOnly.length > 0 && !fixFallback) failures.push(`${snapshotOnly.length} fallback slugs are not approved in Neon`);
+  if (snapshotOnly.length > 0 && !fixFallback) failures.push(`${snapshotOnly.length} fallback slugs are not approved in D1`);
   if (summary.invalid_status > 0) failures.push(`${summary.invalid_status} rows have an invalid status`);
   if (summary.missing_required > 0) failures.push(`${summary.missing_required} approved rows are missing slug, name, or country`);
   if (summary.missing_directory_ready > 0) failures.push(`${summary.missing_directory_ready} approved rows lack directory_ready`);
@@ -140,8 +134,8 @@ async function main() {
   if (summary.indexable_missing_related > 0) failures.push(`${summary.indexable_missing_related} indexable rows have no related churches`);
 
   console.log("Church data health");
-  console.log(`  Neon approved            ${summary.approved}`);
-  console.log(`  Neon archived            ${summary.archived}`);
+  console.log(`  D1 approved            ${summary.approved}`);
+  console.log(`  D1 archived            ${summary.archived}`);
   console.log(`  Indexable                ${summary.indexable}`);
   console.log(`  Offline fallback         ${fallbackCount}`);
   console.log(`  Canonical-only slugs      ${Math.max(0, approvedSlugs.size - fallbackCount)}`);

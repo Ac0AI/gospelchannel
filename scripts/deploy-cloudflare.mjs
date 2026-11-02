@@ -19,7 +19,7 @@ const DEFAULT_WARM_PATHS = [
 const SKIP_WARM_FLAGS = new Set(["--skip-warm", "--no-warm"]);
 const SITEMAP_WARM_PASSES = 2;
 const PRIMARY_WARM_CONCURRENCY = 6;
-// Sitemap chunks each render 5k URLs from Neon. Running them concurrently piles
+// Sitemap chunks each render 5k URLs from D1. Running them concurrently piles
 // up cold-isolate hydrations and trips Cloudflare's gateway timeout (503).
 // Serialize them so the first chunk warms the R2 unstable_cache layer and the
 // rest hit it warm.
@@ -195,7 +195,7 @@ function shouldSkipWarm() {
 // The offline build seeds the incremental cache with empty data (facet lists,
 // stats) that otherwise lingers until each entry's hourly TTL or the 04:00
 // cron. Flush everything right after deploy so the prewarm below re-renders
-// with live Neon data instead of baking the empty entries into the edge.
+// with live D1 data instead of baking the empty entries into the edge.
 async function revalidateAfterDeploy() {
   const secret = (process.env.CRON_SECRET || "").trim();
   if (!secret) {

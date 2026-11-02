@@ -206,7 +206,7 @@ export async function getTopChurchSlugs(periodDays = 30, limit = 10): Promise<Ar
     const rows = await db
       .select({
         slug: schema.churchVoteEvents.slug,
-        votes: sql<number>`count(*)::int`,
+        votes: sql<number>`count(*)`,
       })
       .from(schema.churchVoteEvents)
       .where(gte(schema.churchVoteEvents.createdAt, since))

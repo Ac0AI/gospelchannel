@@ -83,7 +83,7 @@ export function buildDiscoveryChurchProofs(church: DiscoveryChurch): string[] {
 // Two data wrinkles this query is deliberately built around (verified 2026-07-01):
 //   1. "London" is fragmented across city_slug values (london, north-london,
 //      southeast-london, southwest-london, ...), so we match the whole area with
-//      ILIKE '%london%' rather than an exact slug — otherwise we undercount badly
+//      LIKE '%london%' rather than an exact slug — otherwise we undercount badly
 //      (e.g. miss Hillsong North/Southeast/Southwest London).
 //   2. The intent cluster is tradition-based (Pentecostal, Charismatic, Vineyard,
 //      Elim) OR worship-style-tagged (charismatic/pentecostal/gospel) — deliberately
@@ -110,18 +110,18 @@ export const getLondonCharismaticChurches = unstable_cache(
           header_image,
           logo,
           service_times,
-          COALESCE(cardinality(spotify_playlist_ids), 0) + COALESCE(cardinality(additional_playlists), 0) AS playlist_count,
+          COALESCE(json_array_length(spotify_playlist_ids), 0) + COALESCE(json_array_length(additional_playlists), 0) AS playlist_count,
           CASE
-            WHEN jsonb_typeof(youtube_videos) = 'array' THEN jsonb_array_length(youtube_videos)
+            WHEN json_type(youtube_videos) = 'array' THEN json_array_length(youtube_videos)
             ELSE 0
           END AS video_count,
           directory_score
         FROM churches
         WHERE status = 'approved'
-          AND city_slug ILIKE '%london%'
+          AND city_slug LIKE '%london%'
           AND (
-            denomination ILIKE ANY(ARRAY['%pentecostal%', '%charismatic%', '%elim%', '%vineyard%'])
-            OR music_style && ARRAY['charismatic worship', 'pentecostal', 'gospel']
+            (denomination LIKE '%pentecostal%' OR denomination LIKE '%charismatic%' OR denomination LIKE '%elim%' OR denomination LIKE '%vineyard%')
+            OR EXISTS (SELECT 1 FROM json_each(music_style) WHERE value IN ('charismatic worship', 'pentecostal', 'gospel'))
           )
         ORDER BY directory_score DESC NULLS LAST, name
       `) as Array<Record<string, unknown>>;
@@ -158,17 +158,17 @@ const getBestWorshipChurchesCached = unstable_cache(
           header_image,
           logo,
           service_times,
-          COALESCE(cardinality(spotify_playlist_ids), 0) + COALESCE(cardinality(additional_playlists), 0) AS playlist_count,
+          COALESCE(json_array_length(spotify_playlist_ids), 0) + COALESCE(json_array_length(additional_playlists), 0) AS playlist_count,
           CASE
-            WHEN jsonb_typeof(youtube_videos) = 'array' THEN jsonb_array_length(youtube_videos)
+            WHEN json_type(youtube_videos) = 'array' THEN json_array_length(youtube_videos)
             ELSE 0
           END AS video_count,
           directory_score
         FROM churches
         WHERE status = 'approved'
           AND (
-            denomination ILIKE ANY(ARRAY['%pentecostal%', '%charismatic%', '%elim%', '%vineyard%'])
-            OR music_style && ARRAY['charismatic worship', 'pentecostal', 'gospel', 'contemporary worship']
+            (denomination LIKE '%pentecostal%' OR denomination LIKE '%charismatic%' OR denomination LIKE '%elim%' OR denomination LIKE '%vineyard%')
+            OR EXISTS (SELECT 1 FROM json_each(music_style) WHERE value IN ('charismatic worship', 'pentecostal', 'gospel', 'contemporary worship'))
           )
         ORDER BY directory_score DESC NULLS LAST, name
         LIMIT ${limit}

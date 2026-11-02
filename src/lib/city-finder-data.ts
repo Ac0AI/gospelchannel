@@ -123,21 +123,21 @@ async function loadCityFinderData(citySlug: string): Promise<CityFinderData> {
         COALESCE(e.service_times, c.service_times) AS service_times,
         e.languages, e.children_ministry, e.youth_ministry, e.what_to_expect, e.last_enriched_at
       FROM churches c
-      JOIN LATERAL (
-        SELECT ce.*
+      JOIN church_enrichments e ON e.id = (
+        SELECT ce.id
         FROM church_enrichments ce
         WHERE ce.church_slug = c.slug
           AND ce.latitude IS NOT NULL
           AND ce.longitude IS NOT NULL
         ORDER BY ce.updated_at DESC NULLS LAST, ce.id DESC
         LIMIT 1
-      ) e ON TRUE
+      )
       WHERE c.status = 'approved'
         AND c.directory_ready IS NOT FALSE
         AND c.city_slug = $1
         AND COALESCE(e.service_times, c.service_times) IS NOT NULL
-        AND jsonb_typeof(COALESCE(e.service_times, c.service_times)) = 'array'
-        AND jsonb_array_length(COALESCE(e.service_times, c.service_times)) > 0
+        AND json_type(COALESCE(e.service_times, c.service_times)) = 'array'
+        AND json_array_length(COALESCE(e.service_times, c.service_times)) > 0
       ORDER BY c.directory_score DESC NULLS LAST, c.name ASC
       LIMIT 500
     `,

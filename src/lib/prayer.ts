@@ -90,7 +90,7 @@ async function hydrateFreshPrayedCounts<T extends Prayer>(prayers: T[]): Promise
     const rows = (await sql`
       SELECT id, prayed_count
       FROM prayers
-      WHERE id = ANY(${ids})
+      WHERE id IN (SELECT value FROM json_each(${ids}))
     `) as Array<{ id: string; prayed_count: number }>;
     const countById = new Map(rows.map((row) => [row.id, row.prayed_count]));
 
@@ -395,7 +395,7 @@ export async function getChurchNamesForSlugsSQL(
   try {
     const sql = getSql();
     const rows = (await sql`
-      SELECT slug, name FROM churches WHERE slug = ANY(${slugs})
+      SELECT slug, name FROM churches WHERE slug IN (SELECT value FROM json_each(${slugs}))
     `) as Array<{ slug: string; name: string }>;
     const result: Record<string, string> = {};
     for (const row of rows) result[row.slug] = row.name;

@@ -11,7 +11,6 @@ if [[ ! -f "$ENV_FILE" ]]; then
 fi
 
 required=(
-  DATABASE_URL
   BETTER_AUTH_SECRET
   BETTER_AUTH_URL
   NEXT_PUBLIC_SITE_URL

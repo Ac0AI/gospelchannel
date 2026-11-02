@@ -25,7 +25,7 @@ async function loadReviewedChurches(citySlug: string) {
     JOIN church_enrichments e ON e.church_slug = c.slug
     WHERE c.city_slug = $1 AND c.status = 'approved'
       AND c.directory_ready IS NOT FALSE
-      AND e.sources ? 'official_review'
+      AND json_type(e.sources, '$.official_review') IS NOT NULL
     ORDER BY c.name ASC
     LIMIT 30
   `, [citySlug])) as ReviewedChurchRow[];
