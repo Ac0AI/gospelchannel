@@ -37,6 +37,9 @@ jobs:
           BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
           ADMIN_EMAILS: ${{ secrets.ADMIN_EMAILS }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          GOSPEL_D1_DATABASE_ID: ${{ vars.GOSPEL_D1_DATABASE_ID }}
+          GOSPEL_D1_API_TOKEN: ${{ secrets.GOSPEL_D1_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
           NOTIFY_FROM_EMAIL: noreply@gospelchannel.com

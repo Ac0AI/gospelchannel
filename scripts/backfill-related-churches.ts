@@ -38,13 +38,16 @@ import { fileURLToPath } from "node:url";
 import { neon } from "@neondatabase/serverless";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { INDEXABLE_DISPLAY_SCORE_MIN } from "../src/lib/content-quality";
+import { createD1Client } from "./lib/cloudflare-d1.mjs";
+import { readRelatedCandidates, writeRelatedRows } from "./lib/d1-directory.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(resolve(__dirname, ".."));
 
 const DATABASE_URL = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
-if (!DATABASE_URL) throw new Error("Missing DATABASE_URL");
-const sql = neon(DATABASE_URL);
+const d1 = process.env.GOSPEL_D1_DATABASE_ID ? createD1Client(process.env) : null;
+if (!d1 && !DATABASE_URL) throw new Error("Missing DATABASE_URL");
+const sql = d1 ? null : neon(DATABASE_URL!);
 
 const DRY_RUN = process.argv.includes("--dry-run");
 const K = Number.parseInt(process.argv.find((a) => a.startsWith("--k="))?.slice(4) ?? "8", 10);
@@ -103,7 +106,7 @@ async function main() {
 
   // ONE read pass — only the indexable set crosses the wire. Cost-safe:
   // <= ~tens of thousands of rows, lean columns, never raw_* blobs.
-  const rows = (await sql.query(
+  const rows = (d1 ? await readRelatedCandidates(d1, INDEXABLE_DISPLAY_SCORE_MIN) : await sql!.query(
     `SELECT c.slug, c.country, c.city_slug, c.directory_rank, c.display_score,
             c.music_style, c.denomination,
             ce.latitude, ce.longitude
@@ -358,7 +361,8 @@ async function main() {
   let written = 0;
   for (let i = 0; i < updates.length; i += BATCH) {
     const slice = updates.slice(i, i + BATCH);
-    await sql.query(
+    if (d1) await writeRelatedRows(d1, slice);
+    else await sql!.query(
       `UPDATE churches AS c
           SET related_church_slugs = d.related
          FROM (

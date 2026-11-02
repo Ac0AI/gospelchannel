@@ -15,6 +15,7 @@ import { neon } from "@neondatabase/serverless";
 import { generateReport, delta } from "./gsc-report.mjs";
 import { generateReport as generateCfReport, delta as cfDelta } from "./cf-report.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
+import { createD1Client } from "./lib/cloudflare-d1.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(join(__dirname, ".."));
@@ -25,15 +26,15 @@ if (!BREVO_API_KEY) {
   console.error("Missing BREVO_API_KEY");
   process.exit(1);
 }
-if (!process.env.DATABASE_URL && !process.env.DATABASE_URL_UNPOOLED) {
+if (!process.env.GOSPEL_D1_DATABASE_ID && !process.env.DATABASE_URL && !process.env.DATABASE_URL_UNPOOLED) {
   console.error("Missing DATABASE_URL or DATABASE_URL_UNPOOLED");
   process.exit(1);
 }
 
 async function getAdminEmails() {
-  const databaseUrl = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
-  const sql = neon(databaseUrl);
-  const rows = await sql`select email from "user" where role = 'admin' order by email asc`;
+  const rows = process.env.GOSPEL_D1_DATABASE_ID
+    ? await createD1Client(process.env).query(`select email from "user" where role = 'admin' order by email asc`)
+    : await neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED)`select email from "user" where role = 'admin' order by email asc`;
   return rows.map((row) => row.email).filter(Boolean);
 }
 
