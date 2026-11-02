@@ -183,9 +183,11 @@ export default async function HomePage() {
       {/* 2. Stats strip */}
       <div className="border-y border-rose-gold/[0.12] bg-linen-deep px-5 py-5 text-center sm:px-12">
         <p className="m-0 text-sm tracking-wide text-warm-brown">
-          <strong className="font-bold text-espresso">{churchCountLabel}</strong> churches
-          <span className="mx-3.5 opacity-40">·</span>
-          <strong className="font-bold text-espresso">{countryCount}</strong> countries
+          {stats.churchCount > 80000 && countryCount > 100 ? (
+            <>Over <strong className="font-bold text-espresso">80,000 churches</strong> in more than <strong className="font-bold text-espresso">100 countries</strong></>
+          ) : (
+            <><strong className="font-bold text-espresso">{churchCountLabel}</strong> churches in <strong className="font-bold text-espresso">{countryCount}</strong> countries</>
+          )}
           <span className="mx-3.5 opacity-40">·</span>
           Free, no ads, privacy-first
         </p>
