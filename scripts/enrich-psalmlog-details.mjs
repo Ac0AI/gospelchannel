@@ -7,7 +7,7 @@
 
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { isOfficialWebsiteUrl, toSiteRoot } from "./lib/church-intake-utils.mjs";
 import { mapWithConcurrency, sleep } from "./lib/enrichment/rate-limiter.mjs";
@@ -138,10 +138,10 @@ function cleanWebsite(raw) {
 async function main() {
   loadLocalEnv(ROOT_DIR);
   const options = parseArgs(process.argv.slice(2));
-  if (!process.env.DATABASE_URL && !process.env.DATABASE_URL_UNPOOLED) {
-    throw new Error("Missing DATABASE_URL or DATABASE_URL_UNPOOLED");
+  if (!process.env.GOSPEL_D1_DATABASE_ID) {
+    throw new Error("Missing GOSPEL_D1_DATABASE_ID");
   }
-  const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+  const sql = createD1ScriptSql();
 
   const stateSlug = options.state;
   const reasonPrefix = `directory-import: Psalmlog | ${options.state.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}`;
@@ -235,7 +235,7 @@ async function main() {
           const setClauses = keys.map((k, i) => `${k} = $${i + 2}`).join(", ");
           await sql.query(
             `UPDATE church_enrichments
-               SET ${setClauses}, last_enriched_at = NOW(), updated_at = NOW()
+               SET ${setClauses}, last_enriched_at = (unixepoch() * 1000), updated_at = (unixepoch() * 1000)
              WHERE church_slug = $1`,
             [slug, ...keys.map((k) => patch[k])],
           );

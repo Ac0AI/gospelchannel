@@ -30,16 +30,16 @@
 
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { INDEXABLE_DISPLAY_SCORE_MIN } from "../src/lib/content-quality";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(resolve(__dirname, ".."));
 
-const DATABASE_URL = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
-if (!DATABASE_URL) throw new Error("Missing DATABASE_URL");
-const sql = neon(DATABASE_URL);
+const GOSPEL_D1_DATABASE_ID = process.env.GOSPEL_D1_DATABASE_ID;
+if (!GOSPEL_D1_DATABASE_ID) throw new Error("Missing GOSPEL_D1_DATABASE_ID");
+const sql = createD1ScriptSql();
 
 const DRY_RUN = process.argv.includes("--dry-run");
 const LIMIT = Number.parseInt(
@@ -207,12 +207,12 @@ async function main() {
     if (slugs.length === 0) continue;
     const table = FIELDS_ON_CHURCHES.includes(field) ? "churches" : "church_enrichments";
     const slugCol = table === "churches" ? "slug" : "church_slug";
-    // CHUNK the slug list — Neon serverless caps query payload sizes.
+    // CHUNK the slug list — D1 serverless caps query payload sizes.
     const CHUNK = 2000;
     for (let i = 0; i < slugs.length; i += CHUNK) {
       const chunk = slugs.slice(i, i + CHUNK);
       await sql.query(
-        `UPDATE "${table}" SET "${field}" = NULL WHERE "${slugCol}" = ANY($1::text[])`,
+        `UPDATE "${table}" SET "${field}" = NULL WHERE "${slugCol}" IN (SELECT value FROM json_each($1))`,
         [chunk],
       );
     }

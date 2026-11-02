@@ -19,7 +19,7 @@
  *   node scripts/probe-dead-sites.mjs --input=... --apply            # write NULL
  */
 
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { readFile, writeFile } from "node:fs/promises";
@@ -31,9 +31,9 @@ import { mapWithConcurrency, sleep } from "./lib/enrichment/rate-limiter.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(resolve(__dirname, ".."));
 
-const DATABASE_URL = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
-if (!DATABASE_URL) { console.error("Missing DATABASE_URL"); process.exit(1); }
-const sql = neon(DATABASE_URL);
+const GOSPEL_D1_DATABASE_ID = process.env.GOSPEL_D1_DATABASE_ID;
+if (!GOSPEL_D1_DATABASE_ID) { console.error("Missing GOSPEL_D1_DATABASE_ID"); process.exit(1); }
+const sql = createD1ScriptSql();
 
 const UA = "Mozilla/5.0 (compatible; GospelChannelBot/1.0; +https://gospelchannel.com)";
 const CONCURRENCY = 20;
@@ -131,7 +131,7 @@ async function main() {
 
   // Load websites from DB
   const rows = await sql.query(
-    `SELECT slug, website FROM churches WHERE slug = ANY($1::text[]) AND website IS NOT NULL AND website != ''`,
+    `SELECT slug, website FROM churches WHERE slug IN (SELECT value FROM json_each($1)) AND website IS NOT NULL AND website != ''`,
     [targets],
   );
   const bySlug = new Map(rows.map((r) => [r.slug, r.website]));
@@ -185,7 +185,7 @@ async function main() {
     console.log(`\nApplying: setting website=NULL on ${dead.length} churches with dns-fail…`);
     // Batch update
     await sql.query(
-      `UPDATE churches SET website = NULL, updated_at = NOW() WHERE slug = ANY($1::text[])`,
+      `UPDATE churches SET website = NULL, updated_at = (unixepoch() * 1000) WHERE slug IN (SELECT value FROM json_each($1))`,
       [dead],
     );
     console.log("Done.");

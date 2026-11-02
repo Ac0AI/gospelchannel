@@ -6,12 +6,12 @@ import { isOfflinePublicBuild } from "@/lib/runtime-mode";
 import type { ServiceTime } from "@/types/gospel";
 
 // Both pages below are force-dynamic (never prerendered against the DB at
-// build time), which means every request would otherwise hit Neon directly —
-// exactly the pattern that caused a prior Neon-egress incident when these
+// build time), which means every request would otherwise hit D1 directly —
+// exactly the pattern that caused a prior D1-egress incident when these
 // pages are also the ones we've deliberately made attractive to AI crawlers.
 // unstable_cache is the project's R2-backed cache (see CLAUDE.md: never use
 // module-level caches on Workers), so repeat requests within the revalidate
-// window are served from R2 instead of Neon.
+// window are served from R2 instead of D1.
 const DISCOVERY_CACHE_REVALIDATE_SECONDS = 3600;
 
 export type DiscoveryChurch = {

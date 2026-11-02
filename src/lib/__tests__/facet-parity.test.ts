@@ -5,7 +5,7 @@
  * getCountryLinks/getCityLinks/getStyleLinks/getDenominationLinks) for
  * sampled slugs across all four facet kinds.
  *
- * Integration test — hits real Neon. Run before the split-deploy:
+ * Integration test — hits real D1. Run before the split-deploy:
  *   pnpm vitest run src/lib/__tests__/facet-parity.test.ts
  *
  * next/cache unstable_cache is mocked to a pass-through (the standard way to
@@ -48,7 +48,7 @@ type Mods = {
 const m = {} as Mods;
 let all: any[] = [];
 
-// Live-Neon integration gate: requires a real DB (it IS the pre-deploy
+// Live-D1 integration gate: requires a real DB (it IS the pre-deploy
 // gate, run locally with .env.local). CI runs vitest without DB creds →
 // SKIP there rather than fail.
 const _here = dirname(fileURLToPath(import.meta.url));
@@ -56,16 +56,17 @@ try {
   const { loadLocalEnv } = await import(resolve(_here, "../../../scripts/lib/local-env.mjs") as string);
   loadLocalEnv(resolve(_here, "../../.."));
 } catch { /* no .env.local (CI) → suite skips */ }
-const hasDb = Boolean(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+const hasDb = process.env.GOSPEL_D1_VERIFY_REMOTE === "1" && Boolean(process.env.GOSPEL_D1_DATABASE_ID);
 
 beforeAll(async () => {
+  if (!hasDb) return;
   const here = dirname(fileURLToPath(import.meta.url));
   const { loadLocalEnv } = await import(resolve(here, "../../../scripts/lib/local-env.mjs") as string);
   loadLocalEnv(resolve(here, "../../.."));
   const church = await import("@/lib/church");
   const dir = await import("@/lib/church-directory");
   const { slugify } = await import("@/lib/slugify");
-  const { neon } = await import("@neondatabase/serverless");
+  const { getSql } = await import("@/db");
   Object.assign(m, {
     getChurchIndexData: church.getChurchIndexData,
     getChurchFacetPageData: church.getChurchFacetPageData,
@@ -78,7 +79,7 @@ beforeAll(async () => {
     STYLE_FILTERS: dir.STYLE_FILTERS,
     DENOMINATION_FILTERS: dir.DENOMINATION_FILTERS,
     slugify,
-    sql: neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED || ""),
+    sql: getSql(),
   });
   all = await m.getChurchIndexData();
 }, 180_000);

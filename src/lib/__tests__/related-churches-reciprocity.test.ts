@@ -14,7 +14,7 @@
  * link points at a noindexed page (the half of the equity-leak risk we can
  * verify at backfill time; the runtime-stale half is the accepted P3 TODO).
  *
- * Live-Neon integration gate: requires DATABASE_URL. CI runs without DB
+ * Live-D1 integration gate: requires GOSPEL_D1_VERIFY_REMOTE=1 and D1 credentials. CI runs without DB
  * creds → SKIP. Run locally before each deploy:
  *   pnpm vitest run src/lib/__tests__/related-churches-reciprocity.test.ts
  */
@@ -37,7 +37,7 @@ try {
 } catch {
   /* no .env.local (CI) → suite skips */
 }
-const hasDb = Boolean(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+const hasDb = process.env.GOSPEL_D1_VERIFY_REMOTE === "1" && Boolean(process.env.GOSPEL_D1_DATABASE_ID);
 
 type Row = {
   slug: string;
@@ -52,8 +52,8 @@ let columnPopulated = 0;
 
 beforeAll(async () => {
   if (!hasDb) return;
-  const { neon } = await import("@neondatabase/serverless");
-  const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED || "");
+  const { getSql } = await import("@/db");
+  const sql = getSql();
   const { INDEXABLE_DISPLAY_SCORE_MIN } = await import("@/lib/content-quality");
 
   // ONE read — slim columns only.
@@ -70,7 +70,7 @@ beforeAll(async () => {
   columnPopulated = indexable.filter((r) => (r.related_church_slugs?.length ?? 0) > 0).length;
 }, 180_000);
 
-describe.skipIf(!hasDb)("related-churches reciprocity (live Neon)", () => {
+describe.skipIf(!hasDb)("related-churches reciprocity (live D1)", () => {
   it("column has been backfilled (precondition)", () => {
     expect(indexable.length).toBeGreaterThan(0);
     // If 0 columns populated, the backfill hasn't been run yet — fail with

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { hasServiceConfig, createAdminClient } from "@/lib/neon-client";
+import { hasServiceConfig, createAdminClient } from "@/lib/data-client";
 
 const SITE_URL = "https://gospelchannel.com";
 const BATCH_SIZE = 200;

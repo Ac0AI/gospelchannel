@@ -16,7 +16,7 @@ import { tmpdir } from "node:os";
 import { writeFile, unlink } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
 import { spawn } from "node:child_process";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -54,7 +54,7 @@ async function loadTargets(sql, { limit, country, latam }) {
     "c.status='approved' AND (c.header_image IS NULL OR c.header_image='') " +
     "AND e.latitude IS NOT NULL AND e.longitude IS NOT NULL";
   if (country) { params.push(country); where += ` AND c.country = $${params.length}`; }
-  else if (latam) { params.push(LATAM); where += ` AND c.country = ANY($${params.length})`; }
+  else if (latam) { params.push(LATAM); where += ` AND c.country IN (SELECT value FROM json_each($${params.length}))`; }
   let q =
     "SELECT c.slug, c.name, c.country, e.latitude AS lat, e.longitude AS lon " +
     "FROM churches c JOIN church_enrichments e ON e.church_slug = c.slug " +
@@ -119,8 +119,8 @@ async function main() {
   const o = parseArgs(process.argv.slice(2));
   const key = process.env.GOOGLE_MAPS_API_KEY;
   if (!key) throw new Error("Missing GOOGLE_MAPS_API_KEY");
-  if (!process.env.DATABASE_URL && !process.env.DATABASE_URL_UNPOOLED) throw new Error("Missing DATABASE_URL");
-  const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+  if (!process.env.GOSPEL_D1_DATABASE_ID) throw new Error("Missing GOSPEL_D1_DATABASE_ID");
+  const sql = createD1ScriptSql();
 
   const targets = await loadTargets(sql, o);
   console.log(`Targets (coords, no hero): ${targets.length}${o.streetOnly ? " [street-only]" : ""}`);
@@ -137,7 +137,7 @@ async function main() {
       const mediaUrl = `${MEDIA_BASE}/${objKey}`;
       if (!o.dryRun) {
         await uploadToR2(objKey, pic.buffer);
-        await sql`UPDATE churches SET header_image = ${mediaUrl}, header_image_attribution = 'Google', updated_at = NOW() WHERE slug = ${t.slug}`;
+        await sql`UPDATE churches SET header_image = ${mediaUrl}, header_image_attribution = 'Google', updated_at = (unixepoch() * 1000) WHERE slug = ${t.slug}`;
       }
       summary[pic.source] += 1;
       if (summary.places + summary.streetview <= 8 || (summary.places + summary.streetview) % 100 === 0) {

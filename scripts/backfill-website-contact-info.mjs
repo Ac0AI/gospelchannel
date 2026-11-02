@@ -15,7 +15,7 @@
  *   node scripts/backfill-website-contact-info.mjs --limit=100 --dry-run
  */
 
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadLocalEnv } from "./lib/local-env.mjs";
@@ -25,9 +25,9 @@ import { mapWithConcurrency, sleep } from "./lib/enrichment/rate-limiter.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(resolve(__dirname, ".."));
 
-const DATABASE_URL = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
-if (!DATABASE_URL) throw new Error("Missing DATABASE_URL");
-const sql = neon(DATABASE_URL);
+const GOSPEL_D1_DATABASE_ID = process.env.GOSPEL_D1_DATABASE_ID;
+if (!GOSPEL_D1_DATABASE_ID) throw new Error("Missing GOSPEL_D1_DATABASE_ID");
+const sql = createD1ScriptSql();
 
 const DRY_RUN = process.argv.includes("--dry-run");
 const UA = "Mozilla/5.0 (compatible; GospelChannelBot/1.0; +https://gospelchannel.com)";
@@ -191,7 +191,7 @@ async function sqlWithRetry(fn) {
 
 async function saveEmail(slug, email) {
   await sqlWithRetry(() =>
-    sql.query(`UPDATE churches SET email = $1, updated_at = NOW() WHERE slug = $2 AND (email IS NULL OR email = '')`, [email, slug]),
+    sql.query(`UPDATE churches SET email = $1, updated_at = (unixepoch() * 1000) WHERE slug = $2 AND (email IS NULL OR email = '')`, [email, slug]),
   );
 }
 
@@ -201,7 +201,7 @@ async function saveSocials(slug, patch) {
   const setClauses = keys.map((k, i) => `${k} = COALESCE(${k}, $${i + 2})`).join(", ");
   await sqlWithRetry(() =>
     sql.query(
-      `UPDATE church_enrichments SET ${setClauses}, last_enriched_at = NOW(), updated_at = NOW() WHERE church_slug = $1`,
+      `UPDATE church_enrichments SET ${setClauses}, last_enriched_at = (unixepoch() * 1000), updated_at = (unixepoch() * 1000) WHERE church_slug = $1`,
       [slug, ...keys.map((k) => patch[k])],
     ),
   );
@@ -230,7 +230,7 @@ async function main() {
            ce.facebook_url, ce.instagram_url, ce.youtube_url
     FROM churches c
     LEFT JOIN church_enrichments ce ON ce.church_slug = c.slug
-    WHERE c.status = ANY($1::text[])
+    WHERE c.status IN (SELECT value FROM json_each($1))
       AND c.website IS NOT NULL AND c.website != ''
       AND (
         (c.email IS NULL OR c.email = '')
@@ -240,7 +240,7 @@ async function main() {
       )
   `;
   const params = [STATUS_LIST];
-  if (COUNTRIES) { query += ` AND c.country = ANY($${params.length + 1}::text[])`; params.push(COUNTRIES); }
+  if (COUNTRIES) { query += ` AND c.country IN (SELECT value FROM json_each($${params.length + 1}))`; params.push(COUNTRIES); }
   query += ` ORDER BY c.country, c.name`;
   if (LIMIT > 0) { query += ` LIMIT $${params.length + 1}`; params.push(LIMIT); }
 

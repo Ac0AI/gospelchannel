@@ -1,5 +1,5 @@
 import { headers } from "next/headers";
-import { getAuthenticatedUserFromHeaders } from "@/lib/neon-client";
+import { getAuthenticatedUserFromHeaders } from "@/lib/data-client";
 
 export async function createServerComponentClient() {
   return {

@@ -8,12 +8,12 @@
  */
 import pkg from "@next/env";
 const { loadEnvConfig } = pkg;
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { randomUUID } from "crypto";
 
 loadEnvConfig(process.cwd());
 
-const sql = neon(process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL);
+const sql = createD1ScriptSql();
 const dryRun = process.argv.includes("--dry-run");
 
 const PRAYERS = {
@@ -351,7 +351,7 @@ async function main() {
     const batch = toInsert.slice(i, i + 50);
     await Promise.all(batch.map(p => sql`
       INSERT INTO prayers (id, church_slug, content, original_content, author_name, prayed_count, moderated, created_at)
-      VALUES (${p.id}, ${p.church_slug}, ${p.content}, ${p.content}, ${p.author_name}, ${p.prayed_count}, true, NOW() - (random() * interval '90 days'))
+      VALUES (${p.id}, ${p.church_slug}, ${p.content}, ${p.content}, ${p.author_name}, ${p.prayed_count}, true, (unixepoch() * 1000 - abs(random() % 7776000000)))
     `));
     inserted += batch.length;
     console.log(`Progress: ${inserted}/${toInsert.length}`);

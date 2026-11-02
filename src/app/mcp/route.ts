@@ -1,6 +1,6 @@
 // Model Context Protocol endpoint. POST JSON-RPC here to list and call the
 // church-finder tools. The same URL powers a ChatGPT App and works in Claude /
-// Cursor. Public, no auth (public directory data); Neon is protected by the
+// Cursor. Public, no auth (public directory data); D1 is protected by the
 // R2-backed cache in church-queries.ts and a Cloudflare edge rate-limit on POST
 // /mcp.
 

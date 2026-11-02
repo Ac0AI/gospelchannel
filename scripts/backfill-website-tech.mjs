@@ -13,7 +13,7 @@
 
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { detectTechnologies, pickPrimaryPlatform, getSalesAngle } from "./lib/website-platform.mjs";
 
@@ -60,10 +60,10 @@ async function fetchAnyPath(baseUrl) {
 }
 
 async function main() {
-  if (!process.env.DATABASE_URL && !process.env.DATABASE_URL_UNPOOLED) {
-    throw new Error("Missing DATABASE_URL");
+  if (!process.env.GOSPEL_D1_DATABASE_ID) {
+    throw new Error("Missing GOSPEL_D1_DATABASE_ID");
   }
-  const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+  const sql = createD1ScriptSql();
 
   const onlyRetry = process.argv.includes("--retry-unreachable");
   const targets = onlyRetry
@@ -119,7 +119,7 @@ async function main() {
               technologies, sales_angle, detection_version, last_checked_at, created_at, updated_at
             ) VALUES (
               ${church.slug}, ${baseUrl}, ${baseUrl}, ${r.status || 0}, 'Unknown',
-              '[]'::jsonb, 'Audit and modernization angle.', 1, NOW(), NOW(), NOW()
+              '[]', 'Audit and modernization angle.', 1, (unixepoch() * 1000), (unixepoch() * 1000), (unixepoch() * 1000)
             )
             ON CONFLICT (church_slug) DO NOTHING
           `;
@@ -135,16 +135,16 @@ async function main() {
               technologies, sales_angle, detection_version, last_checked_at, created_at, updated_at
             ) VALUES (
               ${church.slug}, ${church.website}, ${r.finalUrl || baseUrl}, 200, ${primary || 'Unknown'},
-              ${technologies && technologies.length > 0 ? JSON.stringify(technologies) : '[]'}::jsonb,
-              ${salesAngle || null}, 1, NOW(), NOW(), NOW()
+              ${technologies && technologies.length > 0 ? JSON.stringify(technologies) : '[]'},
+              ${salesAngle || null}, 1, (unixepoch() * 1000), (unixepoch() * 1000), (unixepoch() * 1000)
             )
             ON CONFLICT (church_slug) DO UPDATE SET
               primary_platform = EXCLUDED.primary_platform,
               technologies = EXCLUDED.technologies,
               sales_angle = EXCLUDED.sales_angle,
               final_url = EXCLUDED.final_url,
-              last_checked_at = NOW(),
-              updated_at = NOW()
+              last_checked_at = (unixepoch() * 1000),
+              updated_at = (unixepoch() * 1000)
           `;
           if (primary && primary !== "Unknown") detected += 1;
         } catch (e) {

@@ -28,7 +28,7 @@
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { writeFileSync, mkdirSync } from "node:fs";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql, encodeD1ScriptValue } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -113,7 +113,7 @@ async function loadTargets(sql, options) {
     return sql`
       SELECT slug, name, location, country, website, header_image
       FROM churches
-      WHERE slug = ANY(${options.slugs}::text[]) AND status = 'approved'
+      WHERE slug IN (SELECT value FROM json_each(${options.slugs})) AND status = 'approved'
     `;
   }
   // City-scoped size enrichment (--needs-reviews [--city=slug]): churches that
@@ -129,7 +129,7 @@ async function loadTargets(sql, options) {
           LEFT JOIN church_enrichments e ON e.church_slug = c.slug
           WHERE c.status = 'approved'
             AND c.city_slug = ${options.city}
-            AND (${options.country || null}::text IS NULL OR c.country = ${options.country || null})
+            AND (${options.country || null} IS NULL OR c.country = ${options.country || null})
             AND e.google_reviews_count IS NULL
           ORDER BY (c.website IS NOT NULL AND c.website <> '') DESC, c.slug
           LIMIT ${options.limit}
@@ -139,7 +139,7 @@ async function loadTargets(sql, options) {
           FROM churches c
           LEFT JOIN church_enrichments e ON e.church_slug = c.slug
           WHERE c.status = 'approved'
-            AND (${options.country || null}::text IS NULL OR c.country = ${options.country || null})
+            AND (${options.country || null} IS NULL OR c.country = ${options.country || null})
             AND e.google_reviews_count IS NULL
           ORDER BY c.slug
           LIMIT ${options.limit}
@@ -166,7 +166,7 @@ async function loadTargets(sql, options) {
             AND (header_image IS NULL OR header_image = '')
             AND display_score IS NOT NULL AND display_score >= 65
             AND denomination IS NOT NULL AND length(denomination) > 0
-            AND NOT (denomination = ANY(${OFF_BRAND}))
+            AND NOT (denomination IN (SELECT value FROM json_each(${OFF_BRAND})))
             AND country = ${options.country}
           ORDER BY display_score DESC NULLS LAST
           LIMIT ${options.limit}
@@ -177,7 +177,7 @@ async function loadTargets(sql, options) {
             AND (header_image IS NULL OR header_image = '')
             AND display_score IS NOT NULL AND display_score >= 65
             AND denomination IS NOT NULL AND length(denomination) > 0
-            AND NOT (denomination = ANY(${OFF_BRAND}))
+            AND NOT (denomination IN (SELECT value FROM json_each(${OFF_BRAND})))
           ORDER BY display_score DESC NULLS LAST
           LIMIT ${options.limit}
         `;
@@ -191,7 +191,7 @@ async function loadTargets(sql, options) {
           SELECT slug, name, location, country, website, header_image FROM churches
           WHERE status = 'approved'
             AND country = ${options.country}
-            AND (${options.force}::boolean OR website IS NULL OR website = '')
+            AND (${options.force} OR website IS NULL OR website = '')
             AND reason LIKE ${`%${options.reasonPrefix}%`}
           ORDER BY slug
           LIMIT ${options.limit}
@@ -200,7 +200,7 @@ async function loadTargets(sql, options) {
           SELECT slug, name, location, country, website, header_image FROM churches
           WHERE status = 'approved'
             AND country = ${options.country}
-            AND (${options.force}::boolean OR website IS NULL OR website = '')
+            AND (${options.force} OR website IS NULL OR website = '')
           ORDER BY slug
           LIMIT ${options.limit}
         `;
@@ -208,7 +208,7 @@ async function loadTargets(sql, options) {
   return sql`
     SELECT slug, name, location, country, website, header_image FROM churches
     WHERE status = 'approved'
-      AND (${options.force}::boolean OR website IS NULL OR website = '')
+      AND (${options.force} OR website IS NULL OR website = '')
     ORDER BY slug
     LIMIT ${options.limit}
   `;
@@ -497,28 +497,18 @@ async function upsertEnrichment(sql, slug, updates) {
   const columns = Object.keys(updates).filter((k) => updates[k] !== undefined);
   if (columns.length === 0) return;
   const existing = await sql`SELECT id FROM church_enrichments WHERE church_slug = ${slug}`;
-  const values = columns.map((c) => {
-    const v = updates[c];
-    if (
-      ["service_times", "sources", "raw_google_places", "amenities"].includes(c)
-      && v !== null
-      && typeof v === "object"
-    ) {
-      return JSON.stringify(v);
-    }
-    return v;
-  });
+  const values = columns.map((c) => encodeD1ScriptValue("church_enrichments", c, updates[c]));
   if (existing.length > 0) {
     const setClause = columns.map((c, i) => `${c} = $${i + 1}`).join(", ");
     await sql.query(
-      `UPDATE church_enrichments SET ${setClause}, updated_at = NOW() WHERE church_slug = $${columns.length + 1}`,
+      `UPDATE church_enrichments SET ${setClause}, updated_at = (unixepoch() * 1000) WHERE church_slug = $${columns.length + 1}`,
       [...values, slug],
     );
   } else {
     const colList = ["church_slug", ...columns].join(", ");
     const placeholders = columns.map((_, i) => `$${i + 2}`).join(", ");
     await sql.query(
-      `INSERT INTO church_enrichments (${colList}, created_at, updated_at) VALUES ($1, ${placeholders}, NOW(), NOW())`,
+      `INSERT INTO church_enrichments (${colList}, created_at, updated_at) VALUES ($1, ${placeholders}, (unixepoch() * 1000), (unixepoch() * 1000))`,
       [slug, ...values],
     );
   }
@@ -527,11 +517,11 @@ async function upsertEnrichment(sql, slug, updates) {
 async function main() {
   loadLocalEnv(ROOT_DIR);
   const options = parseArgs(process.argv.slice(2));
-  if (!process.env.DATABASE_URL && !process.env.DATABASE_URL_UNPOOLED) {
-    throw new Error("Missing DATABASE_URL");
+  if (!process.env.GOSPEL_D1_DATABASE_ID) {
+    throw new Error("Missing GOSPEL_D1_DATABASE_ID");
   }
   if (!process.env.APIFY_TOKEN) throw new Error("Missing APIFY_TOKEN");
-  const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+  const sql = createD1ScriptSql();
 
   const targets = await loadTargets(sql, options);
   console.log(`Loaded ${targets.length} target churches`);
@@ -669,7 +659,7 @@ async function main() {
       churchValues.push(phone);
     }
     if (serviceTimes) {
-      churchUpdates.push(`service_times = COALESCE(service_times, $${churchValues.length + 1}::jsonb)`);
+      churchUpdates.push(`service_times = COALESCE(service_times, $${churchValues.length + 1})`);
       churchValues.push(JSON.stringify(serviceTimes));
     }
     if (place.permanentlyClosed === true) {
@@ -680,7 +670,7 @@ async function main() {
     if (churchUpdates.length > 0) {
       churchValues.push(church.slug);
       await sql.query(
-        `UPDATE churches SET ${churchUpdates.join(", ")}, updated_at = NOW() WHERE slug = $${churchValues.length}`,
+        `UPDATE churches SET ${churchUpdates.join(", ")}, updated_at = (unixepoch() * 1000) WHERE slug = $${churchValues.length}`,
         churchValues,
       );
     }

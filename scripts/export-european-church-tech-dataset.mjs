@@ -10,9 +10,9 @@
  * Usage:
  *   node scripts/export-european-church-tech-dataset.mjs
  *
- * Required env: DATABASE_URL
+ * Required env: GOSPEL_D1_DATABASE_ID
  */
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -22,9 +22,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 loadLocalEnv(ROOT);
 
-const DATABASE_URL = process.env.DATABASE_URL;
-if (!DATABASE_URL) throw new Error("Missing DATABASE_URL");
-const sql = neon(DATABASE_URL);
+const GOSPEL_D1_DATABASE_ID = process.env.GOSPEL_D1_DATABASE_ID;
+if (!GOSPEL_D1_DATABASE_ID) throw new Error("Missing GOSPEL_D1_DATABASE_ID");
+const sql = createD1ScriptSql();
 
 const OUT_DIR = join(ROOT, "data-release", "data");
 mkdirSync(OUT_DIR, { recursive: true });
@@ -75,17 +75,17 @@ async function exportCountryAggregates() {
     `
     SELECT
       c.country AS country,
-      COUNT(*)::int AS total_churches,
-      COUNT(*) FILTER (WHERE c.website IS NOT NULL OR e.website_url IS NOT NULL)::int AS with_website,
-      COUNT(t.primary_platform)::int AS with_cms_detected,
-      COUNT(*) FILTER (WHERE c.facebook_url IS NOT NULL OR e.facebook_url IS NOT NULL)::int AS with_facebook,
-      COUNT(*) FILTER (WHERE c.youtube_channel_id IS NOT NULL OR e.youtube_url IS NOT NULL)::int AS with_youtube,
-      COUNT(*) FILTER (WHERE e.livestream_url IS NOT NULL)::int AS with_livestream
+      COUNT(*) AS total_churches,
+      COUNT(*) FILTER (WHERE c.website IS NOT NULL OR e.website_url IS NOT NULL) AS with_website,
+      COUNT(t.primary_platform) AS with_cms_detected,
+      COUNT(*) FILTER (WHERE c.facebook_url IS NOT NULL OR e.facebook_url IS NOT NULL) AS with_facebook,
+      COUNT(*) FILTER (WHERE c.youtube_channel_id IS NOT NULL OR e.youtube_url IS NOT NULL) AS with_youtube,
+      COUNT(*) FILTER (WHERE e.livestream_url IS NOT NULL) AS with_livestream
     FROM churches c
     LEFT JOIN church_enrichments e ON e.church_slug = c.slug
     LEFT JOIN church_website_tech t ON t.church_slug = c.slug
     WHERE c.status = 'approved'
-      AND c.country = ANY($1)
+      AND c.country IN (SELECT value FROM json_each($1))
     GROUP BY c.country
     ORDER BY total_churches DESC
     `,
@@ -128,11 +128,11 @@ async function exportPlatforms() {
     SELECT
       c.country AS country,
       t.primary_platform AS platform,
-      COUNT(*)::int AS count
+      COUNT(*) AS count
     FROM churches c
     JOIN church_website_tech t ON t.church_slug = c.slug
     WHERE c.status = 'approved'
-      AND c.country = ANY($1)
+      AND c.country IN (SELECT value FROM json_each($1))
       AND t.primary_platform IS NOT NULL
       AND t.primary_platform <> ''
     GROUP BY c.country, t.primary_platform

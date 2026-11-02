@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Generate churches.json from Supabase churches table.
+ * Generate churches.json from D1 churches table.
  * Only includes approved churches.
  *
  * Usage:
@@ -12,7 +12,7 @@ import { readFileSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -20,12 +20,12 @@ const ROOT_DIR = join(__dirname, "..");
 
 loadLocalEnv(ROOT_DIR);
 
-const DATABASE_URL = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
-if (!DATABASE_URL) {
-  throw new Error("Missing DATABASE_URL or DATABASE_URL_UNPOOLED");
+const GOSPEL_D1_DATABASE_ID = process.env.GOSPEL_D1_DATABASE_ID;
+if (!GOSPEL_D1_DATABASE_ID) {
+  throw new Error("Missing GOSPEL_D1_DATABASE_ID");
 }
 
-const sql = neon(DATABASE_URL);
+const sql = createD1ScriptSql();
 
 async function fetchEnrichmentMap() {
   const map = new Map();
@@ -50,12 +50,16 @@ async function fetchEnrichmentMap() {
   return map;
 }
 
-const allData = await sql`
-  select *
-  from churches
-  where status = 'approved'
-  order by name
-`;
+const allData = [];
+let cursor = "";
+while (true) {
+  const page = await sql`SELECT * FROM churches
+    WHERE status = 'approved' AND slug > ${cursor} ORDER BY slug LIMIT 250`;
+  allData.push(...page);
+  if (page.length < 250) break;
+  cursor = page.at(-1).slug;
+}
+allData.sort((a, b) => a.name.localeCompare(b.name));
 
 // Map to ChurchConfig shape (camelCase)
 const existingSnapshot = JSON.parse(readFileSync(join(ROOT_DIR, "src/data/churches.json"), "utf8"));

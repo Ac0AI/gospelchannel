@@ -14,12 +14,12 @@
  *   node scripts/enrich-music-style.mjs --dry-run --limit=15
  *   node scripts/enrich-music-style.mjs --limit=3000 --concurrency=8
  *
- * Required env: DATABASE_URL, ANTHROPIC_API_KEY
+ * Required env: GOSPEL_D1_DATABASE_ID, ANTHROPIC_API_KEY
  */
 
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import Anthropic from "@anthropic-ai/sdk";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { mapWithConcurrency } from "./lib/enrichment/rate-limiter.mjs";
@@ -28,10 +28,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(resolve(__dirname, ".."));
 
 const MODEL = "claude-haiku-4-5-20251001";
-const DATABASE_URL = process.env.DATABASE_URL;
-if (!DATABASE_URL) throw new Error("Missing DATABASE_URL");
+const GOSPEL_D1_DATABASE_ID = process.env.GOSPEL_D1_DATABASE_ID;
+if (!GOSPEL_D1_DATABASE_ID) throw new Error("Missing GOSPEL_D1_DATABASE_ID");
 if (!process.env.ANTHROPIC_API_KEY) throw new Error("Missing ANTHROPIC_API_KEY");
-const sql = neon(DATABASE_URL);
+const sql = createD1ScriptSql();
 const anthropic = new Anthropic();
 
 // Canonical phrases that match STYLE_FILTERS.match in src/lib/church-directory.ts.
@@ -135,13 +135,13 @@ async function main() {
     SELECT slug, name, denomination, location, description, notable_artists
     FROM churches
     WHERE status = 'approved'
-      AND (music_style IS NULL OR array_length(music_style, 1) IS NULL)
+      AND (music_style IS NULL OR nullif(json_array_length(music_style), 0) IS NULL)
       AND description IS NOT NULL AND length(description) >= 60
       AND (
-        (array_length(spotify_playlist_ids,1) > 0 OR array_length(additional_playlists,1) > 0)
+        (nullif(json_array_length(spotify_playlist_ids), 0) > 0 OR nullif(json_array_length(additional_playlists), 0) > 0)
         OR (
           denomination IS NOT NULL AND length(denomination) > 0
-          AND NOT (denomination = ANY(${OFF_BRAND}))
+          AND NOT (denomination IN (SELECT value FROM json_each(${OFF_BRAND})))
           AND display_score IS NOT NULL AND display_score >= 65
         )
       )
@@ -159,7 +159,7 @@ async function main() {
     if (dryRun) {
       console.log(`  ${c.slug}  [${c.denomination || "?"}]  → ${styles.join(", ")}`);
     } else {
-      await sql`UPDATE churches SET music_style = ${styles}, updated_at = now() WHERE slug = ${c.slug}`;
+      await sql`UPDATE churches SET music_style = ${styles}, updated_at = (unixepoch() * 1000) WHERE slug = ${c.slug}`;
     }
     tagged++;
     if (tagged % 200 === 0) console.log(`  …${tagged} tagged`);

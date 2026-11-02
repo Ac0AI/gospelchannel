@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { createAdminClient } from "@/lib/neon-client";
+import { createAdminClient } from "@/lib/data-client";
 import { getChurchBySlugAsync } from "@/lib/content";
 import { getChurchEnrichment } from "@/lib/church";
 import { getApprovedProfileEditsForChurch, buildMergedProfile } from "@/lib/church-profile";

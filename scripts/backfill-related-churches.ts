@@ -24,7 +24,7 @@
  * geo tiebreak applies.
  *
  * Node-only job — never a Worker cron ([[unstable-cache-2mb-oom]]). Same class
- * as backfill-facet-columns.ts: single Neon read of just the indexable set,
+ * as backfill-facet-columns.ts: single D1 read of just the indexable set,
  * CPU-only graph assembly, one batched UPDATE pass.
  *
  * Usage:

@@ -89,10 +89,16 @@ keep the Drizzle models in `src/db/d1-schema` in sync, and apply with
 imports must apply `0000_initial.sql`, load data, then apply the remaining
 migrations so derived search triggers do not rewrite imported source rows.
 
-The old Postgres schema and one-off import/research scripts remain for archival
-use. They are not production jobs. Do not configure `DATABASE_URL` in the app
-or scheduled jobs after cutover. The legacy Supabase importer requires an
-explicit `LEGACY_NEON_DATABASE_URL`.
+All active maintenance/import scripts use D1, including the Supabase-export
+importer. Node scripts use the same D1 account, database ID and token as scheduled
+jobs; there is no Postgres driver or fallback. Run local commands through
+`with-d1-wrangler-auth.mjs` when using the Wrangler login. Use `pnpm exec tsx`
+for scripts which import TypeScript modules.
+
+After a schema change, regenerate the Node field codecs with
+`pnpm db:script-types`; the test suite checks that they match the Drizzle schema.
+Live integration tests require `GOSPEL_D1_VERIFY_REMOTE=1` in addition to D1
+credentials, so ordinary tests never query production implicitly.
 
 ## Environment variables
 

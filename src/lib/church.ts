@@ -7,7 +7,7 @@ import type { ChurchConfig } from "@/types/gospel";
 import { CHURCH_INDEX_TAG, getChurchBySlugAsync, getLocalChurchSnapshot } from "@/lib/content";
 import { getSql, hasDatabaseConfig } from "@/db";
 import { CONTENT_UPDATED_AT, normalizeText, tokenSimilarity } from "@/lib/utils";
-import { hasServiceConfig, createAdminClient } from "@/lib/neon-client";
+import { hasServiceConfig, createAdminClient } from "@/lib/data-client";
 import { getCampusBySlug } from "@/lib/church-networks";
 import { getApprovedProfileEditsForChurch, buildMergedProfile } from "@/lib/church-profile";
 import { calculateProfileScore } from "@/lib/profile-score";

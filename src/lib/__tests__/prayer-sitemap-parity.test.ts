@@ -2,7 +2,7 @@
  * DEPLOY GATE for prayer-sitemap windowing. Proves the new prayer-scoped
  * buildSitemapPrayerData() is byte-for-byte equal to the old
  * getPrayerFilterIndex()-derived path (the ~56 MB full-index intersection it
- * replaced), against live Neon.
+ * replaced), against live D1.
  *
  * Run before the split-deploy:
  *   pnpm vitest run src/lib/__tests__/prayer-sitemap-parity.test.ts
@@ -38,7 +38,7 @@ const m = {} as {
   getChurchSlugsWithPrayers: () => Promise<Set<string>>;
 };
 
-// Live-Neon integration gate: requires a real DB (it IS the pre-deploy
+// Live-D1 integration gate: requires a real DB (it IS the pre-deploy
 // gate, run locally with .env.local). CI runs vitest without DB creds →
 // SKIP there rather than fail.
 const _here = dirname(fileURLToPath(import.meta.url));
@@ -46,7 +46,7 @@ try {
   const { loadLocalEnv } = await import(resolve(_here, "../../../scripts/lib/local-env.mjs") as string);
   loadLocalEnv(resolve(_here, "../../.."));
 } catch { /* no .env.local (CI) → suite skips */ }
-const hasDb = Boolean(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+const hasDb = process.env.GOSPEL_D1_VERIFY_REMOTE === "1" && Boolean(process.env.GOSPEL_D1_DATABASE_ID);
 
 // OLD path, reconstructed exactly: full getPrayerFilterIndex() + the same
 // populated-filter logic getSitemapPrayerDataCached used before windowing.

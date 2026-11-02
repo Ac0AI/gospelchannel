@@ -20,7 +20,7 @@
 
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -55,10 +55,10 @@ async function main() {
   const markers = await res.json();
   console.log(`Got ${markers.length} markers from Pingst SE`);
 
-  if (!process.env.DATABASE_URL && !process.env.DATABASE_URL_UNPOOLED) {
-    throw new Error("Missing DATABASE_URL");
+  if (!process.env.GOSPEL_D1_DATABASE_ID) {
+    throw new Error("Missing GOSPEL_D1_DATABASE_ID");
   }
-  const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+  const sql = createD1ScriptSql();
 
   // Load all Swedish church names + slugs from DB
   const dbRows = await sql`SELECT slug, name FROM churches WHERE country='Sweden' AND status='approved'`;
@@ -142,7 +142,7 @@ async function main() {
         ) VALUES (
           ${slug}, ${m.address || null}, ${lat}, ${lng},
           ${website}, ${parsed.email}, ${parsed.phone},
-          ${sourcesJson}::jsonb, 1, 'partial', NOW(), NOW(), NOW()
+          ${sourcesJson}, 1, 'partial', (unixepoch() * 1000), (unixepoch() * 1000), (unixepoch() * 1000)
         )
         ON CONFLICT (church_slug) DO UPDATE SET
           street_address = COALESCE(church_enrichments.street_address, EXCLUDED.street_address),
@@ -151,9 +151,9 @@ async function main() {
           website_url = COALESCE(church_enrichments.website_url, EXCLUDED.website_url),
           contact_email = COALESCE(church_enrichments.contact_email, EXCLUDED.contact_email),
           phone = COALESCE(church_enrichments.phone, EXCLUDED.phone),
-          sources = COALESCE(church_enrichments.sources, '{}'::jsonb) || EXCLUDED.sources,
-          last_enriched_at = NOW(),
-          updated_at = NOW()
+          sources = json_patch(COALESCE(church_enrichments.sources, '{}'), EXCLUDED.sources),
+          last_enriched_at = (unixepoch() * 1000),
+          updated_at = (unixepoch() * 1000)
       `;
 
       // Push to churches table where missing
@@ -163,7 +163,7 @@ async function main() {
             website = COALESCE(NULLIF(website, ''), ${website}),
             email = COALESCE(NULLIF(email, ''), ${parsed.email}),
             phone = COALESCE(NULLIF(phone, ''), ${parsed.phone}),
-            updated_at = NOW()
+            updated_at = (unixepoch() * 1000)
           WHERE slug = ${slug}
           RETURNING (website IS NOT NULL) AS w, (email IS NOT NULL) AS e, (phone IS NOT NULL) AS p
         `;

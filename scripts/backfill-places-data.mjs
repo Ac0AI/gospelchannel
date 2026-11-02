@@ -30,7 +30,7 @@
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { readdirSync, readFileSync } from "node:fs";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { offBrandCategory } from "./lib/place-categories.mjs";
 
@@ -72,9 +72,9 @@ function parseArgs(argv) {
 async function main() {
   loadLocalEnv(ROOT_DIR);
   const o = parseArgs(process.argv.slice(2));
-  const dbUrl = process.env.DATABASE_URL;
-  if (!dbUrl) throw new Error("DATABASE_URL missing");
-  const sql = neon(dbUrl);
+  const dbUrl = process.env.GOSPEL_D1_DATABASE_ID;
+  if (!dbUrl) throw new Error("GOSPEL_D1_DATABASE_ID missing");
+  const sql = createD1ScriptSql();
 
   // Collect the most complete archived item per slug (later runs win).
   const bySlug = new Map();
@@ -126,19 +126,19 @@ async function main() {
       if (o.dryRun) continue;
 
       await sql.query(
-        `UPDATE church_enrichments e SET
+        `UPDATE church_enrichments AS e SET
            phone = CASE WHEN (e.phone IS NULL OR e.phone='') THEN $2 ELSE e.phone END,
            website_url = CASE WHEN (e.website_url IS NULL OR e.website_url='') THEN $3 ELSE e.website_url END,
            google_rating = COALESCE($4, e.google_rating),
            google_reviews_count = COALESCE($5, e.google_reviews_count),
-           raw_google_places = CASE WHEN $6::jsonb IS NOT NULL
-             THEN COALESCE(e.raw_google_places,'{}'::jsonb) || jsonb_build_object('openingHours', $6::jsonb)
+           raw_google_places = CASE WHEN $6 IS NOT NULL
+             THEN json_set(COALESCE(e.raw_google_places,'{}'), '$.openingHours', json($6))
              ELSE e.raw_google_places END,
            service_times = CASE
-             WHEN $7::jsonb IS NOT NULL
-              AND (e.service_times IS NULL OR e.service_times='[]'::jsonb OR jsonb_typeof(e.service_times)='null')
-             THEN $7::jsonb ELSE e.service_times END,
-           updated_at = now()
+             WHEN $7 IS NOT NULL
+              AND (e.service_times IS NULL OR e.service_times='[]' OR json_type(e.service_times)='null')
+             THEN $7 ELSE e.service_times END,
+           updated_at = (unixepoch() * 1000)
          WHERE e.church_slug = $1`,
         [slug, phone, website, rating, reviews,
          openingHours ? JSON.stringify(openingHours) : null,

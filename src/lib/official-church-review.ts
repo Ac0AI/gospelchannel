@@ -35,7 +35,7 @@ function isSourceUrl(value: unknown): value is string {
   }
 }
 
-/** Editorial checks live in Neon alongside, but do not confer, church ownership. */
+/** Editorial checks live in D1 alongside, but do not confer, church ownership. */
 export function parseOfficialChurchReview(sources: unknown): OfficialChurchReview | undefined {
   if (!isRecord(sources) || !isRecord(sources.official_review)) return undefined;
   const review = sources.official_review;

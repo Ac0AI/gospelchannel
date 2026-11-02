@@ -17,9 +17,9 @@ import { loadLocalEnv } from "./lib/local-env.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(join(__dirname, ".."));
 
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 
-const sql = neon(process.env.DATABASE_URL);
+const sql = createD1ScriptSql();
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
 const DRY_RUN = process.argv.includes("--dry-run");
 const LIMIT = Number(process.argv.find((a) => a.startsWith("--limit="))?.split("=")[1] || 0);
@@ -114,7 +114,7 @@ async function main() {
       for (let attempt = 0; attempt < 3; attempt++) {
         try {
           await sql`
-            UPDATE churches SET description = ${result.description}, updated_at = now()
+            UPDATE churches SET description = ${result.description}, updated_at = (unixepoch() * 1000)
             WHERE slug = ${result.slug} AND (description IS NULL OR description = '')
           `;
           updated++;

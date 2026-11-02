@@ -1,5 +1,5 @@
 import { getSql } from "@/db";
-import { hasServiceConfig } from "@/lib/neon-client";
+import { hasServiceConfig } from "@/lib/data-client";
 import { filterCanonicalChurchSlugRecords } from "@/lib/church-slugs";
 import { filterExplicitNonChurchRows } from "@/lib/non-church-slugs";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";

@@ -1,17 +1,12 @@
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { AnyPgTable } from "drizzle-orm/pg-core";
-import { neon } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-http";
-import * as schema from "../src/db/schema";
+import { getTableColumns } from "drizzle-orm";
+import { getDb } from "../src/db";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
+import * as schema from "../src/db/d1-schema";
+import type { AnySQLiteTable } from "drizzle-orm/sqlite-core";
 
-function getSql() {
-  const url = process.env.LEGACY_NEON_DATABASE_URL;
-  if (!url) throw new Error("Legacy importer requires LEGACY_NEON_DATABASE_URL; use D1 migrations for the live database");
-  return neon(url);
-}
-function getDb() { return drizzle(getSql(), { schema }); }
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -69,7 +64,7 @@ const TABLE_FILE_NAMES: Record<(typeof MANAGED_TABLES)[number], string> = {
   appRateLimits: "app_rate_limits",
 };
 
-const TABLE_MAP: Record<(typeof MANAGED_TABLES)[number], AnyPgTable> = {
+const TABLE_MAP: Record<(typeof MANAGED_TABLES)[number], AnySQLiteTable> = {
   churches: schema.churches,
   churchClaims: schema.churchClaims,
   churchSuggestions: schema.churchSuggestions,
@@ -227,12 +222,13 @@ async function maybeTruncateTables() {
     return;
   }
 
-  const tableNames = MANAGED_TABLES
-    .map((key) => TABLE_FILE_NAMES[key])
-    .map((name) => quoteIdentifier(name))
-    .join(", ");
-
-  await getSql().query(`TRUNCATE TABLE ${tableNames} RESTART IDENTITY CASCADE`);
+  const sql = createD1ScriptSql();
+  await sql.batch([
+    { sql: "PRAGMA defer_foreign_keys = ON" },
+    ...[...MANAGED_TABLES].reverse().map((key) => ({
+      sql: `DELETE FROM ${quoteIdentifier(TABLE_FILE_NAMES[key])}`,
+    })),
+  ]);
   console.log("[import:supabase] truncated managed tables");
 }
 
@@ -252,7 +248,7 @@ async function importTable(tableKey: (typeof MANAGED_TABLES)[number], exportDir:
     return;
   }
 
-  for (const batch of chunkRows(rows, 200)) {
+  for (const batch of chunkRows(rows, Math.max(1, Math.floor(100 / Object.keys(getTableColumns(TABLE_MAP[tableKey])).length)))) {
     await db.insert(TABLE_MAP[tableKey]).values(batch as never).onConflictDoNothing();
   }
 

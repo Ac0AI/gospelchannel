@@ -15,7 +15,7 @@ Aldrig pusha utan att deploya - koden är inte live förrän den når Cloudflare
 
 - **Framework:** Next.js 16 (App Router, webpack via OpenNext)
 - **Hosting:** Cloudflare Workers via OpenNext (`pnpm run deploy`)
-- **Databas:** Neon Postgres (via `@neondatabase/serverless`)
+- **Databas:** Cloudflare D1 (SQLite via Drizzle, Worker binding `GOSPEL_D1`)
 - **Bildlagring:** Cloudflare R2 (`church-assets` bucket)
 - **Bildoptimering:** Cloudflare Image Resizing (Enterprise) via `cfImage()` i `src/lib/media.ts`
 - **Bild-CDN:** `media.gospelchannel.com` (R2 custom domain)

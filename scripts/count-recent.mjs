@@ -3,21 +3,21 @@ import { fileURLToPath } from "node:url";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(join(__dirname, ".."));
-import { neon } from "@neondatabase/serverless";
-const sql = neon(process.env.DATABASE_URL);
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
+const sql = createD1ScriptSql();
 
-const [total] = await sql`SELECT count(*)::int AS n FROM churches`;
-const [recent] = await sql`SELECT count(*)::int AS n FROM churches WHERE created_at > now() - interval '30 days'`;
-const [last7] = await sql`SELECT count(*)::int AS n FROM churches WHERE created_at > now() - interval '7 days'`;
+const [total] = await sql`SELECT count(*) AS n FROM churches`;
+const [recent] = await sql`SELECT count(*) AS n FROM churches WHERE created_at > (unixepoch() * 1000 - 30 * 86400000)`;
+const [last7] = await sql`SELECT count(*) AS n FROM churches WHERE created_at > (unixepoch() * 1000 - 7 * 86400000)`;
 
 console.log(`Total: ${total.n}`);
 console.log(`Last 30 days: ${recent.n}`);
 console.log(`Last 7 days: ${last7.n}`);
 
 const bySource = await sql`
-  SELECT discovery_source, count(*)::int AS n
+  SELECT discovery_source, count(*) AS n
   FROM churches
-  WHERE created_at > now() - interval '30 days'
+  WHERE created_at > (unixepoch() * 1000 - 30 * 86400000)
   GROUP BY discovery_source
   ORDER BY n DESC
   LIMIT 20

@@ -25,7 +25,7 @@
 
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -33,28 +33,31 @@ const ROOT_DIR = join(__dirname, "..");
 
 // A service_times element renders iff it has a non-empty `day` and a `time`
 // containing a digit (mirrors normalizeDay + normalizeTime in content-quality.ts).
-const KEEP = `(el ? 'day' AND el ? 'time' AND btrim(el->>'day') <> '' AND el->>'time' ~ '[0-9]')`;
+const KEEP = `(CASE WHEN el.type = 'object' THEN
+  COALESCE(trim(json_extract(el.value, '$.day')), '') <> ''
+  AND COALESCE(json_extract(el.value, '$.time'), '') GLOB '*[0-9]*'
+  ELSE 0 END)`;
 const HAS_JUNK = `
-  jsonb_typeof(e.service_times) = 'array'
-  AND jsonb_array_length(e.service_times) > 0
+  json_type(e.service_times) = 'array'
+  AND json_array_length(e.service_times) > 0
   AND EXISTS (
-    SELECT 1 FROM jsonb_array_elements(e.service_times) el WHERE NOT ${KEEP}
+    SELECT 1 FROM json_each(e.service_times) el WHERE NOT ${KEEP}
   )`;
 
 async function main() {
   loadLocalEnv(ROOT_DIR);
   const dryRun = process.argv.includes("--dry-run");
-  const sql = neon(process.env.DATABASE_URL);
+  const sql = createD1ScriptSql();
 
-  const before = await sql.query(`SELECT count(*)::int n FROM church_enrichments e WHERE ${HAS_JUNK}`);
+  const before = await sql.query(`SELECT count(*) n FROM church_enrichments e WHERE ${HAS_JUNK}`);
   const affected = before[0].n;
   console.log(`Churches with non-renderable service_times elements: ${affected}`);
 
   // How many end up fully empty (had ONLY junk) vs keep some real times.
   const emptied = await sql.query(`
-    SELECT count(*)::int n FROM church_enrichments e
+    SELECT count(*) n FROM church_enrichments e
     WHERE ${HAS_JUNK}
-      AND NOT EXISTS (SELECT 1 FROM jsonb_array_elements(e.service_times) el WHERE ${KEEP})`);
+      AND NOT EXISTS (SELECT 1 FROM json_each(e.service_times) el WHERE ${KEEP})`);
   console.log(`  of which become empty (were ALL junk): ${emptied[0].n}`);
   console.log(`  of which keep some real service times: ${affected - emptied[0].n}`);
 
@@ -69,15 +72,15 @@ async function main() {
   }
 
   const res = await sql.query(`
-    UPDATE church_enrichments e
+    UPDATE church_enrichments AS e
     SET service_times = COALESCE(
-          (SELECT jsonb_agg(el) FROM jsonb_array_elements(e.service_times) el WHERE ${KEEP}),
-          '[]'::jsonb),
-        updated_at = now()
+          (SELECT json_group_array(json(el.value)) FROM json_each(e.service_times) el WHERE ${KEEP}),
+          '[]'),
+        updated_at = (unixepoch() * 1000)
     WHERE ${HAS_JUNK}`);
   console.log(`\nCleaned ${res.length ?? affected} churches (rowCount reported by driver may be 0; verifying).`);
 
-  const after = await sql.query(`SELECT count(*)::int n FROM church_enrichments e WHERE ${HAS_JUNK}`);
+  const after = await sql.query(`SELECT count(*) n FROM church_enrichments e WHERE ${HAS_JUNK}`);
   console.log(`Remaining with junk after clean: ${after[0].n} (should be 0)`);
 }
 

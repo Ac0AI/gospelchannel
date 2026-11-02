@@ -20,7 +20,7 @@
 
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -159,9 +159,9 @@ async function resolveYouTubeChannelId(url, apiKey) {
 async function main() {
   loadLocalEnv(ROOT_DIR);
   const options = parseArgs(process.argv.slice(2));
-  if (!process.env.DATABASE_URL && !process.env.DATABASE_URL_UNPOOLED) throw new Error("Missing DATABASE_URL");
+  if (!process.env.GOSPEL_D1_DATABASE_ID) throw new Error("Missing GOSPEL_D1_DATABASE_ID");
   if (!process.env.YOUTUBE_API_KEY) throw new Error("Missing YOUTUBE_API_KEY");
-  const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+  const sql = createD1ScriptSql();
   const apiKey = process.env.YOUTUBE_API_KEY;
 
   console.log("Loading churches with youtube_url but no youtube_channel_id...");
@@ -196,7 +196,7 @@ async function main() {
       const channelId = await resolveYouTubeChannelId(t.youtube_url, apiKey);
       if (channelId) {
         if (!options.dryRun) {
-          await sql`UPDATE churches SET youtube_channel_id = ${channelId}, updated_at = NOW() WHERE slug = ${t.slug} AND youtube_channel_id IS NULL`;
+          await sql`UPDATE churches SET youtube_channel_id = ${channelId}, updated_at = (unixepoch() * 1000) WHERE slug = ${t.slug} AND youtube_channel_id IS NULL`;
         }
         summary.resolved += 1;
         if (summary.resolved <= 5 || summary.resolved % 100 === 0) {

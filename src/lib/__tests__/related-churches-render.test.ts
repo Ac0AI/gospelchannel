@@ -1,6 +1,6 @@
 /**
  * Behavior gate for the related-churches read path (orphan-pages plan,
- * deploy 1). Verifies `getRelatedChurches` against live Neon:
+ * deploy 1). Verifies `getRelatedChurches` against live D1:
  *
  *   1. Null/empty column → returns []
  *   2. Populated column → returns hydrated rows preserving backfill order
@@ -8,7 +8,7 @@
  *
  * The wrapper component (`NearbyChurchesSection`) is a 2-line null/render
  * branch on top of this; if (1)/(2)/(3) hold the wrapper is correct by
- * construction. Live-Neon, skipIf no DB.
+ * construction. Live-D1, skipIf no DB.
  */
 import { describe, it, expect, beforeAll, vi } from "vitest";
 import { dirname, resolve } from "node:path";
@@ -29,7 +29,7 @@ try {
 } catch {
   /* CI: no .env.local → suite skips */
 }
-const hasDb = Boolean(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+const hasDb = process.env.GOSPEL_D1_VERIFY_REMOTE === "1" && Boolean(process.env.GOSPEL_D1_DATABASE_ID);
 
 type Sample = { slug: string; related: string[] };
 let sample: Sample | null = null;
@@ -39,8 +39,8 @@ let getRelatedChurches: (slug: string) => Promise<
 
 beforeAll(async () => {
   if (!hasDb) return;
-  const { neon } = await import("@neondatabase/serverless");
-  const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED || "");
+  const { getSql } = await import("@/db");
+  const sql = getSql();
   ({ getRelatedChurches } = await import("@/lib/church"));
 
   // Pick one church whose related_church_slugs is populated AND non-trivial.
@@ -49,7 +49,7 @@ beforeAll(async () => {
        FROM churches
       WHERE status = 'approved'
         AND related_church_slugs IS NOT NULL
-        AND array_length(related_church_slugs, 1) >= 3
+        AND json_array_length(related_church_slugs) >= 3
       LIMIT 1`,
   )) as Array<{ slug: string; related_church_slugs: string[] }>;
   if (rows.length > 0) {
@@ -57,7 +57,7 @@ beforeAll(async () => {
   }
 }, 60_000);
 
-describe.skipIf(!hasDb)("getRelatedChurches (live Neon)", () => {
+describe.skipIf(!hasDb)("getRelatedChurches (live D1)", () => {
   it("returns hydrated rows preserving the backfill's order", async () => {
     expect(
       sample,
@@ -81,8 +81,8 @@ describe.skipIf(!hasDb)("getRelatedChurches (live Neon)", () => {
   }, 30_000);
 
   it("returns [] for a church whose column is null/empty (fresh, not yet backfilled)", async () => {
-    const { neon } = await import("@neondatabase/serverless");
-    const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED || "");
+    const { getSql } = await import("@/db");
+    const sql = getSql();
     const rows = (await sql.query(
       `SELECT slug FROM churches
         WHERE status = 'approved' AND related_church_slugs IS NULL

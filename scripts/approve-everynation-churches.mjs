@@ -3,7 +3,7 @@
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { buildApprovalDecision, resolveApprovedChurchName } from "./lib/church-approval.mjs";
 
@@ -42,13 +42,13 @@ function runGenerateSnapshot() {
 async function main() {
   loadLocalEnv(ROOT_DIR);
   const options = parseArgs(process.argv.slice(2));
-  const databaseUrl = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
+  const databaseUrl = process.env.GOSPEL_D1_DATABASE_ID;
 
   if (!databaseUrl) {
-    throw new Error("Missing DATABASE_URL or DATABASE_URL_UNPOOLED");
+    throw new Error("Missing GOSPEL_D1_DATABASE_ID");
   }
 
-  const sql = neon(databaseUrl);
+  const sql = createD1ScriptSql();
   const rows = await sql`
     select
       c.slug,
@@ -127,7 +127,7 @@ async function main() {
     return;
   }
 
-  const now = new Date().toISOString();
+  const now = Date.now();
 
   for (const entry of approved) {
     const row = entry.row;
@@ -143,7 +143,7 @@ async function main() {
          country = $4,
          website = $5,
          last_researched = $6,
-         updated_at = now()
+         updated_at = (unixepoch() * 1000)
        where slug = $7`,
       [
         mergedName,
@@ -180,7 +180,7 @@ async function main() {
       enrichmentValues.push(row.enrichment_id);
       await sql.query(
         `update church_enrichments
-         set ${enrichmentFields.join(", ")}, updated_at = now()
+         set ${enrichmentFields.join(", ")}, updated_at = (unixepoch() * 1000)
          where id = $${enrichmentValues.length}`,
         enrichmentValues,
       );

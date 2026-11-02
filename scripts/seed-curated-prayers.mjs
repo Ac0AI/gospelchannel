@@ -1,20 +1,20 @@
 #!/usr/bin/env node
 
 import pkg from "@next/env";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 
 const { loadEnvConfig } = pkg;
 loadEnvConfig(process.cwd());
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://gospelchannel.com").replace(/\/+$/, "");
-const DATABASE_URL = process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL;
+const GOSPEL_D1_DATABASE_ID = process.env.GOSPEL_D1_DATABASE_ID;
 
-if (!DATABASE_URL) {
-  console.error("Missing DATABASE_URL or DATABASE_URL_UNPOOLED");
+if (!GOSPEL_D1_DATABASE_ID) {
+  console.error("Missing GOSPEL_D1_DATABASE_ID");
   process.exit(1);
 }
 
-const sql = neon(DATABASE_URL);
+const sql = createD1ScriptSql();
 const AUTHOR_NAME = "Prayer Team";
 const WAIT_FOR_CACHE_MS = 70_000;
 
@@ -141,7 +141,7 @@ async function main() {
       select slug, name
       from churches
       where status = 'approved'
-        and slug = any($1::text[])
+        and slug IN (SELECT value FROM json_each($1))
     `,
     [targetSlugs],
   );
@@ -156,7 +156,7 @@ async function main() {
     `
       select church_slug, content
       from prayers
-      where church_slug = any($1::text[])
+      where church_slug IN (SELECT value FROM json_each($1))
         and author_name = $2
     `,
     [targetSlugs, AUTHOR_NAME],
@@ -184,7 +184,7 @@ async function main() {
     const result = await sql.query(
       `
         insert into prayers (church_slug, content, original_content, author_name, prayed_count, moderated, created_at)
-        values ($1, $2, null, $3, 0, false, $4::timestamptz)
+        values ($1, $2, null, $3, 0, false, (unixepoch($4) * 1000))
         returning id, church_slug, content
       `,
       [row.churchSlug, row.content, row.authorName, row.createdAt],

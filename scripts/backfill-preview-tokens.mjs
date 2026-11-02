@@ -7,13 +7,13 @@
  */
 import pkg from "@next/env";
 const { loadEnvConfig } = pkg;
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { randomBytes } from "crypto";
 
 loadEnvConfig(process.cwd());
 
 const dryRun = process.argv.includes("--dry-run");
-const sql = neon(process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL);
+const sql = createD1ScriptSql();
 
 function generateToken() {
   return randomBytes(16).toString("base64url"); // 22 chars

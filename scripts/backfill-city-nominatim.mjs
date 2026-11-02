@@ -11,7 +11,7 @@
 
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -66,8 +66,8 @@ async function reverseCity(lat, lon) {
 async function main() {
   loadLocalEnv(ROOT_DIR);
   const o = parseArgs(process.argv.slice(2));
-  if (!process.env.DATABASE_URL && !process.env.DATABASE_URL_UNPOOLED) throw new Error("Missing DATABASE_URL");
-  const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+  if (!process.env.GOSPEL_D1_DATABASE_ID) throw new Error("Missing GOSPEL_D1_DATABASE_ID");
+  const sql = createD1ScriptSql();
 
   const targets = await loadTargets(sql, o);
   console.log(`Targets (coords, no city): ${targets.length}`);
@@ -81,7 +81,7 @@ async function main() {
       const city = await reverseCity(t.lat, t.lon);
       if (city) {
         if (!o.dryRun) {
-          await sql`UPDATE churches SET location = ${city}, updated_at = NOW()
+          await sql`UPDATE churches SET location = ${city}, updated_at = (unixepoch() * 1000)
                     WHERE slug = ${t.slug} AND (location IS NULL OR location = '')`;
         }
         summary.filled += 1;

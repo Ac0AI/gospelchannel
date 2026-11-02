@@ -1,3 +1,5 @@
+import { encodeD1ScriptValue } from "../d1-sql.mjs";
+import { prepareCrawlPayload, readCrawlPayload } from "../d1-crawl-payload.mjs";
 /**
  * Enrichment pipeline orchestrator.
  * Coordinates: load churches → fetch Google Places → crawl website → LLM extract → save.
@@ -13,21 +15,8 @@ import { sleep } from "./rate-limiter.mjs";
 
 const SCHEMA_VERSION = 1;
 
-const JSONB_FIELDS = new Set([
-  "service_times",
-  "raw_google_places",
-  "raw_crawled_pages",
-  "sources",
-  "visitor_faq",
-  "amenities",
-]);
-
 function serializeValue(column, value) {
-  if (value === null || value === undefined) return null;
-  if (JSONB_FIELDS.has(column) && typeof value !== "string") {
-    return JSON.stringify(value);
-  }
-  return value;
+  return encodeD1ScriptValue("church_enrichments", column, value);
 }
 
 /**
@@ -71,7 +60,7 @@ export async function loadChurchesForEnrichment({
       );
     } else {
       candidates = await sql.query(
-        `SELECT id, name, country, website, status, location FROM church_candidates WHERE status = ANY($1)`,
+        `SELECT id, name, country, website, status, location FROM church_candidates WHERE status IN (SELECT value FROM json_each($1))`,
         [["pending", "approved"]],
       );
     }
@@ -111,7 +100,7 @@ export async function loadChurchesForEnrichment({
       );
     } else {
       dbChurches = await sql.query(
-        `SELECT slug, name, country, location, website, denomination, discovery_source FROM churches WHERE status = ANY($1)`,
+        `SELECT slug, name, country, location, website, denomination, discovery_source FROM churches WHERE status IN (SELECT value FROM json_each($1))`,
         [["pending", "approved"]],
       );
     }
@@ -161,10 +150,11 @@ async function loadExistingRawData(sql, church) {
   const value = church.slug || church.candidateId;
 
   const rows = await sql.query(
-    `SELECT raw_google_places, raw_crawled_pages, raw_website_markdown FROM church_enrichments WHERE ${column} = $1 LIMIT 1`,
+    `SELECT id, raw_google_places, raw_crawled_pages, raw_website_markdown FROM church_enrichments WHERE ${column} = $1 LIMIT 1`,
     [value],
   );
 
+  if (rows[0]) rows[0].raw_crawled_pages = await readCrawlPayload(sql, rows[0].id, rows[0].raw_crawled_pages);
   return rows[0] || null;
 }
 
@@ -398,7 +388,7 @@ async function upsertEnrichmentStatus(sql, church, status) {
        VALUES ($1, $2)
        ON CONFLICT (church_slug) DO UPDATE SET
          enrichment_status = EXCLUDED.enrichment_status,
-         updated_at = NOW()`,
+         updated_at = (unixepoch() * 1000)`,
       [church.slug, status],
     );
   } else {
@@ -407,7 +397,7 @@ async function upsertEnrichmentStatus(sql, church, status) {
        VALUES ($1, $2)
        ON CONFLICT (candidate_id) DO UPDATE SET
          enrichment_status = EXCLUDED.enrichment_status,
-         updated_at = NOW()`,
+         updated_at = (unixepoch() * 1000)`,
       [church.candidateId, status],
     );
   }
@@ -421,6 +411,10 @@ async function upsertEnrichment(sql, church, row) {
   if (church.slug) delete filtered.candidate_id;
   else delete filtered.church_slug;
 
+  const payload = Object.hasOwn(filtered, "raw_crawled_pages")
+    ? prepareCrawlPayload(filtered.raw_crawled_pages, conflict, filtered[conflict]) : null;
+  if (payload) filtered.raw_crawled_pages = payload.inline;
+
   const columns = Object.keys(filtered);
   const values = columns.map((col) => serializeValue(col, filtered[col]));
   const placeholders = columns.map((_, i) => `$${i + 1}`);
@@ -429,7 +423,7 @@ async function upsertEnrichment(sql, church, row) {
     .map((col) => `${col} = EXCLUDED.${col}`);
 
   // Always bump updated_at on UPDATE path
-  updates.push(`updated_at = NOW()`);
+  updates.push(`updated_at = (unixepoch() * 1000)`);
 
   const text = `
     INSERT INTO church_enrichments (${columns.join(", ")})
@@ -439,7 +433,7 @@ async function upsertEnrichment(sql, church, row) {
   `;
 
   try {
-    await sql.query(text, values);
+    await sql.batch([{ sql: text, params: values }, ...(payload?.statements ?? [])]);
   } catch (err) {
     console.error(`  [save] Upsert error: ${err.message}`);
     throw err;

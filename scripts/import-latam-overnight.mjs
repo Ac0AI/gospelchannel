@@ -2,7 +2,7 @@
 
 // Overnight driver: runs the OSM importer across every LATAM country, sequentially,
 // with a polite gap between Overpass queries. Each child writes on-brand churches
-// (with coordinates) to Neon. Idempotent — safe to re-run. Logs a per-country tally.
+// (with coordinates) to D1. Idempotent — safe to re-run. Logs a per-country tally.
 //
 //   node scripts/import-latam-overnight.mjs
 

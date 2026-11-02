@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import Link from "next/link";
-import { createAdminClient, hasServiceConfig } from "@/lib/neon-client";
+import { createAdminClient, hasServiceConfig } from "@/lib/data-client";
 import { AdminNav } from "@/components/admin/AdminNav";
 import { requireAdminPageAccess } from "@/lib/admin-page";
 import {

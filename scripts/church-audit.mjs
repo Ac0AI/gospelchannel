@@ -21,7 +21,7 @@
  * Read-only on the DB. Fetches prospect homepages + runs Apify search
  * (~1 query per city) + optional Gemini calls. Sends nothing anywhere.
  */
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -158,7 +158,7 @@ async function selectTargets(sql, o) {
       e.google_reviews_count AS reviews,e.google_rating AS rating,e.latitude AS lat,e.longitude AS lng,e.raw_google_places AS raw,
       t.primary_platform AS platform,t.http_status,c.email AS church_email,e.contact_email AS contact_email,e.pastor_name
       FROM churches c JOIN church_enrichments e ON e.church_slug=c.slug LEFT JOIN church_website_tech t ON t.church_slug=c.slug
-      WHERE c.slug = ANY(${o.slugs}::text[])`;
+      WHERE c.slug IN (SELECT value FROM json_each(${o.slugs}))`;
   }
   return sql`SELECT c.slug,c.name,c.location,c.city_slug,c.denomination,c.website,c.header_image,c.service_times,
     e.google_reviews_count AS reviews,e.google_rating AS rating,e.latitude AS lat,e.longitude AS lng,e.raw_google_places AS raw,
@@ -186,7 +186,7 @@ async function main() {
   loadLocalEnv(ROOT);
   const o = parseArgs(process.argv.slice(2));
   if (!o.city && !o.slugs.length) throw new Error("Pass --city=<slug> or --slugs=a,b,c");
-  const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+  const sql = createD1ScriptSql();
   const box = CITY_BOX[o.city];
   if (o.city && !box) console.warn(`WARN: no coord box for "${o.city}" — skipping geo-verification.`);
   const apifyToken = process.env.APIFY_TOKEN;
@@ -273,7 +273,7 @@ async function main() {
   // ---- report ----
   const L = [];
   L.push(`# Kyrko-synlighets-audit — ${o.city || "slug-lista"}`);
-  L.push(`Genererad ${new Date().toISOString()} · ${audits.length} prospekt · Neon + live förstasidor + Google SERP/AI + Gemini`);
+  L.push(`Genererad ${new Date().toISOString()} · ${audits.length} prospekt · D1 + live förstasidor + Google SERP/AI + Gemini`);
   L.push("");
   for (const a of audits) {
     L.push(`## ${a.name} — ${a.reviews}★ omdömen (${a.rating ?? "?"}★)`);

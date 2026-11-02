@@ -15,7 +15,7 @@
 
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -88,10 +88,10 @@ async function geocode(target) {
 async function main() {
   loadLocalEnv(ROOT_DIR);
   const options = parseArgs(process.argv.slice(2));
-  if (!process.env.DATABASE_URL && !process.env.DATABASE_URL_UNPOOLED) {
-    throw new Error("Missing DATABASE_URL");
+  if (!process.env.GOSPEL_D1_DATABASE_ID) {
+    throw new Error("Missing GOSPEL_D1_DATABASE_ID");
   }
-  const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+  const sql = createD1ScriptSql();
 
   console.log("Loading targets with address but no coords...");
   const targets = await loadTargets(sql, options);
@@ -111,7 +111,7 @@ async function main() {
         if (!options.dryRun) {
           await sql`
             UPDATE church_enrichments
-            SET latitude = ${coords.lat}, longitude = ${coords.lng}, updated_at = NOW()
+            SET latitude = ${coords.lat}, longitude = ${coords.lng}, updated_at = (unixepoch() * 1000)
             WHERE church_slug = ${target.slug}
               AND (latitude IS NULL OR longitude IS NULL)
           `;

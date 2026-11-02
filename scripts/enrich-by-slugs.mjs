@@ -18,21 +18,21 @@
  *   node scripts/enrich-by-slugs.mjs --slugs=slug1,slug2,slug3
  *   node scripts/enrich-by-slugs.mjs --slugs=... --dry-run
  *
- * Required env: DATABASE_URL, ANTHROPIC_API_KEY
+ * Required env: GOSPEL_D1_DATABASE_ID, ANTHROPIC_API_KEY
  * Optional env: FIRECRAWL_API_KEY (falls back to raw fetch)
  */
 
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
 loadLocalEnv(process.cwd());
 
-const DATABASE_URL = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
+const GOSPEL_D1_DATABASE_ID = process.env.GOSPEL_D1_DATABASE_ID;
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 const FIRECRAWL_API_KEY = process.env.FIRECRAWL_API_KEY;
 
-if (!DATABASE_URL) {
-  console.error("Missing DATABASE_URL");
+if (!GOSPEL_D1_DATABASE_ID) {
+  console.error("Missing GOSPEL_D1_DATABASE_ID");
   process.exit(1);
 }
 if (!ANTHROPIC_API_KEY) {
@@ -40,7 +40,7 @@ if (!ANTHROPIC_API_KEY) {
   process.exit(1);
 }
 
-const sql = neon(DATABASE_URL);
+const sql = createD1ScriptSql();
 const HAIKU_MODEL = "claude-haiku-4-5-20251001";
 const DRY_RUN = process.argv.includes("--dry-run");
 const slugArg = process.argv.find(a => a.startsWith("--slugs="));
@@ -197,8 +197,8 @@ async function upsertEnrichment(slug, extracted) {
         street_address = COALESCE($1, street_address),
         theological_orientation = COALESCE($2, theological_orientation),
         denomination_network = COALESCE($3, denomination_network),
-        languages = COALESCE($4::text[], languages),
-        service_times = COALESCE($5::jsonb, service_times),
+        languages = COALESCE($4, languages),
+        service_times = COALESCE($5, service_times),
         summary = COALESCE($6, summary),
         pastor_name = COALESCE($7, pastor_name),
         pastor_title = COALESCE($8, pastor_title),
@@ -209,8 +209,8 @@ async function upsertEnrichment(slug, extracted) {
         livestream_url = COALESCE($13, livestream_url),
         what_to_expect = COALESCE($14, what_to_expect),
         enrichment_status = 'complete',
-        last_enriched_at = NOW(),
-        updated_at = NOW()
+        last_enriched_at = (unixepoch() * 1000),
+        updated_at = (unixepoch() * 1000)
       WHERE church_slug = $15`,
       [
         extracted.street_address,
@@ -238,8 +238,8 @@ async function upsertEnrichment(slug, extracted) {
         instagram_url, facebook_url, youtube_url, livestream_url, what_to_expect,
         enrichment_status, last_enriched_at, created_at, updated_at
       ) VALUES (
-        $1, $2, $3, $4, $5::text[], $6::jsonb, $7, $8, $9, $10,
-        $11, $12, $13, $14, $15, 'complete', NOW(), NOW(), NOW()
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+        $11, $12, $13, $14, $15, 'complete', (unixepoch() * 1000), (unixepoch() * 1000), (unixepoch() * 1000)
       )`,
       [
         slug,
@@ -287,11 +287,11 @@ async function updateSpotify(slug, spotify) {
   if (Object.keys(updates).length === 0) return;
 
   if ("spotify_url" in updates && "spotify_playlist_ids" in updates) {
-    await sql`UPDATE churches SET spotify_url = ${updates.spotify_url}, spotify_playlist_ids = ${updates.spotify_playlist_ids}, updated_at = NOW() WHERE slug = ${slug}`;
+    await sql`UPDATE churches SET spotify_url = ${updates.spotify_url}, spotify_playlist_ids = ${updates.spotify_playlist_ids}, updated_at = (unixepoch() * 1000) WHERE slug = ${slug}`;
   } else if ("spotify_url" in updates) {
-    await sql`UPDATE churches SET spotify_url = ${updates.spotify_url}, updated_at = NOW() WHERE slug = ${slug}`;
+    await sql`UPDATE churches SET spotify_url = ${updates.spotify_url}, updated_at = (unixepoch() * 1000) WHERE slug = ${slug}`;
   } else if ("spotify_playlist_ids" in updates) {
-    await sql`UPDATE churches SET spotify_playlist_ids = ${updates.spotify_playlist_ids}, updated_at = NOW() WHERE slug = ${slug}`;
+    await sql`UPDATE churches SET spotify_playlist_ids = ${updates.spotify_playlist_ids}, updated_at = (unixepoch() * 1000) WHERE slug = ${slug}`;
   }
 }
 
@@ -305,7 +305,7 @@ async function main() {
   const churches = await sql`
     SELECT slug, name, website, country
     FROM churches
-    WHERE slug = ANY(${SLUGS}::text[]) AND status = 'approved'
+    WHERE slug IN (SELECT value FROM json_each(${SLUGS})) AND status = 'approved'
   `;
 
   if (churches.length === 0) {

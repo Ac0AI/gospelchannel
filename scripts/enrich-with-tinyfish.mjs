@@ -17,9 +17,9 @@ import { loadLocalEnv } from "./lib/local-env.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(join(__dirname, ".."));
 
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 
-const sql = neon(process.env.DATABASE_URL);
+const sql = createD1ScriptSql();
 const TINYFISH_API_KEY = process.env.TINYFISH_API_KEY;
 const DRY_RUN = process.argv.includes("--dry-run");
 const SINGLE_SLUG = process.argv.find((a) => a.startsWith("--slug="))?.split("=")[1];
@@ -182,7 +182,7 @@ async function main() {
       values.push(value);
       i++;
     }
-    setClauses.push(`updated_at = now()`);
+    setClauses.push(`updated_at = (unixepoch() * 1000)`);
     values.push(church.slug);
 
     await sql.query(

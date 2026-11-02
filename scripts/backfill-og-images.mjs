@@ -14,7 +14,7 @@
  *   node scripts/backfill-og-images.mjs --limit=100 --dry-run
  */
 
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { URL } from "node:url";
@@ -24,9 +24,9 @@ import { mapWithConcurrency, sleep } from "./lib/enrichment/rate-limiter.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(resolve(__dirname, ".."));
 
-const DATABASE_URL = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
-if (!DATABASE_URL) { console.error("Missing DATABASE_URL"); process.exit(1); }
-const sql = neon(DATABASE_URL);
+const GOSPEL_D1_DATABASE_ID = process.env.GOSPEL_D1_DATABASE_ID;
+if (!GOSPEL_D1_DATABASE_ID) { console.error("Missing GOSPEL_D1_DATABASE_ID"); process.exit(1); }
+const sql = createD1ScriptSql();
 
 const UA = "Mozilla/5.0 (compatible; GospelChannelBot/1.0; +https://gospelchannel.com)";
 const DEFAULT_CONCURRENCY = 15;
@@ -174,12 +174,12 @@ async function main() {
   let query = `
     SELECT slug, name, country, website
     FROM churches
-    WHERE status = ANY($1::text[])
+    WHERE status IN (SELECT value FROM json_each($1))
       AND website IS NOT NULL AND website != ''
       AND (header_image IS NULL OR logo IS NULL)
   `;
   const params = [STATUS_LIST];
-  if (COUNTRIES) { query += ` AND country = ANY($${params.length + 1}::text[])`; params.push(COUNTRIES); }
+  if (COUNTRIES) { query += ` AND country IN (SELECT value FROM json_each($${params.length + 1}))`; params.push(COUNTRIES); }
   query += ` ORDER BY country, name`;
   if (LIMIT > 0) { query += ` LIMIT $${params.length + 1}`; params.push(LIMIT); }
 
@@ -224,7 +224,7 @@ async function main() {
         `UPDATE churches
          SET header_image = COALESCE(header_image, $1),
              logo = COALESCE(logo, $2),
-             updated_at = NOW()
+             updated_at = (unixepoch() * 1000)
          WHERE slug = $3`,
         [goodHero, goodLogo, church.slug],
       ));

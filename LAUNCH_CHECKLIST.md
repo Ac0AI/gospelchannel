@@ -6,7 +6,7 @@
 - [ ] Create Spotify app (Client ID/Secret)
 - [ ] Apply for Spotify Extended Quota Mode
 - [ ] Configure Cloudflare Worker routes and cron trigger
-- [ ] Configure Neon production database access
+- [ ] Configure Cloudflare D1 production database binding
 
 ## 2) Local config
 
@@ -15,7 +15,7 @@
   - [ ] `YOUTUBE_API_KEY`
   - [ ] `SPOTIFY_CLIENT_ID`
   - [ ] `SPOTIFY_CLIENT_SECRET`
-  - [ ] `DATABASE_URL`
+  - [ ] `GOSPEL_D1_DATABASE_ID` (Node jobs), `GOSPEL_D1` binding (Worker)
   - [ ] `BETTER_AUTH_SECRET`
   - [ ] `NEXT_PUBLIC_SITE_URL`
   - [ ] `CRON_SECRET`

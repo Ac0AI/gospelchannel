@@ -3,8 +3,8 @@ import { fileURLToPath } from "node:url";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(join(__dirname, ".."));
-import { neon } from "@neondatabase/serverless";
-const sql = neon(process.env.DATABASE_URL);
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
+const sql = createD1ScriptSql();
 
 const PATTERNS = [
   "pastor",
@@ -25,7 +25,7 @@ for (const p of PATTERNS) {
   const rows = await sql`
     SELECT id, church_slug, content, author_name
     FROM prayers
-    WHERE content ILIKE ${"%" + p + "%"}
+    WHERE content LIKE ${"%" + p + "%"}
     ORDER BY created_at DESC
     LIMIT 10
   `;

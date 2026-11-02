@@ -24,9 +24,9 @@ import { loadLocalEnv } from "./lib/local-env.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(join(__dirname, ".."));
 
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 
-const sql = neon(process.env.DATABASE_URL);
+const sql = createD1ScriptSql();
 const HAIKU_MODEL = "claude-haiku-4-5-20251001";
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 if (!ANTHROPIC_API_KEY) {
@@ -111,7 +111,7 @@ async function main() {
     rows = await sql`
       SELECT slug, name, country, location, website, description, denomination, discovery_source
       FROM churches
-      WHERE created_at > now() - interval '30 days'
+      WHERE created_at > (unixepoch() * 1000 - 30 * 86400000)
       ORDER BY created_at DESC
     `;
   }

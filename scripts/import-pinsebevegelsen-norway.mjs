@@ -12,7 +12,7 @@
 
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -99,10 +99,10 @@ function extractDetail(html, urlBase) {
 }
 
 async function main() {
-  if (!process.env.DATABASE_URL && !process.env.DATABASE_URL_UNPOOLED) {
-    throw new Error("Missing DATABASE_URL");
+  if (!process.env.GOSPEL_D1_DATABASE_ID) {
+    throw new Error("Missing GOSPEL_D1_DATABASE_ID");
   }
-  const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+  const sql = createD1ScriptSql();
 
   console.log(`Crawling ${REGIONS.length} regions...`);
   const allChurches = [];
@@ -197,16 +197,16 @@ async function main() {
           sources, schema_version, enrichment_status, last_enriched_at, created_at, updated_at
         ) VALUES (
           ${m.slug}, ${m.address}, ${m.website}, ${m.email}, ${m.phone},
-          ${sourcesJson}::jsonb, 1, 'partial', NOW(), NOW(), NOW()
+          ${sourcesJson}, 1, 'partial', (unixepoch() * 1000), (unixepoch() * 1000), (unixepoch() * 1000)
         )
         ON CONFLICT (church_slug) DO UPDATE SET
           street_address = COALESCE(church_enrichments.street_address, EXCLUDED.street_address),
           website_url = COALESCE(church_enrichments.website_url, EXCLUDED.website_url),
           contact_email = COALESCE(church_enrichments.contact_email, EXCLUDED.contact_email),
           phone = COALESCE(church_enrichments.phone, EXCLUDED.phone),
-          sources = COALESCE(church_enrichments.sources, '{}'::jsonb) || EXCLUDED.sources,
-          last_enriched_at = NOW(),
-          updated_at = NOW()
+          sources = json_patch(COALESCE(church_enrichments.sources, '{}'), EXCLUDED.sources),
+          last_enriched_at = (unixepoch() * 1000),
+          updated_at = (unixepoch() * 1000)
       `;
       if (m.website || m.email || m.phone) {
         await sql`
@@ -214,7 +214,7 @@ async function main() {
             website = COALESCE(NULLIF(website, ''), ${m.website}),
             email = COALESCE(NULLIF(email, ''), ${m.email}),
             phone = COALESCE(NULLIF(phone, ''), ${m.phone}),
-            updated_at = NOW()
+            updated_at = (unixepoch() * 1000)
           WHERE slug = ${m.slug}
         `;
         if (m.website) websitesAdded++;
@@ -256,7 +256,7 @@ async function main() {
           ) VALUES (
             ${baseSlug}, ${r.name}, 'Norway', ${location}, ${r.website}, ${r.email}, ${r.phone},
             'approved', 'discovered', 'directory-import:pinsebevegelsen', 'pinsebevegelsen.no',
-            NOW(), NOW()
+            (unixepoch() * 1000), (unixepoch() * 1000)
           )
         `;
         // Also write enrichment record
@@ -267,7 +267,7 @@ async function main() {
             sources, schema_version, enrichment_status, last_enriched_at, created_at, updated_at
           ) VALUES (
             ${baseSlug}, ${r.address}, ${r.website}, ${r.email}, ${r.phone},
-            ${sourcesJson}::jsonb, 1, 'partial', NOW(), NOW(), NOW()
+            ${sourcesJson}, 1, 'partial', (unixepoch() * 1000), (unixepoch() * 1000), (unixepoch() * 1000)
           ) ON CONFLICT (church_slug) DO NOTHING
         `;
         imported++;

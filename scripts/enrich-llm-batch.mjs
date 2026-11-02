@@ -23,11 +23,11 @@
  *   node scripts/enrich-llm-batch.mjs poll    --dir=/tmp/batch-us-1 --watch
  *   node scripts/enrich-llm-batch.mjs process --dir=/tmp/batch-us-1
  *
- * Required env: DATABASE_URL, OPENAI_API_KEY
+ * Required env: GOSPEL_D1_DATABASE_ID, OPENAI_API_KEY
  * Optional env: FIRECRAWL_API_KEY (falls back to raw fetch if missing)
  */
 
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { appendFile, mkdir, readFile, stat, writeFile } from "node:fs/promises";
@@ -40,13 +40,13 @@ import { inspectHtml } from "./lib/website-platform.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(resolve(__dirname, ".."));
 
-const DATABASE_URL = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
+const GOSPEL_D1_DATABASE_ID = process.env.GOSPEL_D1_DATABASE_ID;
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const FIRECRAWL_API_KEY = process.env.FIRECRAWL_API_KEY;
-if (!DATABASE_URL) { console.error("Missing DATABASE_URL"); process.exit(1); }
+if (!GOSPEL_D1_DATABASE_ID) { console.error("Missing GOSPEL_D1_DATABASE_ID"); process.exit(1); }
 if (!OPENAI_API_KEY) { console.error("Missing OPENAI_API_KEY"); process.exit(1); }
 
-const sql = neon(DATABASE_URL);
+const sql = createD1ScriptSql();
 
 const MODEL_ID = "gpt-5.6-luna";
 const UA = "Mozilla/5.0 (compatible; GospelChannelBot/1.0; +https://gospelchannel.com)";
@@ -224,13 +224,13 @@ async function doPrepare() {
            ce.last_enriched_at
     FROM churches c
     LEFT JOIN church_enrichments ce ON ce.church_slug = c.slug
-    WHERE c.status = ANY($1::text[])
+    WHERE c.status IN (SELECT value FROM json_each($1))
       AND c.website IS NOT NULL AND c.website != ''
   `;
   const params = [STATUS_LIST];
-  if (COUNTRIES) { query += ` AND c.country = ANY($${params.length + 1}::text[])`; params.push(COUNTRIES); }
+  if (COUNTRIES) { query += ` AND c.country IN (SELECT value FROM json_each($${params.length + 1}))`; params.push(COUNTRIES); }
   if (!FORCE) {
-    query += ` AND (ce.last_enriched_at IS NULL OR ce.last_enriched_at < NOW() - INTERVAL '${STALE_DAYS} days' OR ce.enrichment_status IS NULL OR ce.enrichment_status != 'complete')`;
+    query += ` AND (ce.last_enriched_at IS NULL OR ce.last_enriched_at < (unixepoch() * 1000 - ${STALE_DAYS} * 86400000) OR ce.enrichment_status IS NULL OR ce.enrichment_status != 'complete')`;
   }
   query += ` ORDER BY c.country, c.name`;
   if (LIMIT > 0) { query += ` LIMIT $${params.length + 1}`; params.push(LIMIT); }
@@ -572,9 +572,9 @@ async function upsertEnrichment(slug, e) {
       what_to_expect, children_ministry, youth_ministry, ministries, church_size,
       enrichment_status, last_enriched_at, created_at, updated_at
     ) VALUES (
-      $1, $2, $3, $4, $5::text[], $6::jsonb, $7, $8, $9, $10,
-      $11, $12, $13, $14, $15, $16, $17, $18, $19, $20::text[], $21,
-      'complete', NOW(), NOW(), NOW()
+      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+      $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21,
+      'complete', (unixepoch() * 1000), (unixepoch() * 1000), (unixepoch() * 1000)
     )
     ON CONFLICT (church_slug) DO UPDATE SET
       street_address = COALESCE(EXCLUDED.street_address, church_enrichments.street_address),
@@ -598,8 +598,8 @@ async function upsertEnrichment(slug, e) {
       ministries = COALESCE(EXCLUDED.ministries, church_enrichments.ministries),
       church_size = COALESCE(EXCLUDED.church_size, church_enrichments.church_size),
       enrichment_status = 'complete',
-      last_enriched_at = NOW(),
-      updated_at = NOW()`,
+      last_enriched_at = (unixepoch() * 1000),
+      updated_at = (unixepoch() * 1000)`,
     [
       slug,
       e.street_address || null,
@@ -633,7 +633,7 @@ async function upsertWebsiteTech(slug, website, finalUrl, inspection, extracted)
       primary_platform, technologies, sales_angle,
       has_donate_page, has_blog, has_podcast, has_app, outreach_notes,
       detection_version, last_checked_at, created_at, updated_at
-    ) VALUES ($1, $2, $3, 200, $4, $5::jsonb, $6, $7, $8, $9, $10, $11, 2, NOW(), NOW(), NOW())
+    ) VALUES ($1, $2, $3, 200, $4, $5, $6, $7, $8, $9, $10, $11, 2, (unixepoch() * 1000), (unixepoch() * 1000), (unixepoch() * 1000))
     ON CONFLICT (church_slug) DO UPDATE SET
       website_url = EXCLUDED.website_url,
       final_url = EXCLUDED.final_url,
@@ -646,8 +646,8 @@ async function upsertWebsiteTech(slug, website, finalUrl, inspection, extracted)
       has_app = COALESCE(EXCLUDED.has_app, church_website_tech.has_app),
       outreach_notes = COALESCE(EXCLUDED.outreach_notes, church_website_tech.outreach_notes),
       detection_version = 2,
-      last_checked_at = NOW(),
-      updated_at = NOW()`,
+      last_checked_at = (unixepoch() * 1000),
+      updated_at = (unixepoch() * 1000)`,
     [
       slug,
       website,
@@ -672,7 +672,7 @@ async function refreshDescription(slug, summary, currentDescription) {
     if (!looksBoilerplate) return;
   }
   await sqlWithRetry(() => sql.query(
-    `UPDATE churches SET description = $1, updated_at = NOW() WHERE slug = $2`,
+    `UPDATE churches SET description = $1, updated_at = (unixepoch() * 1000) WHERE slug = $2`,
     [summary.slice(0, 500), slug],
   ));
 }
@@ -680,7 +680,7 @@ async function refreshDescription(slug, summary, currentDescription) {
 async function updateEmailIfMissing(slug, email) {
   if (!email) return;
   await sqlWithRetry(() => sql.query(
-    `UPDATE churches SET email = $1, updated_at = NOW() WHERE slug = $2 AND (email IS NULL OR email = '')`,
+    `UPDATE churches SET email = $1, updated_at = (unixepoch() * 1000) WHERE slug = $2 AND (email IS NULL OR email = '')`,
     [email, slug],
   ));
 }

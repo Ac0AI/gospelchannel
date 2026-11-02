@@ -17,7 +17,7 @@
 
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { mapWithConcurrency } from "./lib/enrichment/rate-limiter.mjs";
 
@@ -122,11 +122,11 @@ async function main() {
   loadLocalEnv(ROOT_DIR);
   const options = parseArgs(process.argv.slice(2));
 
-  if (!process.env.DATABASE_URL && !process.env.DATABASE_URL_UNPOOLED) {
-    throw new Error("Missing DATABASE_URL");
+  if (!process.env.GOSPEL_D1_DATABASE_ID) {
+    throw new Error("Missing GOSPEL_D1_DATABASE_ID");
   }
   if (!process.env.ANTHROPIC_API_KEY) throw new Error("Missing ANTHROPIC_API_KEY");
-  const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+  const sql = createD1ScriptSql();
   const apiKey = process.env.ANTHROPIC_API_KEY;
 
   console.log("Loading targets without summary...");
@@ -159,20 +159,20 @@ async function main() {
       if (existing.length > 0) {
         await sql`
           UPDATE church_enrichments
-          SET summary = ${text}, updated_at = NOW()
+          SET summary = ${text}, updated_at = (unixepoch() * 1000)
           WHERE church_slug = ${target.slug}
             AND (summary IS NULL OR summary = '')
         `;
       } else {
         await sql`
           INSERT INTO church_enrichments (church_slug, summary, created_at, updated_at)
-          VALUES (${target.slug}, ${text}, NOW(), NOW())
+          VALUES (${target.slug}, ${text}, (unixepoch() * 1000), (unixepoch() * 1000))
         `;
       }
       // Also fill churches.description when empty — the public page uses this
       await sql`
         UPDATE churches
-        SET description = ${text}, updated_at = NOW()
+        SET description = ${text}, updated_at = (unixepoch() * 1000)
         WHERE slug = ${target.slug}
           AND (description IS NULL OR description = '')
       `;

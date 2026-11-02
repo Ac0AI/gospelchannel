@@ -15,7 +15,7 @@
  *   node scripts/quality-check-pending.mjs --limit=10        # Process first N
  */
 
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import sharp from "sharp";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -27,14 +27,14 @@ const ROOT_DIR = resolve(__dirname, "..");
 
 loadLocalEnv(ROOT_DIR);
 
-const DATABASE_URL = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
+const GOSPEL_D1_DATABASE_ID = process.env.GOSPEL_D1_DATABASE_ID;
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 const MEDIA_BASE_URL = (process.env.NEXT_PUBLIC_MEDIA_BASE_URL || "https://media.gospelchannel.com").replace(/\/$/, "");
 
-if (!DATABASE_URL) throw new Error("Missing DATABASE_URL");
+if (!GOSPEL_D1_DATABASE_ID) throw new Error("Missing GOSPEL_D1_DATABASE_ID");
 if (!ANTHROPIC_API_KEY) throw new Error("Missing ANTHROPIC_API_KEY");
 
-const sql = neon(DATABASE_URL);
+const sql = createD1ScriptSql();
 const DRY_RUN = process.argv.includes("--dry-run");
 const SINGLE_SLUG = process.argv.find(a => a.startsWith("--slug="))?.split("=")[1];
 const LIMIT = Number(process.argv.find(a => a.startsWith("--limit="))?.split("=")[1]) || 9999;

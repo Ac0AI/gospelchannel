@@ -54,7 +54,7 @@ export default function PrivacyPage() {
           </p>
           <ul className="mt-3 list-disc space-y-2 pl-6 text-base text-warm-brown">
             <li><strong className="text-espresso">Cloudflare</strong> – hosts and protects the site and assistant app, and processes standard request and security metadata.</li>
-            <li><strong className="text-espresso">Neon</strong> – hosts the directory database and executes church lookups. Search queries are not written to a user profile or search-history table.</li>
+            <li><strong className="text-espresso">Cloudflare D1</strong> – hosts the directory database and executes church lookups. Search queries are not written to a user profile or search-history table.</li>
             <li><strong className="text-espresso">PostHog</strong> – processes the website analytics described above. It does not receive assistant-app searches or nearby-search coordinates.</li>
             <li><strong className="text-espresso">YouTube</strong> (via youtube-nocookie.com) – provides embedded worship videos. YouTube&rsquo;s privacy policy applies when you interact with a video.</li>
             <li><strong className="text-espresso">Spotify</strong> – provides embedded playlist players. Spotify&rsquo;s privacy policy applies when you interact with a player.</li>
@@ -71,7 +71,7 @@ export default function PrivacyPage() {
           <ul className="mt-3 list-disc space-y-2 pl-6 text-base text-warm-brown">
             <li><strong className="text-espresso">What it receives</strong>: search terms needed for the request, such as an explicitly named city, worship style, denomination, or language. For &ldquo;near me&rdquo; searches, location comes only through the assistant&rsquo;s controlled location metadata and is rounded before the directory lookup. The tool does not ask for precise GPS coordinates in its input fields.</li>
             <li><strong className="text-espresso">What it does</strong>: looks up matching churches in our public directory and returns their public profiles. It is read-only. It cannot change anything, and it never invents details such as service times.</li>
-            <li><strong className="text-espresso">Who processes it</strong>: Cloudflare handles the request and Neon executes the directory lookup on our behalf. Assistant-app searches are not sent to PostHog.</li>
+            <li><strong className="text-espresso">Who processes it</strong>: Cloudflare handles the request and Cloudflare D1 executes the directory lookup on our behalf. Assistant-app searches are not sent to PostHog.</li>
             <li><strong className="text-espresso">What we store</strong>: GospelChannel does not write the query or approximate location to its application database, create a user profile, or keep a personal location history. Cloudflare may retain standard operational logs as described below. The assistant you use has its own privacy policy for the conversation itself.</li>
           </ul>
         </section>

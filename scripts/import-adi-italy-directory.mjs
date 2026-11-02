@@ -22,7 +22,7 @@
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { readFileSync } from "node:fs";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -58,10 +58,10 @@ async function main() {
   const churches = JSON.parse(readFileSync("/tmp/adi-italy/all.json", "utf8"));
   console.log(`Loaded ${churches.length} ADI records`);
 
-  if (!process.env.DATABASE_URL && !process.env.DATABASE_URL_UNPOOLED) {
-    throw new Error("Missing DATABASE_URL");
+  if (!process.env.GOSPEL_D1_DATABASE_ID) {
+    throw new Error("Missing GOSPEL_D1_DATABASE_ID");
   }
-  const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+  const sql = createD1ScriptSql();
 
   // Build map of all italian church slugs in DB for fast match
   const dbRows = await sql`SELECT slug FROM churches WHERE country='Italy' AND status='approved'`;
@@ -133,10 +133,10 @@ async function main() {
           created_at, updated_at
         ) VALUES (
           ${slug}, ${adi.indirizzo || null}, ${lat}, ${lng},
-          ${serviceTimes ? JSON.stringify(serviceTimes) : null}::jsonb,
+          ${serviceTimes ? JSON.stringify(serviceTimes) : null},
           ${website},
-          ${sourcesJson}::jsonb,
-          1, 'partial', NOW(), NOW(), NOW()
+          ${sourcesJson},
+          1, 'partial', (unixepoch() * 1000), (unixepoch() * 1000), (unixepoch() * 1000)
         )
         ON CONFLICT (church_slug) DO UPDATE SET
           street_address = COALESCE(church_enrichments.street_address, EXCLUDED.street_address),
@@ -144,15 +144,15 @@ async function main() {
           longitude = COALESCE(church_enrichments.longitude, EXCLUDED.longitude),
           service_times = COALESCE(church_enrichments.service_times, EXCLUDED.service_times),
           website_url = COALESCE(church_enrichments.website_url, EXCLUDED.website_url),
-          sources = COALESCE(church_enrichments.sources, '{}'::jsonb) || EXCLUDED.sources,
-          last_enriched_at = NOW(),
-          updated_at = NOW()
+          sources = json_patch(COALESCE(church_enrichments.sources, '{}'), EXCLUDED.sources),
+          last_enriched_at = (unixepoch() * 1000),
+          updated_at = (unixepoch() * 1000)
       `;
 
       // Also push the website to churches.website if missing
       if (website) {
         await sql`
-          UPDATE churches SET website = COALESCE(website, ${website}), updated_at = NOW()
+          UPDATE churches SET website = COALESCE(website, ${website}), updated_at = (unixepoch() * 1000)
           WHERE slug = ${slug} AND (website IS NULL OR website = '')
         `;
         websitesWritten += 1;

@@ -1,6 +1,6 @@
 import { desc, gte, inArray, sql } from "drizzle-orm";
 import { getDb, hasDatabaseConfig, schema } from "@/db";
-import { createAdminClient, hasServiceConfig } from "@/lib/neon-client";
+import { createAdminClient, hasServiceConfig } from "@/lib/data-client";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
 import type {
   ChurchPlaylistReview,

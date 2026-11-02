@@ -14,9 +14,9 @@ import { loadLocalEnv } from "./lib/local-env.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(join(__dirname, ".."));
 
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 
-const sql = neon(process.env.DATABASE_URL);
+const sql = createD1ScriptSql();
 
 const NAME_PATTERNS = [
   "choir",
@@ -43,12 +43,14 @@ async function main() {
   console.log("\nSearching for non-church candidates...\n");
 
   for (const pattern of NAME_PATTERNS) {
-    const rows = await sql`
+    const candidates = await sql`
       SELECT slug, name, country, status, website, description
       FROM churches
-      WHERE name ~* ${"\\y" + pattern + "\\y"}
+      WHERE name LIKE ${"%" + pattern.replaceAll("\\", "") + "%"}
       ORDER BY name
     `;
+    const matcher = new RegExp("\\b" + pattern + "\\b", "i");
+    const rows = candidates.filter((row) => matcher.test(row.name));
     if (rows.length === 0) continue;
     console.log(`\n── pattern: "${pattern}" (${rows.length}) ──`);
     for (const row of rows) {

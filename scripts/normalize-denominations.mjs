@@ -11,7 +11,7 @@
  *   node scripts/normalize-denominations.mjs
  */
 
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadLocalEnv } from "./lib/local-env.mjs";
@@ -19,9 +19,9 @@ import { loadLocalEnv } from "./lib/local-env.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(resolve(__dirname, ".."));
 
-const DATABASE_URL = process.env.DATABASE_URL;
-if (!DATABASE_URL) throw new Error("Missing DATABASE_URL");
-const sql = neon(DATABASE_URL);
+const GOSPEL_D1_DATABASE_ID = process.env.GOSPEL_D1_DATABASE_ID;
+if (!GOSPEL_D1_DATABASE_ID) throw new Error("Missing GOSPEL_D1_DATABASE_ID");
+const sql = createD1ScriptSql();
 const DRY_RUN = process.argv.includes("--dry-run");
 
 // ─── Taxonomy (mirrors src/lib/denomination-taxonomy.ts) ───

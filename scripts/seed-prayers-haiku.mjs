@@ -23,7 +23,7 @@
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { randomUUID } from "node:crypto";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import Anthropic from "@anthropic-ai/sdk";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
@@ -106,13 +106,13 @@ async function main() {
   loadLocalEnv(ROOT_DIR);
   const o = parseArgs(process.argv.slice(2));
   if (!process.env.ANTHROPIC_API_KEY) throw new Error("Missing ANTHROPIC_API_KEY");
-  if (!process.env.DATABASE_URL) throw new Error("Missing DATABASE_URL");
-  const sql = neon(process.env.DATABASE_URL);
+  if (!process.env.GOSPEL_D1_DATABASE_ID) throw new Error("Missing GOSPEL_D1_DATABASE_ID");
+  const sql = createD1ScriptSql();
   const anthropic = new Anthropic();
 
   // 4-5 prayers per church -> churches needed for the total
   const churchCount = Math.ceil(o.total / 4.5);
-  const rows = await sql.query(`
+  const candidates = await sql.query(`
     SELECT c.slug, c.name, c.location, c.country, c.denomination
     FROM churches c
     WHERE c.status = 'approved'
@@ -120,19 +120,20 @@ async function main() {
       -- Non-Christian places of worship that slip past the denomination
       -- denylist (e.g. imported POI data). Note: 'temple' alone is NOT safe
       -- to exclude — plenty of Pentecostal churches are named Temple.
-      AND c.name !~* '\\m(gurdwara|mosque|masjid|synagogue|sikh|buddhist|hindu)\\M'
       AND (
-        array_length(c.spotify_playlist_ids, 1) > 0
-        OR array_length(c.additional_playlists, 1) > 0
+        nullif(json_array_length(c.spotify_playlist_ids), 0) > 0
+        OR nullif(json_array_length(c.additional_playlists), 0) > 0
         OR (
           c.denomination IS NOT NULL AND length(c.denomination) > 0
-          AND NOT (c.denomination = ANY($1::text[]))
+          AND NOT (c.denomination IN (SELECT value FROM json_each($1)))
           AND c.display_score IS NOT NULL AND c.display_score >= $2
         )
       )
     ORDER BY (SELECT e.google_reviews_count FROM church_enrichments e WHERE e.church_slug = c.slug) DESC NULLS LAST,
              c.display_score DESC NULLS LAST
-    LIMIT $3`, [OFF_BRAND, SCORE_MIN, churchCount]);
+    `, [OFF_BRAND, SCORE_MIN]);
+  const excludedName = /\b(gurdwara|mosque|masjid|synagogue|sikh|buddhist|hindu)\b/i;
+  const rows = candidates.filter((row) => !excludedName.test(row.name)).slice(0, churchCount);
 
   console.log(`Churches selected: ${rows.length} (target ${o.total} prayers, 4-5 each)`);
   if (rows.length === 0) return;
@@ -181,7 +182,7 @@ async function main() {
         if (!name || content.length < 10 || content.length > 300) continue;
         await sql`
           INSERT INTO prayers (id, church_slug, content, original_content, author_name, prayed_count, moderated, created_at)
-          VALUES (${randomUUID()}, ${church.slug}, ${content}, ${content}, ${name}, ${Math.floor(Math.random() * 8)}, true, NOW() - (random() * interval '60 days'))
+          VALUES (${randomUUID()}, ${church.slug}, ${content}, ${content}, ${name}, ${Math.floor(Math.random() * 8)}, true, (unixepoch() * 1000 - abs(random() % 5184000000)))
         `;
         inserted += 1;
       }

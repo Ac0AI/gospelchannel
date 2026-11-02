@@ -13,7 +13,7 @@
  */
 import pkg from "@next/env";
 const { loadEnvConfig } = pkg;
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 
 loadEnvConfig(process.cwd());
 
@@ -35,7 +35,7 @@ const dryRun = process.argv.includes("--dry-run");
 const limitArg = process.argv.indexOf("--limit");
 const limit = limitArg !== -1 ? parseInt(process.argv[limitArg + 1], 10) : 200;
 
-const sql = neon(process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL);
+const sql = createD1ScriptSql();
 const apiKey = process.env.ANTHROPIC_API_KEY;
 
 if (!apiKey) {

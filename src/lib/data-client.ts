@@ -82,7 +82,7 @@ function buildSelectClause(columns: string): string {
   }
 
   if (normalized.includes("(")) {
-    throw new Error(`Nested selects are not supported by the Neon compatibility layer: ${columns}`);
+    throw new Error(`Nested selects are not supported by the D1 compatibility layer: ${columns}`);
   }
 
   return normalized
@@ -150,7 +150,7 @@ function buildWhereClause(filters: FilterOp[], table: string) {
   };
 }
 
-class NeonTableQuery<T = unknown>
+class D1TableQuery<T = unknown>
   implements PromiseLike<QueryResult<T>>
 {
   private action: "select" | "insert" | "update" | "upsert" = "select";
@@ -462,7 +462,7 @@ export function hasServiceConfig() {
 export function createAdminClient() {
   return {
     from<T = unknown>(tableName: string) {
-      return new NeonTableQuery<T>(tableName);
+      return new D1TableQuery<T>(tableName);
     },
     auth: {
       admin: {

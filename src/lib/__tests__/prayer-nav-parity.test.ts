@@ -37,7 +37,7 @@ const m = {} as {
   getChurchSlugsWithPrayers: () => Promise<Set<string>>;
 };
 
-// Live-Neon integration gate: requires a real DB. Loaded from .env.local
+// Live-D1 integration gate: requires a real DB. Loaded from .env.local
 // locally (it IS the pre-deploy gate); CI runs vitest WITHOUT DB creds
 // (prod creds must not live in CI), so SKIP there rather than fail.
 const _here = dirname(fileURLToPath(import.meta.url));
@@ -45,7 +45,7 @@ try {
   const { loadLocalEnv } = await import(resolve(_here, "../../../scripts/lib/local-env.mjs") as string);
   loadLocalEnv(resolve(_here, "../../.."));
 } catch { /* no .env.local (CI) → hasDb stays false → suite skips */ }
-const hasDb = Boolean(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+const hasDb = process.env.GOSPEL_D1_VERIFY_REMOTE === "1" && Boolean(process.env.GOSPEL_D1_DATABASE_ID);
 
 beforeAll(async () => {
   const here = dirname(fileURLToPath(import.meta.url));

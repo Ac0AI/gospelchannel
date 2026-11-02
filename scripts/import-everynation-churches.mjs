@@ -2,7 +2,7 @@
 
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql, encodeD1ScriptValue } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { mapWithConcurrency, sleep } from "./lib/enrichment/rate-limiter.mjs";
 import { fetchFacebookPage } from "./lib/enrichment/facebook-scraper.mjs";
@@ -265,17 +265,11 @@ function createUniqueSlug(name, location, country, usedSlugs) {
 }
 
 function prepareChurchValue(column, value) {
-  if (value === undefined) return undefined;
-  if (["spotify_playlists", "youtube_videos"].includes(column) && value !== null) return JSON.stringify(value);
-  return value;
+  return encodeD1ScriptValue("churches", column, value);
 }
 
 function prepareEnrichmentValue(column, value) {
-  if (value === undefined) return undefined;
-  if (["service_times", "sources", "raw_google_places", "raw_crawled_pages"].includes(column) && value !== null) {
-    return JSON.stringify(value);
-  }
-  return value;
+  return encodeD1ScriptValue("church_enrichments", column, value);
 }
 
 async function upsertRow(sql, table, conflictColumn, row, prepareValue) {
@@ -290,7 +284,7 @@ async function upsertRow(sql, table, conflictColumn, row, prepareValue) {
     .map((column) => `${column} = EXCLUDED.${column}`);
 
   if (!columns.includes("updated_at")) {
-    updates.push("updated_at = NOW()");
+    updates.push("updated_at = (unixepoch() * 1000)");
   }
 
   await sql.query(
@@ -305,7 +299,7 @@ async function updateRow(sql, table, keyColumn, keyValue, updates, prepareValue)
   if (entries.length === 0) return;
 
   const assignments = entries.map(([column], index) => `${column} = $${index + 1}`);
-  assignments.push("updated_at = NOW()");
+  assignments.push("updated_at = (unixepoch() * 1000)");
   const params = entries.map(([column, value]) => prepareValue(column, value));
   params.push(keyValue);
 
@@ -328,7 +322,7 @@ async function loadChurchRowsBySlug(sql, slugs) {
     const rows = await sql`
       SELECT slug, name, country, location, website, status, reason, youtube_channel_id
       FROM churches
-      WHERE slug = ANY(${batch})
+      WHERE slug IN (SELECT value FROM json_each(${batch}))
     `;
     for (const row of rows) map.set(row.slug, row);
   }
@@ -356,7 +350,7 @@ async function loadEnrichmentsBySlug(sql, slugs) {
         confidence,
         facebook_followers
       FROM church_enrichments
-      WHERE church_slug = ANY(${batch})
+      WHERE church_slug IN (SELECT value FROM json_each(${batch}))
     `;
     for (const row of rows) map.set(row.church_slug, row);
   }
@@ -691,7 +685,7 @@ async function runWebsiteEnrichment(sql, slugs, concurrency) {
     let churchUpdated = false;
     if (youtubeChannelId) {
       await sql.query(
-        "UPDATE churches SET youtube_channel_id = $1, updated_at = NOW() WHERE slug = $2 AND youtube_channel_id IS NULL",
+        "UPDATE churches SET youtube_channel_id = $1, updated_at = (unixepoch() * 1000) WHERE slug = $2 AND youtube_channel_id IS NULL",
         [youtubeChannelId, church.slug],
       );
       churchUpdated = true;
@@ -714,11 +708,11 @@ async function main() {
   loadLocalEnv(ROOT_DIR);
   const options = parseArgs(process.argv.slice(2));
 
-  if (!process.env.DATABASE_URL && !process.env.DATABASE_URL_UNPOOLED) {
-    throw new Error("Missing DATABASE_URL or DATABASE_URL_UNPOOLED");
+  if (!process.env.GOSPEL_D1_DATABASE_ID) {
+    throw new Error("Missing GOSPEL_D1_DATABASE_ID");
   }
 
-  const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+  const sql = createD1ScriptSql();
 
   console.log("Fetching Every Nation directory...");
   const html = await fetchHtml(DIRECTORY_URL);

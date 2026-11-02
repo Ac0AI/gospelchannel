@@ -2,7 +2,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { verifyChurchClaim } from "../src/lib/church-community";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const ROOT_DIR = join(__dirname, "..");
@@ -14,12 +14,12 @@ if (!claimId) {
   process.exit(1);
 }
 
-const databaseUrl = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
+const databaseUrl = process.env.GOSPEL_D1_DATABASE_ID;
 if (!databaseUrl) {
-  throw new Error("Missing DATABASE_URL or DATABASE_URL_UNPOOLED");
+  throw new Error("Missing GOSPEL_D1_DATABASE_ID");
 }
 
-const sql = neon(databaseUrl);
+const sql = createD1ScriptSql();
 
 type ClaimRow = {
   id: string;

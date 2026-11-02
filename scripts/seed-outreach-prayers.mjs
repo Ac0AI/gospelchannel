@@ -6,11 +6,11 @@
  */
 import pkg from "@next/env";
 const { loadEnvConfig } = pkg;
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { randomUUID } from "crypto";
 
 loadEnvConfig(process.cwd());
-const sql = neon(process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL);
+const sql = createD1ScriptSql();
 const dryRun = process.argv.includes("--dry-run");
 
 // Prayers per outreach church — tailored slightly per city/context
@@ -110,7 +110,7 @@ async function main() {
     for (const p of prayers) {
       await sql`
         INSERT INTO prayers (id, church_slug, content, original_content, author_name, prayed_count, moderated, created_at)
-        VALUES (${randomUUID()}, ${slug}, ${p.content}, ${p.content}, ${p.name}, ${Math.floor(Math.random() * 8)}, true, NOW() - (random() * interval '60 days'))
+        VALUES (${randomUUID()}, ${slug}, ${p.content}, ${p.content}, ${p.name}, ${Math.floor(Math.random() * 8)}, true, (unixepoch() * 1000 - abs(random() % 5184000000)))
       `;
       toInsert++;
     }

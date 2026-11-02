@@ -5,7 +5,7 @@
  *
  * Pipeline:
  *   1. Search Spotify for church worship playlists
- *   2. De-duplicate against existing churches in Neon
+ *   2. De-duplicate against existing churches in D1
  *   3. Enrich each candidate with Claude Haiku (website crawl + structuring)
  *   4. Insert as approved churches into the churches table
  *
@@ -24,9 +24,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = join(__dirname, "..");
 loadLocalEnv(ROOT_DIR);
 
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 
-const sql = neon(process.env.DATABASE_URL);
+const sql = createD1ScriptSql();
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
 const DRY_RUN = process.argv.includes("--dry-run");
 const TARGET = (() => {
@@ -429,7 +429,7 @@ async function main() {
           ${0.85},
           ${"Auto-discovered via Spotify search + Claude enrichment (2026-04-02)"},
           'spotify-search',
-          ${new Date().toISOString()}
+          ${Date.now()}
         )
         ON CONFLICT (slug) DO NOTHING
       `;

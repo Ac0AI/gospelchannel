@@ -1,5 +1,5 @@
 import { revalidateTag, unstable_cache } from "next/cache";
-import { createAdminClient, hasServiceConfig } from "@/lib/neon-client";
+import { createAdminClient, hasServiceConfig } from "@/lib/data-client";
 import { getSql } from "@/db";
 import type { Prayer } from "@/types/gospel";
 import {
@@ -15,7 +15,7 @@ const PRAYERS_CACHE_TAG = "prayers";
 // 1 hour TTL. submitPrayer() calls revalidateTag(PRAYERS_CACHE_TAG, "max")
 // so user-visible freshness is sub-second on submit. The TTL is only a
 // safety net for missed invalidations (admin moderation paths, edge cases).
-// Started at 60s → drove ~10 GB/day Neon transfer because the homepage and
+// Started at 60s → drove ~10 GB/day D1 transfer because the homepage and
 // 1.6k prayerwall sub-pages all share PRAYERS_CACHE_TAG and were perpetually
 // STALE (s-maxage=2 live). 1 h cuts background reads ~98%.
 const PRAYERS_CACHE_SECONDS = 3600;

@@ -16,16 +16,16 @@
 
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(resolve(__dirname, ".."));
 
-const DATABASE_URL = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
-if (!DATABASE_URL) throw new Error("Missing DATABASE_URL");
+const GOSPEL_D1_DATABASE_ID = process.env.GOSPEL_D1_DATABASE_ID;
+if (!GOSPEL_D1_DATABASE_ID) throw new Error("Missing GOSPEL_D1_DATABASE_ID");
 
-const sql = neon(DATABASE_URL);
+const sql = createD1ScriptSql();
 const DRY_RUN = process.argv.includes("--dry-run");
 const BATCH = 2000;
 
@@ -137,7 +137,7 @@ async function main() {
     FROM churches c
     LEFT JOIN church_enrichments e ON e.church_slug = c.slug
     WHERE c.status = 'approved'
-      AND nullif(btrim(c.description), '') IS NULL
+      AND nullif(trim(c.description), '') IS NULL
     ORDER BY c.directory_rank NULLS LAST, c.slug
   `;
 
@@ -175,11 +175,11 @@ async function main() {
     await sql.query(
       `UPDATE churches AS c
           SET description = d.description,
-              updated_at = NOW()
-         FROM jsonb_to_recordset($1::jsonb) AS d(slug text, description text)
+              updated_at = (unixepoch() * 1000)
+         FROM (SELECT json_extract(value, '$.slug') AS slug, json_extract(value, '$.description') AS description FROM json_each($1)) AS d
         WHERE c.slug = d.slug
           AND c.status = 'approved'
-          AND nullif(btrim(c.description), '') IS NULL`,
+          AND nullif(trim(c.description), '') IS NULL`,
       [JSON.stringify(slice.map(({ slug, description }) => ({ slug, description })))],
     );
     written += slice.length;

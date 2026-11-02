@@ -35,7 +35,7 @@
     "research": "node scripts/research-churches.mjs",
     "qa:churches": "node scripts/score-church-quality.mjs",
     "intake:global": "node scripts/run-global-intake.mjs",
-    "approve:churches": "node scripts/bulk-approve-churches.mjs",
+    "approve:churches": "tsx scripts/bulk-approve-churches.mjs",
     "discover:sweden": "node scripts/discover-sweden-church-playlists.mjs && tmp/spreadsheets/.venv/bin/python scripts/export-sweden-church-playlists.py",
     "discover:sweden:loop": "node scripts/run-sweden-playlist-harvest-loop.mjs",
     "spotify:enrich": "node scripts/enrich-spotify-by-church-name.mjs",
@@ -44,11 +44,11 @@
     "dataset:publish:zenodo": "node scripts/publish-zenodo-dataset.mjs",
     "dataset:publish:huggingface": "node scripts/publish-huggingface-dataset.mjs",
     "db:new-migration": "wrangler d1 migrations create gospelchannel",
-    "db:migrate:local": "wrangler d1 migrations apply gospelchannel --local"
+    "db:migrate:local": "wrangler d1 migrations apply gospelchannel --local",
+    "db:script-types": "tsx scripts/generate-d1-column-types.ts"
   },
   "dependencies": {
     "@better-auth/drizzle-adapter": "^1.3.7",
-    "@neondatabase/serverless": "^1.0.1",
     "@opennextjs/cloudflare": "^1.19.11",
     "better-auth": "^1.3.7",
     "drizzle-orm": "^0.44.2",
@@ -86,5 +86,10 @@
     "vitest": "^4.1.0",
     "wrangler": "^4.85.0",
     "xlsx": "^0.18.5"
+  },
+  "pnpm": {
+    "overrides": {
+      "drizzle-orm>@neondatabase/serverless": "-"
+    }
   }
 }

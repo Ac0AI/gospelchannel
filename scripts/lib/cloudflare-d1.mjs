@@ -1,5 +1,4 @@
-// Explicit D1 access for Node jobs. A missing token must never fall back to a
-// stale Neon database after the D1 cutover has been selected.
+// Explicit D1 access for Node jobs. Missing credentials fail closed.
 export function createD1Client(env, fetchImpl = fetch) {
   const { CLOUDFLARE_ACCOUNT_ID: accountId, GOSPEL_D1_DATABASE_ID: databaseId } = env;
   const token = env.GOSPEL_D1_API_TOKEN || env.CLOUDFLARE_API_TOKEN;

@@ -2,7 +2,7 @@
 
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql, encodeD1ScriptValue } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import {
   addChurchToIndex,
@@ -163,17 +163,11 @@ function createUniqueSlug(name, city, usedSlugs) {
 }
 
 function prepareChurchValue(column, value) {
-  if (value === undefined) return undefined;
-  if (["spotify_playlists", "youtube_videos"].includes(column) && value !== null) return JSON.stringify(value);
-  return value;
+  return encodeD1ScriptValue("churches", column, value);
 }
 
 function prepareEnrichmentValue(column, value) {
-  if (value === undefined) return undefined;
-  if (["service_times", "sources", "raw_google_places", "raw_crawled_pages"].includes(column) && value !== null) {
-    return JSON.stringify(value);
-  }
-  return value;
+  return encodeD1ScriptValue("church_enrichments", column, value);
 }
 
 async function upsertRow(sql, table, conflictColumn, row, prepareValue) {
@@ -183,7 +177,7 @@ async function upsertRow(sql, table, conflictColumn, row, prepareValue) {
   const placeholders = columns.map((_, i) => `$${i + 1}`);
   const values = entries.map(([c, v]) => prepareValue(c, v));
   const updates = columns.filter((c) => c !== conflictColumn).map((c) => `${c} = EXCLUDED.${c}`);
-  if (!columns.includes("updated_at")) updates.push("updated_at = NOW()");
+  if (!columns.includes("updated_at")) updates.push("updated_at = (unixepoch() * 1000)");
   await sql.query(
     `INSERT INTO ${table} (${columns.join(", ")}) VALUES (${placeholders.join(", ")})
      ON CONFLICT (${conflictColumn}) DO UPDATE SET ${updates.join(", ")}`,
@@ -237,10 +231,10 @@ async function upsertEnrichmentSeeds(sql, rows) {
 async function main() {
   loadLocalEnv(ROOT_DIR);
   const options = parseArgs(process.argv.slice(2));
-  if (!process.env.DATABASE_URL && !process.env.DATABASE_URL_UNPOOLED) {
-    throw new Error("Missing DATABASE_URL or DATABASE_URL_UNPOOLED");
+  if (!process.env.GOSPEL_D1_DATABASE_ID) {
+    throw new Error("Missing GOSPEL_D1_DATABASE_ID");
   }
-  const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+  const sql = createD1ScriptSql();
 
   console.log("Collecting Equmeniakyrkan slugs from paginated taxonomy list...");
   const urls = await collectAllSlugUrls();

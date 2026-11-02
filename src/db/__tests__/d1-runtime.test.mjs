@@ -8,7 +8,7 @@ vi.mock("next/cache", () => ({ unstable_cache: (fn) => fn, revalidateTag: vi.fn(
 vi.mock("server-only", () => ({}));
 
 import { getDb, getSql, schema } from "@/db";
-import { createAdminClient } from "@/lib/neon-client";
+import { createAdminClient } from "@/lib/data-client";
 import { getChurchIndexPageData, getChurchDirectoryFilterOptions, fetchFacetRelatedLinks } from "@/lib/church";
 import { getChurchSearchSuggestions } from "@/lib/search-suggestions";
 import { findChurchesNear } from "@/lib/mcp/church-queries";

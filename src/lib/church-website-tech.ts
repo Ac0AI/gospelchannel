@@ -1,4 +1,4 @@
-import { createAdminClient, hasServiceConfig } from "@/lib/neon-client";
+import { createAdminClient, hasServiceConfig } from "@/lib/data-client";
 
 const PAGE_SIZE = 100;
 const FETCH_PAGE_SIZE = 1000;

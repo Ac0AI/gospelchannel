@@ -22,7 +22,7 @@
 
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -83,9 +83,9 @@ async function fetchUploadPlaylistItems(uploadsPlaylistId, maxResults, apiKey) {
 async function main() {
   loadLocalEnv(ROOT_DIR);
   const options = parseArgs(process.argv.slice(2));
-  if (!process.env.DATABASE_URL && !process.env.DATABASE_URL_UNPOOLED) throw new Error("Missing DATABASE_URL");
+  if (!process.env.GOSPEL_D1_DATABASE_ID) throw new Error("Missing GOSPEL_D1_DATABASE_ID");
   if (!process.env.YOUTUBE_API_KEY) throw new Error("Missing YOUTUBE_API_KEY");
-  const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+  const sql = createD1ScriptSql();
   const apiKey = process.env.YOUTUBE_API_KEY;
 
   console.log("Loading churches with youtube_channel_id but no cached videos...");
@@ -94,7 +94,7 @@ async function main() {
         SELECT slug, name, youtube_channel_id FROM churches
         WHERE status = 'approved'
           AND youtube_channel_id IS NOT NULL
-          AND (youtube_videos IS NULL OR youtube_videos::text = '[]')
+          AND (youtube_videos IS NULL OR youtube_videos = '[]')
         ORDER BY slug
         LIMIT ${options.limit}
       `
@@ -102,7 +102,7 @@ async function main() {
         SELECT slug, name, youtube_channel_id FROM churches
         WHERE status = 'approved'
           AND youtube_channel_id IS NOT NULL
-          AND (youtube_videos IS NULL OR youtube_videos::text = '[]')
+          AND (youtube_videos IS NULL OR youtube_videos = '[]')
         ORDER BY slug
       `;
   console.log(`Targets: ${targets.length}`);
@@ -126,7 +126,7 @@ async function main() {
         if (!options.dryRun) {
           await sql`
             UPDATE churches
-            SET youtube_videos = ${JSON.stringify(videos)}::jsonb, updated_at = NOW()
+            SET youtube_videos = ${JSON.stringify(videos)}, updated_at = (unixepoch() * 1000)
             WHERE slug = ${t.slug}
           `;
         }

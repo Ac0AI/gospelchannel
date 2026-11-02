@@ -18,7 +18,7 @@
 
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql, encodeD1ScriptValue } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import {
   addChurchToIndex,
@@ -167,16 +167,8 @@ function serviceTimesFromOpeningHours(oh) {
   return e.length ? e : null;
 }
 
-function prepareChurchValue(c, v) {
-  if (v === undefined) return undefined;
-  if (["spotify_playlists", "youtube_videos"].includes(c) && v !== null) return JSON.stringify(v);
-  return v;
-}
-function prepareEnrichmentValue(c, v) {
-  if (v === undefined) return undefined;
-  if (["service_times", "sources", "raw_google_places", "raw_crawled_pages"].includes(c) && v !== null) return JSON.stringify(v);
-  return v;
-}
+function prepareChurchValue(c, v) { return encodeD1ScriptValue("churches", c, v); }
+function prepareEnrichmentValue(c, v) { return encodeD1ScriptValue("church_enrichments", c, v); }
 async function upsertRow(sql, table, conflictColumn, row, prep) {
   const entries = Object.entries(row).filter(([, v]) => v !== undefined);
   if (!entries.length) return;
@@ -184,7 +176,7 @@ async function upsertRow(sql, table, conflictColumn, row, prep) {
   const ph = cols.map((_, i) => `$${i + 1}`);
   const vals = entries.map(([c, v]) => prep(c, v));
   const upd = cols.filter((c) => c !== conflictColumn).map((c) => `${c} = EXCLUDED.${c}`);
-  if (!cols.includes("updated_at")) upd.push("updated_at = NOW()");
+  if (!cols.includes("updated_at")) upd.push("updated_at = (unixepoch() * 1000)");
   await sql.query(`INSERT INTO ${table} (${cols.join(", ")}) VALUES (${ph.join(", ")}) ON CONFLICT (${conflictColumn}) DO UPDATE SET ${upd.join(", ")}`, vals);
 }
 async function upsertChurches(sql, rows) {
@@ -211,8 +203,8 @@ async function main() {
   if (!o.city) throw new Error("Missing --city");
   const token = process.env.APIFY_TOKEN;
   if (!token) throw new Error("Missing APIFY_TOKEN");
-  if (!process.env.DATABASE_URL && !process.env.DATABASE_URL_UNPOOLED) throw new Error("Missing DATABASE_URL");
-  const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+  if (!process.env.GOSPEL_D1_DATABASE_ID) throw new Error("Missing GOSPEL_D1_DATABASE_ID");
+  const sql = createD1ScriptSql();
 
   const cityLabel = o.state ? `${o.city}, ${o.state}` : o.city;
   const locationQuery = [o.city, o.state, o.country].filter(Boolean).join(", ");

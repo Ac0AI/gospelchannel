@@ -4,7 +4,7 @@ import churchesJson from "@/data/churches.json";
 import staffPicksJson from "@/data/staff-picks.json";
 import trendingJson from "@/data/cache/trending.json";
 import type { ChurchConfig, CatalogVideo } from "@/types/gospel";
-import { hasServiceConfig, createAdminClient } from "@/lib/neon-client";
+import { hasServiceConfig, createAdminClient } from "@/lib/data-client";
 import { getSql } from "@/db";
 import { rewriteLegacyMediaUrl } from "@/lib/media";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";

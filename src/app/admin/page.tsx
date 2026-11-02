@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { createAdminClient, hasServiceConfig } from "@/lib/neon-client";
+import { createAdminClient, hasServiceConfig } from "@/lib/data-client";
 import { AdminLogout } from "@/components/AdminLogout";
 import { AdminNav } from "@/components/admin/AdminNav";
 import { requireAdminPageAccess } from "@/lib/admin-page";

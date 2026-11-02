@@ -1,7 +1,7 @@
-// Neon query layer for the MCP church-finder tools.
+// D1 query layer for the MCP church-finder tools.
 //
 // Every public function is wrapped in unstable_cache (R2-backed) — that is the
-// primary protection against Neon load on a public endpoint. Near-queries cache
+// primary protection against D1 load on a public endpoint. Near-queries cache
 // on coordinates rounded to ~1.1 km so semantically-identical lookups collapse
 // onto one cache entry. Service times are surfaced only when we actually hold
 // them; we never fabricate a time.

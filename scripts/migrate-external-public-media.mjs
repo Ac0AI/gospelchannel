@@ -7,7 +7,7 @@ import { randomUUID } from "node:crypto";
 import { dirname, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import sharp from "sharp";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { findLikelyHeroImage } from "./lib/church-quality.mjs";
@@ -29,16 +29,16 @@ const DRY_RUN = hasFlag("--dry-run");
 const KEEP_FAILURES = hasFlag("--keep-failures");
 const UPLOAD_RETRIES = 3;
 
-const DATABASE_URL = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
-if (!DATABASE_URL) {
-  throw new Error("Missing DATABASE_URL or DATABASE_URL_UNPOOLED");
+const GOSPEL_D1_DATABASE_ID = process.env.GOSPEL_D1_DATABASE_ID;
+if (!GOSPEL_D1_DATABASE_ID) {
+  throw new Error("Missing GOSPEL_D1_DATABASE_ID");
 }
 
 if (!existsSync(resolve(ROOT_DIR, "node_modules", ".bin", process.platform === "win32" ? "wrangler.cmd" : "wrangler"))) {
   throw new Error("Missing local Wrangler install");
 }
 
-const sql = neon(DATABASE_URL);
+const sql = createD1ScriptSql();
 
 const REJECTED_LOGO_PATTERNS = /swish|vipps|paypal|stripe|klarna|bankid|qr|venmo|cashapp|pixel|spacer|spinner|loading|placeholder|default|wix\.com|squarespace\.com|wordpress\.org\/logo|w3\.org|cloudflare|google-analytics|facebook\.com|twitter\.com/i;
 

@@ -32,7 +32,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -308,16 +308,14 @@ async function writeMatch(sql, slug, result) {
     await sql`
       UPDATE churches
       SET spotify_url = ${`https://open.spotify.com/playlist/${ids[0]}`},
-          spotify_playlist_ids = ARRAY(
-            SELECT DISTINCT UNNEST(COALESCE(spotify_playlist_ids, ARRAY[]::text[]) || ${ids}::text[])
-          ),
-          updated_at = NOW()
+          spotify_playlist_ids = (SELECT json_group_array(value) FROM (SELECT value FROM json_each(COALESCE(spotify_playlist_ids, '[]')) UNION SELECT value FROM json_each(${ids}))),
+          updated_at = (unixepoch() * 1000)
       WHERE slug = ${slug} AND spotify_url IS NULL
     `;
   } else {
     await sql`
       UPDATE churches
-      SET spotify_url = ${`https://open.spotify.com/artist/${result.artist.id}`}, updated_at = NOW()
+      SET spotify_url = ${`https://open.spotify.com/artist/${result.artist.id}`}, updated_at = (unixepoch() * 1000)
       WHERE slug = ${slug} AND spotify_url IS NULL
     `;
   }
@@ -335,22 +333,22 @@ function loadProgress(path) {
 async function main() {
   loadLocalEnv(ROOT_DIR);
   const options = parseArgs(process.argv.slice(2));
-  const DATABASE_URL = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
-  if (!DATABASE_URL) throw new Error("Missing DATABASE_URL");
+  const GOSPEL_D1_DATABASE_ID = process.env.GOSPEL_D1_DATABASE_ID;
+  if (!GOSPEL_D1_DATABASE_ID) throw new Error("Missing GOSPEL_D1_DATABASE_ID");
   if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) throw new Error("Missing Spotify credentials");
-  const sql = neon(DATABASE_URL);
+  const sql = createD1ScriptSql();
 
   mkdirSync(dirname(options.progressPath), { recursive: true });
   const progress = loadProgress(options.progressPath);
 
   const rows = options.slugs.length > 0
-    ? await sql`SELECT slug, name, website FROM churches WHERE slug = ANY(${options.slugs})`
+    ? await sql`SELECT slug, name, website FROM churches WHERE slug IN (SELECT value FROM json_each(${options.slugs}))`
     : await sql`
         SELECT slug, name, website FROM churches
         WHERE status = 'approved'
           AND website IS NOT NULL AND website <> ''
           AND spotify_url IS NULL
-          AND COALESCE(array_length(spotify_playlist_ids, 1), 0) = 0
+          AND COALESCE(nullif(json_array_length(spotify_playlist_ids), 0), 0) = 0
         ORDER BY display_score DESC NULLS LAST, slug
       `;
   const queue = rows

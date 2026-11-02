@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { mapWithConcurrency } from "./lib/enrichment/rate-limiter.mjs";
-import supabaseCompat from "../src/lib/supabase.ts";
+import * as supabaseCompat from "../src/lib/data-client.ts";
 import {
   extractHeadingText,
   extractJsonLdNames,
@@ -170,7 +170,7 @@ async function main() {
   const { createAdminClient, hasSupabaseServiceConfig } = supabaseCompat;
 
   if (!hasSupabaseServiceConfig()) {
-    throw new Error("Missing DATABASE_URL or DATABASE_URL_UNPOOLED");
+    throw new Error("Missing Gospel D1 configuration");
   }
   if (!process.env.ANTHROPIC_API_KEY) {
     throw new Error("Missing ANTHROPIC_API_KEY");

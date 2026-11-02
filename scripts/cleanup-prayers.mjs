@@ -19,9 +19,9 @@ import { loadLocalEnv } from "./lib/local-env.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(join(__dirname, ".."));
 
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 
-const sql = neon(process.env.DATABASE_URL);
+const sql = createD1ScriptSql();
 const DRY_RUN = process.argv.includes("--dry-run");
 
 const BAD_PRAYER_IDS = [
@@ -38,7 +38,7 @@ async function main() {
   console.log("── Deleting flagged prayers ──");
   let flaggedDeleted = 0;
   for (const prefix of BAD_PRAYER_IDS) {
-    const rows = await sql`SELECT id, church_slug, content FROM prayers WHERE id::text LIKE ${prefix + "%"}`;
+    const rows = await sql`SELECT id, church_slug, content FROM prayers WHERE id LIKE ${prefix + "%"}`;
     if (rows.length === 0) {
       console.log(`  skip ${prefix} (not found)`);
       continue;

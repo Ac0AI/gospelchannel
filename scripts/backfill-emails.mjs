@@ -9,7 +9,7 @@
  *   node scripts/backfill-emails.mjs --status=approved --slugs="slug-a,slug-b"
  */
 
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadLocalEnv } from "./lib/local-env.mjs";
@@ -18,9 +18,9 @@ import { isPlausibleContactEmail } from "./lib/website-contact.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(resolve(__dirname, ".."));
 
-const DATABASE_URL = process.env.DATABASE_URL;
-if (!DATABASE_URL) throw new Error("Missing DATABASE_URL");
-const sql = neon(DATABASE_URL);
+const GOSPEL_D1_DATABASE_ID = process.env.GOSPEL_D1_DATABASE_ID;
+if (!GOSPEL_D1_DATABASE_ID) throw new Error("Missing GOSPEL_D1_DATABASE_ID");
+const sql = createD1ScriptSql();
 const DRY_RUN = process.argv.includes("--dry-run");
 
 const FETCH_TIMEOUT = 10_000;
@@ -145,19 +145,19 @@ async function main() {
   let query = `
     SELECT slug, name, website, email, country
     FROM churches
-    WHERE status = ANY($1::text[])
+    WHERE status IN (SELECT value FROM json_each($1))
       AND (email IS NULL OR email = '')
       AND website IS NOT NULL AND website != ''
   `;
   const params = [STATUS_LIST];
 
   if (COUNTRIES) {
-    query += ` AND country = ANY($${params.length + 1}::text[])`;
+    query += ` AND country IN (SELECT value FROM json_each($${params.length + 1}))`;
     params.push(COUNTRIES);
   }
 
   if (SLUGS) {
-    query += ` AND slug = ANY($${params.length + 1}::text[])`;
+    query += ` AND slug IN (SELECT value FROM json_each($${params.length + 1}))`;
     params.push(SLUGS);
   }
 

@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { buildApprovalDecision, resolveApprovedChurchName } from "./lib/church-approval.mjs";
-import supabaseCompat from "../src/lib/supabase.ts";
+import * as supabaseCompat from "../src/lib/data-client.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = join(__dirname, "..");
@@ -213,7 +213,7 @@ async function main() {
   const { createAdminClient, hasSupabaseServiceConfig } = supabaseCompat;
 
   if (!hasSupabaseServiceConfig()) {
-    throw new Error("Missing DATABASE_URL or DATABASE_URL_UNPOOLED");
+    throw new Error("Missing Gospel D1 configuration");
   }
 
   const supabase = createAdminClient();

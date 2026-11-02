@@ -20,9 +20,9 @@ import { loadLocalEnv } from "./lib/local-env.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(join(__dirname, ".."));
 
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 
-const sql = neon(process.env.DATABASE_URL);
+const sql = createD1ScriptSql();
 const DRY_RUN = process.argv.includes("--dry-run");
 
 // ── 1. Pure deletes (artists, bands, labels, brands) ─────────────────────────
@@ -179,21 +179,21 @@ async function main() {
         UPDATE churches SET
           spotify_url = COALESCE(${from.spotify_url}, spotify_url),
           spotify_artist_ids = CASE
-            WHEN ${from.spotify_artist_ids}::text[] IS NOT NULL AND array_length(${from.spotify_artist_ids}::text[], 1) > 0
+            WHEN ${from.spotify_artist_ids} IS NOT NULL AND nullif(json_array_length(${from.spotify_artist_ids}), 0) > 0
             THEN ${from.spotify_artist_ids}
             ELSE spotify_artist_ids
           END,
           spotify_playlist_ids = CASE
-            WHEN ${from.spotify_playlist_ids}::text[] IS NOT NULL AND array_length(${from.spotify_playlist_ids}::text[], 1) > 0
+            WHEN ${from.spotify_playlist_ids} IS NOT NULL AND nullif(json_array_length(${from.spotify_playlist_ids}), 0) > 0
             THEN ${from.spotify_playlist_ids}
             ELSE spotify_playlist_ids
           END,
           music_style = CASE
-            WHEN ${from.music_style}::text[] IS NOT NULL AND array_length(${from.music_style}::text[], 1) > 0
+            WHEN ${from.music_style} IS NOT NULL AND nullif(json_array_length(${from.music_style}), 0) > 0
             THEN ${from.music_style}
             ELSE music_style
           END,
-          updated_at = now()
+          updated_at = (unixepoch() * 1000)
         WHERE slug = ${merge.to}
       `;
       // Delete the worship team entry
@@ -250,7 +250,7 @@ async function main() {
           discovery_source,
           discovered_at,
           created_at,
-          now()
+          (unixepoch() * 1000)
         FROM churches WHERE slug = ${r.oldSlug}
       `;
       // Delete old entry

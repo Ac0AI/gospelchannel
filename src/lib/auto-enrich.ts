@@ -147,7 +147,7 @@ export async function saveEnrichmentToSuggestion(
 ): Promise<void> {
   // We store enrichment data as a JSON column on the suggestion
   // so the admin panel can display it during review
-  const { createAdminClient } = await import("@/lib/neon-client");
+  const { createAdminClient } = await import("@/lib/data-client");
   const client = createAdminClient();
 
   const { error } = await client

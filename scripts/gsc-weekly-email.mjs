@@ -6,7 +6,7 @@
  * Called by the GitHub Actions workflow every Monday morning. Can
  * also be run locally with `node scripts/gsc-weekly-email.mjs` for
  * ad-hoc sends — requires the same env vars as gsc-report.mjs plus
- * BREVO_API_KEY and DATABASE_URL.
+ * BREVO_API_KEY and Gospel D1 credentials.
  */
 
 import { dirname, join } from "node:path";

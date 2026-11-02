@@ -20,14 +20,14 @@ import { execSync } from "node:child_process";
 import { readFileSync, writeFileSync, existsSync, appendFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 loadLocalEnv(ROOT);
 
-const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+const sql = createD1ScriptSql();
 const BATCH = Number(process.argv.find((a) => a.startsWith("--batch="))?.slice(8)) || 600;
 const MAX_BATCHES = Number(process.argv.find((a) => a.startsWith("--max-batches="))?.slice(14)) || Infinity;
 const PROCESSED_FILE = "/tmp/sweep-processed.txt";
@@ -80,7 +80,7 @@ async function main() {
     const websited = (await sql`
       SELECT c.slug FROM churches c
       LEFT JOIN church_enrichments ce ON ce.church_slug = c.slug
-      WHERE c.slug = ANY(${slugs}::text[])
+      WHERE c.slug IN (SELECT value FROM json_each(${slugs}))
         AND ((c.website IS NOT NULL AND c.website <> '') OR (ce.website_url IS NOT NULL AND ce.website_url <> ''))
     `).map((r) => r.slug);
     console.log(`  [2/3] Firecrawl on ${websited.length} newly-websited ...`);
@@ -92,7 +92,7 @@ async function main() {
     run(`npx tsx scripts/backfill-display-score.ts --slugs=${list}`);
 
     markProcessed(slugs);
-    const nowIdx = (await sql`SELECT count(*) n FROM churches WHERE slug = ANY(${slugs}::text[]) AND display_score >= 45`)[0].n;
+    const nowIdx = (await sql`SELECT count(*) n FROM churches WHERE slug IN (SELECT value FROM json_each(${slugs})) AND display_score >= 45`)[0].n;
     cumIndexable += Number(nowIdx);
     console.log(`  Batch ${batchNo} done. crossed→indexable this batch: ${nowIdx}  cumulative: ${cumIndexable}`);
   }

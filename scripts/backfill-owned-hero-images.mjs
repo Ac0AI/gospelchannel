@@ -7,7 +7,8 @@ import { randomUUID } from "node:crypto";
 import { dirname, resolve } from "node:path";
 import { homedir, tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { readCrawlPayload } from "./lib/d1-crawl-payload.mjs";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import sharp from "sharp";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import {
@@ -85,12 +86,12 @@ const WEBP_QUALITY = 76;
 const MIN_CACHE_IMAGE_SCORE = 3;
 const REJECTED_IMAGE_KEYWORDS = /logo|icon|avatar|favicon|flag|badge|placeholder|dummy|default|spinner|loading|play-subscribe|menu|facebook|instagram|twitter|conference|event|poster|flyer|brochure|bulletin|guide|ghid|admit|admission|sermon|schedule|thumbnail|spacer|transparent|copy|small|lockup|billboard|artwork|pastor|text|series|pixel|screenshot|swish|vipps|paypal|stripe|klarna|bankid|qr/i;
 
-const DATABASE_URL = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
-if (!DATABASE_URL) {
-  throw new Error("Missing DATABASE_URL or DATABASE_URL_UNPOOLED");
+const GOSPEL_D1_DATABASE_ID = process.env.GOSPEL_D1_DATABASE_ID;
+if (!GOSPEL_D1_DATABASE_ID) {
+  throw new Error("Missing GOSPEL_D1_DATABASE_ID");
 }
 
-const sql = neon(DATABASE_URL);
+const sql = createD1ScriptSql();
 
 function getArgValue(flag, fallback = "") {
   const direct = process.argv.find((arg) => arg.startsWith(`${flag}=`));
@@ -622,12 +623,12 @@ function mediaUrlForSlug(slug, extension) {
 }
 
 async function updateHeroInDatabase(slug, mediaUrl) {
-  await sql`update churches set header_image = ${mediaUrl}, updated_at = now() where slug = ${slug}`;
+  await sql`update churches set header_image = ${mediaUrl}, updated_at = (unixepoch() * 1000) where slug = ${slug}`;
   await sql`
     insert into church_enrichments (church_slug, cover_image_url, updated_at)
-    values (${slug}, ${mediaUrl}, now())
+    values (${slug}, ${mediaUrl}, (unixepoch() * 1000))
     on conflict (church_slug)
-    do update set cover_image_url = excluded.cover_image_url, updated_at = now()
+    do update set cover_image_url = excluded.cover_image_url, updated_at = (unixepoch() * 1000)
   `;
 }
 
@@ -650,7 +651,10 @@ async function main() {
   const snapshot = structuredClone(churchesSnapshot);
   const snapshotBySlug = new Map(snapshot.map((church) => [church.slug, church]));
 
-  const rows = await sql`
+  const rows = [];
+  let cursor = "";
+  while (true) {
+    const page = await sql`
     select
       c.slug,
       c.name,
@@ -659,14 +663,19 @@ async function main() {
       c.header_image,
       e.website_url,
       e.cover_image_url,
+      e.id AS enrichment_id,
       e.raw_website_markdown,
       e.raw_crawled_pages
     from churches c
     left join church_enrichments e on e.church_slug = c.slug
-    where c.status = 'approved'
+    where c.status = 'approved' AND c.slug > ${cursor}
       and coalesce(nullif(trim(c.website), ''), nullif(trim(e.website_url), '')) is not null
-    order by c.slug
+    order by c.slug LIMIT 20
   `;
+    rows.push(...page);
+    if (page.length < 20) break;
+    cursor = page.at(-1).slug;
+  }
 
   const syncJobs = [];
   const fetchJobs = [];
@@ -695,6 +704,7 @@ async function main() {
       continue;
     }
 
+    row.raw_crawled_pages = await readCrawlPayload(sql, row.enrichment_id, row.raw_crawled_pages);
     fetchJobs.push({
       ...row,
       snapshotChurch,

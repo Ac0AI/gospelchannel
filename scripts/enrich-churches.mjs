@@ -19,7 +19,7 @@
  *   --limit=<n>         Max churches to process (default: all)
  *
  * Required env vars:
- *   NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SECRET_KEY
+ *   GOSPEL_D1_DATABASE_ID, CLOUDFLARE_ACCOUNT_ID, GOSPEL_D1_API_TOKEN
  *
  * Optional env vars:
  *   APIFY_TOKEN, FIRECRAWL_API_KEY, ANTHROPIC_API_KEY
@@ -31,7 +31,7 @@ process.on("uncaughtException", (err) => {
 
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import {
   loadChurchesForEnrichment,
@@ -72,7 +72,7 @@ async function main() {
   const limit = args.limit ? parseInt(args.limit, 10) : Infinity;
 
   // Validate required env
-  const required = ["DATABASE_URL"];
+  const required = ["GOSPEL_D1_DATABASE_ID"];
   for (const key of required) {
     if (!process.env[key]) {
       console.error(`Missing required env var: ${key}`);
@@ -96,7 +96,7 @@ async function main() {
     }
   }
 
-  const sql = neon(process.env.DATABASE_URL);
+  const sql = createD1ScriptSql();
 
   // Load churches
   console.log("Loading churches...");

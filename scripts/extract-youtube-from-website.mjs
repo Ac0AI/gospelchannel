@@ -27,7 +27,7 @@
 
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -159,12 +159,11 @@ async function loadTargets(sql, options) {
     return sql`
       SELECT slug, name, country, website, youtube_channel_id, youtube_searched_at
       FROM churches
-      WHERE slug = ANY(${options.slugs}::text[])
+      WHERE slug IN (SELECT value FROM json_each(${options.slugs}))
         AND status = 'approved'
     `;
   }
   if (options.daily) {
-    const recheckInterval = `${options.recheckAfterDays} days`;
     return sql`
       SELECT slug, name, country, website, youtube_channel_id, youtube_searched_at
       FROM churches
@@ -172,7 +171,7 @@ async function loadTargets(sql, options) {
         AND website IS NOT NULL
         AND youtube_channel_id IS NULL
         AND (youtube_searched_at IS NULL
-             OR youtube_searched_at < NOW() - ${recheckInterval}::interval)
+             OR youtube_searched_at < (unixepoch() * 1000) - ${options.recheckAfterDays * 86400000})
       ORDER BY youtube_searched_at NULLS FIRST, slug
       LIMIT ${options.dailyLimit}
     `;
@@ -190,11 +189,11 @@ async function loadTargets(sql, options) {
 }
 
 async function markSearched(sql, slug) {
-  await sql`UPDATE churches SET youtube_searched_at = NOW(), updated_at = NOW() WHERE slug = ${slug}`;
+  await sql`UPDATE churches SET youtube_searched_at = (unixepoch() * 1000), updated_at = (unixepoch() * 1000) WHERE slug = ${slug}`;
 }
 
 async function writeMatch(sql, slug, channelId) {
-  await sql`UPDATE churches SET youtube_channel_id = ${channelId}, youtube_searched_at = NOW(), updated_at = NOW() WHERE slug = ${slug}`;
+  await sql`UPDATE churches SET youtube_channel_id = ${channelId}, youtube_searched_at = (unixepoch() * 1000), updated_at = (unixepoch() * 1000) WHERE slug = ${slug}`;
 }
 
 /* ── Worker ── */
@@ -224,10 +223,10 @@ function normalizeWebsiteUrl(raw) {
 async function main() {
   loadLocalEnv(ROOT_DIR);
   const options = parseArgs(process.argv.slice(2));
-  if (!process.env.DATABASE_URL && !process.env.DATABASE_URL_UNPOOLED) {
-    throw new Error("Missing DATABASE_URL or DATABASE_URL_UNPOOLED");
+  if (!process.env.GOSPEL_D1_DATABASE_ID) {
+    throw new Error("Missing GOSPEL_D1_DATABASE_ID");
   }
-  const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+  const sql = createD1ScriptSql();
 
   const targets = await loadTargets(sql, options);
   console.log(`Targets: ${targets.length} churches`);

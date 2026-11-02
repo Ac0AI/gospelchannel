@@ -12,7 +12,7 @@
  * Cost-safe: ONE keyset-paginated read pass over approved churches LEFT JOIN
  * church_enrichments (lean columns only — never the raw_* blobs), CPU-only
  * scoring, one batched UPDATE pass. Never calls getChurchPublicPageData per
- * church (that fans out to many queries × 73k → GB+ Neon egress).
+ * church (that fans out to many queries × 73k → GB+ D1 egress).
  *
  * Usage:
  *   npx tsx scripts/backfill-display-score.ts --dry-run
@@ -22,7 +22,7 @@
 
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import {
   deriveDisplayAssessment,
@@ -40,15 +40,15 @@ import type { ChurchConfig } from "../src/types/gospel";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(resolve(__dirname, ".."));
 
-const DATABASE_URL = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
-if (!DATABASE_URL) throw new Error("Missing DATABASE_URL");
-const sql = neon(DATABASE_URL);
+const GOSPEL_D1_DATABASE_ID = process.env.GOSPEL_D1_DATABASE_ID;
+if (!GOSPEL_D1_DATABASE_ID) throw new Error("Missing GOSPEL_D1_DATABASE_ID");
+const sql = createD1ScriptSql();
 
 /**
  * Load every church_slug that has >=1 prayer in one query. The set lives in
  * memory for the duration of the backfill — small (hundreds-low-thousands),
  * far cheaper than per-row lookups. Mirrors src/lib/prayer.ts's
- * getChurchSlugsWithPrayersCached but reads through @neondatabase/serverless
+ * getChurchSlugsWithPrayersCached but reads through the D1 HTTP client
  * to avoid pulling the Worker cache machinery into a Node backfill.
  */
 async function loadPrayerSlugs(): Promise<Set<string>> {
@@ -232,7 +232,7 @@ async function main() {
           `SELECT ${SELECT_COLS}
            FROM churches c
            LEFT JOIN church_enrichments ce ON ce.church_slug = c.slug
-           WHERE c.status = 'approved' AND c.slug = ANY($1::text[])`,
+           WHERE c.status = 'approved' AND c.slug IN (SELECT value FROM json_each($1))`,
           [SLUGS],
         )) as Row[])
       : ((await sql.query(
@@ -249,6 +249,10 @@ async function main() {
 
     const updates: Array<{ slug: string; score: number }> = [];
     for (const r of rows) {
+      // These two joined columns have aliases, so the schema-based decoder
+      // cannot identify them by their original JSON field names.
+      if (typeof r.e_languages === "string") r.e_languages = JSON.parse(r.e_languages);
+      if (typeof r.e_service_times === "string") r.e_service_times = JSON.parse(r.e_service_times);
       const hasPrayers = prayerSlugs.has(r.slug);
       const score = scoreRow(r, hasPrayers);
       updates.push({ slug: r.slug, score });
@@ -277,7 +281,7 @@ async function main() {
     if (!DRY_RUN) {
       await sql.query(
         `UPDATE churches AS c SET display_score = d.score
-         FROM jsonb_to_recordset($1::jsonb) AS d(slug text, score int)
+         FROM (SELECT json_extract(value, '$.slug') AS slug, json_extract(value, '$.score') AS score FROM json_each($1)) AS d
          WHERE c.slug = d.slug`,
         [JSON.stringify(updates)],
       );

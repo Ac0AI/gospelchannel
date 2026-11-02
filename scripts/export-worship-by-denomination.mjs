@@ -2,7 +2,7 @@
 /**
  * Build the "worship by denomination" dataset: which worship songs churches of
  * each denomination actually sing, from real church-curated Spotify playlists
- * (playlist.church corpus) joined to directory denomination labels (Neon).
+ * (playlist.church corpus) joined to directory denomination labels (D1).
  *
  * These are two INDEPENDENT sources: denomination comes from directory/import
  * metadata; song adoption comes from the church's playlists. Nothing here is
@@ -12,10 +12,10 @@
  * not confounded by language (e.g. German-language congregations).
  *
  *   node scripts/export-worship-by-denomination.mjs /path/to/corpus.db
- * Writes src/data/worship-by-denomination-2026.json. Env: DATABASE_URL.
+ * Writes src/data/worship-by-denomination-2026.json. Env: GOSPEL_D1_DATABASE_ID.
  */
 import { DatabaseSync } from "node:sqlite";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -25,7 +25,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 loadLocalEnv(ROOT);
 const CORPUS = process.argv[2];
 if (!CORPUS) throw new Error("Usage: node scripts/export-worship-by-denomination.mjs <corpus.db path>");
-if (!process.env.DATABASE_URL) throw new Error("Missing DATABASE_URL");
+if (!process.env.GOSPEL_D1_DATABASE_ID) throw new Error("Missing GOSPEL_D1_DATABASE_ID");
 
 const ENGLISH = new Set(["United States", "USA", "United Kingdom", "Australia", "Canada", "Ireland", "New Zealand"]);
 const HYMN = /CityAlight|Getty|Sovereign Grace/i;         // modern-hymn houses
@@ -49,8 +49,8 @@ for (const r of rows) {
 }
 const slugs = [...churchGroups.keys()];
 
-const sql = neon(process.env.DATABASE_URL);
-const denomRows = await sql`SELECT slug, denomination FROM churches WHERE slug = ANY(${slugs})`;
+const sql = createD1ScriptSql();
+const denomRows = await sql`SELECT slug, denomination FROM churches WHERE slug IN (SELECT value FROM json_each(${slugs}))`;
 const famOf = (dRaw) => {
   const d = (dRaw || "").toLowerCase();
   if (!d) return null;

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createAdminClient } from '@/lib/neon-client';
+import { createAdminClient } from '@/lib/data-client';
 import { getServerUser } from '@/lib/auth/server';
 import { getChurchMembershipForUserAndSlug } from '@/lib/church-community';
 

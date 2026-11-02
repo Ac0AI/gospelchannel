@@ -18,7 +18,7 @@
  *   node scripts/fetch-youtube-videos-via-rss.mjs
  */
 
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadLocalEnv } from "./lib/local-env.mjs";
@@ -27,9 +27,9 @@ import { mapWithConcurrency, sleep } from "./lib/enrichment/rate-limiter.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(resolve(__dirname, ".."));
 
-const DATABASE_URL = process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED;
-if (!DATABASE_URL) { console.error("Missing DATABASE_URL"); process.exit(1); }
-const sql = neon(DATABASE_URL);
+const GOSPEL_D1_DATABASE_ID = process.env.GOSPEL_D1_DATABASE_ID;
+if (!GOSPEL_D1_DATABASE_ID) { console.error("Missing GOSPEL_D1_DATABASE_ID"); process.exit(1); }
+const sql = createD1ScriptSql();
 
 const UA = "Mozilla/5.0 (compatible; GospelChannelBot/1.0; +https://gospelchannel.com)";
 const DEFAULT_CONCURRENCY = 10;
@@ -113,7 +113,7 @@ async function main() {
     WHERE status = 'approved'
       AND youtube_channel_id IS NOT NULL AND youtube_channel_id != ''
   `;
-  if (!FORCE) query += ` AND (youtube_videos IS NULL OR jsonb_array_length(youtube_videos) = 0)`;
+  if (!FORCE) query += ` AND (youtube_videos IS NULL OR json_array_length(youtube_videos) = 0)`;
   query += ` ORDER BY slug`;
   if (LIMIT > 0) query += ` LIMIT ${LIMIT}`;
 
@@ -141,7 +141,7 @@ async function main() {
       }
 
       await sqlWithRetry(() => sql.query(
-        `UPDATE churches SET youtube_videos = $1::jsonb, updated_at = NOW() WHERE slug = $2`,
+        `UPDATE churches SET youtube_videos = $1, updated_at = (unixepoch() * 1000) WHERE slug = $2`,
         [JSON.stringify(videos), church.slug],
       ));
     } finally {

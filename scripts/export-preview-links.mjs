@@ -17,7 +17,7 @@
  */
 import pkg from "@next/env";
 const { loadEnvConfig } = pkg;
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { writeFileSync, mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 
@@ -30,7 +30,7 @@ const country = countryIdx !== -1 ? args[countryIdx + 1] : null;
 const outIdx = args.indexOf("--out");
 const outPath = outIdx !== -1 ? args[outIdx + 1] : "tmp/preview-links.csv";
 
-const sql = neon(process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL);
+const sql = createD1ScriptSql();
 
 const BASE_URL = "https://gospelchannel.com";
 

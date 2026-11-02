@@ -3,7 +3,7 @@ import { extractCity } from "@/lib/church-directory";
 import { getPublicHostLabel, isValidPublicUrl, normalizeDisplayText } from "@/lib/content-quality";
 import { getApprovedProfileEditsForChurch, buildMergedProfile, type PublicProfileEdit } from "@/lib/church-profile";
 import { getChurchBySlugAsync, getChurchDirectorySeedAsync } from "@/lib/content";
-import { createAdminClient, hasServiceConfig } from "@/lib/neon-client";
+import { createAdminClient, hasServiceConfig } from "@/lib/data-client";
 import { isOfflinePublicBuild } from "@/lib/runtime-mode";
 import type {
   ChurchConfig,

@@ -14,7 +14,7 @@ vi.mock("@/lib/church-community", () => ({
   getChurchMembershipForUserAndSlug: vi.fn(),
 }));
 
-vi.mock("@/lib/neon-client", () => ({
+vi.mock("@/lib/data-client", () => ({
   createAdminClient: vi.fn(() => ({
     storage: {
       from: () => ({

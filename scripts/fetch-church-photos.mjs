@@ -45,7 +45,7 @@ import { spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { tmpdir } from "node:os";
 import sharp from "sharp";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { offBrandCategory } from "./lib/place-categories.mjs";
 
@@ -202,17 +202,18 @@ async function main() {
   loadLocalEnv(ROOT_DIR);
   const o = parseArgs(process.argv.slice(2));
   const token = process.env.APIFY_TOKEN;
-  const dbUrl = process.env.DATABASE_URL;
+  const dbUrl = process.env.GOSPEL_D1_DATABASE_ID;
   if (!token) throw new Error("APIFY_TOKEN missing");
-  if (!dbUrl) throw new Error("DATABASE_URL missing");
-  const sql = neon(dbUrl);
+  if (!dbUrl) throw new Error("GOSPEL_D1_DATABASE_ID missing");
+  const sql = createD1ScriptSql();
 
-  const placeIdExpr = `COALESCE(NULLIF(e.google_place_id, ''), substring(e.google_maps_url from 'query_place_id=([^&]+)'))`;
+  const placeQuery = `substr(e.google_maps_url, instr(e.google_maps_url, 'query_place_id=') + 14)`;
+  const placeIdExpr = `COALESCE(NULLIF(e.google_place_id, ''), CASE WHEN instr(e.google_maps_url, 'query_place_id=') > 0 THEN nullif(substr(${placeQuery}, 1, instr(${placeQuery} || '&', '&') - 1), '') END)`;
   const rows = o.slugs.length > 0
     ? await sql.query(`
         SELECT c.slug, ${placeIdExpr} AS place_id
         FROM churches c JOIN church_enrichments e ON e.church_slug = c.slug
-        WHERE c.slug = ANY($1::text[])`, [o.slugs])
+        WHERE c.slug IN (SELECT value FROM json_each($1))`, [o.slugs])
     : await sql.query(`
         SELECT c.slug, ${placeIdExpr} AS place_id
         FROM churches c JOIN church_enrichments e ON e.church_slug = c.slug
@@ -221,11 +222,11 @@ async function main() {
           AND (e.raw_google_places->>'photoSkipped') IS NULL
           AND ${placeIdExpr} IS NOT NULL
           AND (
-            array_length(c.spotify_playlist_ids, 1) > 0
-            OR array_length(c.additional_playlists, 1) > 0
+            nullif(json_array_length(c.spotify_playlist_ids), 0) > 0
+            OR nullif(json_array_length(c.additional_playlists), 0) > 0
             OR (
               c.denomination IS NOT NULL AND length(c.denomination) > 0
-              AND NOT (c.denomination = ANY($1::text[]))
+              AND NOT (c.denomination IN (SELECT value FROM json_each($1)))
               AND c.display_score IS NOT NULL AND c.display_score >= $2
             )
           )
@@ -271,10 +272,9 @@ async function main() {
   async function stampSkipped(slugs, reason, detail) {
     await sql.query(`
       UPDATE church_enrichments
-      SET raw_google_places = COALESCE(raw_google_places, '{}'::jsonb)
-            || jsonb_build_object('photoSkipped', $1::text, 'photoSkippedDetail', $2::text),
-          updated_at = now()
-      WHERE church_slug = ANY($3::text[])`,
+      SET raw_google_places = json_set(COALESCE(raw_google_places, '{}'), '$.photoSkipped', $1, '$.photoSkippedDetail', $2),
+          updated_at = (unixepoch() * 1000)
+      WHERE church_slug IN (SELECT value FROM json_each($3))`,
       [reason, detail || "", slugs]);
   }
 
@@ -325,10 +325,9 @@ async function main() {
     for (const slug of slugs) {
       await sql.query(`
         UPDATE church_enrichments
-        SET photo_urls = $1::jsonb,
-            raw_google_places = COALESCE(raw_google_places, '{}'::jsonb)
-              || jsonb_build_object('imageUrls', $2::jsonb, 'imagesCount', COALESCE((raw_google_places->>'imagesCount')::int, $3::int)),
-            updated_at = now()
+        SET photo_urls = $1,
+            raw_google_places = json_set(COALESCE(raw_google_places, '{}'), '$.imageUrls', json($2), '$.imagesCount', COALESCE(CAST(raw_google_places->>'imagesCount' AS INTEGER), $3)),
+            updated_at = (unixepoch() * 1000)
         WHERE church_slug = $4`,
         [JSON.stringify(r2Urls), JSON.stringify(sourceUrls), item.imagesCount ?? sourceUrls.length, slug]);
       updated += 1;

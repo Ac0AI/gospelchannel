@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * Two-phase email backfill that minimizes Neon compute time.
+ * Two-phase email backfill that minimizes D1 compute time.
  *
- * Phase 1 (crawl): one short Neon read to load targets, disconnect, then
+ * Phase 1 (crawl): one short D1 read to load targets, disconnect, then
  * crawl every church website over plain HTTP, appending {slug, email|null}
- * to a local JSONL file. Zero Neon writes during this phase, which is
+ * to a local JSONL file. Zero D1 writes during this phase, which is
  * the long one (hours).
  *
- * Phase 2 (apply): re-open Neon for a single batched UPDATE that writes
+ * Phase 2 (apply): re-open D1 for a single batched UPDATE that writes
  * all found emails in one connection burst (seconds).
  *
  * Designed to be safe to resume: if interrupted, re-run skips slugs that
@@ -22,7 +22,7 @@
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { existsSync, readFileSync, appendFileSync } from "node:fs";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { isPlausibleContactEmail } from "./lib/website-contact.mjs";
 
@@ -126,7 +126,7 @@ async function fetchTargets(sql, limit) {
       AND (email IS NULL OR email = '')
       AND website IS NOT NULL AND website <> ''
     ORDER BY country, name
-    ${limit > 0 ? sql`LIMIT ${limit}` : sql``}
+    LIMIT ${limit > 0 ? limit : -1}
   `;
   return rows;
 }
@@ -187,23 +187,21 @@ async function applyPhase(sql, outputFile, dryRun) {
       if (r.email) matches.push({ slug: r.slug, email: r.email });
     } catch {}
   }
-  console.log(`\nPhase 2 (apply): ${matches.length} matches to write to Neon`);
+  console.log(`\nPhase 2 (apply): ${matches.length} matches to write to D1`);
   if (dryRun) { console.log("DRY RUN — not writing."); return; }
   if (matches.length === 0) return;
 
-  // Single Neon session, batched UNNEST UPDATE
+  // Bounded JSON batches avoid the D1 parameter limit
   const BATCH = 500;
   let written = 0;
   const startedAt = Date.now();
   for (let i = 0; i < matches.length; i += BATCH) {
     const slice = matches.slice(i, i + BATCH);
-    const slugs = slice.map((m) => m.slug);
-    const emails = slice.map((m) => m.email);
     await sql`
       UPDATE churches
-      SET email = data.email, updated_at = NOW()
+      SET email = data.email, updated_at = (unixepoch() * 1000)
       FROM (
-        SELECT * FROM UNNEST(${slugs}::text[], ${emails}::text[]) AS t(slug, email)
+        SELECT json_extract(value, '$.slug') AS slug, json_extract(value, '$.email') AS email FROM json_each(${JSON.stringify(slice)})
       ) AS data
       WHERE churches.slug = data.slug AND (churches.email IS NULL OR churches.email = '')
     `;
@@ -221,14 +219,14 @@ async function main() {
   const dryRun = process.argv.includes("--dry-run");
   const applyOnly = process.argv.includes("--apply-only");
 
-  if (!process.env.DATABASE_URL && !process.env.DATABASE_URL_UNPOOLED) {
-    throw new Error("Missing DATABASE_URL");
+  if (!process.env.GOSPEL_D1_DATABASE_ID) {
+    throw new Error("Missing GOSPEL_D1_DATABASE_ID");
   }
-  const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+  const sql = createD1ScriptSql();
 
   if (!applyOnly) {
     const targets = await fetchTargets(sql, limit);
-    console.log(`Fetched ${targets.length} targets from Neon (one query, then disconnect for crawl phase)`);
+    console.log(`Fetched ${targets.length} targets from D1 (one query, then disconnect for crawl phase)`);
     const alreadyProcessed = readProcessedSlugs(outputFile);
     await crawlPhase(targets, outputFile, alreadyProcessed);
   }

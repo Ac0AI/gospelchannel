@@ -1,4 +1,4 @@
-import { createAdminClient, hasServiceConfig } from '@/lib/neon-client';
+import { createAdminClient, hasServiceConfig } from '@/lib/data-client';
 import { getDb, getSql, schema } from '@/db';
 import type {
   ChurchProfileEdit,

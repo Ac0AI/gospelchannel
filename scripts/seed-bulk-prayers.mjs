@@ -11,11 +11,11 @@
  */
 import pkg from "@next/env";
 const { loadEnvConfig } = pkg;
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { randomUUID } from "crypto";
 
 loadEnvConfig(process.cwd());
-const sql = neon(process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL);
+const sql = createD1ScriptSql();
 
 const args = Object.fromEntries(
   process.argv.slice(2).map((a) => {
@@ -190,7 +190,7 @@ async function main() {
           ${p.name},
           ${Math.floor(Math.random() * 12)},
           true,
-          NOW() - (random() * interval '75 days')
+          (unixepoch() * 1000 - abs(random() % 6480000000))
         )
       `;
     } catch (e) {

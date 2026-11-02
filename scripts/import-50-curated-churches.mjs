@@ -17,11 +17,11 @@ import { loadLocalEnv } from "./lib/local-env.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(join(__dirname, ".."));
 
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 
-const sql = neon(process.env.DATABASE_URL);
+const sql = createD1ScriptSql();
 const DRY_RUN = process.argv.includes("--dry-run");
-const NOW = new Date().toISOString();
+const NOW = Date.now();
 
 function slugify(name) {
   return name
@@ -142,7 +142,7 @@ async function main() {
 
   // Check DB
   const slugs = CHURCHES.map((c) => slugify(c.name));
-  const existing = await sql`SELECT slug, name FROM churches WHERE slug = ANY(${slugs})`;
+  const existing = await sql`SELECT slug, name FROM churches WHERE slug IN (SELECT value FROM json_each(${slugs}))`;
   const existingSlugs = new Set(existing.map((r) => r.slug));
 
   if (existing.length > 0) {

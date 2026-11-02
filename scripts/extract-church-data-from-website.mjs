@@ -2,12 +2,12 @@
 /**
  * Two-phase rich extraction from church websites.
  *
- * Phase 1 (crawl): one short Neon read to load targets, then crawl every
+ * Phase 1 (crawl): one short D1 read to load targets, then crawl every
  * church website over plain HTTP, extracting email + phone + social URLs +
  * podcast + donate + service times. Appends results to a JSONL file. Zero
- * Neon writes during this phase.
+ * D1 writes during this phase.
  *
- * Phase 2 (apply): re-open Neon for a single batched UPSERT-style UPDATE
+ * Phase 2 (apply): re-open D1 for a single batched UPSERT-style UPDATE
  * that writes all extracted fields in one connection burst.
  *
  * Why this exists: we already pay the HTTP cost when crawling for emails.
@@ -26,7 +26,7 @@
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { existsSync, readFileSync, appendFileSync } from "node:fs";
-import { neon } from "@neondatabase/serverless";
+import { createD1ScriptSql } from "./lib/d1-sql.mjs";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { isPlausibleContactEmail } from "./lib/website-contact.mjs";
 import { detectTechnologies, pickPrimaryPlatform, getSalesAngle } from "./lib/website-platform.mjs";
@@ -262,7 +262,7 @@ async function fetchTargets(sql, limit) {
       AND website IS NOT NULL AND website <> ''
       AND website_extracted_at IS NULL
     ORDER BY country, name
-    ${limit > 0 ? sql`LIMIT ${limit}` : sql``}
+    LIMIT ${limit > 0 ? limit : -1}
   `;
 }
 
@@ -329,7 +329,7 @@ async function applyPhase(sql, outputFile, dryRun) {
   for (const r of records) {
     for (const k of Object.keys(stats)) if (r[k]) stats[k] += 1;
   }
-  console.log(`\nPhase 2 (apply): ${records.length} records to write to Neon`);
+  console.log(`\nPhase 2 (apply): ${records.length} records to write to D1`);
   console.log("Field hit counts:", stats);
 
   if (dryRun) { console.log("DRY RUN — not writing."); return; }
@@ -341,15 +341,6 @@ async function applyPhase(sql, outputFile, dryRun) {
 
   for (let i = 0; i < records.length; i += BATCH) {
     const slice = records.slice(i, i + BATCH);
-    const slugs = slice.map((r) => r.slug);
-    const emails = slice.map((r) => r.email || null);
-    const phones = slice.map((r) => r.phone || null);
-    const fbs = slice.map((r) => r.facebook_url || null);
-    const igs = slice.map((r) => r.instagram_url || null);
-    const tts = slice.map((r) => r.tiktok_url || null);
-    const aps = slice.map((r) => r.apple_podcast_url || null);
-    const dns = slice.map((r) => r.donate_url || null);
-    const sts = slice.map((r) => (r.service_times ? JSON.stringify(r.service_times) : null));
 
     await sql`
       UPDATE churches
@@ -361,21 +352,15 @@ async function applyPhase(sql, outputFile, dryRun) {
         tiktok_url = COALESCE(churches.tiktok_url, data.tt_v),
         apple_podcast_url = COALESCE(churches.apple_podcast_url, data.ap_v),
         donate_url = COALESCE(churches.donate_url, data.dn_v),
-        service_times = COALESCE(churches.service_times, data.st_v::jsonb),
-        website_extracted_at = NOW(),
-        updated_at = NOW()
+        service_times = COALESCE(churches.service_times, data.st_v),
+        website_extracted_at = (unixepoch() * 1000),
+        updated_at = (unixepoch() * 1000)
       FROM (
-        SELECT * FROM UNNEST(
-          ${slugs}::text[],
-          ${emails}::text[],
-          ${phones}::text[],
-          ${fbs}::text[],
-          ${igs}::text[],
-          ${tts}::text[],
-          ${aps}::text[],
-          ${dns}::text[],
-          ${sts}::text[]
-        ) AS t(slug, email_v, phone_v, fb_v, ig_v, tt_v, ap_v, dn_v, st_v)
+        SELECT json_extract(value, '$.slug') AS slug, json_extract(value, '$.email') AS email_v,
+          json_extract(value, '$.phone') AS phone_v, json_extract(value, '$.facebook_url') AS fb_v,
+          json_extract(value, '$.instagram_url') AS ig_v, json_extract(value, '$.tiktok_url') AS tt_v,
+          json_extract(value, '$.apple_podcast_url') AS ap_v, json_extract(value, '$.donate_url') AS dn_v,
+          json_extract(value, '$.service_times') AS st_v FROM json_each(${JSON.stringify(slice)})
       ) AS data
       WHERE churches.slug = data.slug
     `;
@@ -398,16 +383,16 @@ async function applyPhase(sql, outputFile, dryRun) {
             technologies, sales_angle, detection_version, last_checked_at, created_at, updated_at
           ) VALUES (
             ${r.slug}, ${r.final_url || null}, ${r.final_url || null}, 200, ${r.primary_platform || 'Unknown'},
-            ${r.technologies && r.technologies.length > 0 ? JSON.stringify(r.technologies) : '[]'}::jsonb,
-            ${r.sales_angle || null}, 1, NOW(), NOW(), NOW()
+            ${r.technologies && r.technologies.length > 0 ? JSON.stringify(r.technologies) : '[]'},
+            ${r.sales_angle || null}, 1, (unixepoch() * 1000), (unixepoch() * 1000), (unixepoch() * 1000)
           )
           ON CONFLICT (church_slug) DO UPDATE SET
             primary_platform = EXCLUDED.primary_platform,
             technologies = EXCLUDED.technologies,
             sales_angle = EXCLUDED.sales_angle,
             final_url = EXCLUDED.final_url,
-            last_checked_at = NOW(),
-            updated_at = NOW()
+            last_checked_at = (unixepoch() * 1000),
+            updated_at = (unixepoch() * 1000)
         `;
       }
       process.stdout.write(`\r  ${Math.min(i + BATCH, techRecords.length)}/${techRecords.length}`);
@@ -424,14 +409,14 @@ async function main() {
   const dryRun = process.argv.includes("--dry-run");
   const applyOnly = process.argv.includes("--apply-only");
 
-  if (!process.env.DATABASE_URL && !process.env.DATABASE_URL_UNPOOLED) {
-    throw new Error("Missing DATABASE_URL");
+  if (!process.env.GOSPEL_D1_DATABASE_ID) {
+    throw new Error("Missing GOSPEL_D1_DATABASE_ID");
   }
-  const sql = neon(process.env.DATABASE_URL || process.env.DATABASE_URL_UNPOOLED);
+  const sql = createD1ScriptSql();
 
   if (!applyOnly) {
     const targets = await fetchTargets(sql, limit);
-    console.log(`Fetched ${targets.length} targets from Neon`);
+    console.log(`Fetched ${targets.length} targets from D1`);
     const alreadyProcessed = readProcessedSlugs(outputFile);
     await crawlPhase(targets, outputFile, alreadyProcessed);
   }
