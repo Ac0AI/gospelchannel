@@ -399,7 +399,14 @@ async function fetchApprovedChurchesFromDb(): Promise<ChurchConfig[]> {
   );
 }
 
-async function fetchSingleChurchBySlug(slug: string): Promise<ChurchConfig | undefined> {
+/**
+ * The database knows this church but it is not public (archived, rejected or
+ * pending). Callers must not fall back to the bundled snapshot then, or a
+ * church removed in admin keeps its page from the build-time copy.
+ */
+export const HIDDEN_CHURCH = Symbol("hidden-church");
+
+async function fetchSingleChurchBySlug(slug: string): Promise<ChurchConfig | typeof HIDDEN_CHURCH | undefined> {
   if (isExplicitNonChurchSlug(slug)) {
     return undefined;
   }
@@ -410,7 +417,6 @@ async function fetchSingleChurchBySlug(slug: string): Promise<ChurchConfig | und
     .from("churches")
     .select("*")
     .eq("slug", slug)
-    .eq("status", "approved")
     .limit(1)
     .maybeSingle();
 
@@ -420,6 +426,10 @@ async function fetchSingleChurchBySlug(slug: string): Promise<ChurchConfig | und
 
   if (!churchRow) {
     return undefined;
+  }
+
+  if ((churchRow as { status?: string }).status !== "approved") {
+    return HIDDEN_CHURCH;
   }
 
   const { data: enrichmentRows } = await sb
@@ -886,6 +896,7 @@ export async function getChurchBySlugAsync(
 
   try {
     const church = await fetchSingleChurchBySlug(canonicalSlug);
+    if (church === HIDDEN_CHURCH) return undefined;
     if (church) return church;
     return getFallbackChurchMap().get(canonicalSlug);
   } catch (error) {
