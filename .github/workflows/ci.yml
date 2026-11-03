@@ -38,5 +38,8 @@ jobs:
       - name: Run tests
         run: pnpm exec vitest run
 
+      - name: Test deployment exit status
+        run: node --test scripts/__tests__/deploy-cloudflare.test.mjs
+
       - name: Run build
         run: pnpm build
