@@ -52,7 +52,7 @@
     "@opennextjs/cloudflare": "^1.19.11",
     "better-auth": "^1.3.7",
     "drizzle-orm": "^0.44.2",
-    "next": "16.2.9",
+    "next": "16.4.4",
     "posthog-js": "^1.363.1",
     "posthog-node": "^5.28.5",
     "react": "^19.2.4",
@@ -75,21 +75,24 @@
     "apify-client": "^2.22.2",
     "drizzle-kit": "^0.31.5",
     "eslint": "^9",
-    "eslint-config-next": "16.2.9",
+    "eslint-config-next": "16.4.4",
     "google-auth-library": "^10.6.1",
     "playwright": "^1.61.1",
-    "sharp": "^0.35.3",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4",
     "tsx": "^4.20.6",
     "typescript": "^5",
-    "vite": "^8.0.0",
+    "vite": "^8.3.5",
     "vitest": "^4.1.0",
     "wrangler": "^4.85.0",
     "xlsx": "^0.18.5"
   },
   "pnpm": {
     "overrides": {
-      "drizzle-orm>@neondatabase/serverless": "-"
+      "drizzle-orm>@neondatabase/serverless": "-",
+      "dompurify": "^3.4.17",
+      "protobufjs": "^7.5.5",
+      "proxy-addr": "^2.0.8"
     }
   }
 }
