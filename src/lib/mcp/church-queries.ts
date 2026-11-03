@@ -9,6 +9,10 @@
 import { unstable_cache } from "next/cache";
 import { getSql } from "@/db";
 import { INDEXABLE_ONBRAND_SCORE_MIN, OFF_BRAND_DENOMINATIONS } from "@/lib/content-quality";
+import { STYLE_FILTERS } from "@/lib/church-directory";
+import { DENOMINATIONS } from "@/lib/denomination-taxonomy";
+import { getChurchFamily } from "@/lib/search/church-families";
+import { understandQuery } from "@/lib/search/understand-query";
 
 const SITE_URL = "https://gospelchannel.com";
 const CACHE_SECONDS = 3600;
@@ -135,15 +139,47 @@ function indexableClause(c: string, denylistToken: string, scoreToken: string): 
   )`;
 }
 
+const likePatterns = (values: string[]) => values.map((value) => `%${value}%`);
+
+// "charismatic", "Pentecostal", "pingst", "evangelical": read with the same
+// vocabulary as the site search. A family matches any of its denominations or
+// its style signal; most charismatic churches are tagged Pentecostal, not
+// Charismatic. Returns null for words the vocabulary does not know.
+function conceptClause(p: (value: unknown) => string, raw: string, c: string): string | null {
+  const understood = understandQuery(raw);
+  const family = getChurchFamily(understood.familySlug);
+  if (family) {
+    const denominations = p(likePatterns(family.denominationPatterns));
+    const styles = p(likePatterns(family.stylePatterns));
+    return `AND (
+      EXISTS (SELECT 1 FROM json_each(${denominations}) d WHERE coalesce(${c}.denomination, '') LIKE d.value)
+      OR EXISTS (SELECT 1 FROM json_each(${styles}) s WHERE EXISTS (SELECT 1 FROM json_each(${c}.music_style) ms WHERE ms.value LIKE s.value))
+    )`;
+  }
+  const denomination = DENOMINATIONS.find((d) => d.slug === understood.denominationSlug);
+  if (denomination) {
+    return `AND EXISTS (SELECT 1 FROM json_each(${p(likePatterns(denomination.match))}) d WHERE coalesce(${c}.denomination, '') LIKE d.value)`;
+  }
+  const style = STYLE_FILTERS.find((filter) => filter.slug === understood.styleSlug);
+  if (style) {
+    return `AND EXISTS (SELECT 1 FROM json_each(${p(likePatterns(style.match))}) s WHERE EXISTS (SELECT 1 FROM json_each(${c}.music_style) ms WHERE ms.value LIKE s.value))`;
+  }
+  return null;
+}
+
 function buildFilters(p: (value: unknown) => string, filters: Filters, c = "c", e = "e"): string {
   const clauses: string[] = [];
-  if (filters.style) {
+  const styleConcept = filters.style ? conceptClause(p, filters.style, c) : null;
+  const denominationConcept = filters.denomination ? conceptClause(p, filters.denomination, c) : null;
+  if (styleConcept) clauses.push(styleConcept);
+  if (denominationConcept) clauses.push(denominationConcept);
+  if (filters.style && !styleConcept) {
     // Contains-match, not exact: stored values are phrases like "contemporary
     // worship", so a search for "contemporary" should still hit.
     const token = p(`%${filters.style}%`);
     clauses.push(`AND EXISTS (SELECT 1 FROM json_each(${c}.music_style) ms WHERE ms.value LIKE ${token})`);
   }
-  if (filters.denomination) {
+  if (filters.denomination && !denominationConcept) {
     const token = p(`%${filters.denomination}%`);
     clauses.push(`AND ${c}.denomination LIKE ${token}`);
   }

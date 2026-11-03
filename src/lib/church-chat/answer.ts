@@ -13,6 +13,8 @@ import {
 } from "@/lib/mcp/church-queries";
 import { getChurchSearchSuggestions } from "@/lib/search-suggestions";
 import { slugify } from "@/lib/slugify";
+import { resolvePlace } from "@/lib/search/resolve-place";
+import { tokenize } from "@/lib/search/text";
 import type { ServiceTime } from "@/types/gospel";
 import type { ChurchChatAnswer, ChurchChatCard, ChurchChatGuide, ChurchChatRequest } from "./types";
 
@@ -53,7 +55,8 @@ const FILTER_PROPERTIES = {
   },
   denomination: {
     type: "string",
-    description: "Preferred denomination, e.g. non-denominational, Baptist, Pentecostal, Assemblies of God.",
+    description:
+      "Preferred denomination or family, e.g. non-denominational, Baptist, Pentecostal, evangelical. \"charismatic\" also covers Pentecostal and Vineyard churches.",
   },
   language: { type: "string", description: "Preferred service language, e.g. English, Spanish." },
 } as const;
@@ -120,7 +123,16 @@ export type ChurchChatDeps = {
   findChurchesNear: typeof findChurchesNear;
   getChurchProfile: typeof getChurchProfile;
   getChurchSearchSuggestions: typeof getChurchSearchSuggestions;
+  /** Directory city slug for a misspelled or foreign-language city name ("stokholm", "Gothenburg"). */
+  resolveCitySlug?: (city: string) => Promise<string | null>;
 };
+
+async function resolveCitySlugFromDirectory(city: string): Promise<string | null> {
+  // Imported lazily: the lookup pulls in the whole directory module.
+  const { directoryPlaceLookup } = await import("@/lib/search/directory-place-lookup");
+  const place = await resolvePlace(tokenize(city), undefined, directoryPlaceLookup, { hasConcepts: true });
+  return place.city?.citySlug ?? null;
+}
 
 export function defaultChurchChatDeps(apiKey: string): ChurchChatDeps {
   const client = new Anthropic({ apiKey, maxRetries: 1, timeout: 25_000 });
@@ -130,6 +142,7 @@ export function defaultChurchChatDeps(apiKey: string): ChurchChatDeps {
     findChurchesNear,
     getChurchProfile,
     getChurchSearchSuggestions,
+    resolveCitySlug: resolveCitySlugFromDirectory,
   };
 }
 
@@ -259,7 +272,16 @@ async function runTool(
       const [cityPart, ...rest] = requested.split(",");
       const city = cityPart?.trim() || requested;
       const country = asString(input.country) ?? (rest.join(",").trim() || undefined);
-      const found = await deps.findChurchesInCity({ citySlug: slugify(city), limit: 20, ...filters });
+      let citySlug = slugify(city);
+      let found = await deps.findChurchesInCity({ citySlug, limit: 20, ...filters });
+      if (found.length === 0 && deps.resolveCitySlug) {
+        // "Gothenburg" is stored as Göteborg, typos never match a slug: resolve like the site search does.
+        const resolved = await deps.resolveCitySlug(city).catch(() => null);
+        if (resolved && resolved !== citySlug) {
+          citySlug = resolved;
+          found = await deps.findChurchesInCity({ citySlug, limit: 20, ...filters });
+        }
+      }
       const churches = filterByCountry(found, country).slice(0, MAX_CARDS);
       return {
         result: reply(describeForModel(churches)),

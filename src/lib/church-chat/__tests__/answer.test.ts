@@ -151,6 +151,23 @@ describe("answerChurchQuestion", () => {
     expect(answer.churches).toEqual([]);
   });
 
+  it("resolves a misspelled city through the directory when the slug finds nothing", async () => {
+    const toolUse = { type: "tool_use", id: "tu_1", name: "find_churches_in_city", input: { city: "Stokholm", worship_style: "charismatic" } };
+    const { deps } = makeDeps([
+      message([toolUse], "tool_use"),
+      message([{ type: "text", text: "Here is one." }], "end_turn"),
+    ]);
+    deps.findChurchesInCity = vi.fn(async ({ citySlug }) => (citySlug === "stockholm" ? [MADRID_CHURCH] : []));
+    deps.resolveCitySlug = vi.fn(async () => "stockholm");
+    const answer = await answerChurchQuestion(
+      { messages: [{ role: "user", text: "karismatiska kyrkor i stokholm" }], location: null },
+      deps,
+    );
+    expect(deps.resolveCitySlug).toHaveBeenCalledWith("Stokholm");
+    expect(deps.findChurchesInCity).toHaveBeenLastCalledWith(expect.objectContaining({ citySlug: "stockholm", worshipStyle: "charismatic" }));
+    expect(answer.churches).toHaveLength(1);
+  });
+
   it("answers a refusal with a plain line and no cards", async () => {
     const { deps } = makeDeps([message([], "refusal")]);
     const answer = await answerChurchQuestion(QUESTION, deps);
