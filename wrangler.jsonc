@@ -27,6 +27,33 @@
       "zone_name": "gospelchannel.com"
     }
   ],
+  // Self-reference so the ISR queue can ask this worker to rebuild a page.
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "gospelmigration"
+    }
+  ],
+  // OpenNext cache: background rebuild queue and the tag cache behind
+  // revalidateTag/revalidatePath (see open-next.config.ts).
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "NEXT_CACHE_DO_QUEUE",
+        "class_name": "DOQueueHandler"
+      },
+      {
+        "name": "NEXT_TAG_CACHE_DO_SHARDED",
+        "class_name": "DOShardedTagCache"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["DOQueueHandler", "DOShardedTagCache"]
+    }
+  ],
   "r2_buckets": [
     {
       "binding": "CHURCH_ASSETS",

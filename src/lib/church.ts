@@ -4,7 +4,7 @@ import { getChurchLatestUpdates } from "@/lib/church-updates";
 import { uniqueSpotifyPlaylistIds } from "@/lib/spotify-playlist";
 import type { ChurchProfileEdit, YouTubeVideo, ChurchEnrichment, ChurchProfileScore } from "@/types/gospel";
 import type { ChurchConfig } from "@/types/gospel";
-import { CHURCH_INDEX_TAG, getChurchBySlugAsync, getLocalChurchSnapshot } from "@/lib/content";
+import { CHURCH_INDEX_TAG, churchPageTag, getChurchBySlugAsync, getLocalChurchSnapshot } from "@/lib/content";
 import { getChurchFamily } from "@/lib/search/church-families";
 import { foldText } from "@/lib/search/text";
 import type { CountryCandidate, PlaceCandidate } from "@/lib/search/resolve-place";
@@ -1015,11 +1015,15 @@ async function _getChurchPublicPageData(slug: string) {
   };
 }
 
-export const getChurchPublicPageData = unstable_cache(
-  async (slug: string) => _getChurchPublicPageData(slug),
-  ["church-page-public"],
-  { revalidate: 3600, tags: ["church-page-public"] }
-);
+// The per-church tag lets revalidateChurchChange(slug) refresh one church
+// without expiring "church-page-public", which every church page carries.
+export function getChurchPublicPageData(slug: string) {
+  return unstable_cache(
+    async () => _getChurchPublicPageData(slug),
+    ["church-page-public", slug],
+    { revalidate: 3600, tags: ["church-page-public", churchPageTag(slug)] },
+  )();
+}
 
 /**
  * Read the precomputed reciprocal related-church assignment for a church and
@@ -2055,7 +2059,7 @@ export const getAllChurchFacetLinks = unstable_cache(
 /**
  * Cached count query — keyed on filter shape via the function args.
  * 1h TTL; invalidates with CHURCH_INDEX_TAG when an admin action fires
- * `revalidatePublicChurchContent()` in src/lib/content.ts.
+ * `revalidateChurchChange()` or `revalidatePublicChurchContent()` in src/lib/content.ts.
  */
 // Places for search interpretation (resolve-place.ts). One list per initial
 // letter, most churches first, cached for a day: typos are matched in code

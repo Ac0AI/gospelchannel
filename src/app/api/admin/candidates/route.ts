@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { requireAdminRoute } from "@/lib/admin-route";
 import { updateChurchDetails } from "@/lib/church-community";
-import { revalidatePublicChurchContent } from "@/lib/content";
+import { revalidateChurchChange } from "@/lib/content";
 
 export async function POST(request: NextRequest) {
   const admin = await requireAdminRoute(request);
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
 
   try {
     await updateChurchDetails(payload.slug, { name, website, email, location, country, headerImage });
-    revalidatePublicChurchContent();
+    revalidateChurchChange(payload.slug);
     return admin.json({ success: true });
   } catch (err) {
     return admin.json({ error: (err as Error).message }, { status: 500 });

@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { requireAdminRoute } from "@/lib/admin-route";
-import { revalidatePublicChurchContent } from "@/lib/content";
+import { revalidateChurchChange } from "@/lib/content";
 import { applyChurchFeedback, createChurchFromSuggestion, updateStatus } from "@/lib/church-community";
 
 const VALID_STATUSES_BY_TABLE = {
@@ -56,9 +56,11 @@ export async function POST(request: NextRequest) {
         payload.status
       );
     }
-    if (payload.table === "churches" || createdSlug || updatedChurchSlug) {
-      revalidatePublicChurchContent();
-    }
+    const changedSlugs = new Set(
+      [payload.table === "churches" ? payload.id : null, createdSlug, updatedChurchSlug]
+        .filter((slug): slug is string => Boolean(slug)),
+    );
+    for (const slug of changedSlugs) revalidateChurchChange(slug);
     return admin.json({ success: true, createdSlug, existingSlug, updatedChurchSlug });
   } catch (err) {
     return admin.json({ error: (err as Error).message }, { status: 500 });
