@@ -1,4 +1,5 @@
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
+import { createServer } from "node:net";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 
 const ROOT = process.cwd();
@@ -25,6 +26,22 @@ const PRIMARY_WARM_CONCURRENCY = 6;
 // Serialize them so the first chunk warms the R2 unstable_cache layer and the
 // rest hit it warm.
 const SITEMAP_WARM_CONCURRENCY = 2;
+
+const WORKER_NAME = "gospelmigration";
+// Sidor som måste svara 200 i den lokala kontrollen före trafik. Lokalt finns
+// ingen D1-data, men de här renderar ändå via ögonblicksbilderna. Den 3 nov 2026
+// gav en trasig build 500 + loadManifest på just dessa, både lokalt och live.
+const LOCAL_CHECK_PATHS = ["/robots.txt", "/", "/about", "/guides", "/church"];
+// Sidor som måste svara 200 live direkt efter att den nya versionen fått trafik.
+const SMOKE_PATHS = ["/", "/church", "/guides", "/robots.txt", "/sitemap.xml"];
+const SMOKE_ATTEMPTS = Number(process.env.DEPLOY_SMOKE_ATTEMPTS || 3);
+// Ge den nya versionen tid att nå ut innan livekontrollen, annars kan den svara
+// från den gamla och släppa igenom en trasig version.
+const SMOKE_DELAY_MS = Number(process.env.DEPLOY_SMOKE_DELAY_MS ?? 15000);
+const SMOKE_RETRY_MS = Number(process.env.DEPLOY_SMOKE_RETRY_MS ?? 5000);
+const LOCAL_CRASH_PATTERN = /loadManifest|Uncaught|error code: 1101/i;
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function runCommand(command, args, options = {}) {
   const result = spawnSync(command, args, {
@@ -191,6 +208,132 @@ async function prewarmSite() {
   }
 }
 
+async function checkPaths(baseUrl, paths) {
+  const failures = [];
+  for (const path of paths) {
+    try {
+      const response = await fetch(`${baseUrl}${path}`, { redirect: "follow" });
+      await response.arrayBuffer();
+      if (response.status !== 200) failures.push(`${response.status} ${path}`);
+    } catch (error) {
+      failures.push(`ERR ${path} (${error instanceof Error ? error.message : String(error)})`);
+    }
+  }
+  return failures;
+}
+
+function freePort() {
+  return new Promise((resolve, reject) => {
+    const server = createServer();
+    server.once("error", reject);
+    server.listen(0, "127.0.0.1", () => {
+      const { port } = server.address();
+      server.close(() => resolve(port));
+    });
+  });
+}
+
+// Kör den byggda Workern lokalt i workerd och kräver 200 på nyckelsidorna INNAN
+// något laddas upp. Fångar fel som bara syns när Workern körs (t.ex. en OpenNext
+// som inte känner till en ny Next-version), inte i next build.
+async function localCheckBeforeTraffic() {
+  if (process.env.DEPLOY_SKIP_LOCAL_CHECK === "1") {
+    console.warn("[deploy] Lokal kontroll överhoppad (DEPLOY_SKIP_LOCAL_CHECK=1).");
+    return;
+  }
+  let baseUrl = process.env.DEPLOY_LOCAL_CHECK_URL;
+  let child = null;
+  let log = "";
+  if (!baseUrl) {
+    const port = await freePort();
+    baseUrl = `http://127.0.0.1:${port}`;
+    child = spawn("pnpm", ["exec", "wrangler", "dev", "--local", "--ip", "127.0.0.1", "--port", String(port)], {
+      cwd: ROOT,
+      env: process.env,
+      detached: true,
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+    child.stdout.on("data", (chunk) => { log += chunk; });
+    child.stderr.on("data", (chunk) => { log += chunk; });
+  }
+
+  let ready = false;
+  for (let attempt = 0; attempt < 90 && !ready; attempt += 1) {
+    try {
+      await fetch(`${baseUrl}/robots.txt`);
+      ready = true;
+    } catch {
+      await sleep(1000);
+    }
+  }
+  const failures = ready ? await checkPaths(baseUrl, LOCAL_CHECK_PATHS) : ["lokala Workern startade inte"];
+  const crashed = LOCAL_CRASH_PATTERN.test(log);
+  if (child) {
+    try {
+      process.kill(-child.pid, "SIGTERM");
+    } catch {
+      // redan avslutad
+    }
+  }
+
+  if (failures.length > 0 || crashed) {
+    console.error("[deploy] Lokal kontroll föll. Inget har laddats upp och sajten är orörd.");
+    for (const failure of failures) console.error(`- ${failure}`);
+    if (crashed) console.error(`- workerd-loggen innehåller ${log.match(LOCAL_CRASH_PATTERN)?.[0]}`);
+    process.exit(1);
+  }
+  console.log(`[deploy] Lokal kontroll OK (${LOCAL_CHECK_PATHS.length} sidor i workerd).`);
+}
+
+// Den version som har trafik nu, så att en trasig deploy kan rullas tillbaka.
+function activeVersionId() {
+  const result = spawnSync("pnpm", ["exec", "wrangler", "deployments", "list", "--json"], {
+    cwd: ROOT,
+    encoding: "utf8",
+    env: process.env,
+  });
+  try {
+    const deployments = JSON.parse(result.stdout);
+    const latest = Array.isArray(deployments) ? deployments.at(-1) : null;
+    const versions = [...(latest?.versions ?? [])].sort((a, b) => b.percentage - a.percentage);
+    return versions[0]?.version_id ?? null;
+  } catch {
+    return null;
+  }
+}
+
+// Kontrollerar livesajten efter deployen och rullar automatiskt tillbaka till
+// föregående version om någon nyckelsida inte svarar 200.
+async function smokeCheckOrRollback(previousVersionId) {
+  if (SMOKE_DELAY_MS > 0) await sleep(SMOKE_DELAY_MS);
+  let failures = [];
+  for (let attempt = 1; attempt <= SMOKE_ATTEMPTS; attempt += 1) {
+    failures = await checkPaths(SITE_URL, SMOKE_PATHS);
+    if (failures.length === 0) {
+      console.log(`[deploy] Livekontroll OK (${SMOKE_PATHS.length} sidor).`);
+      return;
+    }
+    if (attempt < SMOKE_ATTEMPTS) await sleep(SMOKE_RETRY_MS);
+  }
+
+  console.error("[deploy] Livekontrollen föll efter deployen:");
+  for (const failure of failures) console.error(`- ${failure}`);
+  console.error(`[deploy] Rullar automatiskt tillbaka till ${previousVersionId} ...`);
+  const rollback = runCommand("pnpm", [
+    "exec", "wrangler", "rollback", previousVersionId, "--name", WORKER_NAME, "-y",
+    "--message", "Automatisk tillbakarullning: livekontrollen föll efter deploy",
+  ]);
+  if (rollback.status !== 0) {
+    console.error(`[deploy] TILLBAKARULLNINGEN MISSLYCKADES. Kör för hand: pnpm exec wrangler rollback ${previousVersionId} --name ${WORKER_NAME} -y`);
+  } else {
+    const after = await checkPaths(SITE_URL, SMOKE_PATHS);
+    console.error(after.length === 0
+      ? "[deploy] Tillbakarullad. Sajten svarar igen på den tidigare versionen."
+      : `[deploy] Tillbakarullad, men sajten svarar fortfarande fel: ${after.join(", ")}`);
+  }
+  process.exit(1);
+}
+
 function shouldSkipWarm() {
   return process.argv.slice(2).some((arg) => SKIP_WARM_FLAGS.has(arg));
 }
@@ -223,6 +366,21 @@ async function revalidateAfterDeploy() {
 console.log("[deploy] Building Cloudflare bundle...");
 assertSuccess(runCommand("pnpm", ["run", "cf:build"]), "cf:build");
 
+console.log("[deploy] Lokal kontroll i workerd före trafik...");
+await localCheckBeforeTraffic();
+
+if (process.argv.slice(2).includes("--check-only")) {
+  console.log("[deploy] --check-only: byggd och lokalt kontrollerad, inget uppladdat.");
+  process.exit(0);
+}
+
+const previousVersionId = activeVersionId();
+if (!previousVersionId) {
+  console.error("[deploy] Hittade inte den aktiva versionen (wrangler deployments list), så en trasig deploy kan inte rullas tillbaka. Avbryter.");
+  process.exit(1);
+}
+console.log(`[deploy] Aktiv version före deploy: ${previousVersionId}`);
+
 console.log("[deploy] Attempting OpenNext deploy...");
 const openNextDeploy = runCommand("pnpm", ["exec", "opennextjs-cloudflare", "deploy"]);
 
@@ -235,6 +393,8 @@ if (openNextDeploy.status !== 0) {
     "wrangler deploy",
   );
 }
+
+await smokeCheckOrRollback(previousVersionId);
 
 await revalidateAfterDeploy();
 
