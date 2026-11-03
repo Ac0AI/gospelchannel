@@ -83,7 +83,6 @@ function getAuth(): ReturnType<typeof betterAuth> {
       baseURL: getAuthBaseUrl(),
       trustedOrigins: getTrustedOrigins(),
       plugins: [
-        nextCookies(),
         emailOTP({
           disableSignUp: true,
           async sendVerificationOTP({ email, otp, type }) {
@@ -99,7 +98,17 @@ function getAuth(): ReturnType<typeof betterAuth> {
             await sendChurchAdminMagicLinkEmail({ email, url });
           },
         }),
+        // Sist: cookies som magic link och e-postkod sätter i sina after-hooks
+        // måste hinna fram till Next (better-auth 1.7 varnar annars).
+        nextCookies(),
       ],
+      // Cloudflare lägger besökarens IP i cf-connecting-ip. Utan den delar alla
+      // besökare en enda rate limit-hink per endpoint (better-auth 1.7 varnar).
+      advanced: {
+        ipAddress: {
+          ipAddressHeaders: ["cf-connecting-ip"],
+        },
+      },
       emailAndPassword: {
         enabled: true,
         disableSignUp: true,
