@@ -15,12 +15,16 @@ import {
 import {
   getChurchDirectoryFilterOptions,
   getChurchIndexPageData,
+  getChurchSearchCount,
   type ChurchDirectoryFilterOption,
 } from "@/lib/church";
 import { getChurchStatsAsync, getFreshestChurchUpdatedAtAsync } from "@/lib/content";
 import { buildBreadcrumbSchema } from "@/lib/seo-schema";
 import { serializeJsonLd } from "@/lib/json-ld";
 import { formatContentFreshness } from "@/lib/utils";
+import { describeSearch, interpretChurchSearch, relaxedSearches, type InterpretedSearch } from "@/lib/search/interpret-search";
+import { directoryPlaceLookup } from "@/lib/search/directory-place-lookup";
+import { getChurchFamily } from "@/lib/search/church-families";
 
 export const revalidate = 3600;
 
@@ -130,9 +134,12 @@ function buildPageHref(page: number, filters: ChurchDirectoryFilters): string {
   return qs ? `/church?${qs}` : "/church";
 }
 
-function buildActiveFilterLabels(filters: ChurchDirectoryFilters): string[] {
+function buildActiveFilterLabels(filters: ChurchDirectoryFilters, cityLabel?: string): string[] {
   const labels: string[] = [];
   if (filters.query) labels.push(`Area/search: ${filters.query}`);
+  if (filters.citySlug || filters.citySlugs?.length) labels.push(`City: ${cityLabel ?? filters.citySlug ?? filters.citySlugs?.[0]}`);
+  if (filters.familySlug) labels.push(getChurchFamily(filters.familySlug)?.label ?? filters.familySlug);
+  if (filters.terms?.length) labels.push(`Name: ${filters.terms.join(" ")}`);
   if (filters.country) labels.push(`Country: ${filters.country}`);
   if (filters.styleSlug) labels.push(getStyleFilterBySlug(filters.styleSlug)?.label ?? filters.styleSlug);
   if (filters.denominationSlug) labels.push(`${getDenominationFilterBySlug(filters.denominationSlug)?.label ?? filters.denominationSlug} tradition`);
@@ -223,33 +230,87 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
   const requestedPage = readPositivePage(params.page);
   const claimIntent = readStringParam(params.intent).trim().toLowerCase() === "claim";
 
-  const [{ churchCount, countryCount }, directoryPage, filterOptions, freshestChurchUpdatedAt] = await Promise.all([
+  // Free text like "karismatiska kyrkor i stokholm" becomes filters: church
+  // family, city, language, kids. Filters set in the URL win. ?exact=1 searches
+  // the literal text instead.
+  const exactSearch = readBoolParam(params.exact);
+  const interpretation =
+    query && !exactSearch
+      ? await interpretChurchSearch(query, directoryPlaceLookup).catch((error: unknown) => {
+          console.error("[church-search] interpretation failed, searching literally", error instanceof Error ? error.message : error);
+          return null;
+        })
+      : null;
+  const interpreted: InterpretedSearch | null = interpretation?.applied ? interpretation : null;
+  const explicitFilters = Object.fromEntries(
+    Object.entries({
+      styleSlug: filters.styleSlug,
+      denominationSlug: filters.denominationSlug,
+      country: filters.country,
+      language: filters.language,
+      hasKids: filters.hasKids,
+      hasServiceTimes: filters.hasServiceTimes,
+      hasMusic: filters.hasMusic,
+    }).filter(([, value]) => value !== undefined),
+  ) as Partial<ChurchDirectoryFilters>;
+  let effectiveFilters: ChurchDirectoryFilters = interpreted
+    ? { ...interpreted.filters, ...explicitFilters, query: "" }
+    : filters;
+
+  const loadDirectory = (active: ChurchDirectoryFilters) =>
+    Promise.all([
+      getChurchIndexPageData({
+        query: active.query ?? "",
+        filters: {
+          styleSlug: active.styleSlug,
+          denominationSlug: active.denominationSlug,
+          country: active.country,
+          language: active.language,
+          hasKids: active.hasKids,
+          hasServiceTimes: active.hasServiceTimes,
+          hasMusic: active.hasMusic,
+          citySlug: active.citySlug,
+          citySlugs: active.citySlugs,
+          familySlug: active.familySlug,
+          terms: active.terms,
+        },
+        page: requestedPage,
+        pageSize: PAGE_SIZE,
+      }),
+      query ? getChurchDirectoryFilterOptions(active) : Promise.resolve({ countries: [], languages: [] }),
+    ] as const);
+
+  const [{ churchCount, countryCount }, firstLoad, freshestChurchUpdatedAt] = await Promise.all([
     getChurchStatsAsync(),
-    getChurchIndexPageData({
-      query,
-      filters: {
-        styleSlug: filters.styleSlug,
-        denominationSlug: filters.denominationSlug,
-        country: filters.country,
-        language: filters.language,
-        hasKids: filters.hasKids,
-        hasServiceTimes: filters.hasServiceTimes,
-        hasMusic: filters.hasMusic,
-      },
-      page: requestedPage,
-      pageSize: PAGE_SIZE,
-    }),
-    query
-      ? getChurchDirectoryFilterOptions(filters)
-      : Promise.resolve({ countries: [], languages: [] }),
+    loadDirectory(effectiveFilters),
     getFreshestChurchUpdatedAtAsync(),
   ]);
+  let [directoryPage, filterOptions] = firstLoad;
+
+  // Nothing matched every condition ("engelskspråkig karismatisk kyrka i lund
+  // med barnverksamhet")? Drop the softest conditions one at a time and say so,
+  // rather than show an empty page. The place and the name words stay.
+  let widenedFrom: string | null = null;
+  if (interpreted && directoryPage.totalCount === 0) {
+    for (const step of relaxedSearches(interpreted.filters, new Set(Object.keys(explicitFilters)))) {
+      const candidate: ChurchDirectoryFilters = { ...step, ...explicitFilters, query: "" };
+      if ((await getChurchSearchCount(candidate).catch(() => 0)) === 0) continue;
+      widenedFrom = interpreted.summary;
+      effectiveFilters = candidate;
+      [directoryPage, filterOptions] = await loadDirectory(candidate);
+      break;
+    }
+  }
+  const widenedSummary = widenedFrom
+    ? describeSearch({ ...effectiveFilters, cityLabel: interpreted?.cityLabel })
+    : null;
   const { currentPage, totalCount, totalPages, pageItems } = directoryPage;
-  const activeFilterLabels = buildActiveFilterLabels(filters);
+  const activeFilterLabels = buildActiveFilterLabels(effectiveFilters, interpreted?.cityLabel);
   const hasActiveFilters = activeFilterLabels.length > 0;
   const directoryCount = hasActiveFilters ? totalCount : churchCount;
 
-  const searchSummary = query ? buildSearchSummary(query) : null;
+  const searchSummary = interpreted ? (widenedSummary ?? interpreted.summary) : query ? buildSearchSummary(query) : null;
+  const exactSearchHref = `/church?${new URLSearchParams({ q: query, exact: "1" }).toString()}`;
   const filterSummary = activeFilterLabels.join(", ");
   const showDecisionGuide = !hasActiveFilters && currentPage === 1;
   const countryOptions = withSelectedOption(filterOptions.countries, filters.country);
@@ -330,6 +391,26 @@ export default async function ChurchIndexPage({ searchParams }: ChurchIndexPageP
               <>Find your <em className="gc-italic">church</em>.</>
             )}
           </h1>
+          {interpreted ? (
+            <p className="mt-3 max-w-[760px] text-sm leading-relaxed text-warm-brown">
+              {widenedFrom ? (
+                <span>
+                  No listed church matches all of &ldquo;{widenedFrom}&rdquo; yet, so this shows the closest matches.{" "}
+                </span>
+              ) : null}
+              {interpreted.corrections.map((correction) => (
+                <span key={correction.from}>
+                  Showing <strong className="font-semibold text-espresso">{correction.to}</strong> for &ldquo;{correction.from}&rdquo;.{" "}
+                </span>
+              ))}
+              <Link
+                href={exactSearchHref}
+                className="font-semibold text-rose-gold underline transition-colors hover:text-rose-gold-deep"
+              >
+                Search the exact words &ldquo;{query}&rdquo; instead
+              </Link>
+            </p>
+          ) : null}
 
           {claimIntent ? (
             <p className="mt-4 max-w-[640px] text-base leading-relaxed text-warm-brown">

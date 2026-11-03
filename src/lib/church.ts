@@ -5,6 +5,9 @@ import { uniqueSpotifyPlaylistIds } from "@/lib/spotify-playlist";
 import type { ChurchProfileEdit, YouTubeVideo, ChurchEnrichment, ChurchProfileScore } from "@/types/gospel";
 import type { ChurchConfig } from "@/types/gospel";
 import { CHURCH_INDEX_TAG, getChurchBySlugAsync, getLocalChurchSnapshot } from "@/lib/content";
+import { getChurchFamily } from "@/lib/search/church-families";
+import { foldText } from "@/lib/search/text";
+import type { CountryCandidate, PlaceCandidate } from "@/lib/search/resolve-place";
 import { getSql, hasDatabaseConfig } from "@/db";
 import { CONTENT_UPDATED_AT, normalizeText, tokenSimilarity } from "@/lib/utils";
 import { hasServiceConfig, createAdminClient } from "@/lib/data-client";
@@ -1549,9 +1552,44 @@ function buildChurchIndexWhereClause(filters: ChurchDirectoryFilters) {
     }
   }
 
+  // Family from an interpreted search: any of its denominations OR its style signal.
+  const family = getChurchFamily(filters.familySlug);
+  if (family) {
+    params.push(getSqlLikePatterns(family.denominationPatterns));
+    const denominationIndex = params.length;
+    params.push(getSqlLikePatterns(family.stylePatterns));
+    const styleIndex = params.length;
+    clauses.push(`(
+      EXISTS (SELECT 1 FROM json_each($${denominationIndex}) pattern WHERE coalesce(denomination, '') LIKE pattern.value)
+      OR EXISTS (SELECT 1 FROM json_each($${styleIndex}) pattern WHERE coalesce((SELECT group_concat(value, ' ') FROM json_each(music_style)), '') LIKE pattern.value)
+    )`);
+  }
+
+  // Name words from an interpreted search: every word must appear somewhere, in
+  // the typed spelling or folded ("soderkyrkan" also as typed "söderkyrkan").
+  for (const term of (filters.terms ?? []).slice(0, 5)) {
+    const variants = Array.from(new Set([term, foldText(term)].filter((value) => value.length >= 2)));
+    if (variants.length === 0) continue;
+    params.push(getSqlLikePatterns(variants));
+    const index = params.length;
+    clauses.push(`EXISTS (SELECT 1 FROM json_each($${index}) pattern WHERE
+      name LIKE pattern.value
+      OR coalesce(location, '') LIKE pattern.value
+      OR coalesce(country, '') LIKE pattern.value
+      OR coalesce(denomination, '') LIKE pattern.value
+      OR coalesce(description, '') LIKE pattern.value
+      OR coalesce((SELECT group_concat(value, ' ') FROM json_each(aliases)), '') LIKE pattern.value
+    )`);
+  }
+
   if (filters.citySlug) {
     params.push(filters.citySlug);
     clauses.push(`city_slug = $${params.length}`);
+  }
+
+  if (filters.citySlugs?.length) {
+    params.push(filters.citySlugs);
+    clauses.push(`city_slug IN (SELECT value FROM json_each($${params.length}))`);
   }
 
   // Country facet: the facade resolves countrySlug → exact country string via
@@ -1565,7 +1603,7 @@ function buildChurchIndexWhereClause(filters: ChurchDirectoryFilters) {
   // Browse parity: the old in-memory filterChurchDirectory hides
   // displayReady === false when there is no search query ("When browsing, hide
   // churches that aren't display-ready"). Search mode shows all, as before.
-  if (!trimmedQuery) {
+  if (!trimmedQuery && !filters.terms?.length) {
     clauses.push("directory_ready IS NOT FALSE");
   }
 
@@ -2016,6 +2054,99 @@ export const getAllChurchFacetLinks = unstable_cache(
  * 1h TTL; invalidates with CHURCH_INDEX_TAG when an admin action fires
  * `revalidatePublicChurchContent()` in src/lib/content.ts.
  */
+// Places for search interpretation (resolve-place.ts). One list per initial
+// letter, most churches first, cached for a day: typos are matched in code
+// against the folded city name, since slugs keep no diacritics ("g-teborg").
+function localSearchCitiesByInitial(initial: string): PlaceCandidate[] {
+  const counts = new Map<string, PlaceCandidate>();
+  for (const church of getLocalChurchSnapshot()) {
+    const city = extractCity(church.location);
+    const citySlug = city ? slugify(city) : "";
+    if (!city || !citySlug.startsWith(initial)) continue;
+    const key = `${citySlug}|${church.country ?? ""}`;
+    const current = counts.get(key) ?? { citySlug, label: city, country: church.country ?? null, churchCount: 0 };
+    current.churchCount += 1;
+    counts.set(key, current);
+  }
+  return [...counts.values()].sort((a, b) => b.churchCount - a.churchCount);
+}
+
+async function fetchSearchCitiesByInitial(initial: string): Promise<PlaceCandidate[]> {
+  if (isOfflinePublicBuild() || !hasServiceConfig()) return localSearchCitiesByInitial(initial);
+  try {
+    return await querySearchCitiesByInitial(initial);
+  } catch (error) {
+    console.error("[church-search] city lookup failed, using local snapshot", error instanceof Error ? error.message : error);
+    return localSearchCitiesByInitial(initial);
+  }
+}
+
+async function querySearchCitiesByInitial(initial: string): Promise<PlaceCandidate[]> {
+  const sql = getSql();
+  const rows = (await sql.query(
+    `SELECT city_slug, max(location) AS location, country, count(*) AS church_count
+       FROM churches
+      WHERE status = 'approved' AND city_slug LIKE $1
+      GROUP BY city_slug, country
+      ORDER BY church_count DESC
+      LIMIT 3000`,
+    [`${initial}%`],
+  )) as Array<{ city_slug: string; location: string | null; country: string | null; church_count: number | string }>;
+  return rows.map((row) => ({
+    citySlug: row.city_slug,
+    label: extractCity(row.location ?? undefined) ?? row.location ?? row.city_slug,
+    country: row.country,
+    churchCount: toCount(row.church_count),
+  }));
+}
+
+function localSearchCountries(): CountryCandidate[] {
+  const counts = new Map<string, number>();
+  for (const church of getLocalChurchSnapshot()) {
+    if (church.country) counts.set(church.country, (counts.get(church.country) ?? 0) + 1);
+  }
+  return [...counts.entries()].map(([country, churchCount]) => ({ country, churchCount }));
+}
+
+async function fetchSearchCountries(): Promise<CountryCandidate[]> {
+  if (isOfflinePublicBuild() || !hasServiceConfig()) return localSearchCountries();
+  try {
+    return await querySearchCountries();
+  } catch (error) {
+    console.error("[church-search] country lookup failed, using local snapshot", error instanceof Error ? error.message : error);
+    return localSearchCountries();
+  }
+}
+
+async function querySearchCountries(): Promise<CountryCandidate[]> {
+  const sql = getSql();
+  const rows = (await sql.query(
+    `SELECT country, count(*) AS church_count FROM churches
+      WHERE status = 'approved' AND country IS NOT NULL AND country <> ''
+      GROUP BY country`,
+    [],
+  )) as Array<{ country: string; church_count: number | string }>;
+  return rows.map((row) => ({ country: row.country, churchCount: toCount(row.church_count) }));
+}
+
+export const getSearchCitiesByInitial = unstable_cache(fetchSearchCitiesByInitial, ["search-cities-by-initial-v1"], {
+  revalidate: 86_400,
+  tags: [CHURCH_INDEX_TAG],
+});
+
+export const getSearchCountries = unstable_cache(fetchSearchCountries, ["search-countries-v1"], {
+  revalidate: 86_400,
+  tags: [CHURCH_INDEX_TAG],
+});
+
+/** How many directory churches match these filters (cached like the /church page count). */
+export async function getChurchSearchCount(filters: ChurchDirectoryFilters): Promise<number> {
+  if (isOfflinePublicBuild() || !hasServiceConfig()) {
+    return getLocalChurchIndexPageData(filters, 1, 1).totalCount;
+  }
+  return getChurchIndexTotalCountCached(filters);
+}
+
 const getChurchIndexTotalCountCached = unstable_cache(
   async (filters: ChurchDirectoryFilters): Promise<number> => fetchChurchIndexTotalCount(filters),
   ["church-index-total-count-v1"],

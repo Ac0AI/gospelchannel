@@ -2,6 +2,8 @@ import type { ChurchConfig } from "@/types/gospel";
 import { slugify } from "@/lib/slugify";
 import { DENOMINATIONS } from "@/lib/denomination-taxonomy";
 import { languageValueMatches } from "@/lib/languages";
+import { matchesFamily } from "@/lib/search/church-families";
+import { foldText } from "@/lib/search/text";
 
 type ChurchDirectoryEnrichmentHint = {
   dataRichnessScore?: number;
@@ -54,6 +56,12 @@ export type ChurchDirectoryFilters = {
   hasKids?: boolean;
   hasServiceTimes?: boolean;
   hasMusic?: boolean;
+  /** A church family from an interpreted search ("charismatic", "evangelical"): several denominations plus a style signal. */
+  familySlug?: string;
+  /** Several slugs for one city stored under different names (Gothenburg/Göteborg). */
+  citySlugs?: string[];
+  /** Name words from an interpreted search. Each must appear somewhere (AND), unlike the literal `query` phrase. */
+  terms?: string[];
 };
 
 export type FacetLink = {
@@ -331,10 +339,11 @@ export function filterChurchDirectory(
   options: ChurchDirectoryFilters = {},
 ): ChurchDirectoryEntry[] {
   const query = options.query?.trim() ?? "";
+  const isSearching = Boolean(query || options.terms?.length || options.familySlug);
 
   // When actively searching, show all churches (even those without music).
   // When browsing (no query), hide churches that aren't display-ready.
-  let filtered = query
+  let filtered = isSearching
     ? churches
     : churches.filter((church) => church.displayReady !== false);
 
@@ -353,12 +362,36 @@ export function filterChurchDirectory(
     });
   }
 
+  if (options.citySlugs?.length) {
+    const slugs = new Set(options.citySlugs);
+    filtered = filtered.filter((church) => {
+      const city = extractCity(church.location);
+      return Boolean(city && slugs.has(slugify(city)));
+    });
+  }
+
   if (options.styleSlug) {
     filtered = filtered.filter((church) => matchesStyle(church.musicStyle, options.styleSlug!));
   }
 
   if (options.denominationSlug) {
     filtered = filtered.filter((church) => matchesDenomination(church.denomination, options.denominationSlug!));
+  }
+
+  if (options.familySlug) {
+    filtered = filtered.filter((church) => matchesFamily(church, options.familySlug!));
+  }
+
+  if (options.terms?.length) {
+    const terms = options.terms.map((term) => foldText(term)).filter(Boolean);
+    filtered = filtered.filter((church) => {
+      const haystack = foldText(
+        [church.name, church.location, church.country, church.denomination, church.description, ...(church.aliases ?? [])]
+          .filter(Boolean)
+          .join(" "),
+      );
+      return terms.every((term) => haystack.includes(term));
+    });
   }
 
   if (options.language) {

@@ -28,7 +28,7 @@ export type ChurchSearchSuggestion = {
 
 export type DecisionSearchSuggestion = {
   id: string;
-  type: "guide" | "compare" | "proof_route";
+  type: "guide" | "compare" | "proof_route" | "search";
   title: string;
   subtitle?: string;
   href: string;
