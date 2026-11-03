@@ -77,6 +77,14 @@ describe("understandQuery", () => {
   });
 });
 
+describe("displayCity", () => {
+  it("drops trailing punctuation and the region part", async () => {
+    const { displayCity } = await import("../resolve-place");
+    expect(displayCity("London.")).toBe("London");
+    expect(displayCity("Stockholm, Sweden")).toBe("Stockholm");
+  });
+});
+
 describe("resolvePlace", () => {
   it("handles Swedish letters, English names and typos for cities", async () => {
     expect((await interpret("pingst göteborg")).place.city?.citySlug).toBe("g-teborg");
@@ -119,5 +127,14 @@ describe("matchesFamily", () => {
     expect(matchesFamily({ denomination: "Lutheran", musicStyle: ["traditional"] }, "charismatic")).toBe(false);
     expect(matchesFamily({ denomination: "Baptist" }, "evangelical")).toBe(true);
     expect(matchesFamily({ denomination: "Catholic" }, "evangelical")).toBe(false);
+  });
+
+  it("keeps Armenian, Orthodox and New Apostolic churches out even when filed as Apostolic", () => {
+    expect(matchesFamily({ name: "Christ Apostolic Church", denomination: "Apostolic" }, "charismatic")).toBe(true);
+    expect(matchesFamily({ name: "Holy Cross Armenian Church", denomination: "Apostolic" }, "charismatic")).toBe(false);
+    expect(matchesFamily({ name: "Holy Cross Church of Armenia", denomination: "Armenian Apostolic" }, "charismatic")).toBe(false);
+    expect(matchesFamily({ name: "Neuapostolische Kirche", denomination: "New Apostolic" }, "charismatic")).toBe(false);
+    expect(matchesFamily({ name: "Holy Cross Armenian Church", denomination: "Apostolic" }, "evangelical")).toBe(false);
+    expect(matchesFamily({ name: "Armenian Evangelical Church", denomination: "Evangelical" }, "evangelical")).toBe(true);
   });
 });

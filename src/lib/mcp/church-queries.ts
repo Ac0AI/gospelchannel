@@ -151,10 +151,12 @@ function conceptClause(p: (value: unknown) => string, raw: string, c: string): s
   if (family) {
     const denominations = p(likePatterns(family.denominationPatterns));
     const styles = p(likePatterns(family.stylePatterns));
+    const excluded = p(likePatterns(family.excludePatterns));
     return `AND (
       EXISTS (SELECT 1 FROM json_each(${denominations}) d WHERE coalesce(${c}.denomination, '') LIKE d.value)
       OR EXISTS (SELECT 1 FROM json_each(${styles}) s WHERE EXISTS (SELECT 1 FROM json_each(${c}.music_style) ms WHERE ms.value LIKE s.value))
-    )`;
+    )
+    AND NOT EXISTS (SELECT 1 FROM json_each(${excluded}) x WHERE coalesce(${c}.denomination, '') LIKE x.value OR coalesce(${c}.name, '') LIKE x.value)`;
   }
   const denomination = DENOMINATIONS.find((d) => d.slug === understood.denominationSlug);
   if (denomination) {
