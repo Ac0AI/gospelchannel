@@ -79,6 +79,11 @@ const COUNTRY_ALIASES: Record<string, string> = {
   mexiko: "Mexico", indien: "India", kina: "China", japan: "Japan", sydkorea: "South Korea", korea: "South Korea",
 };
 
+/** "London." or "Stockholm, Sweden" as a heading shows it: "London", "Stockholm". */
+export function displayCity(label: string): string {
+  return (label.split(",")[0] ?? label).trim().replace(/[\s.;:]+$/, "") || label.trim();
+}
+
 function cityName(label: string): string {
   // Same convention as extractCity in church-directory.ts: the part before the first comma, folded.
   return foldText(label.split(",")[0]?.trim() || label);
@@ -198,7 +203,7 @@ export async function resolvePlace(
       if (city) {
         result.city = city.city;
         result.citySlugs = city.slugs;
-        if (!city.exact) result.corrections.push({ from: phrase.text, to: city.city.label.split(",")[0].trim() });
+        if (!city.exact) result.corrections.push({ from: phrase.text, to: displayCity(city.city.label) });
         matched = true;
       }
     }

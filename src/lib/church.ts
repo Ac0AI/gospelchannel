@@ -1559,10 +1559,13 @@ function buildChurchIndexWhereClause(filters: ChurchDirectoryFilters) {
     const denominationIndex = params.length;
     params.push(getSqlLikePatterns(family.stylePatterns));
     const styleIndex = params.length;
+    params.push(getSqlLikePatterns(family.excludePatterns));
+    const excludeIndex = params.length;
     clauses.push(`(
       EXISTS (SELECT 1 FROM json_each($${denominationIndex}) pattern WHERE coalesce(denomination, '') LIKE pattern.value)
       OR EXISTS (SELECT 1 FROM json_each($${styleIndex}) pattern WHERE coalesce((SELECT group_concat(value, ' ') FROM json_each(music_style)), '') LIKE pattern.value)
     )`);
+    clauses.push(`NOT EXISTS (SELECT 1 FROM json_each($${excludeIndex}) pattern WHERE coalesce(denomination, '') LIKE pattern.value OR coalesce(name, '') LIKE pattern.value)`);
   }
 
   // Name words from an interpreted search: every word must appear somewhere, in

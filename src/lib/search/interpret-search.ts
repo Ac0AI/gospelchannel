@@ -5,7 +5,7 @@
 import type { ChurchDirectoryFilters } from "@/lib/church-directory";
 import { getDenominationFilterBySlug, getStyleFilterBySlug } from "@/lib/church-directory";
 import { getChurchFamily } from "./church-families";
-import { resolvePlace, type PlaceLookup } from "./resolve-place";
+import { displayCity, resolvePlace, type PlaceLookup } from "./resolve-place";
 import { hasConcepts, understandQuery } from "./understand-query";
 
 export type InterpretedSearch = {
@@ -76,7 +76,7 @@ export async function interpretChurchSearch(query: string, lookup: PlaceLookup):
     ...(understood.hasServiceTimes ? { hasServiceTimes: true } : {}),
     ...(terms.length ? { terms } : {}),
   };
-  const cityLabel = place.city?.label.split(",")[0]?.trim();
+  const cityLabel = place.city ? displayCity(place.city.label) : undefined;
   const applied = concepts || Boolean(place.city || place.country);
   return {
     applied,
