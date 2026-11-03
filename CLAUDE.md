@@ -11,6 +11,17 @@ git push && pnpm run deploy
 
 Aldrig pusha utan att deploya - koden är inte live förrän den når Cloudflare.
 
+`pnpm run deploy` (`scripts/deploy-cloudflare.mjs`) gör i tur och ordning:
+
+1. Bygger (`cf:build`).
+2. **Lokal kontroll före trafik:** kör den byggda Workern i workerd (`wrangler dev --local`) och kräver 200 på `/robots.txt`, `/`, `/about`, `/guides` och `/church` samt att loggen inte innehåller `loadManifest`, `Uncaught` eller 1101. Faller kontrollen laddas inget upp. Lokalt finns ingen D1-data, men de sidorna renderar ändå via ögonblicksbilderna.
+3. Sparar vilken version som har trafik (`wrangler deployments list`). Utan den avbryts deployen.
+4. Deployar.
+5. **Livekontroll:** väntar 15 s och kräver sedan 200 på `/`, `/church`, `/guides`, `/robots.txt` och `/sitemap.xml`, med tre försök. Faller den rullar skriptet automatiskt tillbaka till den sparade versionen och avslutar med fel.
+6. Tömmer cachen (`/api/cron/sync?full=true`) och förvärmer.
+
+`pnpm run deploy -- --check-only` bygger och kör den lokala kontrollen utan att ladda upp något. Kör den före riskabla uppgraderingar (Next, OpenNext, wrangler). Den 3 nov 2026 gav Next 16.4.4 med OpenNext 1.19.11 error 1101 på alla sidor i cirka 15 minuter, eftersom deployen då kontrollerade först efteråt. Den lokala kontrollen fångar exakt det felet. Vid en nödsituation: `DEPLOY_SKIP_LOCAL_CHECK=1` hoppar över steg 2, men rollbacken i steg 5 ligger kvar.
+
 ## Stack
 
 - **Framework:** Next.js 16 (App Router, webpack via OpenNext)
