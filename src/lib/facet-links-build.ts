@@ -1,5 +1,5 @@
 import { getSql } from "@/db";
-import { fetchFacetRelatedLinks } from "@/lib/church";
+import { fetchChurchIndexTotalCount, fetchFacetRelatedLinks } from "@/lib/church";
 import { DENOMINATION_FILTERS, STYLE_FILTERS, type ChurchDirectoryFilters } from "@/lib/church-directory";
 import { FACET_RELATED_LIMITS, facetLinksToRows, type FacetLinkRow, type FacetLinkSourceKind } from "@/lib/facet-links";
 import { slugify } from "@/lib/slugify";
@@ -30,7 +30,8 @@ export async function computeFacetLinkRows(
   if (all.country.length === 0 || all.city.length === 0) {
     throw new Error("Whole-directory facet links came back empty; keeping the previous generation.");
   }
-  const rows = facetLinksToRows("all", "", all);
+  // Totals with the facet page's own filters (getChurchIndexPageData adds query: "").
+  const rows = facetLinksToRows("all", "", all, await fetchChurchIndexTotalCount({ query: "" }));
 
   const countries = await distinctCountries();
   const sources: Source[] = [
@@ -50,7 +51,8 @@ export async function computeFacetLinkRows(
     await pause();
     options.onSource?.(`${source.kind}:${source.slug}`);
     const links = await fetchFacetRelatedLinks(source.filters, FACET_RELATED_LIMITS[source.kind]);
-    rows.push(...facetLinksToRows(source.kind, source.slug, links));
+    const total = await fetchChurchIndexTotalCount({ ...source.filters, query: "" });
+    rows.push(...facetLinksToRows(source.kind, source.slug, links, total));
   }
   return { rows, sources: sources.length + 1 };
 }

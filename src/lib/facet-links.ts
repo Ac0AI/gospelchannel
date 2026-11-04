@@ -32,32 +32,43 @@ export const FACET_RELATED_LIMITS: Record<FacetKind, Partial<Record<TargetKind, 
   denomination: { country: 12, city: 12, style: 8 },
 };
 
+// A source's total church count is stored as one row with target_kind 'total'.
+const TOTAL_KIND = "total";
+
 export type FacetLinkRow = {
   sourceKind: FacetLinkSourceKind;
   sourceSlug: string;
-  targetKind: TargetKind;
+  targetKind: TargetKind | typeof TOTAL_KIND;
   position: number;
   targetSlug: string;
   label: string;
   count: number;
 };
 
+/**
+ * @param total the source's church count with the page's own filters
+ *   (fetchChurchIndexTotalCount), so pagination matches the listed rows.
+ */
 export function facetLinksToRows(
   sourceKind: FacetLinkSourceKind,
   sourceSlug: string,
   links: FacetRelatedLinks,
+  total: number,
 ): FacetLinkRow[] {
-  return TARGET_KINDS.flatMap((targetKind) =>
-    links[targetKind].map((link, position) => ({
-      sourceKind,
-      sourceSlug,
-      targetKind,
-      position,
-      targetSlug: link.slug,
-      label: link.label,
-      count: link.count,
-    })),
-  );
+  return [
+    { sourceKind, sourceSlug, targetKind: TOTAL_KIND, position: 0, targetSlug: "", label: "", count: total },
+    ...TARGET_KINDS.flatMap((targetKind) =>
+      links[targetKind].map((link, position) => ({
+        sourceKind,
+        sourceSlug,
+        targetKind,
+        position,
+        targetSlug: link.slug,
+        label: link.label,
+        count: link.count,
+      })),
+    ),
+  ];
 }
 
 function emptyLinks(): FacetRelatedLinks {
@@ -65,14 +76,14 @@ function emptyLinks(): FacetRelatedLinks {
 }
 
 /**
- * The precomputed links for one source, or null when there are none: the table
- * is not migrated yet, no build has run, or the source is newer than the last
- * build. Callers then compute the links live.
+ * The precomputed links and total for one source, or null when there are none:
+ * the table is not migrated yet, no build has run, or the source is newer than
+ * the last build. Callers then compute live.
  */
-export async function readFacetLinks(
+export async function readFacetData(
   sourceKind: FacetLinkSourceKind,
   sourceSlug: string,
-): Promise<FacetRelatedLinks | null> {
+): Promise<{ links: FacetRelatedLinks; total: number } | null> {
   const sql = getSql();
   let rows: Array<{ tk: string; ts: string; lbl: string; n: number }>;
   try {
@@ -95,7 +106,12 @@ export async function readFacetLinks(
   if (rows.length === 0) return null;
 
   const links = emptyLinks();
+  let total: number | null = null;
   for (const row of rows) {
+    if (row.tk === TOTAL_KIND) {
+      total = Number(row.n);
+      continue;
+    }
     const kind = row.tk as TargetKind;
     if (!TARGET_KINDS.includes(kind)) continue;
     const link: FacetLink = {
@@ -106,7 +122,8 @@ export async function readFacetLinks(
     };
     links[kind].push(link);
   }
-  return links;
+  // A generation without its total row is incomplete: compute live instead.
+  return total === null ? null : { links, total };
 }
 
 /**
