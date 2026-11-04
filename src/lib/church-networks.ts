@@ -207,10 +207,21 @@ export async function getNetworkCampuses(
   }
 }
 
-export async function getCampusBySlug(slug: string): Promise<ChurchCampusWithDetails | null> {
+/**
+ * strict (the church page): a failed lookup throws instead of returning null,
+ * and an earlier failure in this isolate (networkReadsUnavailable, a cached
+ * null) does not count as "no such campus". Otherwise one transient error
+ * turns every church page this isolate renders into a 404 that ISR keeps.
+ */
+export async function getCampusBySlug(
+  slug: string,
+  options: { strict?: boolean } = {},
+): Promise<ChurchCampusWithDetails | null> {
+  const strict = options.strict === true;
   const cached = getCachedValue(campusBySlugCache, slug);
-  if (cached !== undefined) return cached;
-  if (isOfflinePublicBuild() || !hasDatabaseConfig() || networkReadsUnavailable) return null;
+  if (cached !== undefined && !(strict && cached === null)) return cached;
+  if (isOfflinePublicBuild() || !hasDatabaseConfig()) return null;
+  if (networkReadsUnavailable && !strict) return null;
   try {
     const db = getDb();
 
@@ -237,6 +248,7 @@ export async function getCampusBySlug(slug: string): Promise<ChurchCampusWithDet
   } catch (error) {
     networkReadsUnavailable = true;
     logNetworkFallback("campus-by-slug", error);
+    if (strict) throw error;
     return setCachedValue(campusBySlugCache, slug, null);
   }
 }
