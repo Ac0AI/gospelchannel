@@ -1,7 +1,8 @@
 #!/usr/bin/env tsx
 
 /**
- * Builds the precomputed facet links (drizzle-d1/0005_facet_links.sql) that
+ * Builds the precomputed facet links (drizzle-d1/0005_facet_links.sql) and the
+ * site stats (app_kv 'site_stats', shown on every page) that
  * the country, style and denomination pages, the hub pages and the sitemap
  * read instead of aggregating over every church per request. Same SQL as the
  * pages used (fetchFacetRelatedLinks), so the numbers are identical.
@@ -19,6 +20,7 @@ import { fileURLToPath } from "node:url";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { computeFacetLinkRows } from "../src/lib/facet-links-build";
 import { writeFacetLinkGeneration } from "../src/lib/facet-links";
+import { writePrecomputedChurchStats } from "../src/lib/content";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(resolve(__dirname, ".."));
@@ -37,6 +39,8 @@ async function main() {
   const generation = new Date().toISOString();
   await writeFacetLinkGeneration(generation, rows);
   console.log(`  wrote generation ${generation}`);
+  const stats = await writePrecomputedChurchStats();
+  console.log(`  wrote site stats: ${stats.churchCount} churches in ${stats.countryCount} countries`);
 }
 
 main().catch((error) => {

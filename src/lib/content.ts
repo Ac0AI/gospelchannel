@@ -729,9 +729,46 @@ const getApprovedChurchDirectorySeedCached = cache(async (): Promise<ChurchDirec
   }
 });
 
+// Site stats ("N churches in M countries") are on every page, in the layout
+// metadata and the footer. Counting them reads every approved church, and
+// after a deploy every data cache is empty, so each of the first few dozen
+// concurrent page renders counted at once: the D1 overload right after the
+// deploy on 2026-11-04. The nightly build (scripts/build-facet-links.ts)
+// stores them in app_kv; pages read them with one primary-key lookup and
+// count live only when they are missing.
+const SITE_STATS_KEY = "site_stats";
+
+async function readPrecomputedChurchStats() {
+  const rows = (await getSql().query(
+    `SELECT json_extract(value, '$.churchCount') AS church_total, json_extract(value, '$.countryCount') AS country_total
+       FROM app_kv WHERE key = $1`,
+    [SITE_STATS_KEY],
+  )) as Array<{ church_total: number | null; country_total: number | null }>;
+  const row = rows[0];
+  if (!row || row.church_total == null || row.country_total == null) return null;
+  const churchCount = Number(row.church_total);
+  return {
+    churchCount,
+    churchCountLabel: formatChurchCountLabel(churchCount),
+    countryCount: Number(row.country_total),
+  };
+}
+
+/** Counts the site stats live and stores them for the pages (nightly build). */
+export async function writePrecomputedChurchStats(): Promise<{ churchCount: number; countryCount: number }> {
+  const { churchCount, countryCount } = await fetchApprovedChurchStatsFromDb();
+  await getSql().query(
+    `INSERT INTO app_kv (key, value, updated_at)
+     VALUES ($1, json_object('churchCount', $2, 'countryCount', $3), unixepoch() * 1000)
+     ON CONFLICT (key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at`,
+    [SITE_STATS_KEY, churchCount, countryCount],
+  );
+  return { churchCount, countryCount };
+}
+
 const getApprovedChurchStatsFromDbCached = unstable_cache(
-  async () => fetchApprovedChurchStatsFromDb(),
-  ["approved-church-stats-v3"],
+  async () => (await readPrecomputedChurchStats()) ?? fetchApprovedChurchStatsFromDb(),
+  ["approved-church-stats-v4-precomputed"],
   { revalidate: 3600, tags: [CHURCH_CONTENT_TAG, CHURCH_STATS_TAG] }
 );
 

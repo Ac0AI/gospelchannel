@@ -16,7 +16,7 @@ vi.mock("next/cache", () => ({ unstable_cache: (fn) => fn, revalidateTag: vi.fn(
 vi.mock("server-only", () => ({}));
 
 import { getChurchFacetPageData, getChurchIndexSummariesBySlugs, getChurchPublicPageData, getRelatedChurches } from "@/lib/church";
-import { getChurchDirectorySeedsBySlugs, getChurchNamesBySlugsAsync, getSitemapChurchSeedSliceAsync } from "@/lib/content";
+import { getChurchDirectorySeedsBySlugs, getChurchNamesBySlugsAsync, getChurchStatsAsync, getSitemapChurchSeedSliceAsync, writePrecomputedChurchStats } from "@/lib/content";
 import { writeFacetLinkGeneration } from "@/lib/facet-links";
 import { computeFacetLinkRows } from "@/lib/facet-links-build";
 
@@ -129,6 +129,18 @@ function unbounded(plans) {
 }
 
 describe("page queries are bounded by an index", () => {
+  it("site stats on every page read the precomputed row, and equal a live count", async () => {
+    const live = await plansFor(() => getChurchStatsAsync());
+    expect(unbounded(live).length).toBeGreaterThan(0); // before the nightly build: a count over every church
+    const written = await writePrecomputedChurchStats();
+    let stats;
+    const plans = await plansFor(async () => { stats = await getChurchStatsAsync(); });
+    expect(unbounded(plans)).toEqual([]);
+    expect(plans).toEqual([]); // app_kv only, nothing touches churches
+    expect({ churchCount: stats.churchCount, countryCount: stats.countryCount }).toEqual(written);
+    expect(written.churchCount).toBe(N - N / 40);
+  });
+
   it("church page and its related churches", async () => {
     const plans = await plansFor(async () => {
       await getChurchPublicPageData(churchSlug(123));

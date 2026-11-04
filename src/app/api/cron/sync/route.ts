@@ -51,7 +51,10 @@ export async function GET(request: NextRequest) {
   revalidateTag("video-catalog", "max");
   revalidateTag("discover", "max");
   const { churchCount } = await getChurchStatsAsync();
-  const updates = await refreshChurchUpdatesBatch();
+  // ?full=true is the cache flush the deploy runs right after going live, while
+  // every data cache is still empty: it must stay a flush. Refreshing church
+  // updates fetches sources and writes rows, which is the daily cron's job.
+  const updates = forceAll ? null : await refreshChurchUpdatesBatch();
 
   return NextResponse.json({
     ok: true,
