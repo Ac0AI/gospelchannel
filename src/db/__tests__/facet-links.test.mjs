@@ -145,4 +145,12 @@ describe("precomputed facet links", () => {
     context.failNext = { match: /count\(\*\) FILTER/, message: "D1_ERROR: no such column: nope" };
     await expect(computeFacetLinkRows({ retryDelaysMs: [0] })).rejects.toThrow(/no such column/);
   });
+
+  it("deletes old generations in slices until none are left", async () => {
+    const insert = db.prepare(`INSERT INTO facet_links (generation, source_kind, source_slug, target_kind, position, target_slug, label, count)
+      VALUES ('old', 'country', ?, 'city', 0, 'x', 'X', 1)`);
+    for (let i = 0; i < 4500; i += 1) insert.run(`old-${i}`);
+    await build();
+    expect(db.prepare(`SELECT count(*) AS n FROM facet_links WHERE generation = 'old'`).get().n).toBe(0);
+  });
 });

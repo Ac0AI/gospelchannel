@@ -37,7 +37,7 @@ async function main() {
   );
   if (DRY_RUN) return;
   const generation = new Date().toISOString();
-  await writeFacetLinkGeneration(generation, rows);
+  await writeFacetLinkGeneration(generation, rows, { pauseMs: 1000 });
   console.log(`  wrote generation ${generation}`);
   const stats = await writePrecomputedChurchStats();
   console.log(`  wrote site stats: ${stats.churchCount} churches in ${stats.countryCount} countries`);
