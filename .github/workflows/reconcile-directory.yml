@@ -15,8 +15,9 @@ name: Nightly directory reconciliation
 # Started at 02:33 UTC by the Worker cron (worker.ts → src/lib/reconcile-dispatch.ts),
 # because GitHub starts scheduled workflows hours late (5-7 h in November 2026)
 # and the job then ran in the middle of the day's traffic. The schedule below
-# stays as the fallback: it skips itself when a run already succeeded in the
-# last 20 hours, and runs (late) if the Worker dispatch ever stops working.
+# stays as the fallback: it skips itself when a run already succeeded since
+# 02:00 UTC the same day, and runs (late) if the Worker dispatch ever stops
+# working.
 on:
   schedule:
     - cron: '33 2 * * *'
@@ -41,14 +42,18 @@ jobs:
           EVENT: ${{ github.event_name }}
         run: |
           if [ "$EVENT" != "schedule" ]; then echo "skip=false" >> "$GITHUB_OUTPUT"; exit 0; fi
-          since=$(date -u -d '20 hours ago' +%Y-%m-%dT%H:%M:%SZ)
+          # Only a run from tonight's 02:33 slot counts. GitHub starts this
+          # schedule hours late but on the same UTC day, and a manual run the
+          # afternoon before must not stand in for tonight's (a rolling 20 h
+          # window let it, so a failed dispatch could skip the night).
+          since=$(date -u +%Y-%m-%dT02:00:00Z)
           recent=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow reconcile-directory.yml --status success \
-            --limit 10 --json createdAt -q "[.[] | select(.createdAt > \"$since\")] | length")
+            --limit 10 --json createdAt -q "[.[] | select(.createdAt >= \"$since\")] | length")
           if [ "${recent:-0}" -gt 0 ]; then
-            echo "Already reconciled in the last 20 h (started by the Worker cron); skipping the late schedule."
+            echo "Already reconciled since $since (started by the Worker cron); skipping the late schedule."
             echo "skip=true" >> "$GITHUB_OUTPUT"
           else
-            echo "No successful run in the last 20 h; the late schedule runs the reconcile."
+            echo "No successful run since $since; the late schedule runs the reconcile."
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
 
