@@ -47,6 +47,7 @@ import {
   type FacetLink,
 } from "@/lib/church-directory";
 import { slugify } from "@/lib/slugify";
+import { FACET_RELATED_LIMITS, readFacetLinks } from "@/lib/facet-links";
 import {
   formatLanguageLabel,
   getKnownLanguageDefinitions,
@@ -2043,22 +2044,16 @@ export async function fetchFacetRelatedLinks(
 }
 
 // Full facet sets (every country/city/style/denomination with >0 approved
-// churches, count-sorted) for the facet-index hub pages at /church/{kind}.
-// Same SQL aggregate the per-facet pages and the sitemap use; the result is
-// small so unstable_cache actually stores it. 1h TTL, CHURCH_INDEX_TAG.
+// churches, count-sorted) for the facet-index hub pages at /church/{kind} and
+// the sitemap. Read from the nightly precomputed set; computed live (the
+// whole-directory aggregate) only when that is missing. A failed read throws
+// rather than caching empty facets for an hour. 1h TTL, CHURCH_INDEX_TAG.
 export const getAllChurchFacetLinks = unstable_cache(
   async (): Promise<FacetRelatedLinks> => {
     if (isOfflinePublicBuild() || !hasServiceConfig()) {
       return { country: [], city: [], style: [], denomination: [] };
     }
-    try {
-      return await fetchFacetRelatedLinks({});
-    } catch (error) {
-      console.error(
-        `[facet-index] Falling back to empty facets: ${error instanceof Error ? error.message : String(error)}`,
-      );
-      return { country: [], city: [], style: [], denomination: [] };
-    }
+    return (await readFacetLinks("all", "")) ?? (await fetchFacetRelatedLinks({}));
   },
   ["all-church-facet-links-v1"],
   { revalidate: 3600, tags: [CHURCH_INDEX_TAG] },
@@ -2323,17 +2318,19 @@ export async function getChurchFacetPageData(input: {
     label = filter.label;
   }
 
-  // Per-kind related-link limits, matching what each page rendered before.
-  const limits: Record<FacetKind, { country?: number; city?: number; style?: number; denomination?: number }> = {
-    city: { country: 12, style: 8, denomination: 8 },
-    country: { city: 12, style: 8, denomination: 8 },
-    style: { country: 12, city: 12, denomination: 8 },
-    denomination: { country: 12, city: 12, style: 8 },
-  };
+  // Country, style and denomination links are aggregates over thousands of
+  // churches: read the nightly precomputed set (src/lib/facet-links.ts) and
+  // compute live only when it is missing. City links are bounded by the city
+  // (idx_churches_status_city_slug) and stay live.
+  const relatedLinksPromise = kind === "city"
+    ? fetchFacetRelatedLinks(filters, FACET_RELATED_LIMITS.city)
+    : readFacetLinks(kind, slug).then(
+      (links) => links ?? fetchFacetRelatedLinks(filters, FACET_RELATED_LIMITS[kind]),
+    );
 
   const [pageData, relatedLinks] = await Promise.all([
     getChurchIndexPageData({ filters, page: input.page, pageSize: input.pageSize }),
-    fetchFacetRelatedLinks(filters, limits[kind]),
+    relatedLinksPromise,
   ]);
 
   if (pageData.totalCount === 0) return null;
