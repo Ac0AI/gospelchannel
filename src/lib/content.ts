@@ -614,37 +614,80 @@ const getApprovedChurchDirectorySeedChunkCached = unstable_cache(
   { revalidate: 3600, tags: [CHURCH_CONTENT_TAG, CHURCH_INDEX_TAG] }
 );
 
-// Sitemap-ONLY church seed: same query + the isIndexableChurch filter.
-// SEPARATE cache keys so the shared
-// full directory seed (getChurchDirectorySeedAsync → prayer-filters /
-// prayerwall) stays UNFILTERED — filtering the shared path regressed prayer
-// sitemap parity (the gate caught it). count + chunk carry the SAME filter
-// so sitemap pagination stays consistent.
-const getSitemapChurchSeedCountCached = unstable_cache(
-  async (): Promise<number> => {
-    if (isOfflinePublicBuild() || !hasServiceConfig()) {
-      return getFallbackChurchDirectorySeed().length;
-    }
-    return fetchApprovedChurchDirectorySeedCountFromDb(true);
-  },
-  ["sitemap-church-seed-count-v3-official-reviews"],
+// Sitemap-ONLY church seed: the isIndexableChurch filter, in (name, slug)
+// order. SEPARATE from the shared full directory seed
+// (getChurchDirectorySeedAsync → prayer-filters / prayerwall), which stays
+// UNFILTERED — filtering the shared path regressed prayer sitemap parity.
+//
+// Keyset pagination: one pass over the indexable set gives the total and the
+// first (name, slug) of every chunk; each chunk is then an index range on
+// (status, name, slug) from its boundary. LIMIT/OFFSET re-read every earlier
+// row, so regenerating the sitemap was quadratic in the number of churches
+// and tripped D1's resource limit on 2026-11-04. Total and chunk boundaries
+// come from the same snapshot, and a chunk's cache key includes its boundary.
+type SitemapSeedBoundary = { name: string; slug: string };
+export type SitemapSeedIndex = { total: number; boundaries: SitemapSeedBoundary[] };
+
+export async function fetchSitemapChurchSeedIndexFromDb(
+  chunkSize = SITEMAP_CHURCH_SEED_CACHE_CHUNK_SIZE,
+): Promise<SitemapSeedIndex> {
+  const reviewedSlugs = await getIndexableOfficialReviewSlugsCached();
+  const rows = (await getSql().query(`
+    SELECT name, slug, total FROM (
+      SELECT name, slug,
+             row_number() OVER (ORDER BY name, slug) - 1 AS rn,
+             count(*) OVER () AS total
+        FROM churches
+       WHERE status = 'approved'
+         AND NOT (slug IN (SELECT value FROM json_each($1)))
+         ${indexableSeedClause("$2", "$3", "$4")}
+    )
+    WHERE rn % $5 = 0
+    ORDER BY name, slug
+  `, [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS, [...OFF_BRAND_DENOMINATIONS], INDEXABLE_ONBRAND_SCORE_MIN, reviewedSlugs, chunkSize],
+  )) as Array<{ name: string; slug: string; total: number | string }>;
+  return {
+    total: Number(rows[0]?.total ?? 0),
+    boundaries: rows.map(({ name, slug }) => ({ name, slug })),
+  };
+}
+
+export async function fetchSitemapChurchSeedChunkFromDb(
+  boundary: SitemapSeedBoundary,
+  chunkSize = SITEMAP_CHURCH_SEED_CACHE_CHUNK_SIZE,
+): Promise<ChurchDirectorySeed[]> {
+  const reviewedSlugs = await getIndexableOfficialReviewSlugsCached();
+  const rawRows = (await getSql().query(`
+    WITH ranked AS (
+      SELECT slug
+        FROM churches
+       WHERE status = 'approved'
+         AND (name, slug) >= ($5, $6)
+         AND NOT (slug IN (SELECT value FROM json_each($1)))
+         ${indexableSeedClause("$2", "$3", "$4")}
+       ORDER BY name, slug
+       LIMIT $7
+    )
+    SELECT c.slug, c.name, c.country, c.location, c.music_style, c.denomination, c.updated_at
+      FROM ranked r
+      JOIN churches c ON c.slug = r.slug
+     ORDER BY c.name, c.slug
+  `, [CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS, [...OFF_BRAND_DENOMINATIONS], INDEXABLE_ONBRAND_SCORE_MIN, reviewedSlugs,
+    boundary.name, boundary.slug, chunkSize],
+  )) as ChurchDirectorySeedRow[];
+  return rawRows.map(mapRowToChurchDirectorySeed);
+}
+
+const getSitemapChurchSeedIndexCached = unstable_cache(
+  async (): Promise<SitemapSeedIndex> => fetchSitemapChurchSeedIndexFromDb(),
+  ["sitemap-church-seed-index-v1"],
   { revalidate: 3600, tags: [CHURCH_CONTENT_TAG, CHURCH_INDEX_TAG] }
 );
 
 const getSitemapChurchSeedChunkCached = unstable_cache(
-  async (chunkIndex: number): Promise<ChurchDirectorySeed[]> => {
-    if (isOfflinePublicBuild() || !hasServiceConfig()) {
-      const snapshot = getFallbackChurchDirectorySeed();
-      const offset = chunkIndex * SITEMAP_CHURCH_SEED_CACHE_CHUNK_SIZE;
-      return snapshot.slice(offset, offset + SITEMAP_CHURCH_SEED_CACHE_CHUNK_SIZE);
-    }
-    return fetchApprovedChurchDirectorySeedChunkFromDb(
-      chunkIndex,
-      true,
-      SITEMAP_CHURCH_SEED_CACHE_CHUNK_SIZE,
-    );
-  },
-  ["sitemap-church-seed-chunk-v4-official-reviews-small"],
+  async (_chunkIndex: number, name: string, slug: string): Promise<ChurchDirectorySeed[]> =>
+    fetchSitemapChurchSeedChunkFromDb({ name, slug }),
+  ["sitemap-church-seed-chunk-v5-keyset"],
   { revalidate: 3600, tags: [CHURCH_CONTENT_TAG, CHURCH_INDEX_TAG] }
 );
 
@@ -792,7 +835,10 @@ export async function getChurchDirectorySeedCountAsync(): Promise<number> {
 // getChurchDirectorySeed{Count,Slice}Async above stay UNFILTERED for
 // prayer-filters / prayerwall — do not swap these.
 export async function getSitemapChurchSeedCountAsync(): Promise<number> {
-  return getSitemapChurchSeedCountCached();
+  if (isOfflinePublicBuild() || !hasServiceConfig()) {
+    return getFallbackChurchDirectorySeed().length;
+  }
+  return (await getSitemapChurchSeedIndexCached()).total;
 }
 
 export async function getSitemapChurchSeedSliceAsync(
@@ -811,8 +857,14 @@ export async function getSitemapChurchSeedSliceAsync(
     { length: lastChunkIndex - firstChunkIndex + 1 },
     (_, index) => firstChunkIndex + index,
   );
+  const { boundaries } = await getSitemapChurchSeedIndexCached();
   const rows = await Promise.all(
-    chunkIndexes.map((chunkIndex) => getSitemapChurchSeedChunkCached(chunkIndex)),
+    chunkIndexes.map((chunkIndex) => {
+      const boundary = boundaries[chunkIndex];
+      return boundary
+        ? getSitemapChurchSeedChunkCached(chunkIndex, boundary.name, boundary.slug)
+        : Promise.resolve([] as ChurchDirectorySeed[]);
+    }),
   );
   const flattened = rows.flat();
   const chunkStartOffset = firstChunkIndex * SITEMAP_CHURCH_SEED_CACHE_CHUNK_SIZE;
