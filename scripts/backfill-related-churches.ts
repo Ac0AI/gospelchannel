@@ -38,7 +38,7 @@ import { fileURLToPath } from "node:url";
 import { loadLocalEnv } from "./lib/local-env.mjs";
 import { INDEXABLE_DISPLAY_SCORE_MIN } from "../src/lib/content-quality";
 import { createD1Client } from "./lib/cloudflare-d1.mjs";
-import { readRelatedCandidates, writeRelatedRows } from "./lib/d1-directory.mjs";
+import { changedRelatedRows, readRelatedCandidates, writeRelatedRows } from "./lib/d1-directory.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 loadLocalEnv(resolve(__dirname, ".."));
@@ -59,6 +59,7 @@ type Row = {
   display_score: number | null;
   music_style: string[] | null;
   denomination: string | null;
+  related_church_slugs: string[] | null;
   latitude: number | null;
   longitude: number | null;
 };
@@ -339,8 +340,12 @@ async function main() {
     return;
   }
 
-  // JSON arrays preserve each related slug exactly.
-  const updates = [...emit.entries()].map(([slug, related]) => ({ slug, related }));
+  // JSON arrays preserve each related slug exactly. Write only the lists that
+  // changed since the last run.
+  const allUpdates = [...emit.entries()].map(([slug, related]) => ({ slug, related }));
+  const currentBySlug = new Map(rows.map((row) => [row.slug, row.related_church_slugs]));
+  const updates = changedRelatedRows(currentBySlug, allUpdates);
+  console.log(`  ${allUpdates.length - updates.length} unchanged, ${updates.length} to write`);
   let written = 0;
   for (let i = 0; i < updates.length; i += BATCH) {
     const slice = updates.slice(i, i + BATCH);
