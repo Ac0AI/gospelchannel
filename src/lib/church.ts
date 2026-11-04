@@ -2253,9 +2253,13 @@ export async function getChurchIndexPageData(input: {
       pageItems,
     };
   } catch (error) {
+    // No snapshot fallback here: the bundled snapshot is a few thousand
+    // churches from build time, and a listing rendered from it answers 200, so
+    // the worker's edge cache kept it for a day (seen on 2026-11-04 when D1
+    // was overloaded). An error is not cached; the next request reads live.
     const detail = error instanceof Error ? error.message : String(error);
-    console.error(`[church-index-page] Falling back to local snapshot: ${detail}`);
-    return getLocalChurchIndexPageData(filters, requestedPage, input.pageSize);
+    console.error(`[church-index-page] Database read failed: ${detail}`);
+    throw error;
   }
 }
 

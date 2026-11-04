@@ -80,3 +80,11 @@ describe("getCampusBySlug when the database read fails", () => {
     expect(campusQuery).toHaveBeenCalledTimes(2);
   });
 });
+
+describe("directory listings when the database read fails", () => {
+  it("throw instead of rendering the bundled snapshot as a 200", async () => {
+    const { getChurchIndexPageData } = await import("../church");
+    await expect(getChurchIndexPageData({ filters: { citySlug: "stockholm" }, page: 1, pageSize: 24 }))
+      .rejects.toThrow("overloaded");
+  });
+});
