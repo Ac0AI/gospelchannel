@@ -845,7 +845,7 @@ export const getChurchPageData = getChurchPagePayload;
 async function _getChurchPublicPageData(slug: string) {
   const totalStart = performance.now();
   const timings: ChurchTimingMap = {};
-  const church = await measureChurchStep(timings, "public.base", () => getChurchBySlugAsync(slug));
+  const church = await measureChurchStep(timings, "public.base", () => getChurchBySlugAsync(slug, { strict: true }));
 
   const [enrichment, edits, topSongs] = await Promise.all([
     measureChurchStep(timings, "public.enrichment", () => getChurchEnrichment(slug)),
@@ -923,7 +923,7 @@ async function _getChurchPublicPageData(slug: string) {
     };
   }
 
-  const campus = await measureChurchStep(timings, "public.campus_lookup", () => getCampusBySlug(slug));
+  const campus = await measureChurchStep(timings, "public.campus_lookup", () => getCampusBySlug(slug, { strict: true }));
   if (!campus) return null;
 
   const parentChurch = campus.network.parentChurchSlug

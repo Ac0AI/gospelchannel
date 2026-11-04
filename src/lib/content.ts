@@ -886,7 +886,8 @@ export function getLocalChurchSnapshot(): ChurchConfig[] {
  * Get a single approved church by slug from the public source of truth.
  */
 export async function getChurchBySlugAsync(
-  slug: string
+  slug: string,
+  options: { strict?: boolean } = {},
 ): Promise<ChurchConfig | undefined> {
   const canonicalSlug = resolveCanonicalChurchSlug(slug);
 
@@ -901,7 +902,12 @@ export async function getChurchBySlugAsync(
     return getFallbackChurchMap().get(canonicalSlug);
   } catch (error) {
     logChurchSnapshotFallback(`church-by-slug:${canonicalSlug}`, error);
-    return getFallbackChurchMap().get(canonicalSlug);
+    const fallback = getFallbackChurchMap().get(canonicalSlug);
+    // strict (the church page): a failed query must not read as "no such
+    // church". Undefined would render a 404 that ISR keeps for a day, so a
+    // church newer than the snapshot rethrows and the next visit retries.
+    if (!fallback && options.strict) throw error;
+    return fallback;
   }
 }
 
