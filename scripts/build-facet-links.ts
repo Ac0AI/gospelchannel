@@ -27,7 +27,7 @@ const DRY_RUN = process.argv.includes("--dry-run");
 async function main() {
   const started = Date.now();
   console.log(`build-facet-links  ${DRY_RUN ? "DRY-RUN" : "WRITE"}`);
-  const { rows, sources } = await computeFacetLinkRows({ pauseMs: 1000 });
+  const { rows, sources } = await computeFacetLinkRows({ pauseMs: 3000 });
   const all = rows.filter((row) => row.sourceKind === "all");
   console.log(
     `  ${sources} sources, ${rows.length} rows (whole directory: ${all.filter((r) => r.targetKind === "city").length} cities, ` +
