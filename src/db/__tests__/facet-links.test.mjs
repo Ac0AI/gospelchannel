@@ -11,8 +11,8 @@ vi.mock("@opennextjs/cloudflare", () => ({ getCloudflareContext: () => ({ env: {
 vi.mock("next/cache", () => ({ unstable_cache: (fn) => fn, revalidateTag: vi.fn() }));
 vi.mock("server-only", () => ({}));
 
-import { fetchFacetRelatedLinks, getAllChurchFacetLinks, getChurchFacetPageData } from "@/lib/church";
-import { FACET_RELATED_LIMITS, readFacetLinks, writeFacetLinkGeneration } from "@/lib/facet-links";
+import { fetchChurchIndexTotalCount, fetchFacetRelatedLinks, getAllChurchFacetLinks, getChurchFacetPageData } from "@/lib/church";
+import { FACET_RELATED_LIMITS, readFacetData, writeFacetLinkGeneration } from "@/lib/facet-links";
 import { computeFacetLinkRows } from "@/lib/facet-links-build";
 
 const CHURCHES = [
@@ -71,13 +71,16 @@ async function build() {
 
 describe("precomputed facet links", () => {
   it("reads nothing before the first build, so callers compute live", async () => {
-    await expect(readFacetLinks("all", "")).resolves.toBeNull();
+    await expect(readFacetData("all", "")).resolves.toBeNull();
     await expect(getAllChurchFacetLinks()).resolves.toEqual(await fetchFacetRelatedLinks({}));
   });
 
-  it("returns exactly the live aggregate for the whole directory and every precomputed source", async () => {
+  it("returns exactly the live aggregate and total for the whole directory and every precomputed source", async () => {
     await build();
-    expect(await readFacetLinks("all", "")).toEqual(await fetchFacetRelatedLinks({}));
+    expect(await readFacetData("all", "")).toEqual({
+      links: await fetchFacetRelatedLinks({}),
+      total: await fetchChurchIndexTotalCount({ query: "" }),
+    });
 
     const sources = [
       ["style", "contemporary-worship", { styleSlug: "contemporary-worship" }],
@@ -89,14 +92,16 @@ describe("precomputed facet links", () => {
     ];
     for (const [kind, slug, filters] of sources) {
       const live = await fetchFacetRelatedLinks(filters, FACET_RELATED_LIMITS[kind]);
+      const total = await fetchChurchIndexTotalCount({ ...filters, query: "" });
       expect(live.city.length + live.country.length).toBeGreaterThan(0);
-      expect(await readFacetLinks(kind, slug), `${kind}:${slug}`).toEqual(live);
+      expect(total).toBeGreaterThan(0);
+      expect(await readFacetData(kind, slug), `${kind}:${slug}`).toEqual({ links: live, total });
     }
   });
 
   it("leaves out churches the browse set leaves out", async () => {
     await build();
-    const stockholm = (await readFacetLinks("all", "")).city.find((link) => link.slug === "stockholm");
+    const stockholm = (await readFacetData("all", "")).links.city.find((link) => link.slug === "stockholm");
     expect(stockholm.count).toBe(2);
   });
 
@@ -105,18 +110,21 @@ describe("precomputed facet links", () => {
     db.exec(`UPDATE churches SET status = 'archived' WHERE slug = 'a2'`);
     await build();
     expect(db.prepare(`SELECT count(DISTINCT generation) AS n FROM facet_links`).get().n).toBe(1);
-    const stockholm = (await readFacetLinks("all", "")).city.find((link) => link.slug === "stockholm");
+    const stockholm = (await readFacetData("all", "")).links.city.find((link) => link.slug === "stockholm");
     expect(stockholm.count).toBe(1);
   });
 
-  it("facet pages read the precomputed set for countries, styles and denominations, and stay live for cities", async () => {
+  it("facet pages read the precomputed links and total for countries, styles and denominations, and stay live for cities", async () => {
     await build();
-    db.exec(`UPDATE facet_links SET label = 'Precomputed ' || label`);
+    db.exec(`UPDATE facet_links SET label = 'Precomputed ' || label WHERE target_kind <> 'total'`);
+    db.exec(`UPDATE facet_links SET count = 999 WHERE target_kind = 'total'`);
 
     const style = await getChurchFacetPageData({ kind: "style", slug: "gospel", page: 1, pageSize: 24 });
     expect(style.relatedLinks.country.every((link) => link.label.startsWith("Precomputed "))).toBe(true);
+    expect(style.totalCount).toBe(999);
 
     const city = await getChurchFacetPageData({ kind: "city", slug: "stockholm", page: 1, pageSize: 24 });
     expect(city.relatedLinks.country.map((link) => link.label)).toEqual(["Sweden"]);
+    expect(city.totalCount).toBe(2);
   });
 });

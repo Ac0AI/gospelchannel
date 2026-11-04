@@ -47,7 +47,7 @@ import {
   type FacetLink,
 } from "@/lib/church-directory";
 import { slugify } from "@/lib/slugify";
-import { FACET_RELATED_LIMITS, readFacetLinks } from "@/lib/facet-links";
+import { FACET_RELATED_LIMITS, readFacetData } from "@/lib/facet-links";
 import {
   formatLanguageLabel,
   getKnownLanguageDefinitions,
@@ -1737,7 +1737,7 @@ async function fetchChurchIndexPageRows(filters: ChurchDirectoryFilters, current
   `, [...where.params, pageSize, offset])) as ChurchIndexQueryRow[];
 }
 
-async function fetchChurchIndexTotalCount(filters: ChurchDirectoryFilters): Promise<number> {
+export async function fetchChurchIndexTotalCount(filters: ChurchDirectoryFilters): Promise<number> {
   const sql = getSql();
   const where = buildChurchIndexWhereClause(filters);
 
@@ -2053,7 +2053,7 @@ export const getAllChurchFacetLinks = unstable_cache(
     if (isOfflinePublicBuild() || !hasServiceConfig()) {
       return { country: [], city: [], style: [], denomination: [] };
     }
-    return (await readFacetLinks("all", "")) ?? (await fetchFacetRelatedLinks({}));
+    return (await readFacetData("all", ""))?.links ?? (await fetchFacetRelatedLinks({}));
   },
   ["all-church-facet-links-v1"],
   { revalidate: 3600, tags: [CHURCH_INDEX_TAG] },
@@ -2192,6 +2192,8 @@ export async function getChurchIndexPageData(input: {
   filters?: Omit<ChurchDirectoryFilters, "query">;
   page: number;
   pageSize: number;
+  /** A precomputed total for exactly these filters (facet pages); skips the count query. */
+  knownTotalCount?: number;
 }): Promise<ChurchIndexPageData> {
   const filters: ChurchDirectoryFilters = {
     ...(input.filters ?? {}),
@@ -2208,7 +2210,7 @@ export async function getChurchIndexPageData(input: {
     // `getChurchIndexTotalCountCached` so most hits skip the DB entirely.
     const [firstRows, totalCount] = await Promise.all([
       fetchChurchIndexPageRows(filters, requestedPage, input.pageSize),
-      getChurchIndexTotalCountCached(filters),
+      input.knownTotalCount ?? getChurchIndexTotalCountCached(filters),
     ]);
     const totalPages = Math.max(1, Math.ceil(totalCount / input.pageSize));
     const currentPage = Math.min(requestedPage, totalPages);
@@ -2318,19 +2320,20 @@ export async function getChurchFacetPageData(input: {
     label = filter.label;
   }
 
-  // Country, style and denomination links are aggregates over thousands of
-  // churches: read the nightly precomputed set (src/lib/facet-links.ts) and
-  // compute live only when it is missing. City links are bounded by the city
-  // (idx_churches_status_city_slug) and stay live.
-  const relatedLinksPromise = kind === "city"
-    ? fetchFacetRelatedLinks(filters, FACET_RELATED_LIMITS.city)
-    : readFacetLinks(kind, slug).then(
-      (links) => links ?? fetchFacetRelatedLinks(filters, FACET_RELATED_LIMITS[kind]),
-    );
+  // Country, style and denomination links and totals are aggregates over
+  // thousands of churches: read the nightly precomputed set
+  // (src/lib/facet-links.ts) and compute live only when it is missing. City
+  // pages are bounded by the city (idx_churches_status_city_slug) and stay live.
+  const precomputed = kind === "city" ? null : await readFacetData(kind, slug);
 
   const [pageData, relatedLinks] = await Promise.all([
-    getChurchIndexPageData({ filters, page: input.page, pageSize: input.pageSize }),
-    relatedLinksPromise,
+    getChurchIndexPageData({
+      filters,
+      page: input.page,
+      pageSize: input.pageSize,
+      knownTotalCount: precomputed?.total,
+    }),
+    precomputed?.links ?? fetchFacetRelatedLinks(filters, FACET_RELATED_LIMITS[kind]),
   ]);
 
   if (pageData.totalCount === 0) return null;
@@ -2435,6 +2438,32 @@ export async function getChurchIndexData() {
   }
 
   return churchIndexDataPromise;
+}
+
+/**
+ * Name, logo and country for a handful of churches (the vote top list), mapped
+ * exactly like directory rows. One primary-key lookup per slug: the route used
+ * to pull the whole church index (~70 MB through OFFSET pages) into a cold
+ * isolate to show at most 20 churches.
+ */
+export async function getChurchIndexSummariesBySlugs(slugs: string[]): Promise<Map<string, ChurchIndexSummary>> {
+  if (slugs.length === 0) return new Map();
+  if (isOfflinePublicBuild() || !hasServiceConfig()) return getChurchIndexSummaryLookup();
+  const rows = (await getSql().query(`
+    SELECT c.slug, c.name, c.description, c.spotify_playlist_ids, c.additional_playlists, c.logo, c.website,
+           c.spotify_url, c.country, c.denomination, c.location, c.music_style, c.email, c.header_image,
+           c.verified_at, c.last_researched, c.aliases, c.language, c.source_kind
+      FROM (SELECT DISTINCT value AS slug FROM json_each($1)) AS wanted
+      CROSS JOIN churches c ON c.slug = wanted.slug
+     WHERE c.status = 'approved'
+       AND NOT (c.slug IN (SELECT value FROM json_each($2)))
+  `, [slugs, getChurchIndexExcludedSlugs()])) as ChurchIndexQueryRow[];
+  const filtered = filterExplicitNonChurchRows(filterCanonicalChurchSlugRecords(rows));
+  const meta = await getEnrichmentMetaForSlugs(filtered.map((row) => row.slug));
+  return buildChurchIndexSummaryLookup(filtered.map((row) => {
+    const hint = meta.get(row.slug);
+    return mapChurchToIndexRecord(mapChurchIndexRowToConfig(row, hint), hint);
+  }));
 }
 
 export async function getChurchIndexSummaryLookup(): Promise<Map<string, ChurchIndexSummary>> {

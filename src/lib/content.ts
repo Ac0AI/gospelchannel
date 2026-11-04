@@ -1020,18 +1020,22 @@ export function churchPageTag(slug: string): string {
 
 /**
  * One church changed: its status in admin, its profile, an approved edit.
- * Expires that church's page and the listings right away, nothing else.
+ * Expires that church's own page and data, and the home page, right away.
  *
- * Every church page also carries church-content, church-stats and
- * church-page-public. Expiring those (as revalidatePublicChurchContent does)
- * makes all ~65k church pages re-render on their next visit, so they are left
- * to the daily cron. Until then a neighbouring church page can still link to
- * a church that was just archived; the link itself answers 404.
+ * Listing rows (city, country, style, denomination, /church) are queried live,
+ * so a church that was archived or approved leaves or joins them at once. What
+ * is left alone are aggregates: counts and the sitemap (church-index, 1 h) and
+ * the facet links and totals (nightly, src/lib/facet-links.ts). Expiring
+ * church-index here made every single edit recompute all of them, which kept
+ * D1 busy with whole-table scans. Every church page also carries
+ * church-content, church-stats and church-page-public; expiring those would
+ * re-render all ~65k church pages, so the daily cron handles them. Until then
+ * a neighbouring church page can still link to a church that was just
+ * archived; the link itself answers 404.
  */
 export function revalidateChurchChange(slug: string): void {
   revalidateTag(churchPageTag(slug), { expire: 0 });
   revalidatePath(`/church/${slug}`);
-  revalidateTag(CHURCH_INDEX_TAG, { expire: 0 });
   revalidateTag(HOME_TAG, { expire: 0 });
 }
 
