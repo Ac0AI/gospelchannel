@@ -15,7 +15,7 @@ vi.mock("@opennextjs/cloudflare", () => ({ getCloudflareContext: () => ({ env: {
 vi.mock("next/cache", () => ({ unstable_cache: (fn) => fn, revalidateTag: vi.fn(), revalidatePath: vi.fn() }));
 vi.mock("server-only", () => ({}));
 
-import { getChurchFacetPageData, getChurchPublicPageData, getRelatedChurches } from "@/lib/church";
+import { getChurchFacetPageData, getChurchIndexSummariesBySlugs, getChurchPublicPageData, getRelatedChurches } from "@/lib/church";
 import { getChurchDirectorySeedsBySlugs, getChurchNamesBySlugsAsync, getSitemapChurchSeedSliceAsync } from "@/lib/content";
 import { writeFacetLinkGeneration } from "@/lib/facet-links";
 import { computeFacetLinkRows } from "@/lib/facet-links-build";
@@ -159,11 +159,13 @@ describe("page queries are bounded by an index", () => {
     expect(plans.filter(({ sql }) => /count\(\*\)|GROUP BY/i.test(sql)).map(({ sql }) => sql.slice(0, 120))).toEqual([]);
   });
 
-  it("sitemap church chunks and slug lookups", async () => {
+  it("sitemap church chunks and slug lookups (names, seeds, vote top list)", async () => {
     const plans = await plansFor(async () => {
       await getSitemapChurchSeedSliceAsync(0, 5000);
       await getChurchNamesBySlugsAsync([churchSlug(5), churchSlug(9), churchSlug(11)]);
       await getChurchDirectorySeedsBySlugs([churchSlug(5), churchSlug(9)]);
+      const top = await getChurchIndexSummariesBySlugs([churchSlug(7), churchSlug(8), churchSlug(7)]);
+      expect([...top.keys()].sort()).toEqual([churchSlug(7), churchSlug(8)]);
     });
     expect(unbounded(plans)).toEqual([]);
   });

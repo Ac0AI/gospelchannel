@@ -2440,6 +2440,32 @@ export async function getChurchIndexData() {
   return churchIndexDataPromise;
 }
 
+/**
+ * Name, logo and country for a handful of churches (the vote top list), mapped
+ * exactly like directory rows. One primary-key lookup per slug: the route used
+ * to pull the whole church index (~70 MB through OFFSET pages) into a cold
+ * isolate to show at most 20 churches.
+ */
+export async function getChurchIndexSummariesBySlugs(slugs: string[]): Promise<Map<string, ChurchIndexSummary>> {
+  if (slugs.length === 0) return new Map();
+  if (isOfflinePublicBuild() || !hasServiceConfig()) return getChurchIndexSummaryLookup();
+  const rows = (await getSql().query(`
+    SELECT c.slug, c.name, c.description, c.spotify_playlist_ids, c.additional_playlists, c.logo, c.website,
+           c.spotify_url, c.country, c.denomination, c.location, c.music_style, c.email, c.header_image,
+           c.verified_at, c.last_researched, c.aliases, c.language, c.source_kind
+      FROM (SELECT DISTINCT value AS slug FROM json_each($1)) AS wanted
+      CROSS JOIN churches c ON c.slug = wanted.slug
+     WHERE c.status = 'approved'
+       AND NOT (c.slug IN (SELECT value FROM json_each($2)))
+  `, [slugs, getChurchIndexExcludedSlugs()])) as ChurchIndexQueryRow[];
+  const filtered = filterExplicitNonChurchRows(filterCanonicalChurchSlugRecords(rows));
+  const meta = await getEnrichmentMetaForSlugs(filtered.map((row) => row.slug));
+  return buildChurchIndexSummaryLookup(filtered.map((row) => {
+    const hint = meta.get(row.slug);
+    return mapChurchToIndexRecord(mapChurchIndexRowToConfig(row, hint), hint);
+  }));
+}
+
 export async function getChurchIndexSummaryLookup(): Promise<Map<string, ChurchIndexSummary>> {
   if (churchIndexSummaryCache && churchIndexSummaryCache.expiresAt > Date.now()) {
     return churchIndexSummaryCache.value;
