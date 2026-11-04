@@ -575,9 +575,9 @@ export async function getChurchDirectorySeedsBySlugs(
   const sql = getSql();
   const rawRows = (await sql.query(`
     SELECT c.slug, c.name, c.country, c.location, c.music_style, c.denomination, c.updated_at
-    FROM churches c
+    FROM (SELECT DISTINCT value AS slug FROM json_each($1)) AS wanted
+    CROSS JOIN churches c ON c.slug = wanted.slug
     WHERE c.status = 'approved'
-      AND c.slug IN (SELECT value FROM json_each($1))
       AND NOT (c.slug IN (SELECT value FROM json_each($2)))
   `, [slugs, CHURCH_DIRECTORY_SEED_EXCLUDED_SLUGS])) as ChurchDirectorySeedRow[];
   return rawRows.map(mapRowToChurchDirectorySeed);
@@ -854,11 +854,14 @@ export async function getChurchNamesBySlugsAsync(slugs: string[]): Promise<Recor
 
   try {
     const sql = getSql();
+    // The slug list drives the join, one primary-key lookup per slug; with
+    // `status = 'approved' AND slug IN (json_each)` SQLite scanned every
+    // approved church through the status index (see getRelatedChurches).
     const rows = (await sql.query(`
-      SELECT slug, name
-      FROM churches
-      WHERE status = 'approved'
-        AND slug IN (SELECT value FROM json_each($1))
+      SELECT c.slug, c.name
+      FROM (SELECT DISTINCT value AS slug FROM json_each($1)) AS wanted
+      CROSS JOIN churches c ON c.slug = wanted.slug
+      WHERE c.status = 'approved'
     `, [uniqueCanonicalSlugs])) as ChurchNameRow[];
 
     return buildNameMap(new Map(rows.map((row) => [row.slug, row.name])));
