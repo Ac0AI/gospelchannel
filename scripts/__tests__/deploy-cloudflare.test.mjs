@@ -13,12 +13,21 @@ const DEPLOYMENTS = JSON.stringify([
   { versions: [{ version_id: "prev-123", percentage: 100 }] },
 ]);
 
-async function startServer(t, failingPath) {
+async function startServer(t, failingPath, requests = []) {
+  let inFlight = 0;
   const server = createServer((req, res) => {
+    inFlight += 1;
+    requests.push({ url: req.url, inFlight });
     res.statusCode = req.url === failingPath ? 500 : 200;
-    if (req.url === "/church") res.end('<a href="/church/test-church">Church</a>');
-    else if (req.url === "/sitemap.xml") res.end("<sitemapindex></sitemapindex>");
-    else res.end("ok");
+    // A short delay so requests that run in parallel overlap and show up.
+    setTimeout(() => {
+      inFlight -= 1;
+      if (req.url === "/church") {
+        res.end(["test-church", "second-church", "third-church", "fourth-church", "fifth-church"]
+          .map((slug) => `<a href="/church/${slug}">Church</a>`).join(""));
+      } else if (req.url === "/sitemap.xml") res.end("<sitemapindex></sitemapindex>");
+      else res.end("ok");
+    }, 15);
   });
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
   t.after(() => new Promise((resolve) => server.close(resolve)));
@@ -27,7 +36,7 @@ async function startServer(t, failingPath) {
 
 // Kör deploy-kommandot utan att bygga eller deploya. pnpm är en attrapp som
 // loggar sina argument och svarar på `wrangler deployments list`.
-async function runDeploy(t, { siteFailing, localFailing, deployments = DEPLOYMENTS, args = [] } = {}) {
+async function runDeploy(t, { siteFailing, localFailing, deployments = DEPLOYMENTS, args = [], siteRequests } = {}) {
   const dir = await mkdtemp(join(tmpdir(), "deploy-check-"));
   t.after(() => rm(dir, { recursive: true, force: true }));
   await mkdir(join(dir, "bin"));
@@ -43,7 +52,7 @@ async function runDeploy(t, { siteFailing, localFailing, deployments = DEPLOYMEN
     "",
   ].join("\n"), { mode: 0o755 });
 
-  const siteUrl = await startServer(t, siteFailing);
+  const siteUrl = await startServer(t, siteFailing, siteRequests);
   const localUrl = await startServer(t, localFailing);
   const child = spawn(process.execPath, [script, ...args], {
     cwd: dir,
@@ -113,4 +122,23 @@ test("--check-only builds and checks locally but never deploys", async (t) => {
   assert.equal(result.code, 0, result.output);
   assert.match(result.commands, /run cf:build/);
   assert.doesNotMatch(result.commands, /opennextjs-cloudflare deploy|wrangler deploy|rollback/);
+});
+
+test("prewarm fills the shared data one page at a time before warming in parallel", async (t) => {
+  const siteRequests = [];
+  const result = await runDeploy(t, { siteRequests });
+  assert.equal(result.code, 0, result.output);
+
+  const serial = ["/", "/church/city", "/church/country", "/church/style", "/church/denomination", "/church/test-church"];
+  const afterFlush = siteRequests.slice(siteRequests.findIndex((r) => r.url === "/api/cron/sync?full=true") + 1);
+  // /church and /sitemap.xml are read first, one after the other, to find the URLs to warm.
+  assert.deepEqual(afterFlush.slice(0, 2).map((r) => r.url), ["/church", "/sitemap.xml"]);
+  const warm = afterFlush.slice(2);
+  const serialRequests = warm.slice(0, serial.length);
+  assert.deepEqual(serialRequests.map((r) => r.url), serial);
+  for (const request of serialRequests) assert.equal(request.inFlight, 1, `${request.url} ran alongside another request`);
+
+  const parallel = warm.slice(serial.length).filter((r) => !r.url.startsWith("/sitemap"));
+  assert.ok(parallel.some((r) => r.url === "/church/fifth-church"));
+  assert.ok(Math.max(...parallel.map((r) => r.inFlight)) <= 3, "more than three warm requests at once");
 });

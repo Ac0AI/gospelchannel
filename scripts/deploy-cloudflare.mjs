@@ -20,12 +20,27 @@ const DEFAULT_WARM_PATHS = [
 ];
 const SKIP_WARM_FLAGS = new Set(["--skip-warm", "--no-warm"]);
 const SITEMAP_WARM_PASSES = 2;
-const PRIMARY_WARM_CONCURRENCY = 6;
+// After the post-deploy flush every shared data entry (church stats, facet
+// lists, directory and sitemap seeds) is cold, and each page rendered in
+// parallel recomputes the same heavy queries. Six at once, plus crawlers,
+// tripped D1's limit on 2026-11-04 ("D1 DB is overloaded. Too many resources
+// consumed within a 10 second window": ~2 min of 500s on church pages and
+// sitemaps). D1's advice for that error is to spread the load, not retry, so
+// the pages that fill the shared entries run one at a time first, followed
+// by one church page, and only then the rest, a few at a time.
+const SHARED_DATA_WARM_PATHS = [
+  "/",
+  "/church/city",
+  "/church/country",
+  "/church/style",
+  "/church/denomination",
+];
+const PRIMARY_WARM_CONCURRENCY = 3;
 // Sitemap chunks each render 5k URLs from D1. Running them concurrently piles
-// up cold-isolate hydrations and trips Cloudflare's gateway timeout (503).
-// Serialize them so the first chunk warms the R2 unstable_cache layer and the
-// rest hit it warm.
-const SITEMAP_WARM_CONCURRENCY = 2;
+// up cold-isolate hydrations and trips Cloudflare's gateway timeout (503) and
+// D1's resource limit. One at a time, so the first chunk warms the R2
+// unstable_cache layer and the rest hit it warm.
+const SITEMAP_WARM_CONCURRENCY = 1;
 
 const WORKER_NAME = "gospelmigration";
 // Sidor som måste svara 200 i den lokala kontrollen före trafik. Lokalt finns
@@ -185,9 +200,18 @@ function logWarmResults(results) {
 }
 
 async function prewarmSite() {
+  // collectWarmUrls already loads /church and /sitemap.xml, one after the other.
   const { urls, sitemapUrls } = await collectWarmUrls();
-  const primaryResults = await warmUrls(urls, PRIMARY_WARM_CONCURRENCY);
-  logWarmResults(primaryResults);
+  const sharedUrls = SHARED_DATA_WARM_PATHS.map(buildWarmUrl);
+  const defaultUrls = new Set(DEFAULT_WARM_PATHS.map(buildWarmUrl));
+  const firstChurchUrl = urls.find(
+    (url) => /\/church\/[a-z0-9-]+$/.test(url) && !defaultUrls.has(url) && !sharedUrls.includes(url),
+  );
+  const serialUrls = firstChurchUrl ? [...sharedUrls, firstChurchUrl] : sharedUrls;
+  const serialResults = await warmUrls(serialUrls, 1);
+  const otherUrls = urls.filter((url) => !serialUrls.includes(url));
+  const primaryResults = await warmUrls(otherUrls, PRIMARY_WARM_CONCURRENCY);
+  logWarmResults([...serialResults, ...primaryResults]);
 
   for (let pass = 1; pass <= SITEMAP_WARM_PASSES; pass += 1) {
     if (sitemapUrls.length === 0) {
