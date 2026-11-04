@@ -18,8 +18,10 @@ async function distinctCountries(): Promise<string[]> {
 /**
  * Every precomputed source with the exact SQL the pages used
  * (fetchFacetRelatedLinks): the whole directory, then each style,
- * denomination and country, one at a time with a pause in between so the
- * build itself never bursts D1.
+ * denomination and country, one at a time. The links and the total of a
+ * style or denomination are each a scan of every approved church, so there is
+ * a pause before each of them: D1 limits resources per database in 10-second
+ * windows, and the site serves visitors from the same database meanwhile.
  */
 export async function computeFacetLinkRows(
   options: { pauseMs?: number; onSource?: (source: string) => void } = {},
@@ -51,6 +53,7 @@ export async function computeFacetLinkRows(
     await pause();
     options.onSource?.(`${source.kind}:${source.slug}`);
     const links = await fetchFacetRelatedLinks(source.filters, FACET_RELATED_LIMITS[source.kind]);
+    await pause();
     const total = await fetchChurchIndexTotalCount({ ...source.filters, query: "" });
     rows.push(...facetLinksToRows(source.kind, source.slug, links, total));
   }
