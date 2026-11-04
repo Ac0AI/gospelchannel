@@ -19,7 +19,7 @@ const {
   getAllPublishedCampusesMock,
   getCompareGuideSlugsMock,
   getChurchSlugsWithPrayersMock,
-  fetchFacetRelatedLinksMock,
+  allFacetLinksMock,
 } = vi.hoisted(() => ({
   getChurchDirectorySeedAsyncMock: vi.fn(),
   getChurchDirectorySeedCountAsyncMock: vi.fn(),
@@ -39,7 +39,7 @@ const {
   getAllPublishedCampusesMock: vi.fn(),
   getCompareGuideSlugsMock: vi.fn(),
   getChurchSlugsWithPrayersMock: vi.fn(),
-  fetchFacetRelatedLinksMock: vi.fn(),
+  allFacetLinksMock: vi.fn(),
 }));
 
 vi.mock("next/cache", () => ({
@@ -69,7 +69,7 @@ vi.mock("@/lib/church-directory", () => ({
 }));
 
 vi.mock("@/lib/church", () => ({
-  fetchFacetRelatedLinks: fetchFacetRelatedLinksMock,
+  getAllChurchFacetLinks: allFacetLinksMock,
 }));
 
 vi.mock("@/lib/church-networks", () => ({
@@ -111,9 +111,9 @@ describe("sitemap-data", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // Sitemap facet links now come from fetchFacetRelatedLinks({}) (1 each →
+    // Sitemap facet links come from getAllChurchFacetLinks() (1 each →
     // section counts country=1, city=1, style=1, denom=1, unchanged).
-    fetchFacetRelatedLinksMock.mockResolvedValue({
+    allFacetLinksMock.mockResolvedValue({
       country: [{ slug: "sweden", label: "Sweden", href: "/church/country/sweden", count: 12 }],
       city: [{ slug: "stockholm", label: "Stockholm", href: "/church/city/stockholm", count: 8 }],
       style: [{ slug: "gospel", label: "Gospel", href: "/church/style/gospel", count: 4 }],
@@ -169,7 +169,7 @@ describe("sitemap-data", () => {
 
   it("drops thin city hubs (<MIN_INDEXABLE_CITY_CHURCHES) from the sitemap", async () => {
     getChurchDirectorySeedCountAsyncMock.mockResolvedValue(0);
-    fetchFacetRelatedLinksMock.mockResolvedValue({
+    allFacetLinksMock.mockResolvedValue({
       country: [{ slug: "sweden", label: "Sweden", href: "/church/country/sweden", count: 12 }],
       city: [
         { slug: "stockholm", label: "Stockholm", href: "/church/city/stockholm", count: 8 },

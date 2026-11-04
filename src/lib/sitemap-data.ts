@@ -10,7 +10,7 @@ import {
   type ChurchDirectorySeed,
 } from "@/lib/content";
 import { MIN_INDEXABLE_CITY_CHURCHES, type FacetLink } from "@/lib/church-directory";
-import { fetchFacetRelatedLinks } from "@/lib/church";
+import { getAllChurchFacetLinks } from "@/lib/church";
 import {
   getNetworkCount,
   getNetworksSlice,
@@ -276,16 +276,13 @@ function getSitemapEntryCountFromSections(data: SitemapSectionCounts): number {
     + data.prayerChurchCount;
 }
 
-// Facet sitemap links from the SAME SQL aggregate the facet pages use
-// (fetchFacetRelatedLinks with no filter = whole approved browse set, no
-// limits). Removes the old full directory-seed pull that OOM'd the Worker on
-// cold sitemap chunks; the aggregate result is small so unstable_cache
-// actually stores it (>2 MB silent-skip no longer applies). Zero-drift with
-// the facet pages by construction. (Prayer sitemap is now also windowed —
-// see getSitemapPrayerDataCached.)
+// Facet sitemap links from the same whole-directory set as the hub pages
+// (getAllChurchFacetLinks: the nightly precomputed links, computed live only
+// when missing), so sitemap'd facets == hub-listed facets by construction.
+// (Prayer sitemap is windowed separately — see getSitemapPrayerDataCached.)
 const getSitemapFacetDataCached = unstable_cache(
   async (): Promise<SitemapFacetData> => {
-    const links = await fetchFacetRelatedLinks({});
+    const links = await getAllChurchFacetLinks();
     return {
       countryLinks: links.country,
       // Thin city hubs (<MIN_INDEXABLE_CITY_CHURCHES) go noindex,follow on the
