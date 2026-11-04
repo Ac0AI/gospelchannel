@@ -6,7 +6,7 @@ import { readFileSync } from "node:fs";
 // pages exactly what the live aggregate gave them, so this runs both against a
 // real SQLite database with the D1 migrations applied.
 
-const context = vi.hoisted(() => ({ binding: null }));
+const context = vi.hoisted(() => ({ binding: null, failNext: null }));
 vi.mock("@opennextjs/cloudflare", () => ({ getCloudflareContext: () => ({ env: { GOSPEL_D1: context.binding } }) }));
 vi.mock("next/cache", () => ({ unstable_cache: (fn) => fn, revalidateTag: vi.fn() }));
 vi.mock("server-only", () => ({}));
@@ -42,6 +42,11 @@ beforeEach(() => {
   context.binding = {
     prepare(sql) {
       return { bind(...values) {
+        if (context.failNext && context.failNext.match.test(sql)) {
+          const message = context.failNext.message;
+          context.failNext = null;
+          return { all: async () => { throw new Error(message); } };
+        }
         const statement = db.prepare(sql);
         const rows = () => /\?\d/.test(sql)
           ? statement.all(Object.fromEntries(values.map((value, i) => [`?${i + 1}`, value])))
@@ -126,5 +131,18 @@ describe("precomputed facet links", () => {
     const city = await getChurchFacetPageData({ kind: "city", slug: "stockholm", page: 1, pageSize: 24 });
     expect(city.relatedLinks.country.map((link) => link.label)).toEqual(["Sweden"]);
     expect(city.totalCount).toBe(2);
+  });
+
+  it("waits out a D1 overload instead of discarding the build", async () => {
+    context.failNext = { match: /count\(\*\) FILTER/, message: "D1_ERROR: D1 DB is overloaded. Too many resources consumed within a 10 second window" };
+    const { rows } = await computeFacetLinkRows({ retryDelaysMs: [0] });
+    expect(context.failNext).toBeNull();
+    await writeFacetLinkGeneration("after-retry", rows);
+    expect((await readFacetData("all", "")).links).toEqual(await fetchFacetRelatedLinks({}));
+  });
+
+  it("fails at once on an error that is not an overload", async () => {
+    context.failNext = { match: /count\(\*\) FILTER/, message: "D1_ERROR: no such column: nope" };
+    await expect(computeFacetLinkRows({ retryDelaysMs: [0] })).rejects.toThrow(/no such column/);
   });
 });
