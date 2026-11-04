@@ -1,7 +1,9 @@
-export async function readRelatedCandidates(client, minScore) {
+export async function readRelatedCandidates(client, minScore, { pauseMs = 1000 } = {}) {
   const rows = [];
   let cursor = "";
   for (;;) {
+    // A pause between pages: the site serves visitors from the same database.
+    if (cursor && pauseMs > 0) await new Promise((resolve) => setTimeout(resolve, pauseMs));
     const page = await client.query(`SELECT c.slug, c.country, c.city_slug, c.directory_rank, c.display_score,
       c.music_style, c.denomination, c.related_church_slugs, ce.latitude, ce.longitude
     FROM churches c LEFT JOIN church_enrichments ce ON ce.id = (

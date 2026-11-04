@@ -10,7 +10,7 @@ test("loads and writes related churches without losing array contents", async ()
     INSERT INTO churches VALUES ('a', 'SE', 'city', 1, 5, '["Worship"]', NULL, 'approved', NULL);
     INSERT INTO churches VALUES ('b', 'SE', 'city', 2, 2, NULL, NULL, 'archived', NULL);`);
   const client = { async query(sql, params) { const statement = db.prepare(sql); return sql.trimStart().startsWith("SELECT") ? statement.all(...params) : statement.run(...params); } };
-  const rows = await readRelatedCandidates(client, 4);
+  const rows = await readRelatedCandidates(client, 4, { pauseMs: 0 });
   assert.equal(rows.length, 1);
   assert.deepEqual(rows[0].music_style, ["Worship"]);
   assert.equal(rows[0].related_church_slugs, null);

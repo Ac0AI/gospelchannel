@@ -23,6 +23,7 @@ type TargetKind = keyof FacetRelatedLinks;
 const TARGET_KINDS: TargetKind[] = ["country", "city", "style", "denomination"];
 const GENERATION_KEY = "facet_links_generation";
 const INSERT_BATCH = 400;
+const DELETE_BATCH = 2000;
 
 /** Per-kind related-link limits, matching what each facet page rendered before. */
 export const FACET_RELATED_LIMITS: Record<FacetKind, Partial<Record<TargetKind, number>>> = {
@@ -129,11 +130,18 @@ export async function readFacetData(
 /**
  * Writes a complete new generation, points app_kv at it, then deletes the
  * older generations. A failure before the pointer moves leaves the previous
- * generation in place.
+ * generation in place. The nightly build passes a pause: writes and deletes
+ * in one burst overloaded D1 for the site's visitors (2026-11-04).
  */
-export async function writeFacetLinkGeneration(generation: string, rows: FacetLinkRow[]): Promise<void> {
+export async function writeFacetLinkGeneration(
+  generation: string,
+  rows: FacetLinkRow[],
+  { pauseMs = 0 }: { pauseMs?: number } = {},
+): Promise<void> {
   const sql = getSql();
+  const pause = () => (pauseMs > 0 ? new Promise((resolve) => setTimeout(resolve, pauseMs)) : Promise.resolve());
   for (let start = 0; start < rows.length; start += INSERT_BATCH) {
+    if (start > 0) await pause();
     const batch = rows.slice(start, start + INSERT_BATCH).map((row) => ({
       sk: row.sourceKind,
       ss: row.sourceSlug,
@@ -157,5 +165,15 @@ export async function writeFacetLinkGeneration(generation: string, rows: FacetLi
      ON CONFLICT (key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at`,
     [GENERATION_KEY, generation],
   );
-  await sql.query(`DELETE FROM facet_links WHERE generation <> $1`, [generation]);
+  // Old generations go in slices, not one statement over thousands of rows.
+  for (;;) {
+    await pause();
+    const deleted = (await sql.query(
+      `DELETE FROM facet_links
+        WHERE rowid IN (SELECT rowid FROM facet_links WHERE generation <> $1 LIMIT ${DELETE_BATCH})
+        RETURNING 1 AS gone`,
+      [generation],
+    )) as unknown[];
+    if (deleted.length < DELETE_BATCH) break;
+  }
 }
