@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { refreshChurchUpdatesBatch } from "@/lib/church-updates";
+import { optimizeDatabase } from "@/db";
 import { getChurchStatsAsync, revalidateChurchChange, revalidateCronSync, revalidatePublicChurchContent } from "@/lib/content";
 
 function authorized(request: NextRequest): boolean {
@@ -29,6 +30,15 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ ok: true, revalidationMode: "church", church, runAt: new Date().toISOString() });
   }
 
+  // Index statistics first, so the queries below already get good plans.
+  let databaseOptimized = false;
+  try {
+    await optimizeDatabase();
+    databaseOptimized = true;
+  } catch (error) {
+    console.error("[cron-sync] PRAGMA optimize failed:", error instanceof Error ? error.message : error);
+  }
+
   // ?full=true forces nuclear invalidation (use after schema changes, bulk imports, etc.)
   const forceAll = request.nextUrl.searchParams.get("full") === "true";
 
@@ -47,6 +57,7 @@ export async function GET(request: NextRequest) {
     ok: true,
     churchesRevalidated: churchCount,
     revalidationMode: forceAll ? "full" : "cron",
+    databaseOptimized,
     updates,
     runAt: new Date().toISOString(),
   });

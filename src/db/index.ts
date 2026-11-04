@@ -29,6 +29,20 @@ export function getD1Binding(): AnyD1Database {
   return binding;
 }
 
+/**
+ * Refreshes SQLite's index statistics (sqlite_stat1) so the planner picks the
+ * selective index. Without them it guessed: city pages walked every approved
+ * church through (status, directory_rank) instead of (status, city_slug), and
+ * `slug IN (json_each) AND status = ...` scanned the status index instead of
+ * the primary key (~4 billion rows read a day, D1 overloads after deploys,
+ * 2026-11-04). Cloudflare's advice is to run it after creating indexes;
+ * SQLite's is to run it periodically. Cheap: it only analyzes tables whose
+ * statistics are missing or stale. Called by the daily cron.
+ */
+export async function optimizeDatabase(): Promise<void> {
+  await getD1Binding().prepare("PRAGMA optimize").run();
+}
+
 export function hasDatabaseConfig(): boolean {
   const config = nodeConfig();
   if (config) return Boolean(config.accountId && config.token);
