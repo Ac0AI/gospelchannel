@@ -11,7 +11,7 @@
     "head_sampling_rate": 1
   },
   "triggers": {
-    "crons": ["0 4 * * *", "23 6 * * *"]
+    "crons": ["33 2 * * *", "0 4 * * *", "23 6 * * *"]
   },
   "assets": {
     "directory": ".open-next/assets",
