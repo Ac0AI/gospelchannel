@@ -1,7 +1,7 @@
 import { test } from "vitest";
 import assert from "node:assert/strict";
 import { DatabaseSync } from "node:sqlite";
-import { readRelatedCandidates, writeRelatedRows } from "../lib/d1-directory.mjs";
+import { changedRelatedRows, readRelatedCandidates, writeRelatedRows } from "../lib/d1-directory.mjs";
 
 test("loads and writes related churches without losing array contents", async () => {
   const db = new DatabaseSync(":memory:");
@@ -13,6 +13,13 @@ test("loads and writes related churches without losing array contents", async ()
   const rows = await readRelatedCandidates(client, 4);
   assert.equal(rows.length, 1);
   assert.deepEqual(rows[0].music_style, ["Worship"]);
-  await writeRelatedRows(client, [{ slug: "a", related: ["b", "x,y"] }]);
+  assert.equal(rows[0].related_church_slugs, null);
+  await writeRelatedRows(client, [{ slug: "a", related: ["b", "x,y"] }], { pauseMs: 0 });
   assert.deepEqual(JSON.parse(db.prepare("SELECT related_church_slugs FROM churches WHERE slug='a'").get().related_church_slugs), ["b", "x,y"]);
+});
+
+test("writes only the related lists that changed", () => {
+  const current = new Map([["a", ["b", "c"]], ["b", ["a"]], ["c", null]]);
+  const updates = [{ slug: "a", related: ["b", "c"] }, { slug: "b", related: ["c"] }, { slug: "c", related: ["a"] }, { slug: "d", related: [] }];
+  assert.deepEqual(changedRelatedRows(current, updates).map((u) => u.slug), ["b", "c", "d"]);
 });
