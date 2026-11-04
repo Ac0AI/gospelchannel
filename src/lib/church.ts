@@ -1125,12 +1125,20 @@ export async function getRelatedChurches(
   // This SQL guard closes that half of the residual with one extra
   // predicate: no DDL, no parity gate, monotonic (always a subset of the
   // previous result set).
+  //
+  // The slug list drives the join (CROSS JOIN keeps it the outer loop), so
+  // each related church is one primary-key lookup. With
+  // `slug IN (SELECT value FROM json_each(...)) AND status = 'approved'`
+  // SQLite chose the status index and read every approved church instead:
+  // ~83k rows per church page render, 2.4 billion rows a day, and the main
+  // cause of the D1 overloads ("Too many resources consumed within a 10
+  // second window") after the deploys on 2026-11-04.
   const hydrated = (await sqlClient`
-    SELECT slug, name, country, location
-      FROM churches
-     WHERE slug IN (SELECT value FROM json_each(${related}))
-       AND status = 'approved'
-       AND (display_score IS NULL OR display_score >= ${INDEXABLE_DISPLAY_SCORE_MIN})
+    SELECT c.slug, c.name, c.country, c.location
+      FROM (SELECT DISTINCT value AS slug FROM json_each(${related})) AS wanted
+      CROSS JOIN churches AS c ON c.slug = wanted.slug
+     WHERE c.status = 'approved'
+       AND (c.display_score IS NULL OR c.display_score >= ${INDEXABLE_DISPLAY_SCORE_MIN})
   `) as Array<{ slug: string; name: string; country: string | null; location: string | null }>;
 
   type RelatedChurchRow = { slug: string; name: string; country: string; location?: string };
