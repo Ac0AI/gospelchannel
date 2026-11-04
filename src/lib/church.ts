@@ -1166,22 +1166,46 @@ export async function getRelatedChurches(
 }
 
 /**
- * Paginate a database query that may return >1000 rows.
+ * Reads every row of a large query in pages ordered by two key columns, each
+ * page starting right after the previous page's last key, so every page is an
+ * index range. LIMIT/OFFSET re-read all earlier rows for each page (quadratic
+ * in table size); the nightly reconcile pulling the full index that way
+ * failed on 2026-11-04 ("Directory pagination failed", which also hid the
+ * database error). Errors now surface as they are.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function fetchAllRows<T = any>(
-  buildQuery: (sb: ReturnType<typeof createAdminClient>, from: number, to: number) => PromiseLike<{ data: T[] | null; error: unknown }>
-): Promise<T[]> {
-  const sb = createAdminClient();
-  const PAGE_SIZE = 1000;
+export async function fetchAllRowsByKey<T extends Record<string, unknown>>(input: {
+  table: string;
+  columns: string;
+  where: string;
+  params?: unknown[];
+  keys: [string, string];
+  pageSize?: number;
+}): Promise<T[]> {
+  const sql = getSql();
+  const pageSize = input.pageSize ?? 1000;
+  const [first, second] = input.keys;
   const all: T[] = [];
-  let from = 0;
+  let after: [unknown, unknown] | null = null;
   while (true) {
-    const { data, error } = await buildQuery(sb, from, from + PAGE_SIZE - 1);
-    if (error || !data) throw new Error("Directory pagination failed");
-    all.push(...data);
-    if (data.length < PAGE_SIZE) break;
-    from += PAGE_SIZE;
+    const params = [...(input.params ?? [])];
+    let keyClause = "";
+    if (after) {
+      params.push(after[0], after[1]);
+      keyClause = ` AND (${first}, ${second}) > ($${params.length - 1}, $${params.length})`;
+    }
+    params.push(pageSize);
+    const rows = (await sql.query(
+      `SELECT ${input.columns} FROM ${input.table}
+        WHERE ${input.where}${keyClause}
+        ORDER BY ${first}, ${second}
+        LIMIT $${params.length}`,
+      params,
+      input.table,
+    )) as T[];
+    all.push(...rows);
+    if (rows.length < pageSize) break;
+    const last = rows[rows.length - 1];
+    after = [last[first], last[second]];
   }
   return all;
 }
@@ -1264,17 +1288,15 @@ async function getEnrichmentMeta(): Promise<Map<string, IndexEnrichmentHint>> {
     cover_image_url: string | null;
     logo_image_url: string | null;
   };
-  // Total order (church_slug is near-unique, id breaks the few ties): range
-  // pagination without ORDER BY has no stable row order in Postgres, so page
-  // boundaries dropped/duplicated rows between runs — enrichment hints (and
-  // with them dataRichnessScore → directory ordering) flapped run-to-run.
-  const data = await fetchAllRows((sb, from, to) =>
-    sb.from<EnrichmentMetaRow[]>("church_enrichments")
-      .select("church_slug, enrichment_status, summary, service_times, street_address, languages, instagram_url, facebook_url, youtube_url, children_ministry, youth_ministry, cover_image_url, logo_image_url")
-      .order("church_slug")
-      .order("id")
-      .range(from, to)
-  );
+  // Total order (church_slug is near-unique, id breaks the few ties), so the
+  // hints (and with them dataRichnessScore → directory ordering) are stable
+  // run to run. Rows without a church_slug are skipped below anyway.
+  const data = await fetchAllRowsByKey<EnrichmentMetaRow & { id: string }>({
+    table: "church_enrichments",
+    columns: "id, church_slug, enrichment_status, summary, service_times, street_address, languages, instagram_url, facebook_url, youtube_url, children_ministry, youth_ministry, cover_image_url, logo_image_url",
+    where: "church_slug IS NOT NULL",
+    keys: ["church_slug", "id"],
+  });
   const map = new Map<string, IndexEnrichmentHint>();
   for (const row of data ?? []) {
     if (!row.church_slug) continue;
@@ -1399,14 +1421,13 @@ async function getEnrichmentMetaForSlugs(slugs: string[]): Promise<Map<string, I
 
 async function getChurchIndexRows(): Promise<ChurchIndexRow[]> {
   if (isOfflinePublicBuild() || !hasServiceConfig()) return [];
-  const rows = await fetchAllRows((sb, from, to) =>
-    sb.from<ChurchIndexRow[]>("churches")
-      .select("slug, name, description, spotify_playlist_ids, additional_playlists, logo, website, spotify_url, country, denomination, location, music_style, email, header_image, verified_at, last_researched, aliases, language, source_kind")
-      .eq("status", "approved")
-      .order("name")
-      .order("slug")
-      .range(from, to)
-  );
+  // Name order through churches_status_name_slug_idx, as before.
+  const rows = await fetchAllRowsByKey<ChurchIndexRow>({
+    table: "churches",
+    columns: "slug, name, description, spotify_playlist_ids, additional_playlists, logo, website, spotify_url, country, denomination, location, music_style, email, header_image, verified_at, last_researched, aliases, language, source_kind",
+    where: "status = 'approved'",
+    keys: ["name", "slug"],
+  });
   return filterExplicitNonChurchRows(rows);
 }
 
