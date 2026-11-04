@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { revalidatePath } from 'next/cache';
 import { createAdminClient } from '@/lib/data-client';
 import { getServerUser } from '@/lib/auth/server';
 import { getChurchMembershipForUserAndSlug } from '@/lib/church-community';
-import { revalidatePublicChurchContent } from '@/lib/content';
+import { revalidateChurchChange } from '@/lib/content';
 import { getChurchBySlugAsync } from '@/lib/content';
 import { syncChurchUpdateSourcesFromProfileEdit } from '@/lib/church-updates';
 import { validateField, sanitizeText, normalizeInstagramInput } from '@/lib/profile-validation';
@@ -98,8 +97,7 @@ export async function POST(request: NextRequest) {
       enrichment,
     });
     await syncChurchUpdateSourcesFromProfileEdit(churchSlug, fieldName);
-    revalidatePublicChurchContent();
-    revalidatePath(`/church/${churchSlug}`);
+    revalidateChurchChange(churchSlug);
     return NextResponse.json({ success: true, edit });
   } catch (err) {
     const message = (err as Error).message;

@@ -5,7 +5,7 @@ vi.mock('next/cache', () => ({ revalidatePath: vi.fn() }));
 
 vi.mock('@/lib/auth/server', () => ({ getServerUser: vi.fn() }));
 vi.mock('@/lib/church-community', () => ({ getChurchMembershipForUserAndSlug: vi.fn() }));
-vi.mock('@/lib/content', () => ({ getChurchBySlugAsync: vi.fn(), revalidatePublicChurchContent: vi.fn() }));
+vi.mock('@/lib/content', () => ({ getChurchBySlugAsync: vi.fn(), revalidateChurchChange: vi.fn() }));
 vi.mock('@/lib/data-client', () => ({ createAdminClient: vi.fn() }));
 vi.mock('@/lib/church-updates', () => ({ syncChurchUpdateSourcesFromProfileEdit: vi.fn() }));
 vi.mock('@/lib/church-profile', () => ({ submitProfileEdit: vi.fn(), getProfileEditsForChurch: vi.fn() }));
@@ -13,7 +13,7 @@ vi.mock('@/lib/church-profile', () => ({ submitProfileEdit: vi.fn(), getProfileE
 import { POST } from '@/app/api/church/profile/route';
 import { getServerUser } from '@/lib/auth/server';
 import { getChurchMembershipForUserAndSlug } from '@/lib/church-community';
-import { getChurchBySlugAsync, revalidatePublicChurchContent } from '@/lib/content';
+import { getChurchBySlugAsync, revalidateChurchChange } from '@/lib/content';
 import { createAdminClient } from '@/lib/data-client';
 import { submitProfileEdit } from '@/lib/church-profile';
 import { syncChurchUpdateSourcesFromProfileEdit } from '@/lib/church-updates';
@@ -43,7 +43,7 @@ describe('church profile edits', () => {
     const response = await POST(request(churchSlug, 'phone', '+49 30 1234567'));
     expect(response.status).toBe(200);
     expect(submitProfileEdit).toHaveBeenCalledWith(expect.objectContaining({ churchSlug, fieldName: 'phone' }));
-    expect(revalidatePublicChurchContent).toHaveBeenCalledOnce();
+    expect(revalidateChurchChange).toHaveBeenCalledExactlyOnceWith(churchSlug);
   });
 
   it('rejects edits without membership', async () => {

@@ -952,10 +952,33 @@ export const getHomepageShowcaseChurches = unstable_cache(
   { revalidate: 3600, tags: [CHURCH_CONTENT_TAG, HOME_TAG] }
 );
 
+/** Cache tag for one church's own page data (see getChurchPublicPageData). */
+export function churchPageTag(slug: string): string {
+  return `church:${slug}`;
+}
+
 /**
- * Nuclear revalidation — invalidates ALL church-related caches and paths.
- * Use for admin operations (approve, status change, profile edit) where
- * the full scope of change is unknown.
+ * One church changed: its status in admin, its profile, an approved edit.
+ * Expires that church's page and the listings right away, nothing else.
+ *
+ * Every church page also carries church-content, church-stats and
+ * church-page-public. Expiring those (as revalidatePublicChurchContent does)
+ * makes all ~65k church pages re-render on their next visit, so they are left
+ * to the daily cron. Until then a neighbouring church page can still link to
+ * a church that was just archived; the link itself answers 404.
+ */
+export function revalidateChurchChange(slug: string): void {
+  revalidateTag(churchPageTag(slug), { expire: 0 });
+  revalidatePath(`/church/${slug}`);
+  revalidateTag(CHURCH_INDEX_TAG, { expire: 0 });
+  revalidateTag(HOME_TAG, { expire: 0 });
+}
+
+/**
+ * Nuclear revalidation — invalidates ALL church-related caches and paths,
+ * which re-renders every church page on its next visit. Only for changes
+ * whose scope is unknown (schema changes, bulk imports): /api/cron/sync?full=true.
+ * A change to one church goes through revalidateChurchChange.
  */
 export function revalidatePublicChurchContent(): void {
   // Mutations require the next visitor to see fresh data, not one stale
