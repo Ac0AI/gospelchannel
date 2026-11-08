@@ -10,6 +10,8 @@ import {
   isCriticalDisplayFlag,
   isIndexableChurch,
   INDEXABLE_ONBRAND_SCORE_MIN,
+  NEVER_INDEX_DENOMINATIONS,
+  OFF_BRAND_DENOMINATIONS,
   isValidOfficialWebsiteUrl,
   normalizePublicUrl,
   sanitizeServiceTimes,
@@ -174,14 +176,33 @@ describe("content-quality", () => {
       expect(getChurchRobotsPolicy({ indexScore: null, denomination: "", hasVisitFacts: false })).toBe("noindex");
     });
 
-    it("off-brand denominations stay noindex everywhere, with or without facts", () => {
-      expect(getChurchRobotsPolicy({ indexScore: 100, denomination: "Catholic", hasVisitFacts: true })).toBe("noindex");
-      expect(getChurchRobotsPolicy({ indexScore: below, denomination: " Seventh-day Adventist ", hasVisitFacts: true })).toBe("noindex");
+    it("off-brand Christian traditions with visit facts stay open to Bing, not Google", () => {
+      expect(getChurchRobotsPolicy({ indexScore: 100, denomination: "Catholic", hasVisitFacts: true })).toBe("google-noindex");
+      expect(getChurchRobotsPolicy({ indexScore: below, denomination: " Seventh-day Adventist ", hasVisitFacts: true })).toBe("google-noindex");
+      expect(getChurchRobotsPolicy({ indexScore: null, denomination: "Advent Christian", displayDenomination: "adventist", hasVisitFacts: true })).toBe("google-noindex");
+      expect(getChurchRobotsPolicy({ indexScore: 100, denomination: null, displayDenomination: "Church of Christ", hasVisitFacts: true })).toBe("google-noindex");
     });
 
-    it("an off-brand denomination shown from enrichment keeps the profile noindex", () => {
-      expect(getChurchRobotsPolicy({ indexScore: 100, denomination: null, displayDenomination: "Church of Christ", hasVisitFacts: true })).toBe("noindex");
+    it("off-brand Christian traditions stay out of the Google index set and noindex without facts", () => {
+      expect(isIndexableChurch({ indexScore: 100, denomination: "Lutheran" })).toBe(false);
+      expect(getChurchRobotsPolicy({ indexScore: 100, denomination: "Methodist", hasVisitFacts: false })).toBe("noindex");
+    });
+
+    it("never-index denominations stay noindex everywhere, with or without facts", () => {
+      expect(getChurchRobotsPolicy({ indexScore: 100, denomination: "Jehovah's Witnesses", hasVisitFacts: true })).toBe("noindex");
+      expect(getChurchRobotsPolicy({ indexScore: below, denomination: " Latter-day Saints ", hasVisitFacts: true })).toBe("noindex");
+      expect(getChurchRobotsPolicy({ indexScore: below, denomination: "Buddhist", hasVisitFacts: true })).toBe("noindex");
+    });
+
+    it("a never-index denomination shown from enrichment keeps the profile noindex, in any case", () => {
+      expect(getChurchRobotsPolicy({ indexScore: 100, denomination: null, displayDenomination: "christian science", hasVisitFacts: true })).toBe("noindex");
       expect(getChurchRobotsPolicy({ indexScore: below, denomination: null, displayDenomination: "Assemblies of God", hasVisitFacts: true })).toBe("google-noindex");
+    });
+
+    it("every never-index denomination is also off-brand", () => {
+      for (const denomination of NEVER_INDEX_DENOMINATIONS) {
+        expect(OFF_BRAND_DENOMINATIONS).toContain(denomination);
+      }
     });
   });
 

@@ -291,10 +291,10 @@ export const INDEXABLE_DISPLAY_SCORE_MIN = 45;
 // meta (church/[slug]) and the sitemap seed (content.ts) both read this rule.
 export const INDEXABLE_ONBRAND_SCORE_MIN = 65;
 
-// Denominations outside the GospelChannel brand. Flat list so the SQL sitemap
-// seed (content.ts) can pass it as a text[] param and stay byte-identical to
-// this TS predicate.
-export const OFF_BRAND_DENOMINATIONS: readonly string[] = [
+// Historic Christian traditions outside the core free-church brand. They stay
+// out of the Google index set, the sitemap and assistant results, but a profile
+// with visit facts is open to Bing (see getChurchRobotsPolicy).
+const OFF_BRAND_CHRISTIAN_TRADITIONS: readonly string[] = [
   "Catholic", "Roman Catholic",
   "Methodist", "United Methodist", "Free Methodist",
   "AME", "CME", "African Methodist Episcopal", "Christian Methodist Episcopal",
@@ -302,8 +302,15 @@ export const OFF_BRAND_DENOMINATIONS: readonly string[] = [
   "Orthodox", "Greek Orthodox", "Russian Orthodox", "Eastern Orthodox",
   "Coptic Orthodox", "Antiochian Orthodox",
   "Seventh-day Adventist", "Seventh-Day Adventist", "Adventist", "Advent Christian",
+  "Quaker", "United Church of Christ", "Church of Christ",
+];
+
+// Never indexed by any engine: non-Christian places and groups outside
+// historic Christian belief.
+export const NEVER_INDEX_DENOMINATIONS: readonly string[] = [
   "Christian Science", "Jehovah's Witnesses",
   "Mormon", "Latter-Day Saints", "Latter-day Saints", "LDS",
+  "Unitarian", "Unitarian Universalist", "Christadelphian",
   "Buddhist", "Muslim", "Jewish", "Hindu",
   // Non-Christian variants seen in imported POI data (exact-match set, so every
   // spelling matters). Messianic Jewish/Judaism stays OFF this list on purpose —
@@ -314,11 +321,21 @@ export const OFF_BRAND_DENOMINATIONS: readonly string[] = [
   "Judaism", "Orthodox Judaism", "Orthodox Jewish", "Reform Judaism", "Reform Jewish",
   "Conservative Judaism", "Jewish - Chabad",
   "Sikh", "Sikhism", "Hinduism", "Swaminarayan Hindu", "Scientology",
-  "Unitarian", "Unitarian Universalist", "Quaker",
-  "United Church of Christ", "Church of Christ", "Christadelphian",
+];
+
+// Denominations outside the GospelChannel brand. Flat list so the SQL sitemap
+// seed (content.ts) can pass it as a text[] param and stay byte-identical to
+// this TS predicate.
+export const OFF_BRAND_DENOMINATIONS: readonly string[] = [
+  ...OFF_BRAND_CHRISTIAN_TRADITIONS,
+  ...NEVER_INDEX_DENOMINATIONS,
 ];
 
 const OFF_BRAND_DENOMINATION_SET: ReadonlySet<string> = new Set(OFF_BRAND_DENOMINATIONS);
+// Case-insensitive: the shown denomination can come from enrichment in lowercase.
+const NEVER_INDEX_DENOMINATION_KEYS: ReadonlySet<string> = new Set(
+  NEVER_INDEX_DENOMINATIONS.map((value) => value.toLowerCase()),
+);
 
 export type ChurchIndexabilityInput = {
   indexScore: number | null | undefined;
@@ -346,17 +363,23 @@ export type ChurchRobotsPolicy = "index" | "google-noindex" | "noindex";
 // is the engine that sends visitors: in a 160-profile sample, 55 profiles
 // below the gate carried 131 of 362 Bing clicks over eight weeks, and every
 // one of them had an address or service times. Such profiles stay out of
-// Google (googlebot noindex) and open to Bing and other engines. Off-brand
+// Google (googlebot noindex) and open to Bing and other engines.
+//
+// Christian tier (2026-11-08). Historic Christian traditions outside the core
+// brand get the same treatment. Bing kept showing 185 of these noindexed
+// profiles and sent them 130 clicks from April to October 2026, and the most
+// cited page in Bing's Copilot export (553 citations) was an Adventist
+// profile. NEVER_INDEX
 // denominations and profiles with no visit facts stay noindex everywhere. The
 // shown denomination often comes from enrichment (displayDenomination) when
-// the church row has none, so it counts for the off-brand check too.
+// the church row has none, so it counts for the never-index check too.
 export function getChurchRobotsPolicy(
   input: ChurchIndexabilityInput & { hasVisitFacts: boolean; displayDenomination?: string | null },
 ): ChurchRobotsPolicy {
   if (isIndexableChurch(input)) return "index";
-  const offBrand = [input.denomination, input.displayDenomination]
-    .some((value) => OFF_BRAND_DENOMINATION_SET.has((value ?? "").trim()));
-  if (offBrand) return "noindex";
+  const neverIndex = [input.denomination, input.displayDenomination]
+    .some((value) => NEVER_INDEX_DENOMINATION_KEYS.has((value ?? "").trim().toLowerCase()));
+  if (neverIndex) return "noindex";
   return input.hasVisitFacts ? "google-noindex" : "noindex";
 }
 
