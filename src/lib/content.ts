@@ -1072,6 +1072,8 @@ export function churchPageTag(slug: string): string {
  */
 export function revalidateChurchChange(slug: string): void {
   revalidateTag(churchPageTag(slug), { expire: 0 });
+  // MCP caches city searches and profiles separately from church page data.
+  revalidateTag("mcp", { expire: 0 });
   revalidatePath(`/church/${slug}`);
   revalidateTag(HOME_TAG, { expire: 0 });
 }
