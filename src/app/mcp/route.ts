@@ -24,6 +24,12 @@ const CLAUDE_SERVER_CONFIG: McpServerConfig = {
   tools: CHURCH_TOOLS.filter((tool) => tool.name !== "find_churches_near").map((tool) => ({
     ...tool,
     annotations: { ...tool.annotations, title: tool.title },
+    handler: async (args, context) => {
+      const result = await tool.handler(args, context);
+      if (result.isError || !result.structuredContent) return result;
+      // Claude may consume text content without the optional structuredContent.
+      return { ...result, content: [{ type: "text", text: JSON.stringify(result.structuredContent) }] };
+    },
   })),
 };
 

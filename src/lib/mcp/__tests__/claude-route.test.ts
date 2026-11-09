@@ -4,7 +4,11 @@ import { NextRequest } from "next/server";
 vi.mock("@/lib/mcp/church-queries", () => ({
   findChurchesInCity: vi.fn().mockResolvedValue([]),
   findChurchesNear: vi.fn().mockResolvedValue([]),
-  getChurchProfile: vi.fn().mockResolvedValue(null),
+  getChurchProfile: vi.fn().mockResolvedValue({
+    slug: "test-church", name: "Test Church", location: "Austin", country: "United States",
+    url: "https://gospelchannel.com/church/test-church", worshipStyles: [],
+    serviceTimes: [{ day: "Sunday", time: "10:00" }],
+  }),
 }));
 
 import { POST } from "@/app/mcp/route";
@@ -28,5 +32,15 @@ describe("Claude MCP connection", () => {
   it("preserves the existing MCP tool surface", async () => {
     const tools = await listTools("https://gospelchannel.com/mcp");
     expect(tools.map((tool: { name: string }) => tool.name)).toEqual(["find_churches_near", "find_churches_in_city", "get_church"]);
+  });
+
+  it("includes profile details in text content for clients that ignore structured content", async () => {
+    const request = new NextRequest("https://gospelchannel.com/mcp?client=claude", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ jsonrpc: "2.0", id: 2, method: "tools/call", params: { name: "get_church", arguments: { slug: "test-church" } } }),
+    });
+    const body = await (await POST(request)).json();
+    expect(JSON.parse(body.result.content[0].text).church.serviceTimes).toEqual([{ day: "Sunday", time: "10:00" }]);
   });
 });
