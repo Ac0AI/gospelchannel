@@ -181,6 +181,16 @@ export default async function AboutPage() {
         </div>
       </section>
 
+      <section className="mx-auto mt-16 max-w-[1280px] px-5 sm:px-12">
+        <h2 className="font-serif text-3xl font-semibold text-espresso">Use GospelChannel in Claude</h2>
+        <p className="mt-4 max-w-3xl text-warm-brown">
+          Add a custom connector in Claude and enter <strong>https://gospelchannel.com/mcp?client=claude</strong> as the server URL. No sign-in is required. Ask for churches in a named city, optionally specifying worship style, denomination, or language. You can also ask for a church profile from the results.
+        </p>
+        <p className="mt-3 max-w-3xl text-warm-brown">
+          This read-only connector searches GospelChannel’s public directory. Details may be incomplete or out of date, so confirm service times with the church before visiting. See our <Link href="/privacy" className="underline">privacy policy</Link> or <Link href="/contact" className="underline">contact us</Link> for help.
+        </p>
+      </section>
+
       {/* Numbers */}
       <section className="mx-auto mt-24 max-w-[1280px] px-5 sm:px-12 sm:mt-28">
         <div className="grid grid-cols-2 border-y border-rose-gold/[0.14] sm:grid-cols-4">

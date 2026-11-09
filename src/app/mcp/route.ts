@@ -16,8 +16,20 @@ const SERVER_CONFIG: McpServerConfig = {
   tools: CHURCH_TOOLS,
 };
 
+// Claude does not supply ChatGPT's location metadata. Keep the same protected
+// endpoint while exposing only tools that work with an explicitly named city.
+const CLAUDE_SERVER_CONFIG: McpServerConfig = {
+  serverInfo: SERVER_CONFIG.serverInfo,
+  instructions: "Find Christian churches in a named city and show their public profiles. Ask for a city when needed. Service times may be incomplete or stale; confirm them with the church before visiting.",
+  tools: CHURCH_TOOLS.filter((tool) => tool.name !== "find_churches_near").map((tool) => ({
+    ...tool,
+    annotations: { ...tool.annotations, title: tool.title },
+  })),
+};
+
 export async function POST(request: NextRequest): Promise<Response> {
-  return handleMcpRequest(request, SERVER_CONFIG);
+  const config = request.nextUrl.searchParams.get("client") === "claude" ? CLAUDE_SERVER_CONFIG : SERVER_CONFIG;
+  return handleMcpRequest(request, config);
 }
 
 export function OPTIONS(): Response {
